@@ -12,7 +12,7 @@
   
   <servlet>
   	<servlet-name>TreatmentGrammar</servlet-name>
-  	<servlet-class>servlets.Connection</servlet-class>
+  	<servlet-class>controller.GrammarServlet</servlet-class>
   </servlet>
   
   <servlet-mapping>
