@@ -13,8 +13,7 @@ public class Grammar {
 	private Set<Rule> rule;
 
 	// builders
-	public Grammar() {
-	}
+	public Grammar() {	}
 
 	public Grammar(String[] variables, String[] terminals, char initialSymbol,
 			String[] rules) {
@@ -93,16 +92,17 @@ public class Grammar {
 		return variables;
 	}
 
-	public void setVariables(String variables) {
-		this.variables.add(variables);
+	public void setVariables(Set<String> set) {
+		//this.variables.addAll(set);
+		this.variables = set;
 	}
 
 	public Set<String> getTerminals() {
 		return terminals;
 	}
 
-	public void setTerminals(String terminals) {
-		this.terminals.add(terminals);
+	public void setTerminals(Set<String> set) {
+		this.terminals = set;
 	}
 
 	public char getInitialSymbol() {
@@ -117,8 +117,22 @@ public class Grammar {
 		return rule;
 	}
 
-	public void setRule(Set<Rule> rule) {
-		this.rule = rule;
+	public void setRule(Set<Rule> set) {
+		this.rule = set;
+	}
+	
+	public void insertRule(String leftSide, String rightSide) {
+		Rule r = new Rule();
+		r.setleftSide(leftSide);
+		r.setrightSide(rightSide);
+		this.rule.add(new Rule(r));
+	}
+	
+	public void removeRule(String leftSide, String rightSide) {
+		Rule r = new Rule();
+		r.setleftSide(leftSide);
+		r.setrightSide(rightSide);
+		this.rule.remove(r);
 	}
 
 	// algorithms
