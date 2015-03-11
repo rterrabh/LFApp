@@ -63,11 +63,12 @@ public class Main {
 
 			Grammar g = new Grammar(gramatica);
 
-			//g = GrammarParser.getGrammarWithInitialSymbolNotRecursive(g);
-			//g = GrammarParser.getGrammarEssentiallyNoncontracting(g);
-			//g = GrammarParser.getGrammarWithoutChainRules(g);
+			g = GrammarParser.getGrammarWithInitialSymbolNotRecursive(g);
+			g = GrammarParser.getGrammarEssentiallyNoncontracting(g);
+			g = GrammarParser.getGrammarWithoutChainRules(g);
 			g = GrammarParser.getGrammarWithoutNoTerm(g);
 			g = GrammarParser.getGrammarWithoutNoReach(g);
+			g = GrammarParser.FNC(g);
 			/*
 			 * IMPRESS System.out.println(g.getInitialSymbol());
 			 * 
