@@ -24,16 +24,16 @@ public class GrammarServlet extends HttpServlet {
 
 	static void controlInputs(HttpServletRequest req, HttpServletResponse resp, String txtGrammar, Grammar g) throws ServletException, IOException {
 		//Grammar g = new Grammar();
-		char initialSymbol;
+		String initialSymbol;
 		if (!req.getParameter("initialSymbol").equals(""))
-			initialSymbol= req.getParameter("initialSymbol").charAt(0);
+			initialSymbol= req.getParameter("initialSymbol");
 		else
-			initialSymbol = ' ';
-		initialSymbol = Character.toUpperCase(initialSymbol);
+			initialSymbol = "";
+		initialSymbol = Character.toString(Character.toUpperCase(initialSymbol.charAt(0)));
 		String terminals = req.getParameter("terminals");
 		String variables = req.getParameter("variables");
 		
-		if (initialSymbol == ' ') {
+		if (initialSymbol.equals("")) {
 			// símbolo inicial não foi especificado
 			if (variables.equals("")
 					&& !terminals.equals("")) {
@@ -91,7 +91,7 @@ public class GrammarServlet extends HttpServlet {
 					req.getRequestDispatcher("warning.jsp").forward(req, resp);
 				}
 			}
-		} else if (initialSymbol != ' ') {
+		} else if (!initialSymbol.equals("")) {
 			// símbolo inicial especificado
 			if (variables.equals("")
 					&& !terminals.equals("")) {
@@ -147,8 +147,7 @@ public class GrammarServlet extends HttpServlet {
 				else {
 					//variáveis inseridas não fazem sentido
 					req.getRequestDispatcher("warning.jsp").forward(req, resp);
-				}
-				
+				}				
 			} 
 			else {
 				// símbolo inicial, conjunto de variáveis e símbolos terminais
@@ -215,7 +214,7 @@ public class GrammarServlet extends HttpServlet {
 					&& req.getParameter("terminals").equals("")
 					&& req.getParameter("initialSymbol").equals("")) {
 				// variáveis, terminais e símbolo inicial não foram informados, logo, todos os
-				// dados devem ser extraídos
+				// dados devem ser extraídos do conjunto de regras
 				g = new Grammar(txtGrammar);
 					
 			} else {
@@ -226,16 +225,37 @@ public class GrammarServlet extends HttpServlet {
 
 			//clona objeto grammar para fazer as devidas modificações
 			//clonar objeto G
+			//FALTA CLONAR OBJETO!!!
 			
 			// REALIZA CONTROLE DE AÇÕES A SEREM FEITAS
 			switch (req.getParameter("action")) {
 				case "Símbolo inicial não recursivo":
 					// chama algoritmo para remoção de símbolo inicial não recursivo
-					g = GrammarParser.removeInitialSymbolRecursive(g);
+					g = GrammarParser.getGrammarWithInitialSymbolNotRecursive(g);
 					break;
 				case "Remoção de símbolo lâmbda":
 					// chama algoritmo para remoção de símbolo lâmbda
+					g = GrammarParser.getGrammarEssentiallyNoncontracting(g);
 					break;
+				case "Remoção de regras da cadeia":
+					//realiza remoção de regras da cadeia
+					g = GrammarParser.getGrammarWithoutChainRules(g);
+					break;
+				case "Remoção de regras inalcançáveis":
+					//realiza remoção de regras inalcançáveis
+					g = GrammarParser.getGrammarWithoutNoReach(g);
+					break;
+				case "Remoção de regras não terminais":
+					//realiza remoção de regras que não geram símbolos terminais
+					g = GrammarParser.getGrammarWithoutNoTerm(g);
+					break;
+				case "Forma Normal de Chomsky":
+					g = GrammarParser.FNC(g);
+					break;
+			}
+			
+			for (Rule element : g.getRule()) {
+				out.print(element.getleftSide() + "->" + element.getrightSide()+ "<br/>");
 			}
 			out.println("<html><body>");
 
@@ -254,12 +274,12 @@ public class GrammarServlet extends HttpServlet {
 
 			out.println("<br>");
 
-			for (Rule r : g.getRule()) {
+			/*for (Rule r : g.getRule()) {
 				out.println(r.getleftSide());
 				out.println(" -> ");
 				out.println(r.getrightSide());
 				out.println("<br>");
-			}
+			}*/
 
 			out.println("</body></html>");
 

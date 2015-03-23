@@ -16,6 +16,10 @@
 				<textarea rows="12" cols="50" name="txtGrammar"></textarea> <br/><br/>
 			<div id="align-button"><input type="submit" name="action"	value="Símbolo inicial não recursivo" /></div>			
 			<div id="align-button"><input type="submit" name="action"	value="Remoção de símbolo lâmbda" /></div>
+			<div id="align-button"><input type="submit" name="action"	value="Remoção de regras da cadeia" /></div>
+			<div id="align-button"><input type="submit" name="action"	value="Remoção de regras inalcançáveis" /></div>
+			<div id="align-button"><input type="submit" name="action"	value="Remoção de regras não terminais" /></div>
+			<div id="align-button"><input type="submit" name="action" 	value="Forma Normal de Chomsky" /></div>
 			</div>		
 		</form>
 	</div>

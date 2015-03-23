@@ -9,13 +9,13 @@ public class Grammar {
 	// attributes
 	private Set<String> variables;
 	private Set<String> terminals;
-	private char initialSymbol;
+	private String initialSymbol;
 	private Set<Rule> rule;
 
 	// builders
 	public Grammar() {	}
 
-	public Grammar(String[] variables, String[] terminals, char initialSymbol,
+	public Grammar(String[] variables, String[] terminals, String initialSymbol,
 			String[] rules) {
 		this.variables = new HashSet<>();
 		for (String element : variables) {
@@ -42,8 +42,8 @@ public class Grammar {
 				String[] rules = txt.split("\n");
 				
 				//search for the initial symbol
-				char initialSymbol = ' ';
-				initialSymbol = txt.charAt(0);
+				String initialSymbol = "";
+				initialSymbol = Character.toString(txt.charAt(0));
 				
 				//search for the terminals
 				String[] terminals = new String[txt.length()];
@@ -105,12 +105,12 @@ public class Grammar {
 		this.terminals = set;
 	}
 
-	public char getInitialSymbol() {
+	public String getInitialSymbol() {
 		return initialSymbol;
 	}
 
-	public void setInitialSymbol(char initialSymbol) {
-		this.initialSymbol = initialSymbol;
+	public void setInitialSymbol(String string) {
+		this.initialSymbol = string;
 	}
 
 	public Set<Rule> getRule() {
@@ -134,6 +134,8 @@ public class Grammar {
 		r.setrightSide(rightSide);
 		this.rule.remove(r);
 	}
+	
+	
 
 	// algorithms
 	
