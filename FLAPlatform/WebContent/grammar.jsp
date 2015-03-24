@@ -20,6 +20,7 @@
 			<div id="align-button"><input type="submit" name="action"	value="Remoção de regras inalcançáveis" /></div>
 			<div id="align-button"><input type="submit" name="action"	value="Remoção de regras não terminais" /></div>
 			<div id="align-button"><input type="submit" name="action" 	value="Forma Normal de Chomsky" /></div>
+			<div id="align-button"><a href="cyk.jsp">Algoritmo CYK</a></div>
 			</div>		
 		</form>
 	</div>

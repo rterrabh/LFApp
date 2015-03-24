@@ -252,6 +252,12 @@ public class GrammarServlet extends HttpServlet {
 				case "Forma Normal de Chomsky":
 					g = GrammarParser.FNC(g);
 					break;
+				case "CYK":
+					String word = req.getParameter("word");
+					String[][] CYK = GrammarParser.CYK(g, word);
+					req.setAttribute("CYK", CYK);
+					req.getRequestDispatcher("").forward(req, resp);
+					break;
 			}
 			
 			for (Rule element : g.getRule()) {

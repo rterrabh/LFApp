@@ -125,7 +125,9 @@ public class Grammar {
 		Rule r = new Rule();
 		r.setleftSide(leftSide);
 		r.setrightSide(rightSide);
-		this.rule.add(new Rule(r));
+		System.out.println(r.getleftSide() + " " + r.getrightSide());
+		
+		rule.add(new Rule(r));
 	}
 	
 	public void removeRule(String leftSide, String rightSide) {
