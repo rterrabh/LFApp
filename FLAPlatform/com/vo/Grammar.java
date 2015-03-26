@@ -13,7 +13,12 @@ public class Grammar {
 	private Set<Rule> rule;
 
 	// builders
-	public Grammar() {	}
+	public Grammar() {
+		this.variables = new HashSet<>();
+		this.terminals = new HashSet<>();
+		this.initialSymbol = new String();
+		this.rule = new HashSet<>();
+	}
 
 	public Grammar(String[] variables, String[] terminals, String initialSymbol,
 			String[] rules) {
@@ -124,10 +129,12 @@ public class Grammar {
 	public void insertRule(String leftSide, String rightSide) {
 		Rule r = new Rule();
 		r.setleftSide(leftSide);
-		r.setrightSide(rightSide);
+		r.setrightSide(rightSide);	
 		System.out.println(r.getleftSide() + " " + r.getrightSide());
-		
-		rule.add(new Rule(r));
+		this.rule.add(new Rule(r));
+		for (Rule element : rule) {
+			System.out.println(element.getleftSide() + "->" + element.getrightSide());
+		}
 	}
 	
 	public void removeRule(String leftSide, String rightSide) {

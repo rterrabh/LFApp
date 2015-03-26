@@ -255,8 +255,13 @@ public class GrammarServlet extends HttpServlet {
 				case "CYK":
 					String word = req.getParameter("word");
 					String[][] CYK = GrammarParser.CYK(g, word);
+					for (int i = 0; i < word.length(); i++) {
+						for (int j = 0; j < word.length(); j++)
+							System.out.print(CYK[i][j] + "  ");
+						System.out.println();
+					}
 					req.setAttribute("CYK", CYK);
-					req.getRequestDispatcher("").forward(req, resp);
+					req.getRequestDispatcher("cyk_out.jsp").forward(req, resp);
 					break;
 			}
 			

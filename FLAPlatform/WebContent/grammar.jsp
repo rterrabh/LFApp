@@ -11,6 +11,7 @@
 			S&iacute;mbolo inicial: <input type="text"	size="1" 	maxlength="1"	name="initialSymbol"> <br/> <br/>
 			Vari&aacute;veis: <input type="text" size="10" maxlength="20"	name="variables"> <br/> <br/>
 			Terminais: <input type="text" size="10" maxlength="20"	name="terminals"> <br/> <br/>
+			Palavra(Apenas para CYK): <input type="text"		size="20" 	maxlength=""	name="word"> </br></br>
 			Regras de produ&ccedil;&atilde;o: <br/>
 			<div id="align-textarea">				
 				<textarea rows="12" cols="50" name="txtGrammar"></textarea> <br/><br/>
@@ -20,7 +21,7 @@
 			<div id="align-button"><input type="submit" name="action"	value="Remoção de regras inalcançáveis" /></div>
 			<div id="align-button"><input type="submit" name="action"	value="Remoção de regras não terminais" /></div>
 			<div id="align-button"><input type="submit" name="action" 	value="Forma Normal de Chomsky" /></div>
-			<div id="align-button"><a href="cyk.jsp">Algoritmo CYK</a></div>
+			<div id="align-button"><input type="submit" name="action" 	value="CYK" /></div>
 			</div>		
 		</form>
 	</div>

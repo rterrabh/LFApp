@@ -15,8 +15,10 @@ public class Rule {
 
 	public Rule(Rule r) {
 		// TODO Auto-generated constructor stub
-		leftSide = r.getleftSide();
-		rightSide = r.getrightSide();
+		System.out.println(r.getleftSide());
+		System.out.println(r.getrightSide());
+		this.leftSide = r.getleftSide();
+		this.rightSide = r.getrightSide();
 	}
 
 	public String getleftSide() {

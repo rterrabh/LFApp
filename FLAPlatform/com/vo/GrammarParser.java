@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public class GrammarParser {
 
@@ -260,10 +266,11 @@ public class GrammarParser {
 		for (Rule element : g.getRule()) {
 			// verifica se variável está no conjunto anulável e se
 			// contém o símbolo lâmbda
+			System.out.println(element.getleftSide() + " " + element.getrightSide());
 			if (nullableVariablesAux.contains(element.getleftSide())
 					&& element.getrightSide().contains(".")) {
 				String aux = element.getrightSide();
-				aux = replaceEmpty(aux, element);
+				aux = replaceEmpty(aux, element);			
 				teste.insertRule(element.getleftSide(), aux);
 				nullableVariablesAux.remove(element.getleftSide());
 			} else {
@@ -271,12 +278,6 @@ public class GrammarParser {
 			}
 		}
 		g.setRule(teste.getRule());
-		/*
-		 * for (Rule element : g.getRule()) {
-		 * System.out.print(element.getleftSide()); System.out.print(" -> ");
-		 * System.out.print(element.getrightSide()); System.out.println(); }
-		 * System.out.println("---------------------");
-		 */
 		Grammar teste2 = new Grammar();
 		for (Rule element : g.getRule()) {
 			if (nullableVariablesAux.contains(element.getleftSide())) {
@@ -1126,12 +1127,14 @@ public class GrammarParser {
 	//ALGORITMO DE RECONHECIMENTO CYK
 	public static String[][] CYK(Grammar g, String word) {
 		String[][] X = new String[word.length()][word.length()];
+		X = initializeArray(X, word);
 		for (int i = 0; i < word.length(); i++) {
 			for (Rule element : g.getRule()) {
 				if (element.getrightSide().contains(
 						Character.toString(word.charAt(i)))) {
-					if (!X[i][i].contains(Character.toString(word.charAt(i))))
+					if (!X[i][i].contains(Character.toString(word.charAt(i)))) {
 						X[i][i] += element.getleftSide();
+					}						
 				}
 			}
 		}
@@ -1159,6 +1162,14 @@ public class GrammarParser {
 			return "Palavra pertence à linguagem.";
 		} else {
 			return "Palavra não pertence à linguagem.";*/
+		return X;
+	}
+
+	private static String[][] initializeArray(String[][] X, String word) {
+		for (int i = 0; i < word.length(); i++) {
+			for (int j = 0; j < word.length(); j++)
+				X[i][j] = "";
+		}
 		return X;
 	}
 
