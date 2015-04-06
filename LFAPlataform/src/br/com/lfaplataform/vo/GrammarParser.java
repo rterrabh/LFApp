@@ -70,8 +70,14 @@ public class GrammarParser {
 		for (String x : rules) {
 			auxRule = x.split("->");
 			r.setleftSide(auxRule[0].trim());
-			r.setrightSide(auxRule[1].trim());
-			rule.add(new Rule(r));
+			String[] rulesOnRightSide = auxRule[1].split(" | ");
+			for (int i = 0; i < rulesOnRightSide.length; i++) {
+				rulesOnRightSide[i] = rulesOnRightSide[i].trim();
+				if (!rulesOnRightSide[i].equals("|") && !rulesOnRightSide[i].isEmpty()) {
+					r.setrightSide(rulesOnRightSide[i]);
+					rule.add(new Rule(r));
+				}
+			}
 		}
 		return rule;
 	}
@@ -192,34 +198,53 @@ public class GrammarParser {
 		return aux;
 	}
 
-	public static String permutation(String variables, int index, String aux,
-			Set<String> nullableVariables) {
+	public static String permutation(String rightSide, Set<String> nullableVariables, int i, String totalSentence) {
 		String newSentence = new String();
-		String auxString = aux;
-		int count = 1;
-		int auxCount = 0;
-		if (aux.length() != 1) {
-			newSentence = " | ";
-
+		String aux = new String();
+		if (nullableVariables.contains(Character.toString(rightSide.charAt(i)))) {
+			for (int j = 0; j < rightSide.length(); j++) {
+				if (j != i)
+					aux += Character.toString(rightSide.charAt(j));
+			}
+			newSentence = aux + " | ";
 		}
+		
+		for (int j = 0; j < aux.length(); j++) {
+			String temporarySentence = aux;
+			int k = 0;
+			while (k != temporarySentence.length()) {
+				if (nullableVariables.contains(Character.toString(temporarySentence.charAt(k)))) {
+					temporarySentence = updateTemporarySentence(temporarySentence, k);
+					if (existingProduction(totalSentence + " | " + newSentence, temporarySentence))
+						newSentence += temporarySentence + " | ";
+					k = 0;
+				} else {
+					k++;
+				}
+			}
+		}		
 		return newSentence;
 	}
 
-	public static String cancelsVariables(String variables,
-			Set<String> nullableVariables) {
-		String[] searchVariables = variables.split(" | ");
-		for (String aux : searchVariables) {
-			for (int i = 0; i < aux.length(); i++) {
-				if (nullableVariables
-						.contains(Character.toString(aux.charAt(i)))) {
-					// se a variável que estou percorrendo é anulável, deve
-					// ocorrer a permutação
-					variables += permutation(variables, i, aux,
-							nullableVariables);
-				}
-			}
+	private static boolean existingProduction(String newSentence,
+			String temporarySentence) {
+		String[] productions = newSentence.split(" | ");
+		for (int i = 0; i < productions.length; i++) {
+			productions[i] = productions[i].trim();
+			if (productions[i].equals(temporarySentence))
+				return false;
 		}
-		return variables;
+		return true;
+	}
+
+	private static String updateTemporarySentence(String temporarySentence,
+			int k) {
+		String newSentence = new String();
+		for (int i = 0; i < temporarySentence.length(); i++) {
+			if (i != k)
+				newSentence += Character.toString(temporarySentence.charAt(i));
+		}
+		return newSentence;
 	}
 
 	// remove símbolos terminais de regras
@@ -253,8 +278,6 @@ public class GrammarParser {
 		for (Rule element : g.getRule()) {
 			// verifica se variável está no conjunto anulável e se
 			// contém o símbolo lâmbda
-			System.out.println(element.getleftSide() + " "
-					+ element.getrightSide());
 			if (nullableVariablesAux.contains(element.getleftSide())
 					&& element.getrightSide().contains(".")) {
 				String aux = element.getrightSide();
@@ -270,26 +293,26 @@ public class GrammarParser {
 		for (Rule element : g.getRule()) {
 			if (nullableVariablesAux.contains(element.getleftSide())) {
 				// preciso trabalhar com variáveis do lado direito
-				String aux = element.getrightSide();
-				aux = cancelsVariables(aux, nullableVariables);
-				teste2.insertRule(element.getleftSide(), aux);
+				String aux = element.getrightSide() + " | ";
+				int i = 0;
+				while (i != element.getrightSide().length()) {
+					aux += permutation(element.getrightSide(), nullableVariables, i, aux);
+					i++;
+				}
+				String[] productionsOnRightSide = aux.split(" | ");
+				for (i = 0; i < productionsOnRightSide.length; i++ ) {
+					productionsOnRightSide[i] = productionsOnRightSide[i].trim();
+					if (!productionsOnRightSide[i].equals("|"))
+						teste2.insertRule(element.getleftSide(), productionsOnRightSide[i]);
+				}
 			} else {
 				teste2.insertRule(element.getleftSide(), element.getrightSide());
 			}
 		}
-		g.setRule(teste2.getRule());
+		
 		if (nullableVariables.contains(g.getInitialSymbol())) {
-			Grammar teste3 = new Grammar();
-			for (Rule element : g.getRule()) {
-				if (element.getleftSide().equals(g.getInitialSymbol())) {
-					teste3.insertRule(element.getleftSide(),
-							element.getrightSide() + " | .");
-				} else {
-					teste3.insertRule(element.getleftSide(),
-							element.getrightSide());
-				}
-			}
-			g.setRule(teste3.getRule());
+			teste2.insertRule(g.getInitialSymbol(), ".");
+			g.setRule(teste2.getRule());
 		}
 		return g;
 	}
@@ -364,6 +387,22 @@ public class GrammarParser {
 		}
 		return i - 1;
 	}
+	
+	//junta as regras para verificar se existe regras da cadeia
+	public static Set<Rule> joinRules(Grammar g, Set<Rule> rulesTogheter) {
+		for (String variable : g.getVariables()) {
+			Rule r = new Rule();
+			String newRule = new String();
+			for (Rule element : g.getRule()) {
+				if (variable.equals(element.getleftSide()))
+					newRule += element.getrightSide() + " | ";
+			}
+			r.setleftSide(variable);
+			r.setrightSide(newRule);
+			rulesTogheter.add(r);
+		}
+		return rulesTogheter;
+	}
 
 	// remove regras da cadeia
 	// retorna gramática sem regras da cadeia
@@ -373,8 +412,10 @@ public class GrammarParser {
 		// e não possui chain rules
 		ArrayList<Rule> noChainRules = new ArrayList<Rule>();
 		ArrayList<Rule> chainRules = new ArrayList<Rule>();
+		Set<Rule> rulesTogether = new HashSet<Rule>();
+		rulesTogether = joinRules(g, rulesTogether);
 		// padronizando a gramática
-		for (Rule element : g.getRule()) {
+		for (Rule element : rulesTogether) {
 			System.out.println(element.getrightSide());
 			String[] auxRightSide = element.getrightSide().split(" | ");
 			for (int i = 0; i < auxRightSide.length; i++) {
@@ -404,7 +445,6 @@ public class GrammarParser {
 				r.setleftSide(chainRules.get(i).getleftSide());
 				searchChainRules(aux, noChainRules, chainRules, r);
 				System.out.println(r.getleftSide() + " -> " + r.getrightSide());
-				// concertar o loop
 				chainRules.remove(returnIndex(chainRules, r.getleftSide()));
 				for (int j = 0; j < chainRules.size(); j++)
 					System.out.println(chainRules.get(j).getleftSide() + " -> "
@@ -421,9 +461,15 @@ public class GrammarParser {
 		Grammar g2 = new Grammar();
 		// copia elementos do ArrayList na gramática auxiliar
 		for (int i = 0; i < noChainRules.size(); i++) {
-			g2.insertRule(noChainRules.get(i).getleftSide(), noChainRules
-					.get(i).getrightSide());
-			;
+			String[] rulesOnTheRightSide = noChainRules.get(i).getrightSide().split(" | ");
+			for (int j = 0; j < rulesOnTheRightSide.length; j++) {
+				rulesOnTheRightSide[j] = rulesOnTheRightSide[j].trim();
+				if (!rulesOnTheRightSide[j].equals("|") && (!rulesOnTheRightSide[j].equals(""))) {
+					System.out.println(rulesOnTheRightSide[j]);
+					g2.insertRule(noChainRules.get(i).getleftSide(), rulesOnTheRightSide[j]);
+			
+				}
+			}
 		}
 		// copia gramática auxiliar na gramática principal
 		g.setRule(g2.getRule());
@@ -492,13 +538,12 @@ public class GrammarParser {
 		Set<String> prev = new HashSet<>();
 		// preenche conjunto term com as variáveis que são terminais
 		for (Rule element : g.getRule()) {
-			String[] aux = element.getrightSide().split(" | ");
-			for (int i = 0; i < aux.length; i++) {
-				aux[i] = aux[i].trim();
-				if (aux[i].length() == 1 && (!aux[i].equals("|"))
-						&& Character.isLowerCase(aux[i].charAt(0))) {
+			System.out.println(element.getleftSide() + "->" + element.getrightSide());
+		}
+		for (Rule element : g.getRule()) {
+			if (element.getrightSide().length() == 1 && (!element.getrightSide().equals("|"))
+						&& Character.isLowerCase(element.getrightSide().charAt(0))) {
 					term.add(element.getleftSide());
-				}
 			}
 		}
 		do {

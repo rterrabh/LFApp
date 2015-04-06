@@ -53,62 +53,23 @@ public class Grammar implements Cloneable {
 		}				
 	}
 	
-	public Grammar(String txt) {
-		//get the rules
-				String[] rules = txt.split("\n");
-				
+	public Grammar(String txt) {				
 				//search for the initial symbol
-				String initialSymbol = "";
-				initialSymbol = Character.toString(txt.charAt(0));
-				
-				//search for the terminals
-				String[] terminals = new String[txt.length()];
-				int j = 0;
-				for (int i = 0; i < txt.length(); i++) {
-						if (Character.isLowerCase(txt.charAt(i))) {
-							terminals[j] = Character.toString(txt.charAt(i));
-							j++;
-					}
-				}
-				
-				//search for the variables
-				String[] variables = new String[txt.length()];
-				j = 0;
-				for (int i = 0; i < txt.length(); i++) {
-					if (Character.isUpperCase(txt.charAt(i))) {
-						variables[j] = Character.toString(txt.charAt(i));
-						j++;
-					}
-				}
+				String initialSymbol = GrammarParser.extractInitialSymbolFromFull(txt);
 				
 				//assigns variables
-				this.variables = new HashSet<>();
-				for (String element : variables) {
-					this.variables.add(element);
-				}
+				this.variables = GrammarParser.extractVariablesFromFull(txt);
+				
 				//assigns terminals
-				this.terminals = new HashSet<>();
-				for (String element : terminals) {
-					this.terminals.add(element);
-				}
+				this.terminals = GrammarParser.extractTerminalsFromFull(txt);
+				
 				//assign initial symbol
 				this.initialSymbol = initialSymbol;
+				
 				//assigns rules
-				this.rule = new HashSet<Rule>();
-				Rule r = new Rule();
-				String[] auxRule;
-				for (String x : rules) {
-					auxRule = x.split("->");
-					r.setleftSide(auxRule[0].trim());
-					String[] rulesOnTheRightSide = auxRule[1].split(" | ");
-					for (String production : rulesOnTheRightSide) {
-						production = production.trim();
-						if (!production.isEmpty() && !production.equals("|")) {
-							r.setrightSide(production);
-							this.rule.add(new Rule(r));
-						}
-					}
-				}				
+				this.rule = GrammarParser.extractRulesFromFull(txt);
+				
+					
 	}
 	// methods
 
