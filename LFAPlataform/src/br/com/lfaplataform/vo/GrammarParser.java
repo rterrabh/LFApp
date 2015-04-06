@@ -487,28 +487,24 @@ public class GrammarParser {
 		for (Rule element : g.getRule()) {
 			if (prev.contains(element.getleftSide())) {
 				String newRule = new String();
-				String[] aux = element.getrightSide().split(" | ");
-				for (int i = 0; i < aux.length; i++) {
-					aux[i] = aux[i].trim();
 					boolean insertOnNewRule = true;
-					for (int j = 0; j < aux[i].length()
+					for (int j = 0; j < element.getrightSide().length()
 							&& insertOnNewRule != false; j++) {
-						if (Character.isUpperCase(aux[i].charAt(j))) {
-							if (prev.contains(Character.toString(aux[i]
+						if (Character.isUpperCase(element.getrightSide().charAt(j))) {
+							if (prev.contains(Character.toString(element.getrightSide()
 									.charAt(j))))
 								insertOnNewRule = true;
 							else
 								insertOnNewRule = false;
-						} else if (Character.isLowerCase(aux[i].charAt(j))) {
+						} else if (Character.isLowerCase(element.getrightSide().charAt(j))) {
 							insertOnNewRule = true;
 						} else {
 							insertOnNewRule = false;
 						}
 					}
 					if (insertOnNewRule) {
-						newRule += aux[i] + " | ";
+						newRule += element.getrightSide();
 					}
-				}
 				if (newRule.length() != 0) {
 					Rule r = new Rule();
 					r.setleftSide(element.getleftSide());
@@ -538,9 +534,6 @@ public class GrammarParser {
 		Set<String> prev = new HashSet<>();
 		// preenche conjunto term com as variáveis que são terminais
 		for (Rule element : g.getRule()) {
-			System.out.println(element.getleftSide() + "->" + element.getrightSide());
-		}
-		for (Rule element : g.getRule()) {
 			if (element.getrightSide().length() == 1 && (!element.getrightSide().equals("|"))
 						&& Character.isLowerCase(element.getrightSide().charAt(0))) {
 					term.add(element.getleftSide());
@@ -549,31 +542,23 @@ public class GrammarParser {
 		do {
 			prev.addAll(term);
 			for (Rule element : g.getRule()) {
-				String[] aux = element.getrightSide().split(" | ");
-				for (int i = 0; i < aux.length; i++) {
-					aux[i] = aux[i].trim();
-				}
 				boolean insertOnTerm = false;
-				for (int i = 0; i < aux.length && insertOnTerm == false; i++) {
-					if (aux[i].length() == 1) {
+					if (element.getrightSide().length() == 1) {
 						if (g.getTerminals().contains(
-								Character.toString(aux[i].charAt(0)))
-								|| prev.contains(Character.toString(aux[i]
-										.charAt(0)))) {
+								element.getrightSide())
+								|| prev.contains(element.getrightSide())) {
 							insertOnTerm = true;
 						}
 					} else {
-						for (int j = 0; j < aux[i].length(); j++) {
+						for (int j = 0; j < element.getrightSide().length(); j++) {
 							if (g.getTerminals().contains(
-									Character.toString(aux[i].charAt(j)))
-									|| prev.contains(Character.toString(aux[i]
-											.charAt(j)))) {
+									Character.toString(element.getrightSide().charAt(j)))
+									|| prev.contains(Character.toString(element.getrightSide().charAt(j)))) {
 								insertOnTerm = true;
 							} else {
 								insertOnTerm = false;
 							}
 						}
-					}
 				}
 				if (insertOnTerm) {
 					term.add(element.getleftSide());
@@ -582,7 +567,6 @@ public class GrammarParser {
 		} while (!term.equals(prev));
 		Grammar aux = new Grammar();
 		aux.setVariables(prev);
-		aux.setInitialSymbol(g.getInitialSymbol());
 		aux.setRule(updateRules(prev, g));
 		aux.setTerminals(updateTerminals(aux));
 		g.setVariables(aux.getVariables());
@@ -789,34 +773,22 @@ public class GrammarParser {
 
 		Set<Rule> newSetOfRules = new HashSet<>();
 		int contInsertions = 1;
-
 		for (Rule element : g.getRule()) {
 			String newProduction = new String();
-			String[] aux = element.getrightSide().split(" | ");
-			for (int i = 0; i < aux.length; i++) {
-				aux[i] = aux[i].trim();
-				String sentence = aux[i];
+				String sentence = element.getrightSide();
 				int cont = 0;
-				int insertionsOnNewProduction = 0;
 				while (sentence.length() > 2) {
 					if (Character.isLowerCase(sentence.charAt(0))) {
 						if (cont == 0) {
 							if (existsProduction(element.getleftSide(),
 									Character.toString(sentence.charAt(cont)),
 									g, newSetOfRules)) {
-								// há uma produção deste tipo, não é necessário
-								// realizar
-								// inserções
 								if (canInsert(newProduction)) {
 									newProduction = getVariable(
 											Character.toString(sentence
 													.charAt(cont)), g,
 											newSetOfRules);
-									insertionsOnNewProduction++;
 								}
-								// sentence =
-								// getVariable(Character.toString(sentence.charAt(0)),
-								// g, newSetOfRules) + sentence.substring(1);
 								sentence = sentence.substring(1);
 							} else {
 								// não há produções deste tipo, então uma
@@ -828,10 +800,8 @@ public class GrammarParser {
 								newSetOfRules.add(r);
 								if (canInsert(newProduction)) {
 									newProduction = "T" + contInsertions;
-									insertionsOnNewProduction++;
 								}
 								sentence = sentence.substring(1);
-								// contInsertions++;
 								contInsertions = updateNumberOfInsertions(
 										newSetOfRules, contInsertions);
 							}
@@ -840,7 +810,6 @@ public class GrammarParser {
 							// é minúsculo e está na segunda posição
 							if (canInsert(newProduction)) {
 								newProduction += "T" + contInsertions;
-								insertionsOnNewProduction++;
 							}
 
 							if (existsProduction(element.getleftSide(),
@@ -874,8 +843,6 @@ public class GrammarParser {
 								} else {
 									sentence = sentence.substring(1);
 								}
-								// cont = 0;
-								// contInsertions += 2;
 								contInsertions = updateNumberOfInsertions(
 										newSetOfRules, contInsertions);
 							}
@@ -904,21 +871,16 @@ public class GrammarParser {
 								if (canInsert(newProduction)) {
 									newProduction += getVariable(sentence, g,
 											newSetOfRules);
-									insertionsOnNewProduction++;
 								}
 								Rule r = new Rule();
 								r.setleftSide("T" + contInsertions);
 								r.setrightSide(insertRightRide(sentence,
 										contInsertions, newSetOfRules, g));
 								newSetOfRules.add(r);
-								// sentence = newProduction +=
-								// getVariable(sentence, g);
 								if (sentence.length() == 2)
 									sentence += sentence.substring(2);
 								else
 									sentence += sentence.substring(1);
-								// cont = 0;
-								// contInsertions++;
 								contInsertions = updateNumberOfInsertions(
 										newSetOfRules, contInsertions);
 							} else {
@@ -926,17 +888,14 @@ public class GrammarParser {
 								boolean control = false;
 								if (canInsert(newProduction)) {
 									newProduction += "T" + contInsertions;
-									insertionsOnNewProduction++;
 								}
 								Rule r = new Rule();
 								r.setleftSide("T" + contInsertions);
 								r.setrightSide(insertRightRide(sentence,
 										contInsertions, newSetOfRules, g));
 								newSetOfRules.add(r);
-								// contInsertions++;
 								contInsertions = updateNumberOfInsertions(
 										newSetOfRules, contInsertions);
-								// cont = 0;
 								if (Character.isDigit(sentence.charAt(1))) {
 									if (control)
 										newProduction += sentence.charAt(1);
@@ -1019,8 +978,6 @@ public class GrammarParser {
 							newSetOfRules.add(auxRule);
 							sentence = "T" + (contInsertions + 1)
 									+ sentence.substring(1);
-							// contInsertions++;
-							// contInsertions -= 1;
 						} else {
 							sentence = getVariable(
 									Character.toString(sentence.charAt(0)), g,
@@ -1059,13 +1016,10 @@ public class GrammarParser {
 							newSetOfRules.add(auxRule);
 							sentence = "T" + (contInsertions)
 									+ sentence.substring(1);
-							// contInsertions++;
 							contInsertions = updateNumberOfInsertions(
 									newSetOfRules, contInsertions);
 							secondChar = Character.toString(sentence.charAt(2));
 						} else {
-							// if (canInsert(newProduction))
-							// newProduction += "T" + contInsertions;
 							sentence = getVariable(
 									Character.toString(sentence.charAt(0)), g,
 									newSetOfRules) + sentence.substring(1);
@@ -1083,20 +1037,10 @@ public class GrammarParser {
 									+ contInsertions;
 							contInsertions = updateNumberOfInsertions(
 									newSetOfRules, contInsertions);
-							// Rule lastRule = new Rule();
-							// lastRule.setleftSide("T" + contInsertions);
-							// lastRule.setrightSide(sentence);
-							// newSetOfRules.add(lastRule);
-							// contInsertions++;
 						} else {
 							sentence = sentence.substring(0,
 									sentence.length() - 1)
 									+ getVariable(secondChar, g, newSetOfRules);
-							// Rule auxRule = new Rule();
-							// auxRule.setleftSide("T" + contInsertions);
-							// auxRule.setrightSide(sentence);
-							// newSetOfRules.add(auxRule);
-							// contInsertions++;
 						}
 						if (canInsert(newProduction)) {
 							if (newProductionSize(newProduction) == 1) {
@@ -1123,7 +1067,6 @@ public class GrammarParser {
 						newProduction += sentence;
 				}
 				newProduction += " | ";
-			}
 			if (newProduction.charAt(newProduction.length() - 2) == '|') {
 				newProduction = newProduction.substring(0,
 						newProduction.length() - 2);
