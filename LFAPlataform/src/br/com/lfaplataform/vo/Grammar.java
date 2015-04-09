@@ -10,77 +10,74 @@ public class Grammar implements Cloneable {
 	private Set<String> variables;
 	private Set<String> terminals;
 	private String initialSymbol;
-	private Set<Rule> rule;
+	private Set<Rule> rules;
 
 	// builders
 	public Grammar() {
 		this.variables = new HashSet<>();
 		this.terminals = new HashSet<>();
 		this.initialSymbol = new String();
-		this.rule = new HashSet<>();
+		this.rules = new HashSet<>();
 	}
 
-	public Grammar(String[] variables, String[] terminals, String initialSymbol,
-			String[] rules) {
-		
-		//assigns variables
+	public Grammar(String[] variables, String[] terminals,
+			String initialSymbol, String[] rules) {
+
+		// assigns variables
 		this.variables = new HashSet<>();
 		for (String element : variables) {
 			this.variables.add(element);
 		}
-		//assigns terminals
+		// assigns terminals
 		this.terminals = new HashSet<>();
 		for (String element : terminals) {
 			this.terminals.add(element);
 		}
-		//assigns initial symbol 
+		// assigns initial symbol
 		this.initialSymbol = initialSymbol;
-		//assigns rules
-		this.rule = new HashSet<Rule>();
+		// assigns rules
+		this.rules = new HashSet<Rule>();
 		Rule r = new Rule();
 		String[] auxRule;
 		for (String x : rules) {
 			auxRule = x.split("->");
-			r.setleftSide(auxRule[0].trim());
+			r.setLeftSide(auxRule[0].trim());
 			String[] rulesOnTheRightSide = auxRule[1].split(" | ");
 			for (String production : rulesOnTheRightSide) {
 				production = production.trim();
 				if (!production.isEmpty() && !production.equals("|")) {
-					r.setrightSide(production);
-					this.rule.add(new Rule(r));
+					r.setRightSide(production);
+					this.rules.add(new Rule(r));
 				}
 			}
-		}				
+		}
 	}
-	
-	public Grammar(String txt) {				
-				//search for the initial symbol
-				String initialSymbol = GrammarParser.extractInitialSymbolFromFull(txt);
-				
-				//assigns variables
-				this.variables = GrammarParser.extractVariablesFromFull(txt);
-				
-				//assigns terminals
-				this.terminals = GrammarParser.extractTerminalsFromFull(txt);
-				
-				//assign initial symbol
-				this.initialSymbol = initialSymbol;
-				
-				//assigns rules
-				this.rule = GrammarParser.extractRulesFromFull(txt);
-				
-					
+
+	public Grammar(String txt) {
+		// search for the initial symbol
+		String initialSymbol = GrammarParser.extractInitialSymbolFromFull(txt);
+
+		// assigns variables
+		this.variables = GrammarParser.extractVariablesFromFull(txt);
+
+		// assigns terminals
+		this.terminals = GrammarParser.extractTerminalsFromFull(txt);
+
+		// assign initial symbol
+		this.initialSymbol = initialSymbol;
+
+		// assigns rules
+		this.rules = GrammarParser.extractRulesFromFull(txt);
+
 	}
+
 	// methods
-
-	// accessors
-
 	public Set<String> getVariables() {
 		return variables;
 	}
 
 	public void setVariables(Set<String> set) {
-		//this.variables.addAll(set);
+		// this.variables.addAll(set);
 		this.variables = set;
 	}
 
@@ -100,49 +97,64 @@ public class Grammar implements Cloneable {
 		this.initialSymbol = string;
 	}
 
-	public Set<Rule> getRule() {
-		return rule;
+	public Set<Rule> getRules() {
+		return rules;
 	}
 
 	public void setRule(Set<Rule> set) {
-		this.rule = set;
+		this.rules = set;
 	}
 	
+	public void insertVariable(String newVariable) {
+		this.variables.add(newVariable);
+	}
+	
+	public void removeVariable(String variable) {
+		this.variables.remove(variable);
+	}
+	
+	public void insertTerminal(String newTerminal) {
+		this.terminals.add(newTerminal);
+	}
+	
+	public void removeTerminal(String terminal) {
+		this.terminals.remove(terminal);
+	}
+
 	public void insertRule(String leftSide, String rightSide) {
 		Rule r = new Rule();
-		r.setleftSide(leftSide);
-		r.setrightSide(rightSide);	
-		System.out.println(r.getleftSide() + " " + r.getrightSide());
-		this.rule.add(new Rule(r));
-		for (Rule element : rule) {
-			System.out.println(element.getleftSide() + "->" + element.getrightSide());
+		r.setLeftSide(leftSide);
+		r.setRightSide(rightSide);
+		System.out.println(r.getLeftSide() + " " + r.getRightSide());
+		this.rules.add(new Rule(r));
+		for (Rule element : rules) {
+			System.out.println(element.getLeftSide() + "->"
+					+ element.getRightSide());
 		}
 	}
-	
+
 	public void removeRule(String leftSide, String rightSide) {
 		Rule r = new Rule();
-		r.setleftSide(leftSide);
-		r.setrightSide(rightSide);
-		this.rule.remove(r);
+		r.setLeftSide(leftSide);
+		r.setRightSide(rightSide);
+		this.rules.remove(r);
 	}
-	
-	/*
+
 	@Override
-	public Object clone(Grammar g) throws CloneNotSupportedException {
-		Grammar g1 = new Grammar();
-		g1.setInitialSymbol(g.getInitialSymbol());
-		g1.setVariables(new HashSet<String>(g.getVariables()));
-		g1.setTerminals(new HashSet<String>(g.getTerminals()));
-		
+	public Object clone() {
+		Grammar gc = new Grammar();
+		gc.setInitialSymbol(initialSymbol);
+		gc.setVariables(new HashSet<String>(this.variables));
+		gc.setTerminals(new HashSet<String>(this.terminals));
+
 		Set<Rule> rules = new HashSet<Rule>();
-		for (Rule r : g.getRule()){
-			rules.add(new Rule(r.getleftSide(),r.getrightSide()));
+		for (Rule r : this.rules) {
+			rules.add((Rule)r.clone());
 		}
-		g1.setRule(rules);
-		return g1;
-	}*/
+		gc.setRule(rules);
+		return gc;
+	}
 
 	// algorithms
-	
 
 }

@@ -262,8 +262,8 @@ public class GrammarServlet extends HttpServlet {
 					break;
 			}
 			
-			for (Rule element : g.getRule()) {
-				out.print(element.getleftSide() + "->" + element.getrightSide()+ "<br/>");
+			for (Rule element : g.getRules()) {
+				out.print(element.getLeftSide() + "->" + element.getRightSide()+ "<br/>");
 			}
 			/*
 			out.println("<html><body>");

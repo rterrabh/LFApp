@@ -1,5 +1,8 @@
 package br.com.lfaplataform.vo;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Rule {
 	
 	//attributes 
@@ -21,25 +24,23 @@ public class Rule {
 
 	public Rule(Rule r) {
 		// TODO Auto-generated constructor stub
-		System.out.println(r.getleftSide());
-		System.out.println(r.getrightSide());
-		this.leftSide = r.getleftSide();
-		this.rightSide = r.getrightSide();
+		this.leftSide = r.getLeftSide();
+		this.rightSide = r.getRightSide();
 	}
 
-	public String getleftSide() {
+	public String getLeftSide() {
 		return leftSide;
 	}
 
-	public void setleftSide(String leftSide) {
+	public void setLeftSide(String leftSide) {
 		this.leftSide = leftSide ;
 	}
 
-	public String getrightSide() {
+	public String getRightSide() {
 		return rightSide;
 	}
 
-	public void setrightSide(String rightSide) {
+	public void setRightSide(String rightSide) {
 		this.rightSide = rightSide;
 	}
 
@@ -74,6 +75,21 @@ public class Rule {
 		} else if (!rightSide.equals(other.rightSide))
 			return false;
 		return true;
+	}
+	
+	@Override
+	protected Object clone()   {
+		Rule rc = new Rule();
+		
+		rc.setLeftSide(this.leftSide);
+		rc.setRightSide(this.rightSide);
+		
+		return rc;
+	}
+	
+	@Override
+	public String toString() {
+		return this.leftSide + " -> " + this.rightSide;
 	}
 	
 	
