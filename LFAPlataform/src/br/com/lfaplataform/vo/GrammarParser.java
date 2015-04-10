@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.TreeSet;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -1146,18 +1147,18 @@ public class GrammarParser {
 	}
 
 	// ALGORITMO DE RECONHECIMENTO CYK
-	public static String[][] CYK(Grammar g, String word) {
+	public static Set<String>[][] CYK(Grammar g, String word) {
 		// inicializando a tabela
-		String[][] X = new String[word.length() + 1][word.length()];
+		Set<String>[][] X = new TreeSet[word.length() + 1][word.length()];
 		for (int i = 0; i < word.length() + 1; i++) {
 			for (int j = 0; j < word.length(); j++) {
-				X[i][j] = ((j > i) ? ("null") : (""));
+				X[i][j] = new TreeSet<String>();
 			}
 		}
 
 		// inserindo a palavra na base da tabela
 		for (int i = 0; i < word.length(); i++) {
-			X[word.length()][i] = Character.toString(word.charAt(i));
+			X[word.length()][i].add(Character.toString(word.charAt(i)));
 		}
 
 		// preenchendo a primeira linha da tabela
@@ -1176,43 +1177,32 @@ public class GrammarParser {
 		return X;
 	}
 	
-	private static String[][] fillOthersLines(String[][] x, Grammar g, int count, int line, int column, String word) {
+	private static Set<String>[][] fillOthersLines(Set<String>[][] x, Grammar g, int count, int line, int column, String word) {
 		while (count != 7) {
 			while (count + column <= word.length()) {
-				String[] firstCell = x[5][column].split(",");
-				String[] secondCell = x[line - 1][column + 1].split(",");
+				String firstCell = returnsAlphabeticSymbols(x[5][column]);
+				String secondCell = returnsAlphabeticSymbols(x[line - 1][column + 1]);
 				
-				for (String firstElement : firstCell) {
+				for (int counterOfFirstCell = 0; counterOfFirstCell < firstCell.length(); counterOfFirstCell++) { 
 					String sentence = new String();
-					if (firstElement != ",") {
-						sentence += firstElement.trim();
-					}
-					for (String secondElement : secondCell) {
-						if (secondElement != ",") {
-							sentence += secondElement.trim();
-						}
-						String aux = checksEquality(g, word, sentence);
-						aux += (aux.equals("")) ? (aux) : (", ");
-						x[line - 2][column] += aux;
+					sentence += Character.toString(firstCell.charAt(counterOfFirstCell)).trim();
+					for (int counterOfSecondCell = 0; counterOfSecondCell < secondCell.length(); counterOfSecondCell++) { 
+						sentence += Character.toString(secondCell.charAt(counterOfSecondCell)).trim();
+						Set<String> aux = checksEquality(g, word, sentence);
+						x[line - 2][column].addAll(aux);
 						sentence = sentence.substring(0, sentence.length() - 1);
 					}
 				}
 				
-				firstCell = x[line - 1][column].split(",");
-				secondCell = x[5][column + (count - 1)].split(",");
-				
-				for (String firstElement : firstCell) {
+				firstCell = returnsAlphabeticSymbols(x[line - 1][column]);						
+				secondCell = returnsAlphabeticSymbols(x[5][column + (count - 1)]);				
+				for (int counterOfFirstCell = 0; counterOfFirstCell < firstCell.length(); counterOfFirstCell++) { 
 					String sentence = new String();
-					if (firstElement != ",") {
-						sentence += firstElement.trim();
-					}
-					for (String secondElement : secondCell) {
-						if (secondElement != ",") {
-							sentence += secondElement.trim();
-						}
-						String aux = checksEquality(g, word, sentence);
-						aux += (aux.equals("")) ? (aux) : (", ");
-						x[line - 2][column] += aux;
+					sentence += Character.toString(firstCell.charAt(counterOfFirstCell)).trim();
+					for (int counterOfSecondCell = 0; counterOfSecondCell < secondCell.length(); counterOfSecondCell++) { 
+						sentence += Character.toString(secondCell.charAt(counterOfSecondCell)).trim();
+						Set<String> aux = checksEquality(g, word, sentence);
+						x[line - 2][column].addAll(aux);
 						sentence = sentence.substring(0, sentence.length() - 1);
 					}
 				}
@@ -1225,32 +1215,38 @@ public class GrammarParser {
 		return x;
 	}
 
-	private static String[][] fillSecondLine(String[][] x, Grammar g,
+	private static Set<String>[][] fillSecondLine(Set<String>[][] x, Grammar g,
 			String word) {
 		for (int j = 0; j < word.length() - 1; j++) {
-			String[] firstCell = x[word.length() - 1][j].split(",");
-			String[] secondCell = x[word.length() - 1][j + 1].split(",");
+			String firstCell = returnsAlphabeticSymbols(x[word.length() - 1][j]); 
+			String secondCell = returnsAlphabeticSymbols(x[word.length() - 1][j + 1]);
 
-			for (String firstElement : firstCell) {
+			for (int counterOfFirstCell = 0; counterOfFirstCell < firstCell.length(); counterOfFirstCell++) {
 				String sentence = new String();
-				if (firstElement != ",") {
-					sentence += firstElement.trim();
-				}
-				for (String secondElement : secondCell) {
-					if (secondElement != ",") {
-						sentence += secondElement.trim();
-					}
-					String aux = checksEquality(g, word, sentence);
-					aux += (aux.equals("")) ? (aux) : (", ");
-					x[word.length() - 2][j] += aux;
-					sentence = sentence.substring(0, sentence.length() - 1);
+				sentence += Character.toString(firstCell.charAt(counterOfFirstCell)).trim();
+				for (int counterOfSecondCell = 0; counterOfSecondCell < secondCell.length(); counterOfSecondCell++) {
+					sentence += Character.toString(secondCell.charAt(counterOfSecondCell)).trim();
+					Set<String> aux = checksEquality(g, word, sentence);
+					x[word.length() - 2][j].addAll(aux);
+					sentence = sentence.substring(0, sentence.length()-1);
 				}
 			}
 		}
 		return x;
 	}
+	
+	//remove caracteres que não sejam alfabéticos
+	private static String returnsAlphabeticSymbols(Set<String> set) {
+		String aux = new String();
+		for (String element : set) {
+			if (Character.isAlphabetic(element.charAt(0)))
+				aux += element;
+		}
+		return aux;
+	}
 
-	private static String[][] fillFirstLine(String[][] x, Grammar g, String word) {
+	//preenche a primeira linha da tabela
+	private static Set<String>[][] fillFirstLine(Set<String>[][] x, Grammar g, String word) {
 		for (int j = 0; j < word.length(); j++) {
 			x[word.length() - 1][j] = checksEquality(g, word,
 					Character.toString(word.charAt(j)));
@@ -1258,19 +1254,34 @@ public class GrammarParser {
 		return x;
 	}
 
-	private static String checksEquality(Grammar g, String word, String letter) {
-		String found = new String();
+	private static Set<String> checksEquality(Grammar g, String word, String letter) {
+		Set<String> found = new TreeSet<String>();
 		for (Rule element : g.getRules()) {
-			String[] aux = element.getRightSide().split(" | ");
-			for (int j = 0; j < aux.length; j++) {
-				if (aux[j].equals(letter)) {
-					if (!aux[j].contains(letter))
-						found += element.getLeftSide() + ", ";
+			if (element.getRightSide().equals(letter)) {
+					found.add(element.getLeftSide());
+			}
+		}
+		return found;
+	}
+
+	public static String[][] turnsTreesetOnArray(Set<String>[][] CYK, String word) {
+		String[][] cykOut = new String[word.length()+1][word.length()];
+		for (int i = 0; i < word.length()+1; i++) {
+			for (int j = 0; j < word.length(); j++) {
+				if (j <= i) {
+					String sentence = returnsAlphabeticSymbols(CYK[i][j]);
+					String newSentence = new String();
+					for (int k = 0; k < sentence.length(); k++) {
+						newSentence += Character.toString(sentence.charAt(k)) + " ";
+					}
+					newSentence = (newSentence.equals("") ? ("-") : (newSentence.substring(0, newSentence.length()-1)));
+					cykOut[i][j] = newSentence;
+				} else {
+					cykOut[i][j] = "";
 				}
 			}
 		}
-		found = (found.equals("") ? ("") : (found.substring(0, found.length() - 2)));
-		return found;
+		return cykOut;
 	}
 
 }

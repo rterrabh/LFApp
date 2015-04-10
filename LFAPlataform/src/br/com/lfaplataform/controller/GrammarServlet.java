@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.TreeSet;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -255,8 +256,9 @@ public class GrammarServlet extends HttpServlet {
 					break;
 				case "CYK":
 					String word = req.getParameter("word");
-					String[][] CYK = GrammarParser.CYK(g, word);
-					req.setAttribute("CYK", CYK);
+					Set<String>[][] CYK = GrammarParser.CYK(g, word);
+					String[][] cykOut = GrammarParser.turnsTreesetOnArray(CYK, word);
+					req.setAttribute("CYK", cykOut);
 					req.setAttribute("word", word);
 					req.getRequestDispatcher("cyk_out.jsp").forward(req, resp);
 					break;

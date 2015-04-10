@@ -15,14 +15,7 @@
 			<tr>
 			<% for (int j = 0; j < word.length(); j++) { %>
 				<td> 
-				<% 
-					if (CYK[i][j].equals("")) {
-						out.print(" - ");
-					} else if (CYK[i][j].equals("null")) {
-						out.print("");
-					} else {
-						out.print(CYK[i][j]); 
-					}%>
+				<% 	out.print(CYK[i][j]); 	%>
 			</td>	
 			<%	} %>
 			</tr>
