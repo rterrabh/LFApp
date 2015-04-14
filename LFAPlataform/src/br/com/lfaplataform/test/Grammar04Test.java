@@ -1,6 +1,9 @@
 package br.com.lfaplataform.test;
 
 import static org.junit.Assert.*;
+
+import java.util.Set;
+
 import br.com.lfaplataform.vo.*;
 import junit.framework.*;
 
@@ -128,6 +131,21 @@ public class Grammar04Test extends TestCase {
 		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getTerminals(), newG.getTerminals()));
 		
 		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getVariables(), newG.getVariables()));
+	}
+	
+	@Test
+	public void testCYK() {
+		Set<String>[][] matrix = GrammarParser.CYK(g, "bbabaa");
+		
+		assertNotNull(matrix);
+		assertNotNull(matrix[0][0]);
+		assertNotEquals("", matrix[0][0]);
+		
+		Set<String> topVariables = matrix[0][0];
+		
+		assertEquals(0, topVariables.size());
+
+		assertTrue(topVariables.isEmpty());
 	}
 
 }

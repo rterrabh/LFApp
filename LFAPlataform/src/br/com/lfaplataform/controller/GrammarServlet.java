@@ -59,7 +59,7 @@ public class GrammarServlet extends HttpServlet {
 					//extrai símbolo inicial das regras
 					g.setInitialSymbol(GrammarParser.extractInitialSymbolFromFull(txtGrammar));
 					//realiza atribuição das regras
-					g.setRule(GrammarParser.extractRulesFromFull(txtGrammar));
+					g.setRules(GrammarParser.extractRulesFromFull(txtGrammar));
 				}
 				else {
 					//terminais inseridos não fazem sentido
@@ -86,7 +86,7 @@ public class GrammarServlet extends HttpServlet {
 					//extrai símbolo inicial das regras
 					g.setInitialSymbol(GrammarParser.extractInitialSymbolFromFull(txtGrammar));
 					//realiza atribuição das regras
-					g.setRule(GrammarParser.extractRulesFromFull(txtGrammar));
+					g.setRules(GrammarParser.extractRulesFromFull(txtGrammar));
 				}
 				else {
 					//variáveis inseridas não fazem sentido
@@ -117,7 +117,7 @@ public class GrammarServlet extends HttpServlet {
 					//extrai símbolo inicial das regras
 					g.setInitialSymbol(GrammarParser.extractInitialSymbolFromFull(txtGrammar));
 					//realiza atribuição das regras
-					g.setRule(GrammarParser.extractRulesFromFull(txtGrammar));
+					g.setRules(GrammarParser.extractRulesFromFull(txtGrammar));
 				}
 				else {
 					//terminais inseridos não fazem sentido
@@ -144,7 +144,7 @@ public class GrammarServlet extends HttpServlet {
 					//atribui símbolo inicial
 					g.setInitialSymbol(initialSymbol);
 					//realiza atribuição das regras
-					g.setRule(GrammarParser.extractRulesFromFull(txtGrammar));
+					g.setRules(GrammarParser.extractRulesFromFull(txtGrammar));
 				}
 				else {
 					//variáveis inseridas não fazem sentido
@@ -183,7 +183,7 @@ public class GrammarServlet extends HttpServlet {
 					
 					//realiza atribuições aos atributos do objeto
 					g.setInitialSymbol(GrammarParser.formatInitialSymbol(initialSymbol));					
-					g.setRule(GrammarParser.extractRulesFromFull(txtGrammar));
+					g.setRules(GrammarParser.extractRulesFromFull(txtGrammar));
 				}
 				else {
 					//algum parâmetro inserido não faz sentido

@@ -101,7 +101,7 @@ public class Grammar implements Cloneable {
 		return rules;
 	}
 
-	public void setRule(Set<Rule> set) {
+	public void setRules(Set<Rule> set) {
 		this.rules = set;
 	}
 	
@@ -151,7 +151,7 @@ public class Grammar implements Cloneable {
 		for (Rule r : this.rules) {
 			rules.add((Rule)r.clone());
 		}
-		gc.setRule(rules);
+		gc.setRules(rules);
 		return gc;
 	}
 

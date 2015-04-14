@@ -291,7 +291,7 @@ public class GrammarParser {
 				teste.insertRule(element.getLeftSide(), element.getRightSide());
 			}
 		}
-		g.setRule(teste.getRules());
+		g.setRules(teste.getRules());
 		Grammar teste2 = new Grammar();
 		for (Rule element : g.getRules()) {
 			if (nullableVariables.contains(element.getLeftSide())) {
@@ -315,7 +315,7 @@ public class GrammarParser {
 		
 		if (nullableVariables.contains(g.getInitialSymbol())) {
 			teste2.insertRule(g.getInitialSymbol(), ".");
-			g.setRule(teste2.getRules());
+			g.setRules(teste2.getRules());
 		}
 		return g;
 	}
@@ -340,7 +340,6 @@ public class GrammarParser {
 			if (noChainRules.get(i).getLeftSide()
 					.equals(Character.toString(caracter))) {
 				s += noChainRules.get(i).getRightSide() + " ";
-				// CONTINUAR AQUI
 				found = true;
 			}
 		}
@@ -354,7 +353,6 @@ public class GrammarParser {
 			if (noChainRules.get(i).getLeftSide()
 					.equals(Character.toString(caracter))) {
 				s += noChainRules.get(i).getRightSide() + " ";
-				// CONTINUAR AQUI
 				found = true;
 			}
 		}
@@ -477,7 +475,7 @@ public class GrammarParser {
 			}
 		}
 		// copia gramática auxiliar na gramática principal
-		gc.setRule(g2.getRules());
+		gc.setRules(g2.getRules());
 		for (Rule element : gc.getRules()) {
 			System.out.println(element.getLeftSide() + " -> "
 					+ element.getRightSide());
@@ -580,11 +578,11 @@ public class GrammarParser {
 		//term = termMinusNoTerm(term, noTerm);
 		Grammar aux = new Grammar();
 		aux.setVariables(prev);
-		aux.setRule(updateRules(prev, g));
+		aux.setRules(updateRules(prev, g));
 		aux.setTerminals(updateTerminals(aux));
 		g.setVariables(aux.getVariables());
 		g.setTerminals(aux.getTerminals());
-		g.setRule(aux.getRules());
+		g.setRules(aux.getRules());
 		return g;
 	}
 	
@@ -620,6 +618,10 @@ public class GrammarParser {
 		Set<String> prev = new HashSet<>();
 		Set<String> New = new HashSet<>();
 		reach.add(g.getInitialSymbol());
+		System.out.println("______________");
+		for (Rule element : g.getRules()) {
+			System.out.println(element.getLeftSide() + "->" + element.getRightSide());
+		}
 		do {
 			New.addAll(reachMinusPrev(reach, prev));
 			prev.addAll(reach);
@@ -635,53 +637,26 @@ public class GrammarParser {
 		Grammar aux = new Grammar();
 		aux.setVariables(prev);
 		aux.setInitialSymbol(g.getInitialSymbol());
-		aux.setRule(updateRules(prev, g));
+		aux.setRules(updateRules(prev, g));
 		aux.setTerminals(updateTerminals(aux));
 		g.setVariables(aux.getVariables());
 		g.setTerminals(aux.getTerminals());
-		g.setRule(aux.getRules());
+		g.setRules(aux.getRules());
 		return aux;
 	}
 
-	public static boolean existsProduction(String leftSide, String symbol,
-			Grammar g, Set<Rule> newSetOfRules) {
-		for (Rule element : g.getRules()) {
-			if (element.getLeftSide().charAt(0) != 'T') {
-				String[] aux = element.getRightSide().split(" | ");
-				for (int i = 0; i < aux.length; i++) {
-					if (aux[i].equals(symbol)) {
-						return true;
-					}
-				}
-			}
-		}
+	public static boolean existsProduction(String leftSide, String symbol, Set<Rule> newSetOfRules) {
 		for (Rule element : newSetOfRules) {
-			if (element.getLeftSide().charAt(0) != 'T') {
-				String[] aux = element.getRightSide().split(" | ");
-				for (int i = 0; i < aux.length; i++) {
-					if (aux[i].equals(symbol)) {
+				if (element.getRightSide().equals(symbol)) {
 						return true;
-					}
 				}
-			}
 		}
 		return false;
 	}
 
-	public static String getVariable(String symbol, Grammar g,
-			Set<Rule> newSetOfRules) {
+	public static String getVariable(String symbol, Set<Rule> newSetOfRules) {
 		String variable = new String();
 		boolean found = false;
-		for (Rule element : g.getRules()) {
-			String[] aux = element.getRightSide().split(" | ");
-			for (int i = 0; i < aux.length && found == false; i++) {
-				aux[i] = aux[i].trim();
-				if (aux[i].equals(symbol)) {
-					variable = element.getLeftSide();
-					found = true;
-				}
-			}
-		}
 		for (Rule element : newSetOfRules) {
 			String[] aux = element.getRightSide().split(" | ");
 			for (int i = 0; i < aux.length && found == false; i++) {
@@ -695,49 +670,53 @@ public class GrammarParser {
 		return variable;
 	}
 
-	private static int counterLowerCaseLetters(String sentence) {
+	private static int sentenceSize(String sentence) {
 		int count = 0;
-		boolean valid = true;
-		for (int i = 1; i < sentence.length() && valid == true; i++) {
-			if (Character.isUpperCase(sentence.charAt(i)))
-				valid = false;
-			else
+		for (int i = 0; i < sentence.length(); i++) {
+			if (Character.isAlphabetic(sentence.charAt(i)))
 				count++;
 		}
 		return count;
 	}
 
-	private static String insertRightRide(String sentence, int contInsertions,
-			Set<Rule> newSetOfRules, Grammar g) {
+	private static String insertRightRide(String sentence, int contInsertions, Set<Rule> newSetOfRules, Grammar g) {
 		String aux = new String();
-		if (sentence.length() == 2
-				&& Character.isUpperCase(sentence.charAt(0))
-				&& Character
-						.isLowerCase(sentence.charAt(sentence.length() - 1))) {
-			aux = sentence.substring(0, sentence.length() - 1) + "T"
-					+ (contInsertions);
-		} else if (Character.isDigit(sentence.charAt(1))
-				&& sentence.length() > 2) {
-			aux = Character.toString(sentence.charAt(0))
-					+ Character.toString(sentence.charAt(1)) + "T"
-					+ (contInsertions + 1);
-		} else if (Character.isLowerCase(sentence.charAt(1))
-				&& (Character.isLowerCase(sentence.charAt(2)))
-				&& sentence.length() > 2) {
-			newSetOfRules = insertNewRules(newSetOfRules, sentence,
-					contInsertions, g);
-			contInsertions = updateNumberOfInsertions(newSetOfRules,
-					contInsertions);
+		if (sentenceSize(sentence) > 2) {
+			
+			
+			
+		} else if (sentenceSize(sentence) == 2) {
+			if (Character.isUpperCase(sentence.charAt(sentence.length() - 1)) || 
+					(Character.isUpperCase(sentence.charAt(0)) && Character.isUpperCase(sentence.charAt(1)))) {
+				 aux = sentence;
+			} else if (Character.isLowerCase(sentence.charAt(0)) && Character.isLowerCase(sentence.charAt(1))) {
+				aux = "T" + (contInsertions + 1) + "T" + (contInsertions + 2);
+			} else if (Character.isLowerCase(sentence.charAt(0)) && Character.isUpperCase(sentence.charAt(1))) {
+				aux = "T" + (contInsertions + 1) + sentence.substring(1);
+			} else if (Character.isUpperCase(sentence.charAt(0)) && Character.isLowerCase(sentence.charAt(1))) {
+				aux = Character.toString(sentence.charAt(0)) + "T" + (contInsertions + 1);
+			}
+		} else {
+			
+		}
+		
+		
+		
+		
+		/*if (sentence.length() == 2 && Character.isUpperCase(sentence.charAt(0))	&& Character.isLowerCase(sentence.charAt(sentence.length() - 1))) {
+			aux = sentence.substring(0, sentence.length() - 1) + "T" + (contInsertions);
+		} else if (Character.isDigit(sentence.charAt(1)) && sentence.length() > 2) {
+			aux = Character.toString(sentence.charAt(0)) + Character.toString(sentence.charAt(1)) + "T" + (contInsertions + 1);
+		} else if (Character.isLowerCase(sentence.charAt(1)) && (Character.isLowerCase(sentence.charAt(2))) && sentence.length() > 2) {
+			newSetOfRules = insertNewRules(newSetOfRules, sentence,	contInsertions, g);
+			contInsertions = updateNumberOfInsertions(newSetOfRules, contInsertions);
 			aux = Character.toString(sentence.charAt(0)) + "T" + contInsertions;
 		} else if (sentence.length() > 2)
-			aux = Character.toString(sentence.charAt(0)) + "T"
-					+ (contInsertions + 1);
-		else if (Character.isLowerCase(sentence.charAt(1))
-				&& sentence.length() == 2)
-			aux = Character.toString(sentence.charAt(0)) + "T"
-					+ (contInsertions + 1);
+			aux = Character.toString(sentence.charAt(0)) + "T" + (contInsertions + 1);
+		else if (Character.isLowerCase(sentence.charAt(1)) && sentence.length() == 2)
+			aux = Character.toString(sentence.charAt(0)) + "T" + (contInsertions + 1);
 		else
-			aux = sentence;
+			aux = sentence;*/
 		return aux;
 	}
 
@@ -761,8 +740,7 @@ public class GrammarParser {
 		for (int i = 1; i < sentence.length() && valid == true; i++) {
 			if (Character.isLowerCase(sentence.charAt(i))) {
 				if (!existsProduction("T" + contInsertions,
-						Character.toString(sentence.charAt(i)), g,
-						newSetOfRules)) {
+						Character.toString(sentence.charAt(i)), newSetOfRules)) {
 					Rule r = new Rule();
 					r.setLeftSide("T" + contInsertions);
 					r.setRightSide(Character.toString(sentence.charAt(i)));
@@ -791,347 +769,143 @@ public class GrammarParser {
 		return insert;
 	}
 
+	private static boolean correctFormat(String sentence) {
+		for (int i = 0; i < sentence.length(); i++) {
+			
+		}
+		return false;
+	}
+	
+	
 	public static Grammar FNC(Grammar g) {
-
+		
+		g = GrammarParser.getGrammarWithInitialSymbolNotRecursive(g);
+		g = GrammarParser.getGrammarEssentiallyNoncontracting(g);
+		g = GrammarParser.getGrammarWithoutChainRules(g);
+		g = GrammarParser.getGrammarWithoutNoTerm(g);
+		g = GrammarParser.getGrammarWithoutNoReach(g);
+		
+		
 		Set<Rule> newSetOfRules = new HashSet<>();
+		Set<Rule> auxSetOfRules = new HashSet<>();
 		int contInsertions = 1;
 		for (Rule element : g.getRules()) {
 			String newProduction = new String();
 				String sentence = element.getRightSide();
 				int cont = 0;
-				while (sentence.length() > 2) {
-					if (Character.isLowerCase(sentence.charAt(0))) {
-						if (cont == 0) {
-							if (existsProduction(element.getLeftSide(),
-									Character.toString(sentence.charAt(cont)),
-									g, newSetOfRules)) {
-								if (canInsert(newProduction)) {
-									newProduction = getVariable(
-											Character.toString(sentence
-													.charAt(cont)), g,
-											newSetOfRules);
-								}
-								sentence = sentence.substring(1);
-							} else {
-								// não há produções deste tipo, então uma
-								// inserção é feita
+				int changeCounter = 0;
+				//primeiro, cria-se produções para todos os símbolos terminais
+				String newSentence = new String();
+				if (sentenceSize(sentence) >= 2) {
+					for (int i = 0; i < sentence.length(); i++) {
+						if (Character.isLowerCase(sentence.charAt(i))) {
+							if (!existsProduction(element.getLeftSide(), Character.toString(sentence.charAt(i)), newSetOfRules)) {
 								Rule r = new Rule();
 								r.setLeftSide("T" + contInsertions);
-								r.setRightSide(Character.toString(sentence
-										.charAt(cont)));
+								r.setRightSide(Character.toString(sentence.charAt(i)));
 								newSetOfRules.add(r);
-								if (canInsert(newProduction)) {
-									newProduction = "T" + contInsertions;
-								}
-								sentence = sentence.substring(1);
-								contInsertions = updateNumberOfInsertions(
-										newSetOfRules, contInsertions);
-							}
-							cont++;
-						} else {
-							// é minúsculo e está na segunda posição
-							if (canInsert(newProduction)) {
-								newProduction += "T" + contInsertions;
-							}
-
-							if (existsProduction(element.getLeftSide(),
-									Character.toString(sentence.charAt(0)), g,
-									newSetOfRules)) {
-								Rule rule = new Rule();
-								rule.setLeftSide("T" + contInsertions);
-								rule.setRightSide(insertRightRide(
-										getVariable(Character.toString(sentence
-												.charAt(0)), g, newSetOfRules)
-												+ sentence, contInsertions,
-										newSetOfRules, g));
-								newSetOfRules.add(rule);
-								sentence = sentence.substring(1);
-								contInsertions++;
+								newSentence += "T" + contInsertions;
+								contInsertions = updateNumberOfInsertions(newSetOfRules, contInsertions);
 							} else {
-								Rule rule = new Rule();
-								rule.setLeftSide("T" + (contInsertions + 1));
-								rule.setRightSide(Character.toString(sentence
-										.charAt(0)));
-								newSetOfRules.add(rule);
-								sentence = "T" + (contInsertions + 1)
-										+ sentence.substring(1);
-								Rule r = new Rule();
-								r.setLeftSide("T" + contInsertions);
-								r.setRightSide(insertRightRide(sentence,
-										contInsertions + 1, newSetOfRules, g));
-								newSetOfRules.add(r);
-								if (Character.isDigit(sentence.charAt(1))) {
-									sentence = sentence.substring(2);
-								} else {
-									sentence = sentence.substring(1);
-								}
-								contInsertions = updateNumberOfInsertions(
-										newSetOfRules, contInsertions);
-							}
-						}
-					} else if (!Character.isLowerCase(sentence.charAt(0))) {
-						// maiúsculo na primeira posição
-						if (cont == 0) {
-							cont++;
-							boolean control = false;
-							if (canInsert(newProduction)) {
-								newProduction += sentence.charAt(0);
-								control = true;
-							}
-							if (Character.isDigit(sentence.charAt(1))) {
-								if (control)
-									newProduction += sentence.charAt(1);
-								sentence = sentence.substring(2);
-							} else {
-								sentence = sentence.substring(1);
+								newSentence += getVariable(Character.toString(sentence.charAt(i)), newSetOfRules);
 							}
 						} else {
-							// maiúsculo na segunda posição
-							// verifica se produção já existe
-							if (existsProduction(element.getLeftSide(),
-									sentence, g, newSetOfRules)) {
-								if (canInsert(newProduction)) {
-									newProduction += getVariable(sentence, g,
-											newSetOfRules);
-								}
-								Rule r = new Rule();
-								r.setLeftSide("T" + contInsertions);
-								r.setRightSide(insertRightRide(sentence,
-										contInsertions, newSetOfRules, g));
-								newSetOfRules.add(r);
-								if (sentence.length() == 2)
-									sentence += sentence.substring(2);
-								else
-									sentence += sentence.substring(1);
-								contInsertions = updateNumberOfInsertions(
-										newSetOfRules, contInsertions);
-							} else {
-								// se produção não existe
-								boolean control = false;
-								if (canInsert(newProduction)) {
-									newProduction += "T" + contInsertions;
-								}
-								Rule r = new Rule();
-								r.setLeftSide("T" + contInsertions);
-								r.setRightSide(insertRightRide(sentence,
-										contInsertions, newSetOfRules, g));
-								newSetOfRules.add(r);
-								contInsertions = updateNumberOfInsertions(
-										newSetOfRules, contInsertions);
-								if (Character.isDigit(sentence.charAt(1))) {
-									if (control)
-										newProduction += sentence.charAt(1);
-									sentence = sentence.substring(2);
-								} else {
-									sentence = sentence.substring(1);
-								}
-							}
+							newSentence += Character.toString(sentence.charAt(i));
 						}
 					}
+				} else {
+					Rule r = new Rule();
+					r.setLeftSide(element.getLeftSide());
+					r.setRightSide(element.getRightSide());
+					auxSetOfRules.add(r);
 				}
-				if (sentence.length() == 2) {
-					if (Character.isUpperCase(sentence.charAt(0))
-							&& Character.isUpperCase(sentence.charAt(1))) {
-						if (!existsProduction(element.getLeftSide(), sentence,
-								g, newSetOfRules)) {
-							if (canInsert(newProduction)) {
-								if (newProductionSize(newProduction) == 1) {
-									Rule auxRule = new Rule();
-									auxRule.setLeftSide("T" + contInsertions);
-									auxRule.setRightSide(sentence);
-									newSetOfRules.add(auxRule);
-									newProduction += "T" + contInsertions;
-									contInsertions = updateNumberOfInsertions(
-											newSetOfRules, contInsertions);
-								} else {
-									newProduction += sentence;
+				if (sentenceSize(newSentence) > 2) {
+					while (cont < newSentence.length()) {
+						if (Character.isAlphabetic(newSentence.charAt(cont))) {
+							if (changeCounter == 1) {
+								if (canInsert(newProduction)) {
+									newProduction += "T" + contInsertions;								
 								}
-							} else {
-								Rule lastRule = new Rule();
-								lastRule.setLeftSide("T" + contInsertions);
-								lastRule.setRightSide(sentence);
-								newSetOfRules.add(lastRule);
-								contInsertions = updateNumberOfInsertions(
-										newSetOfRules, contInsertions);
-							}
-						} else {
-							newProduction += sentence;}
-					} else if (Character.isUpperCase(sentence.charAt(0))
-							&& Character.isLowerCase(sentence.charAt(1))) {
-						String secondChar = sentence.substring(sentence
-								.length() - 1);
-						if (!existsProduction(element.getLeftSide(),
-								secondChar, g, newSetOfRules)) {
-							sentence = sentence.substring(0,
-									sentence.length() - 1)
-									+ "T"
-									+ contInsertions;
-							Rule lastRule = new Rule();
-							lastRule.setLeftSide("T" + contInsertions);
-							lastRule.setRightSide(secondChar);
-							newSetOfRules.add(lastRule);
-						} else {
-							sentence = sentence.substring(0,
-									sentence.length() - 1)
-									+ getVariable(secondChar, g, newSetOfRules);
-							if (!existsProduction(element.getLeftSide(), sentence, g, newSetOfRules)) {
+								String insertOnRightSide = splitSentence(cont, newSentence, contInsertions);
+								//newSentence = newSentence.substring(cont + 1);
+								newSentence = splitSentence(newSentence);
 								Rule r = new Rule();
 								r.setLeftSide("T" + contInsertions);
-								r.setRightSide(sentence);
+								r.setRightSide(insertOnRightSide);
 								newSetOfRules.add(r);
-							}
-						}
-						if (canInsert(newProduction)) {
-							if (newProductionSize(newProduction) == 1) {
-								if (existsProduction(element.getLeftSide(), sentence, g, newSetOfRules)) {
-									newProduction += getVariable(sentence, g, newSetOfRules);
-								} else {
-									newProduction += "T" + contInsertions;
-								}
-								//
-								//newProduction += "T" + contInsertions;
-								contInsertions = updateNumberOfInsertions(
-										newSetOfRules, contInsertions);
+								contInsertions = updateNumberOfInsertions(newSetOfRules, contInsertions);
+								changeCounter = 0;
+								cont = -1;
 							} else {
-								newProduction += sentence;
-							}
-						} else {
-							Rule auxRule = new Rule();
-							auxRule.setLeftSide("T" + contInsertions);
-							auxRule.setRightSide(sentence);
-							newSetOfRules.add(auxRule);
-							contInsertions = updateNumberOfInsertions(
-									newSetOfRules, contInsertions);
-						}
-						
-					} else if (Character.isLowerCase(sentence.charAt(0))
-							&& Character.isUpperCase(sentence.charAt(1))) {
-						if (!existsProduction(element.getLeftSide(),
-								Character.toString(sentence.charAt(0)), g,
-								newSetOfRules)) {
-							Rule auxRule = new Rule();
-							auxRule.setLeftSide("T" + (contInsertions + 1));
-							auxRule.setRightSide(Character.toString(sentence
-									.charAt(0)));
-							newSetOfRules.add(auxRule);
-							sentence = "T" + (contInsertions + 1)
-									+ sentence.substring(1);
-						} else {
-							sentence = getVariable(
-									Character.toString(sentence.charAt(0)), g,
-									newSetOfRules) + sentence.substring(1);
-						}
-						if (canInsert(newProduction)) {
-							if (newProductionSize(newProduction) == 1) {
-								if (!existsProduction(element.getLeftSide(), sentence, g, newSetOfRules)) {
-									Rule auxRule = new Rule();
-									auxRule.setLeftSide("T" + contInsertions);
-									auxRule.setRightSide(sentence);
-									newSetOfRules.add(auxRule);
-									newProduction += "T" + contInsertions;
-									contInsertions = updateNumberOfInsertions(
-										newSetOfRules, contInsertions);
-								} else {
-									newProduction += getVariable(sentence, g, newSetOfRules);
+								if (canInsert(newProduction)) {
+									newProduction += partialSentence(newSentence);
+									newSentence = splitSentence(newSentence);
 								}
-								
-							} else {
-								newProduction += sentence;
+								changeCounter++;
 							}
-						} else {
-							Rule auxRule = new Rule();
-							auxRule.setLeftSide("T" + contInsertions);
-							auxRule.setRightSide(sentence);
-							newSetOfRules.add(auxRule);
-							contInsertions = updateNumberOfInsertions(
-									newSetOfRules, contInsertions);
 						}
-					} else if (Character.isLowerCase(sentence.charAt(0))
-							&& Character.isLowerCase(sentence.charAt(1))) {
-						String secondChar;
-						if (!existsProduction(element.getLeftSide(),
-								Character.toString(sentence.charAt(0)), g,
-								newSetOfRules)) {
-							Rule auxRule = new Rule();
-							auxRule.setLeftSide("T" + contInsertions);
-							auxRule.setRightSide(Character.toString(sentence
-									.charAt(0)));
-							newSetOfRules.add(auxRule);
-							sentence = "T" + (contInsertions)
-									+ sentence.substring(1);
-							contInsertions = updateNumberOfInsertions(
-									newSetOfRules, contInsertions);
-							secondChar = Character.toString(sentence.charAt(2));
-						} else {
-							sentence = getVariable(
-									Character.toString(sentence.charAt(0)), g,
-									newSetOfRules) + sentence.substring(1);
-							secondChar = assignsChar(sentence);
-						}
-						if (!existsProduction(element.getLeftSide(),
-								secondChar, g, newSetOfRules)) {
-							Rule auxRule = new Rule();
-							auxRule.setLeftSide("T" + contInsertions);
-							auxRule.setRightSide(secondChar);
-							newSetOfRules.add(auxRule);
-							sentence = sentence.substring(0,
-									sentence.length() - 1)
-									+ "T"
-									+ contInsertions;
-							contInsertions = updateNumberOfInsertions(
-									newSetOfRules, contInsertions);
-						} else {
-							sentence = sentence.substring(0,
-									sentence.length() - 1)
-									+ getVariable(secondChar, g, newSetOfRules);
-						}
-						if (canInsert(newProduction)) {
-							if (newProductionSize(newProduction) == 1) {
-								Rule auxRule = new Rule();
-								auxRule.setLeftSide("T" + contInsertions);
-								auxRule.setRightSide(sentence);
-								newSetOfRules.add(auxRule);
-								newProduction += "T" + contInsertions;
-								contInsertions = updateNumberOfInsertions(
-										newSetOfRules, contInsertions);
-							} else
-								newProduction += sentence;
-						} else {
-							Rule auxRule = new Rule();
-							auxRule.setLeftSide("T" + contInsertions);
-							auxRule.setRightSide(sentence);
-							newSetOfRules.add(auxRule);
-							contInsertions = updateNumberOfInsertions(
-									newSetOfRules, contInsertions);
-						}
+						cont++;
 					}
-				} else if (sentence.length() == 1) {
-					if (canInsert(newProduction))
-						newProduction += sentence;
+					Rule r = new Rule();
+					r.setLeftSide(element.getLeftSide());
+					r.setRightSide(newProduction);
+					newSetOfRules.add(r);
+				} else  if (sentenceSize(newSentence) == 2){
+					Rule r = new Rule();
+					r.setLeftSide(element.getLeftSide());
+					r.setRightSide(newSentence);
+					newSetOfRules.add(r);
 				}
-				newProduction += " | ";
-			if (newProduction.charAt(newProduction.length() - 2) == '|') {
-				newProduction = newProduction.substring(0,
-						newProduction.length() - 2);
-				newProduction = newProduction.trim();
-			}
-			Rule r = new Rule();
-			r.setLeftSide(element.getLeftSide());
-			r.setRightSide(newProduction);
-			newSetOfRules.add(r);
 		}
-		g.setRule(newSetOfRules);
-		System.out.println();
-		for (Rule element : g.getRules())
-			System.out.println(element.getLeftSide() + "->" + element.getRightSide());
+		newSetOfRules.addAll(auxSetOfRules);
+		g.setRules(newSetOfRules);
 		return g;
+	}
+
+	private static String splitSentence(String newSentence) {
+		if (newSentence.charAt(0) != 'T') {
+			newSentence = newSentence.substring(1);
+		} else {
+			newSentence = newSentence.substring(1);
+			while (Character.isDigit(newSentence.charAt(0))) {
+				newSentence = newSentence.substring(1);
+			}				
+		}
+		return newSentence;
+	}
+
+	private static String splitSentence(int cont, String newSentence, int contInsertions) {
+		String aux = new String();
+		if (newProductionSize(newSentence) ==  2) {
+			aux =  newSentence;
+		} else {
+			aux = Character.toString(newSentence.charAt(0));
+			if (newSentence.charAt(0) == 'T') {
+				for (int i = 1; !Character.isAlphabetic(newSentence.charAt(i)); i++) {
+					aux += Character.toString(newSentence.charAt(i));
+				}
+			}			
+			aux += "T" + (contInsertions + 1);			
+		}
+		return aux;
+	}
+
+	private static String partialSentence(String sentence) {
+		String partial = new String();
+		if (sentence.charAt(0) == 'T') {
+			partial += "T";
+			for (int i =1; !Character.isAlphabetic(sentence.charAt(i)); i++)
+				partial += Character.toString(sentence.charAt(i));
+		} else {
+			partial = Character.toString(sentence.charAt(0));
+		}		
+		return partial;
 	}
 
 	private static int newProductionSize(String newProduction) {
 		int count = 0;
-		String[] aux = newProduction.split(" | ");
-		for (int i = 0; i < aux[aux.length - 1].length(); i++) {
-			if (Character.isLetter(aux[aux.length - 1].charAt(i)))
+		for (int i = 0; i < newProduction.length(); i++) {
+			if (Character.isLetter(newProduction.charAt(i)))
 				count++;
 		}
 		return count;
@@ -1180,7 +954,7 @@ public class GrammarParser {
 	private static Set<String>[][] fillOthersLines(Set<String>[][] x, Grammar g, int count, int line, int column, String word) {
 		while (count != 7) {
 			while (count + column <= word.length()) {
-				String firstCell = returnsAlphabeticSymbols(x[5][column]);
+				String firstCell = returnsAlphabeticSymbols(x[word.length()-1][column]);
 				String secondCell = returnsAlphabeticSymbols(x[line - 1][column + 1]);
 				
 				for (int counterOfFirstCell = 0; counterOfFirstCell < firstCell.length(); counterOfFirstCell++) { 
@@ -1195,7 +969,7 @@ public class GrammarParser {
 				}
 				
 				firstCell = returnsAlphabeticSymbols(x[line - 1][column]);						
-				secondCell = returnsAlphabeticSymbols(x[5][column + (count - 1)]);				
+				secondCell = returnsAlphabeticSymbols(x[word.length()-1][column + (count - 1)]);				
 				for (int counterOfFirstCell = 0; counterOfFirstCell < firstCell.length(); counterOfFirstCell++) { 
 					String sentence = new String();
 					sentence += Character.toString(firstCell.charAt(counterOfFirstCell)).trim();
