@@ -1,8 +1,10 @@
 package br.com.lfaplataform.vo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.io.IOException;
@@ -34,7 +36,7 @@ public class GrammarParser {
 			if (element != null)
 				Variables.add(element);
 		}
-
+		
 		return Variables;
 	}
 
@@ -84,7 +86,12 @@ public class GrammarParser {
 	}
 
 	public static String extractInitialSymbolFromFull(String txt) {
-		return Character.toString(txt.charAt(0));
+		String initialSymbol = new String();
+		for (int i = 0; txt.charAt(i) != ' ' && txt.charAt(i) != '-'; i++) {
+			initialSymbol += Character.toString(txt.charAt(i));
+		}
+		initialSymbol = initialSymbol.trim();
+		return initialSymbol;
 	}
 
 	public static boolean compareInitialSymbolWithParameter(
@@ -140,7 +147,7 @@ public class GrammarParser {
 
 	// retira símbolo inicial recursivo
 	// retorna gramática sem símbolo inicial recursivo
-	public static Grammar getGrammarWithInitialSymbolNotRecursive(Grammar g) {
+	public static Grammar getGrammarWithInitialSymbolNotRecursive(final Grammar g) {
 		String initialSymbol = g.getInitialSymbol();
 		boolean insert = false;
 		for (Rule element : g.getRules()) {
@@ -204,7 +211,7 @@ public class GrammarParser {
 	public static String permutation(String rightSide, Set<String> nullableVariables, int i, String totalSentence) {
 		String newSentence = new String();
 		String aux = new String();
-		if (nullableVariables.contains(Character.toString(rightSide.charAt(i)))) {
+		if (nullableVariables.contains(Character.toString(rightSide.charAt(i))) && (rightSide.length() != 1)) {
 			for (int j = 0; j < rightSide.length(); j++) {
 				if (j != i)
 					aux += Character.toString(rightSide.charAt(j));
@@ -252,7 +259,7 @@ public class GrammarParser {
 
 	// remove símbolos terminais de regras
 	// retorna gramática essencialmente não-contrátil
-	public static Grammar getGrammarEssentiallyNoncontracting(Grammar g) {
+	public static Grammar getGrammarEssentiallyNoncontracting(final Grammar g) {
 		// conjunto que irá armazenar o conjunto de variáveis anuláveis
 		Set<String> nullableVariables = new HashSet<>();
 		Set<String> nullableVariablesAux = new HashSet<>();
@@ -312,10 +319,12 @@ public class GrammarParser {
 				teste2.insertRule(element.getLeftSide(), element.getRightSide());
 			}
 		}
-		
 		if (nullableVariables.contains(g.getInitialSymbol())) {
 			teste2.insertRule(g.getInitialSymbol(), ".");
 			g.setRules(teste2.getRules());
+		}
+		for (Rule element : g.getRules()) {
+			System.out.println(element.getLeftSide()+" -> " + element.getRightSide());
 		}
 		return g;
 	}
@@ -371,10 +380,19 @@ public class GrammarParser {
 				if (foundChainRules(aux[i].charAt(0), s, noChainRules)) {
 					// se a regra da cadeia puder ser selecionada imediatamente
 					s = replaceChainRules(aux[i].charAt(0), s, noChainRules);
+					//chainRules.remove(returnIndex(chainRules, r.getLeftSide()));					
+				} else if (r.getLeftSide().equals(Character.toString(aux[i].charAt(0)))) {
+					s += " ";
+				} else  {
+					s += aux[i] + " ";
 				}
 			} else {
 				s += aux[i] + " ";
 			}
+		}
+		String[] testChain = s.split(" | ");
+		if (!isChain(testChain)) {
+			chainRules.remove(returnIndex(chainRules, r.getLeftSide()));
 		}
 		r.setRightSide(s);
 	}
@@ -419,7 +437,6 @@ public class GrammarParser {
 		rulesTogether = joinRules(gc, rulesTogether);
 		// padronizando a gramática
 		for (Rule element : rulesTogether) {
-			System.out.println(element.getRightSide());
 			String[] auxRightSide = element.getRightSide().split(" | ");
 			for (int i = 0; i < auxRightSide.length; i++) {
 				auxRightSide[i] = auxRightSide[i].trim();
@@ -446,20 +463,14 @@ public class GrammarParser {
 					aux[j] = aux[j].trim();
 				}
 				r.setLeftSide(chainRules.get(i).getLeftSide());
+				r.setRightSide("");
 				searchChainRules(aux, noChainRules, chainRules, r);
-				System.out.println(r.getLeftSide() + " -> " + r.getRightSide());
-				chainRules.remove(returnIndex(chainRules, r.getLeftSide()));
-				for (int j = 0; j < chainRules.size(); j++)
-					System.out.println(chainRules.get(j).getLeftSide() + " -> "
-							+ chainRules.get(j).getRightSide());
-				System.out.println(chainRules.size());
 			}
-			noChainRules.add(r);
+			if (thereIsNoChainRules(r)) {
+				noChainRules.add(r);
+			}
+			
 		}
-		System.out.println("--------------------");
-		for (int j = 0; j < noChainRules.size(); j++)
-			System.out.println(noChainRules.get(j).getLeftSide() + " -> "
-					+ noChainRules.get(j).getRightSide());
 		// utilizando gramática auxiliar para armazenar novas regras
 		Grammar g2 = new Grammar();
 		// copia elementos do ArrayList na gramática auxiliar
@@ -468,19 +479,26 @@ public class GrammarParser {
 			for (int j = 0; j < rulesOnTheRightSide.length; j++) {
 				rulesOnTheRightSide[j] = rulesOnTheRightSide[j].trim();
 				if (!rulesOnTheRightSide[j].equals("|") && (!rulesOnTheRightSide[j].equals(""))) {
-					System.out.println(rulesOnTheRightSide[j]);
 					g2.insertRule(noChainRules.get(i).getLeftSide(), rulesOnTheRightSide[j]);
 			
 				}
 			}
 		}
 		// copia gramática auxiliar na gramática principal
-		gc.setRules(g2.getRules());
-		for (Rule element : gc.getRules()) {
-			System.out.println(element.getLeftSide() + " -> "
-					+ element.getRightSide());
-		}
+		gc.setRules(g2.getRules());	
 		return gc;
+	}
+
+	private static boolean thereIsNoChainRules(Rule r) {
+		boolean test = true;
+		String[] aux = r.getRightSide().split(" | ");
+		for (int i = 0; i < aux.length; i++) {
+			aux[i] = aux[i].trim();
+			if (aux[i].length() == 1 && Character.isUpperCase(aux[i].charAt(0))) {
+				test = false;
+			}
+		}
+		return test;
 	}
 
 	// atualiza as regras da gramática após rodar algoritmos de remoção
@@ -779,11 +797,18 @@ public class GrammarParser {
 	
 	public static Grammar FNC(Grammar g) {
 		
-		g = GrammarParser.getGrammarWithInitialSymbolNotRecursive(g);
+		g = GrammarParser.getGrammarWithInitialSymbolNotRecursive(g);		
 		g = GrammarParser.getGrammarEssentiallyNoncontracting(g);
 		g = GrammarParser.getGrammarWithoutChainRules(g);
+		System.out.println("----------------------------------");
+		for (Rule element : g.getRules()) {
+			System.out.println(element.getLeftSide() + "->" + element.getRightSide());
+		}
+		//continuar aqui :)
 		g = GrammarParser.getGrammarWithoutNoTerm(g);
 		g = GrammarParser.getGrammarWithoutNoReach(g);
+		
+		
 		
 		
 		Set<Rule> newSetOfRules = new HashSet<>();
@@ -919,6 +944,59 @@ public class GrammarParser {
 			result = sentence.substring(1);
 		return result;
 	}
+	
+	//remoção de recursão à esquerda
+	public static Grammar removingLeftRecursion(final Grammar g) {
+		Grammar gc = (Grammar) g.clone();
+		
+		//primeira coisa: verificar quais variáveis possuem recursão à esquerda
+		Set<String> haveRecursion = new HashSet<String>();
+		for (Rule element : gc.getRules()) {
+			if (element.getLeftSide().equals(Character.toString(element.getRightSide().charAt(0)))) {
+				haveRecursion.add(element.getLeftSide());
+			}			
+		}
+		
+		//estabelece relacao entre variável que gera recursão e a variável que irá resolver esta solução
+		Map<String, String> variablesMapped = new HashMap<String, String>();
+		int counter = 1;
+		for (String element : haveRecursion) {
+			if (!variablesMapped.containsKey(element)) {
+				variablesMapped.put(element, "Z" + counter);
+				counter++;
+			}
+		}
+		
+		//já é posśivel saber quem possui recursão e onde ela está, sendo possível removê-la
+		Set<Rule> newSetOfRules = new HashSet<Rule>();
+		for (Rule element : gc.getRules()) {
+			if (variablesMapped.containsKey(element.getLeftSide())) {
+				if (element.getLeftSide().equals(Character.toString(element.getRightSide().charAt(0)))) {
+					//recursão encontrada
+					Rule r = new Rule();
+					r.setLeftSide(variablesMapped.get(element.getLeftSide()));
+					r.setRightSide(element.getRightSide().substring(1) + variablesMapped.get(element.getLeftSide()));
+					newSetOfRules.add(r);
+				} else {
+					//sem recursão, mas tratamento é necessário
+					Rule r = new Rule();
+					r.setLeftSide(element.getLeftSide());
+					r.setRightSide(element.getRightSide());
+					newSetOfRules.add(r);
+					r.setRightSide(element.getLeftSide() + variablesMapped.get(element.getLeftSide()));
+					newSetOfRules.add(r);
+				}				
+			} else {
+				//variável não produz recursão à esquerda
+				newSetOfRules.add(element);
+			}			
+		}
+		
+		//seta as regras alteradas na gramática clonada 
+		gc.setRules(newSetOfRules);
+		return gc;
+	}
+	
 
 	// ALGORITMO DE RECONHECIMENTO CYK
 	public static Set<String>[][] CYK(Grammar g, String word) {

@@ -59,6 +59,7 @@ public class Grammar implements Cloneable {
 
 		// assigns variables
 		this.variables = GrammarParser.extractVariablesFromFull(txt);
+		this.variables.add(initialSymbol);
 
 		// assigns terminals
 		this.terminals = GrammarParser.extractTerminalsFromFull(txt);
