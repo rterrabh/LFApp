@@ -254,6 +254,9 @@ public class GrammarServlet extends HttpServlet {
 				case "Forma Normal de Chomsky":
 					g = GrammarParser.FNC(g);
 					break;
+				case "Remoção de recursão à esquerda":
+					g = GrammarParser.removingLeftRecursion(g);
+					break;
 				case "CYK":
 					String word = req.getParameter("word");
 					Set<String>[][] CYK = GrammarParser.CYK(g, word);

@@ -148,9 +148,11 @@ public class GrammarParser {
 	// retira símbolo inicial recursivo
 	// retorna gramática sem símbolo inicial recursivo
 	public static Grammar getGrammarWithInitialSymbolNotRecursive(final Grammar g) {
-		String initialSymbol = g.getInitialSymbol();
+		Grammar gc = (Grammar) g.clone();
+		
+		String initialSymbol = gc.getInitialSymbol();
 		boolean insert = false;
-		for (Rule element : g.getRules()) {
+		for (Rule element : gc.getRules()) {
 			if (element.getLeftSide().equals(initialSymbol)) {
 				if (element.getRightSide().contains(initialSymbol)) {
 					insert = true;
@@ -158,12 +160,14 @@ public class GrammarParser {
 			}
 		}
 		if (insert == true) {
-			g.insertRule(initialSymbol + "'", initialSymbol);
-			g.setInitialSymbol(initialSymbol + "'");
+			gc.insertRule(initialSymbol + "'", initialSymbol);
+			gc.setInitialSymbol(initialSymbol + "'");
 		}
 		
-		g.insertVariable(g.getInitialSymbol());
-		return g;
+		gc.insertVariable(gc.getInitialSymbol());
+		System.out.println(gc.getInitialSymbol());
+		System.out.println(gc.getVariables());
+		return gc;
 	}
 
 	public static String searchVariablesOnRules(String element,
@@ -260,20 +264,23 @@ public class GrammarParser {
 	// remove símbolos terminais de regras
 	// retorna gramática essencialmente não-contrátil
 	public static Grammar getGrammarEssentiallyNoncontracting(final Grammar g) {
+		
+		Grammar gc = (Grammar) g.clone();
+		
 		// conjunto que irá armazenar o conjunto de variáveis anuláveis
 		Set<String> nullableVariables = new HashSet<>();
 		Set<String> nullableVariablesAux = new HashSet<>();
 		// conjunto que irá armazenar o conjunto de próximas variáveis
 		Set<String> prev = new HashSet<>();
 		// percorre todas as regras procurando alguma variável que produza vazio
-		for (Rule element : g.getRules()) {
+		for (Rule element : gc.getRules()) {
 			if (element.getRightSide().contains(Character.toString('.')))
 				nullableVariables.add(element.getLeftSide());
 		}
 		// calcula conjunto de variáveis anuláveis
 		do {
 			prev.addAll(nullableVariables);
-			for (Rule element : g.getRules()) {
+			for (Rule element : gc.getRules()) {
 				String containsVariables = searchVariablesOnRules(
 						element.getRightSide(), nullableVariables);
 				if (searchVariables(containsVariables, prev)) {
@@ -285,22 +292,24 @@ public class GrammarParser {
 		// realiza comparações
 		// procura vazio
 		Grammar teste = new Grammar();
-		for (Rule element : g.getRules()) {
+		for (Rule element : gc.getRules()) {
 			// verifica se variável está no conjunto anulável e se
 			// contém o símbolo lâmbda
 			if (nullableVariablesAux.contains(element.getLeftSide())
 					&& element.getRightSide().contains(".")) {
 				String aux = element.getRightSide();
-				aux = replaceEmpty(aux, element);
+				if (!element.getLeftSide().equals(gc.getInitialSymbol())) {
+					aux = replaceEmpty(aux, element);
+				}
 				teste.insertRule(element.getLeftSide(), aux);
 				nullableVariablesAux.remove(element.getLeftSide());
 			} else {
 				teste.insertRule(element.getLeftSide(), element.getRightSide());
 			}
 		}
-		g.setRules(teste.getRules());
+		gc.setRules(teste.getRules());
 		Grammar teste2 = new Grammar();
-		for (Rule element : g.getRules()) {
+		for (Rule element : gc.getRules()) {
 			if (nullableVariables.contains(element.getLeftSide())) {
 				// preciso trabalhar com variáveis do lado direito
 				String aux = element.getRightSide() + " | ";
@@ -319,14 +328,14 @@ public class GrammarParser {
 				teste2.insertRule(element.getLeftSide(), element.getRightSide());
 			}
 		}
-		if (nullableVariables.contains(g.getInitialSymbol())) {
-			teste2.insertRule(g.getInitialSymbol(), ".");
-			g.setRules(teste2.getRules());
+		if (nullableVariables.contains(gc.getInitialSymbol())) {
+			teste2.insertRule(gc.getInitialSymbol(), ".");
+			gc.setRules(teste2.getRules());
 		}
-		for (Rule element : g.getRules()) {
+		for (Rule element : gc.getRules()) {
 			System.out.println(element.getLeftSide()+" -> " + element.getRightSide());
 		}
-		return g;
+		return gc;
 	}
 
 	// verifica se a sentença possui regra da cadeia
@@ -428,8 +437,15 @@ public class GrammarParser {
 	public static Grammar getGrammarWithoutChainRules(final Grammar g) {
 		// primeiro passo, dividir as regras em dois conjuntos: possui chain
 		// rules
-		// e não possui chain rules
+		// e não possui chain rules		
 		Grammar gc = (Grammar) g.clone();
+		
+		System.out.println("----------------------------------");
+		System.out.println(gc.getInitialSymbol());
+		for (Rule element : gc.getRules()) {
+			System.out.println(element.getLeftSide() + "->" + element.getRightSide());
+		}
+		System.out.println("---------------------------------");
 		
 		ArrayList<Rule> noChainRules = new ArrayList<Rule>();
 		ArrayList<Rule> chainRules = new ArrayList<Rule>();
@@ -652,14 +668,20 @@ public class GrammarParser {
 				}
 			}
 		} while (!reach.equals(prev));
+		System.out.println("______________");
 		Grammar aux = new Grammar();
+		System.out.println("------------------------");
 		aux.setVariables(prev);
+		System.out.println(aux.getVariables());
 		aux.setInitialSymbol(g.getInitialSymbol());
+		System.out.println(aux.getInitialSymbol());
 		aux.setRules(updateRules(prev, g));
 		aux.setTerminals(updateTerminals(aux));
+		System.out.println(aux.getTerminals());
 		g.setVariables(aux.getVariables());
 		g.setTerminals(aux.getTerminals());
 		g.setRules(aux.getRules());
+		
 		return aux;
 	}
 
@@ -797,19 +819,12 @@ public class GrammarParser {
 	
 	public static Grammar FNC(Grammar g) {
 		
-		g = GrammarParser.getGrammarWithInitialSymbolNotRecursive(g);		
-		g = GrammarParser.getGrammarEssentiallyNoncontracting(g);
+		g = GrammarParser.getGrammarWithInitialSymbolNotRecursive(g);	// ok
+		g = GrammarParser.getGrammarEssentiallyNoncontracting(g); // ok
 		g = GrammarParser.getGrammarWithoutChainRules(g);
-		System.out.println("----------------------------------");
-		for (Rule element : g.getRules()) {
-			System.out.println(element.getLeftSide() + "->" + element.getRightSide());
-		}
-		//continuar aqui :)
-		g = GrammarParser.getGrammarWithoutNoTerm(g);
+		g = GrammarParser.getGrammarWithoutNoTerm(g); // ok
 		g = GrammarParser.getGrammarWithoutNoReach(g);
-		
-		
-		
+			
 		
 		Set<Rule> newSetOfRules = new HashSet<>();
 		Set<Rule> auxSetOfRules = new HashSet<>();
@@ -973,18 +988,24 @@ public class GrammarParser {
 			if (variablesMapped.containsKey(element.getLeftSide())) {
 				if (element.getLeftSide().equals(Character.toString(element.getRightSide().charAt(0)))) {
 					//recursão encontrada
-					Rule r = new Rule();
-					r.setLeftSide(variablesMapped.get(element.getLeftSide()));
-					r.setRightSide(element.getRightSide().substring(1) + variablesMapped.get(element.getLeftSide()));
-					newSetOfRules.add(r);
+					Rule firstProduction = new Rule();
+					firstProduction.setLeftSide(variablesMapped.get(element.getLeftSide()));
+					firstProduction.setRightSide(element.getRightSide().substring(1) + variablesMapped.get(element.getLeftSide()));
+					newSetOfRules.add(firstProduction);
+					Rule secondProduction = new Rule();
+					secondProduction.setLeftSide(firstProduction.getLeftSide());
+					secondProduction.setRightSide(element.getRightSide().substring(1));
+					newSetOfRules.add(secondProduction);
 				} else {
 					//sem recursão, mas tratamento é necessário
-					Rule r = new Rule();
-					r.setLeftSide(element.getLeftSide());
-					r.setRightSide(element.getRightSide());
-					newSetOfRules.add(r);
-					r.setRightSide(element.getLeftSide() + variablesMapped.get(element.getLeftSide()));
-					newSetOfRules.add(r);
+					Rule firstProduction = new Rule();
+					firstProduction.setLeftSide(element.getLeftSide());
+					firstProduction.setRightSide(element.getRightSide());
+					newSetOfRules.add(firstProduction);
+					Rule secondProduction = new Rule();
+					secondProduction.setLeftSide(firstProduction.getLeftSide());
+					secondProduction.setRightSide(element.getRightSide() + variablesMapped.get(element.getLeftSide()));
+					newSetOfRules.add(secondProduction);
 				}				
 			} else {
 				//variável não produz recursão à esquerda

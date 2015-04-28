@@ -133,8 +133,8 @@ public class Grammar03Test extends TestCase {
 		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getVariables(), newG.getVariables()));
 	}
 	
-	@Test
-	public void testFNC() {
+	//@Test
+	/*public void testFNC() {
 		Grammar newG = GrammarParser.FNC(this.g);
 		
 		String[] expectedVariables = new String[] {"S", "A", "B", "C"};
@@ -158,9 +158,9 @@ public class Grammar03Test extends TestCase {
 		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getTerminals(), newG.getTerminals()));
 		
 		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getVariables(), newG.getVariables()));	
-	}
+	}*/
 	
-	@Test
+	/*@Test
 	public void testCYK() {
 		Set<String>[][] matrix = GrammarParser.CYK(g, "aaabbbb");
 		
@@ -174,7 +174,7 @@ public class Grammar03Test extends TestCase {
 
 		assertTrue(topVariables.isEmpty());
 		
-	}
+	}*/
 	
 	
 
