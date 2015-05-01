@@ -266,10 +266,14 @@ public class GrammarServlet extends HttpServlet {
 					req.getRequestDispatcher("cyk_out.jsp").forward(req, resp);
 					break;
 			}
-			
-			for (Rule element : g.getRules()) {
-				out.print(element.getLeftSide() + "->" + element.getRightSide()+ "<br/>");
+			for (String variable : g.getVariables()) {
+				for (Rule element : g.getRules()) {
+					if (element.getLeftSide().equals(variable)) {
+						out.print(element.getLeftSide() + "->" + element.getRightSide()+ "<br/>");
+					}
+				}				
 			}
+			
 			/*
 			out.println("<html><body>");
 

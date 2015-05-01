@@ -200,15 +200,16 @@ public class GrammarParser {
 		return found;
 	}
 
-	public static String replaceEmpty(String aux, Rule element) {
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append(aux);
-		for (int i = 0; i < stringBuilder.length(); i++) {
-			if (stringBuilder.charAt(i) == '.')
-				stringBuilder.setCharAt(i,
-						Character.toLowerCase(element.getLeftSide().charAt(0)));
+	public static String replaceEmpty(Rule element, Grammar gc) {
+		String aux = element.getRightSide();
+		System.out.println(gc.getTerminals());
+		if (!element.getLeftSide().equals(gc.getInitialSymbol())) {
+			if (gc.getTerminals().contains(Character.toString(Character.toLowerCase(element.getLeftSide().charAt(0))))) {
+				aux = Character.toString(Character.toLowerCase(element.getLeftSide().charAt(0)));
+			} else {
+				aux = "";
+			}
 		}
-		aux = stringBuilder.toString();
 		return aux;
 	}
 
@@ -239,6 +240,7 @@ public class GrammarParser {
 		}		
 		return newSentence;
 	}
+		
 
 	private static boolean existingProduction(String newSentence,
 			String temporarySentence) {
@@ -259,262 +261,132 @@ public class GrammarParser {
 				newSentence += Character.toString(temporarySentence.charAt(i));
 		}
 		return newSentence;
-	}
-
+	}	
+	
 	// remove símbolos terminais de regras
 	// retorna gramática essencialmente não-contrátil
 	public static Grammar getGrammarEssentiallyNoncontracting(final Grammar g) {
-		
 		Grammar gc = (Grammar) g.clone();
+		Set<String> nullable = new HashSet<String>();
+		Set<Rule> setOfRules = new HashSet<Rule>();
 		
-		// conjunto que irá armazenar o conjunto de variáveis anuláveis
-		Set<String> nullableVariables = new HashSet<>();
-		Set<String> nullableVariablesAux = new HashSet<>();
-		// conjunto que irá armazenar o conjunto de próximas variáveis
-		Set<String> prev = new HashSet<>();
-		// percorre todas as regras procurando alguma variável que produza vazio
+		// nullable = nullable U A -> . |  A E V 
 		for (Rule element : gc.getRules()) {
-			if (element.getRightSide().contains(Character.toString('.')))
-				nullableVariables.add(element.getLeftSide());
+			if (element.getRightSide().equals(".")) {
+				nullable.add(element.getLeftSide());
+				String newRightSide = replaceEmpty(element, gc);
+				if (!newRightSide.equals("")) {
+					Rule r = new Rule(element.getLeftSide(), newRightSide );
+					setOfRules.add(r);
+				}
+			} else {
+				Rule r = new Rule(element.getLeftSide(), element.getRightSide());
+				setOfRules.add(r);
+			}
 		}
-		// calcula conjunto de variáveis anuláveis
+		
+		//gera conjuntos de variáveis anuláveis
+		Set<String> prev = new HashSet<String>();
 		do {
-			prev.addAll(nullableVariables);
+			prev.addAll(nullable);
 			for (Rule element : gc.getRules()) {
-				String containsVariables = searchVariablesOnRules(
-						element.getRightSide(), nullableVariables);
-				if (searchVariables(containsVariables, prev)) {
-					nullableVariables.add(element.getLeftSide());
+				if (prevContainsVariable(prev, element.getRightSide())) {
+					nullable.add(element.getLeftSide());
 				}
 			}
-		} while (!nullableVariables.equals(prev));
-		nullableVariablesAux.addAll(nullableVariables);
-		// realiza comparações
-		// procura vazio
-		Grammar teste = new Grammar();
-		for (Rule element : gc.getRules()) {
-			// verifica se variável está no conjunto anulável e se
-			// contém o símbolo lâmbda
-			if (nullableVariablesAux.contains(element.getLeftSide())
-					&& element.getRightSide().contains(".")) {
-				String aux = element.getRightSide();
-				if (!element.getLeftSide().equals(gc.getInitialSymbol())) {
-					aux = replaceEmpty(aux, element);
-				}
-				teste.insertRule(element.getLeftSide(), aux);
-				nullableVariablesAux.remove(element.getLeftSide());
-			} else {
-				teste.insertRule(element.getLeftSide(), element.getRightSide());
-			}
-		}
-		gc.setRules(teste.getRules());
-		Grammar teste2 = new Grammar();
-		for (Rule element : gc.getRules()) {
-			if (nullableVariables.contains(element.getLeftSide())) {
-				// preciso trabalhar com variáveis do lado direito
-				String aux = element.getRightSide() + " | ";
-				int i = 0;
-				while (i != element.getRightSide().length()) {
-					aux += permutation(element.getRightSide(), nullableVariables, i, aux);
+		} while (!prev.equals(nullable));		
+		Set<Rule> newSetOfRules = new HashSet<Rule>();		
+		for (Rule element : setOfRules) {
+			String aux = element.getRightSide() + " | ";				
+			int i = 0;
+			while (i != element.getRightSide().length()) {
+					aux += permutation(element.getRightSide(), nullable, i, aux);
 					i++;
-				}
-				String[] productionsOnRightSide = aux.split(" | ");
-				for (i = 0; i < productionsOnRightSide.length; i++ ) {
-					productionsOnRightSide[i] = productionsOnRightSide[i].trim();
-					if (!productionsOnRightSide[i].equals("|"))
-						teste2.insertRule(element.getLeftSide(), productionsOnRightSide[i]);
-				}
-			} else {
-				teste2.insertRule(element.getLeftSide(), element.getRightSide());
+			}
+			String[] productionsOnRightSide = aux.split(" | ");
+			for (i = 0; i < productionsOnRightSide.length; i++ ) {
+				productionsOnRightSide[i] = productionsOnRightSide[i].trim();
+				if (!productionsOnRightSide[i].equals("|")) {
+					Rule r = new Rule(element.getLeftSide(), productionsOnRightSide[i]);
+					newSetOfRules.add(r);
+				} 
 			}
 		}
-		if (nullableVariables.contains(gc.getInitialSymbol())) {
-			teste2.insertRule(gc.getInitialSymbol(), ".");
-			gc.setRules(teste2.getRules());
+		
+		if (nullable.contains(gc.getInitialSymbol())) {
+			Rule r = new Rule(gc.getInitialSymbol(), ".");
+			newSetOfRules.add(r);
 		}
-		for (Rule element : gc.getRules()) {
-			System.out.println(element.getLeftSide()+" -> " + element.getRightSide());
-		}
+		gc.setRules(newSetOfRules);		
 		return gc;
-	}
-
-	// verifica se a sentença possui regra da cadeia
-	public static boolean isChain(String[] auxRightSide) {
-		boolean chain = false;
-		for (int i = 0; i < auxRightSide.length && chain == false; i++) {
-			if (auxRightSide[i].length() == 1 && !auxRightSide[i].contains("|")) {
-				if (Character.isUpperCase(auxRightSide[i].charAt(0)))
-					chain = true;
-			}
-		}
-		return chain;
-	}
-
-	public static boolean foundChainRules(char caracter, String s,
-			ArrayList<Rule> noChainRules) {
-		// pesquisa se o caracter está no conjunto direto
-		boolean found = false;
-		for (int i = 0; i < noChainRules.size() && found == false; i++) {
-			if (noChainRules.get(i).getLeftSide()
-					.equals(Character.toString(caracter))) {
-				s += noChainRules.get(i).getRightSide() + " ";
-				found = true;
-			}
-		}
-		return found;
-	}
-
-	public static String replaceChainRules(char caracter, String s,
-			ArrayList<Rule> noChainRules) {
-		boolean found = false;
-		for (int i = 0; i < noChainRules.size() && found == false; i++) {
-			if (noChainRules.get(i).getLeftSide()
-					.equals(Character.toString(caracter))) {
-				s += noChainRules.get(i).getRightSide() + " ";
-				found = true;
-			}
-		}
-		return s;
-	}
-
-	public static void searchChainRules(String[] aux,
-			ArrayList<Rule> noChainRules, ArrayList<Rule> chainRules, Rule r) {
-		String s = new String();
-		String leftSide = new String();
-		for (int i = 0; i < aux.length; i++) {
-			if (aux[i].length() == 1 && !aux[i].contains("|")
-					&& Character.isUpperCase(aux[i].charAt(0))) {
-				// primeiramente deve-se verificar se a regra da cadeia pode ser
-				// resolvida diretamente
-				if (foundChainRules(aux[i].charAt(0), s, noChainRules)) {
-					// se a regra da cadeia puder ser selecionada imediatamente
-					s = replaceChainRules(aux[i].charAt(0), s, noChainRules);
-					//chainRules.remove(returnIndex(chainRules, r.getLeftSide()));					
-				} else if (r.getLeftSide().equals(Character.toString(aux[i].charAt(0)))) {
-					s += " ";
-				} else  {
-					s += aux[i] + " ";
-				}
-			} else {
-				s += aux[i] + " ";
-			}
-		}
-		String[] testChain = s.split(" | ");
-		if (!isChain(testChain)) {
-			chainRules.remove(returnIndex(chainRules, r.getLeftSide()));
-		}
-		r.setRightSide(s);
-	}
-
-	public static int returnIndex(ArrayList<Rule> chainRules, String leftside) {
-		int i = 0;
-		boolean aux = false;
-		for (; i < chainRules.size() && aux == false; i++) {
-			if (chainRules.get(i).getLeftSide().equals(leftside))
-				aux = true;
-		}
-		return i - 1;
 	}
 	
-	//junta as regras para verificar se existe regras da cadeia
-	public static Set<Rule> joinRules(Grammar g, Set<Rule> rulesTogheter) {
-		for (String variable : g.getVariables()) {
-			Rule r = new Rule();
-			String newRule = new String();
-			for (Rule element : g.getRules()) {
-				if (variable.equals(element.getLeftSide()))
-					newRule += element.getRightSide() + " | ";
-			}
-			r.setLeftSide(variable);
-			r.setRightSide(newRule);
-			rulesTogheter.add(r);
-		}
-		return rulesTogheter;
-	}
-
-	// remove regras da cadeia
-	// retorna gramática sem regras da cadeia
-	public static Grammar getGrammarWithoutChainRules(final Grammar g) {
-		// primeiro passo, dividir as regras em dois conjuntos: possui chain
-		// rules
-		// e não possui chain rules		
-		Grammar gc = (Grammar) g.clone();
-		
-		System.out.println("----------------------------------");
-		System.out.println(gc.getInitialSymbol());
-		for (Rule element : gc.getRules()) {
-			System.out.println(element.getLeftSide() + "->" + element.getRightSide());
-		}
-		System.out.println("---------------------------------");
-		
-		ArrayList<Rule> noChainRules = new ArrayList<Rule>();
-		ArrayList<Rule> chainRules = new ArrayList<Rule>();
-		Set<Rule> rulesTogether = new HashSet<Rule>();
-		rulesTogether = joinRules(gc, rulesTogether);
-		// padronizando a gramática
-		for (Rule element : rulesTogether) {
-			String[] auxRightSide = element.getRightSide().split(" | ");
-			for (int i = 0; i < auxRightSide.length; i++) {
-				auxRightSide[i] = auxRightSide[i].trim();
-			}
-			if (isChain(auxRightSide)) {
-				Rule r = new Rule();
-				r.setLeftSide(element.getLeftSide());
-				r.setRightSide(element.getRightSide());
-				chainRules.add(r);
-			} else {
-				Rule r = new Rule();
-				r.setLeftSide(element.getLeftSide());
-				r.setRightSide(element.getRightSide());
-				noChainRules.add(r);
-			}
-		}
-		// enquanto houver chain rules
-		while (chainRules.size() != 0) {
-			System.out.println(chainRules.size());
-			Rule r = new Rule();
-			for (int i = 0; i < chainRules.size(); i++) {
-				String[] aux = chainRules.get(i).getRightSide().split(" | ");
-				for (int j = 0; j < aux.length; j++) {
-					aux[j] = aux[j].trim();
-				}
-				r.setLeftSide(chainRules.get(i).getLeftSide());
-				r.setRightSide("");
-				searchChainRules(aux, noChainRules, chainRules, r);
-			}
-			if (thereIsNoChainRules(r)) {
-				noChainRules.add(r);
-			}
-			
-		}
-		// utilizando gramática auxiliar para armazenar novas regras
-		Grammar g2 = new Grammar();
-		// copia elementos do ArrayList na gramática auxiliar
-		for (int i = 0; i < noChainRules.size(); i++) {
-			String[] rulesOnTheRightSide = noChainRules.get(i).getRightSide().split(" | ");
-			for (int j = 0; j < rulesOnTheRightSide.length; j++) {
-				rulesOnTheRightSide[j] = rulesOnTheRightSide[j].trim();
-				if (!rulesOnTheRightSide[j].equals("|") && (!rulesOnTheRightSide[j].equals(""))) {
-					g2.insertRule(noChainRules.get(i).getLeftSide(), rulesOnTheRightSide[j]);
-			
-				}
-			}
-		}
-		// copia gramática auxiliar na gramática principal
-		gc.setRules(g2.getRules());	
-		return gc;
-	}
-
-	private static boolean thereIsNoChainRules(Rule r) {
+	public static boolean prevContainsVariable(Set<String> prev, String element) {
 		boolean test = true;
-		String[] aux = r.getRightSide().split(" | ");
-		for (int i = 0; i < aux.length; i++) {
-			aux[i] = aux[i].trim();
-			if (aux[i].length() == 1 && Character.isUpperCase(aux[i].charAt(0))) {
+		for (int i = 0; i < element.length() && test == true; i++) {
+			if (!Character.isUpperCase(element.charAt(i)) || !prev.contains(Character.toString(element.charAt(i)))) {
 				test = false;
 			}
 		}
 		return test;
+	}
+
+	// remove regras da cadeia
+	// retorna gramática sem regras da cadeia
+	
+	public static Grammar getGrammarWithoutChainRules(final Grammar g) {
+		Grammar gc = (Grammar) g.clone();
+		
+		//primeiramente, deve-se construir os subconjuntos
+		Map<String, Set<String>> setOfChains = new HashMap<String, Set<String>>();
+		for (String variable : gc.getVariables()) {
+			// conjunto que representa o chain de determinada variável
+			Set<String> chain = new HashSet<String>();
+			Set<String> prev = new HashSet<String>();
+			Set<String> New = new HashSet<String>();
+			chain.add(variable);
+			do {
+				New = chainMinusPrev(chain, prev);
+				prev.addAll(chain);
+				for (String variableInNew : New) {
+					for (Rule element : gc.getRules()) {
+						if (variableInNew.equals(element.getLeftSide()) && (element.getRightSide().length() == 1 && Character.isUpperCase(element.getRightSide().charAt(0)))) {
+							chain.add(element.getRightSide());
+						}
+					}
+				}
+			} while (!chain.equals(prev));
+			setOfChains.put(variable, chain);
+		}
+						
+		//iterações sobre os conjuntos de chains
+		Set<Rule> newSetOfRules = new HashSet<Rule>();
+		for (String variable : gc.getVariables()) {
+			Set<String> chainsOfVariable = setOfChains.get(variable);
+			for (String variableChain : chainsOfVariable) {
+				for (Rule element : gc.getRules()) {
+					if (element.getLeftSide().equals(variableChain)) {
+						if (element.getRightSide().length() != 1 || !Character.isUpperCase(element.getRightSide().charAt(0))) {
+							Rule r = new Rule(variable, element.getRightSide());
+							newSetOfRules.add(r);
+						}
+					}
+				}
+			}
+		}
+		
+		gc.setRules(newSetOfRules);		
+		return gc;
+	}
+	
+	public static Set<String> chainMinusPrev(Set<String> chain, Set<String> prev) {
+		Set<String> aux = new HashSet<String>();
+		for (String element : chain) {
+			if (!prev.contains(element)) {
+				aux.add(element);
+			}
+		}
+		return aux;
 	}
 
 	// atualiza as regras da gramática após rodar algoritmos de remoção
@@ -568,12 +440,14 @@ public class GrammarParser {
 		return newTerminals;
 	}
 
-	public static Grammar getGrammarWithoutNoTerm(Grammar g) {
+	public static Grammar getGrammarWithoutNoTerm(final Grammar g) {
 		Set<String> term = new HashSet<>();
 		Set<String> prev = new HashSet<>();
 		Set<String> noTerm = new HashSet<String>();
+		Grammar gc = (Grammar) g.clone();
+
 		// preenche conjunto term com as variáveis que são terminais
-		for (Rule element : g.getRules()) {
+		for (Rule element : gc.getRules()) {
 			if (element.getRightSide().length() == 1 && (!element.getRightSide().equals("|"))
 						&& (Character.isLowerCase(element.getRightSide().charAt(0)) || element.getRightSide().charAt(0) == '.')) {
 					term.add(element.getLeftSide());
@@ -581,17 +455,17 @@ public class GrammarParser {
 		}
 		do {
 			prev.addAll(term);
-			for (Rule element : g.getRules()) {
+			for (Rule element : gc.getRules()) {
 				boolean insertOnTerm = false;
 					if (element.getRightSide().length() == 1) {
-						if (g.getTerminals().contains(
+						if (gc.getTerminals().contains(
 								element.getRightSide())
 								|| prev.contains(element.getRightSide())) {
 							insertOnTerm = true;
 						}
 					} else {
 						for (int j = 0; j < element.getRightSide().length(); j++) {
-							if (g.getTerminals().contains(
+							if (gc.getTerminals().contains(
 									Character.toString(element.getRightSide().charAt(j)))
 									|| prev.contains(Character.toString(element.getRightSide().charAt(j)))) {
 								insertOnTerm = true;
@@ -609,15 +483,14 @@ public class GrammarParser {
 				}
 			}
 		} while (!term.equals(prev));
-		//term = termMinusNoTerm(term, noTerm);
 		Grammar aux = new Grammar();
 		aux.setVariables(prev);
-		aux.setRules(updateRules(prev, g));
+		aux.setRules(updateRules(prev, gc));
 		aux.setTerminals(updateTerminals(aux));
-		g.setVariables(aux.getVariables());
-		g.setTerminals(aux.getTerminals());
-		g.setRules(aux.getRules());
-		return g;
+		gc.setVariables(aux.getVariables());
+		gc.setTerminals(aux.getTerminals());
+		gc.setRules(aux.getRules());
+		return gc;
 	}
 	
 	public static Set<String> termMinusNoTerm(Set<String> term, Set<String> noTerm) {
@@ -652,10 +525,6 @@ public class GrammarParser {
 		Set<String> prev = new HashSet<>();
 		Set<String> New = new HashSet<>();
 		reach.add(g.getInitialSymbol());
-		System.out.println("______________");
-		for (Rule element : g.getRules()) {
-			System.out.println(element.getLeftSide() + "->" + element.getRightSide());
-		}
 		do {
 			New.addAll(reachMinusPrev(reach, prev));
 			prev.addAll(reach);
@@ -668,16 +537,11 @@ public class GrammarParser {
 				}
 			}
 		} while (!reach.equals(prev));
-		System.out.println("______________");
 		Grammar aux = new Grammar();
-		System.out.println("------------------------");
 		aux.setVariables(prev);
-		System.out.println(aux.getVariables());
 		aux.setInitialSymbol(g.getInitialSymbol());
-		System.out.println(aux.getInitialSymbol());
 		aux.setRules(updateRules(prev, g));
 		aux.setTerminals(updateTerminals(aux));
-		System.out.println(aux.getTerminals());
 		g.setVariables(aux.getVariables());
 		g.setTerminals(aux.getTerminals());
 		g.setRules(aux.getRules());
@@ -719,47 +583,6 @@ public class GrammarParser {
 		return count;
 	}
 
-	private static String insertRightRide(String sentence, int contInsertions, Set<Rule> newSetOfRules, Grammar g) {
-		String aux = new String();
-		if (sentenceSize(sentence) > 2) {
-			
-			
-			
-		} else if (sentenceSize(sentence) == 2) {
-			if (Character.isUpperCase(sentence.charAt(sentence.length() - 1)) || 
-					(Character.isUpperCase(sentence.charAt(0)) && Character.isUpperCase(sentence.charAt(1)))) {
-				 aux = sentence;
-			} else if (Character.isLowerCase(sentence.charAt(0)) && Character.isLowerCase(sentence.charAt(1))) {
-				aux = "T" + (contInsertions + 1) + "T" + (contInsertions + 2);
-			} else if (Character.isLowerCase(sentence.charAt(0)) && Character.isUpperCase(sentence.charAt(1))) {
-				aux = "T" + (contInsertions + 1) + sentence.substring(1);
-			} else if (Character.isUpperCase(sentence.charAt(0)) && Character.isLowerCase(sentence.charAt(1))) {
-				aux = Character.toString(sentence.charAt(0)) + "T" + (contInsertions + 1);
-			}
-		} else {
-			
-		}
-		
-		
-		
-		
-		/*if (sentence.length() == 2 && Character.isUpperCase(sentence.charAt(0))	&& Character.isLowerCase(sentence.charAt(sentence.length() - 1))) {
-			aux = sentence.substring(0, sentence.length() - 1) + "T" + (contInsertions);
-		} else if (Character.isDigit(sentence.charAt(1)) && sentence.length() > 2) {
-			aux = Character.toString(sentence.charAt(0)) + Character.toString(sentence.charAt(1)) + "T" + (contInsertions + 1);
-		} else if (Character.isLowerCase(sentence.charAt(1)) && (Character.isLowerCase(sentence.charAt(2))) && sentence.length() > 2) {
-			newSetOfRules = insertNewRules(newSetOfRules, sentence,	contInsertions, g);
-			contInsertions = updateNumberOfInsertions(newSetOfRules, contInsertions);
-			aux = Character.toString(sentence.charAt(0)) + "T" + contInsertions;
-		} else if (sentence.length() > 2)
-			aux = Character.toString(sentence.charAt(0)) + "T" + (contInsertions + 1);
-		else if (Character.isLowerCase(sentence.charAt(1)) && sentence.length() == 2)
-			aux = Character.toString(sentence.charAt(0)) + "T" + (contInsertions + 1);
-		else
-			aux = sentence;*/
-		return aux;
-	}
-
 	private static int updateNumberOfInsertions(Set<Rule> newSetOfRules,
 			int contInsertions) {
 		int counter = 0;
@@ -771,26 +594,6 @@ public class GrammarParser {
 			}
 		}
 		return (counter + 1);
-	}
-
-	private static Set<Rule> insertNewRules(Set<Rule> newSetOfRules,
-			String sentence, int contInsertions, Grammar g) {
-		boolean valid = true;
-		contInsertions += 1;
-		for (int i = 1; i < sentence.length() && valid == true; i++) {
-			if (Character.isLowerCase(sentence.charAt(i))) {
-				if (!existsProduction("T" + contInsertions,
-						Character.toString(sentence.charAt(i)), newSetOfRules)) {
-					Rule r = new Rule();
-					r.setLeftSide("T" + contInsertions);
-					r.setRightSide(Character.toString(sentence.charAt(i)));
-					newSetOfRules.add(r);
-					contInsertions++;
-				}
-			} else
-				valid = false;
-		}
-		return newSetOfRules;
 	}
 
 	private static boolean canInsert(String sentence) {
@@ -809,20 +612,12 @@ public class GrammarParser {
 		return insert;
 	}
 
-	private static boolean correctFormat(String sentence) {
-		for (int i = 0; i < sentence.length(); i++) {
-			
-		}
-		return false;
-	}
-	
-	
 	public static Grammar FNC(Grammar g) {
 		
-		g = GrammarParser.getGrammarWithInitialSymbolNotRecursive(g);	// ok
-		g = GrammarParser.getGrammarEssentiallyNoncontracting(g); // ok
+		g = GrammarParser.getGrammarWithInitialSymbolNotRecursive(g);
+		g = GrammarParser.getGrammarEssentiallyNoncontracting(g); 
 		g = GrammarParser.getGrammarWithoutChainRules(g);
-		g = GrammarParser.getGrammarWithoutNoTerm(g); // ok
+		g = GrammarParser.getGrammarWithoutNoTerm(g);
 		g = GrammarParser.getGrammarWithoutNoReach(g);
 			
 		
@@ -867,7 +662,6 @@ public class GrammarParser {
 									newProduction += "T" + contInsertions;								
 								}
 								String insertOnRightSide = splitSentence(cont, newSentence, contInsertions);
-								//newSentence = newSentence.substring(cont + 1);
 								newSentence = splitSentence(newSentence);
 								Rule r = new Rule();
 								r.setLeftSide("T" + contInsertions);
@@ -951,14 +745,6 @@ public class GrammarParser {
 		return count;
 	}
 
-	private static String assignsChar(String sentence) {
-		String result;
-		if (Character.isDigit(sentence.charAt(1)))
-			result = sentence.substring(2);
-		else
-			result = sentence.substring(1);
-		return result;
-	}
 	
 	//remoção de recursão à esquerda
 	public static Grammar removingLeftRecursion(final Grammar g) {
