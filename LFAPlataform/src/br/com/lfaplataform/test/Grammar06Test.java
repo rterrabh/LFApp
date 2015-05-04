@@ -103,16 +103,6 @@ public class Grammar06Test extends TestCase {
 		
 		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);
 		
-		System.out.println("______________");
-		for (Rule element : newG.getRules()) {
-			System.out.println(element.getLeftSide() + "->" + element.getRightSide());
-		}
-		
-		System.out.println(newG.getInitialSymbol());
-		System.out.println(newG.getTerminals());
-		System.out.println(newG.getVariables());
-		
-		
 		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getRules(), newG.getRules()));
 		
 		assertEquals(newG.getInitialSymbol(), expectedGrammar.getInitialSymbol());

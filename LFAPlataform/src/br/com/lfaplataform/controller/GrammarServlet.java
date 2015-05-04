@@ -254,7 +254,10 @@ public class GrammarServlet extends HttpServlet {
 				case "Forma Normal de Chomsky":
 					g = GrammarParser.FNC(g);
 					break;
-				case "Remoção de recursão à esquerda":
+				case "Remoção de recursão à esquerda imediata":
+					g = GrammarParser.removingTheImmediateLeftRecursion(g);
+					break;
+				case "Remoção de recursão à esquerda direta e indireta":
 					g = GrammarParser.removingLeftRecursion(g);
 					break;
 				case "CYK":

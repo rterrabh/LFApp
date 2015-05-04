@@ -21,6 +21,13 @@ public class Grammar03Test extends TestCase {
 	 C -> cdC | dC | e
 	*/
 	
+	/**
+	 S -> ABC | AC | SA | A | .
+	 A -> aA | a
+	 B -> Sb | b
+	 C -> cdC | dC | e
+	 */
+	
 	@Override
 	protected void setUp() throws Exception {
 		String[] variables = new String[]{"S", "A", "B", "C"};
@@ -60,12 +67,12 @@ public class Grammar03Test extends TestCase {
 		String[] expectedVariables = new String[] {"S", "A", "B", "C"};
 		String[] expectedTerminals = new String[] {"a", "b", "c", "d", "e"};
 		String expectedInitialSymbol = "S";
-		String[] expectedRules = new String[] {"S -> ABC | SA | AC | A | .", "A -> aA | a", "B -> Sb | b", "C -> cdC | dC | e"};
+		String[] expectedRules = new String[] {"S -> ABC | SA | AC | A ", "A -> aA | a", "B -> Sb | b", "C -> cdC | dC | e"};
 		
 		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);
 		
 		assertEquals(expectedGrammar.getInitialSymbol(), newG.getInitialSymbol());
-		
+				
 		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getTerminals(), newG.getTerminals()));
 		
 		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getRules(), newG.getRules()));

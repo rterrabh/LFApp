@@ -21,16 +21,6 @@ public class CloneTest extends TestCase {
 		this.g = new Grammar(variables, terminals, initialSymbol, rules);
 	}
 
-	/*
-	@Override
-	protected void tearDown() throws Exception {
-		Grammar g1 = (Grammar) this.g.clone();
-		
-		
-		//tirar um el de g1 e ver se ele continua em g
-		
-	}
-	*/
 
 	@Test
 	public void testClone() throws CloneNotSupportedException {
@@ -65,6 +55,8 @@ public class CloneTest extends TestCase {
 
 		assertFalse(this.g.getRules().contains(rx));
 		assertTrue(gc.getRules().contains(rx));
+		
+		
 		
 	}
 	
