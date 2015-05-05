@@ -28,9 +28,6 @@ public class Grammar01Test extends TestCase {
 				"A -> BA | a", "B -> aa | VC | CV | CC | b", "V -> a" };
 		this.g = new Grammar(variables, terminals, initialSymbol, rules);
 	}
-
-	@Override
-	protected void tearDown() throws Exception {}	
 	
 	@Test
 	public void testInitialSymbolNotRecursive() {
@@ -115,11 +112,6 @@ public class Grammar01Test extends TestCase {
 		String expectedInitialSymbol = "S";
 		String[] expectedRules = new String[] {"S -> AB | BC | BV", "C -> AB",
 				"A -> BA | a", "B -> T1T1 | VC | CV | CC | b", "V -> a", "T1 -> a" };
-		
-		System.out.println("______________");
-		for (Rule element : newG.getRules()) {
-			System.out.println(element.getLeftSide() + "->" + element.getRightSide());
-		}
 		
 		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);		
 		

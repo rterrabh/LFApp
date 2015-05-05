@@ -273,11 +273,12 @@ public class GrammarParser {
 		for (Rule element : gc.getRules()) {
 			if (element.getRightSide().equals(".")) {
 				nullable.add(element.getLeftSide());
+				/*
 				String newRightSide = replaceEmpty(element, gc);
 				if (!newRightSide.equals("")) {
 					Rule r = new Rule(element.getLeftSide(), newRightSide );
 					setOfRules.add(r);
-				}
+				}*/
 			} else {
 				Rule r = new Rule(element.getLeftSide(), element.getRightSide());
 				setOfRules.add(r);
@@ -616,11 +617,11 @@ public class GrammarParser {
 	public static Grammar FNC(final Grammar g) {
 		
 		Grammar gc = (Grammar) g.clone();
-		gc = GrammarParser.getGrammarWithInitialSymbolNotRecursive(g);
-		gc = GrammarParser.getGrammarEssentiallyNoncontracting(g); 
-		gc = GrammarParser.getGrammarWithoutChainRules(g);
-		gc = GrammarParser.getGrammarWithoutNoTerm(g);
-		gc = GrammarParser.getGrammarWithoutNoReach(g);
+		gc = GrammarParser.getGrammarWithInitialSymbolNotRecursive(gc);
+		gc = GrammarParser.getGrammarEssentiallyNoncontracting(gc); 
+		gc = GrammarParser.getGrammarWithoutChainRules(gc);
+		gc = GrammarParser.getGrammarWithoutNoTerm(gc);
+		gc = GrammarParser.getGrammarWithoutNoReach(gc);
 			
 		
 		Set<Rule> newSetOfRules = new HashSet<>();

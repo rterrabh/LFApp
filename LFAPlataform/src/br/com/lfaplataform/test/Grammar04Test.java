@@ -60,7 +60,7 @@ public class Grammar04Test extends TestCase {
 		String[] expectedVariables = new String[] {"S", "A", "B", "C"};
 		String[] expectedTerminals = new String[] {"a", "b"};
 		String expectedInitialSymbol = "S";
-		String[] expectedRules = new String[] {"S -> aS | ABC | BC | AC | A | B | C | a | . | AB", "A -> BB | a | B", "B -> CC | a | C", "C -> AA | b | A"};
+		String[] expectedRules = new String[] {"S -> aS | ABC | a | AB | AC | BC | A | B | C | .", "A -> BB | B", "B -> CC | a | C", "C -> AA | b | A"};
 		
 		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);
 		
@@ -132,6 +132,30 @@ public class Grammar04Test extends TestCase {
 		
 		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getVariables(), newG.getVariables()));
 	}
+	
+	@Test
+	public void testFNC() {
+		Grammar newG = GrammarParser.FNC(this.g);
+		
+		String[] expectedVariables = new String[] {"S'", "S", "A", "B", "C"};
+		String[] expectedTerminals = new String[] {"a", "b"};
+		String expectedInitialSymbol = "S'";
+		String[] expectedRules = new String[] {"S' -> BB | BC | T1S | AT2 | AC | AB | AA | . | CC | b | a",
+				"S -> BC | BB | AC | b | a | T1S | AA | CC | AT3 | AB",
+				"A -> a | b | AA | CC | BB",
+				"B -> AA | BB | CC | a | b",
+				"C -> CC | b | a | BB | AA",
+				"T3 -> BC", "T1 -> a", "T2 -> BC"};		
+		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);
+		
+		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getRules(), newG.getRules()));
+		
+		assertEquals(newG.getInitialSymbol(), expectedGrammar.getInitialSymbol());
+		
+		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getTerminals(), newG.getTerminals()));
+		
+		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getVariables(), newG.getVariables()));	
+	} 
 	
 	@Test
 	public void testCYK() {

@@ -141,23 +141,19 @@ public class Grammar02Test extends TestCase {
 		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getVariables(), newG.getVariables()));
 	}
 	
-	/*@Test
+	@Test
 	public void testFNC() {
 		Grammar newG = GrammarParser.FNC(this.g);
 		
-		String[] expectedVariables = new String[] {"S", "A", "B", "C"};
+		String[] expectedVariables = new String[] {"S'", "S", "A", "B", "C"};
 		String[] expectedTerminals = new String[] {"a", "b", "c"};
-		String expectedInitialSymbol = "S";
-		String[] expectedRules = new String[] {"S -> aS | AB | AC | a | B | A | C | .", " A -> aA | a", "B -> bB | b", "C -> cC | c", "T1 -> a", "T2 -> b"};
-		
-		
+		String expectedInitialSymbol = "S'";
+		String[] expectedRules = new String[] {"S'-> T2B | T1S | T1A | c | T3C | AC | AB | . | b | a", 
+				"S -> T2B | T1S | T1A | c | T3C | AC | AB | b | a", 
+				"A -> a | T1A", "B -> T2B | b", "C -> T3C | c",
+				"T1 -> a", "T2 -> b", "T3 -> c"};		
 		
 		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);
-		
-		System.out.println("______________");
-		for (Rule element : newG.getRules()) {
-			System.out.println(element.getLeftSide() + "->" + element.getRightSide());
-		}
 		
 		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getRules(), newG.getRules()));
 		
@@ -166,7 +162,8 @@ public class Grammar02Test extends TestCase {
 		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getTerminals(), newG.getTerminals()));
 		
 		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getVariables(), newG.getVariables()));	
-	}*/
+		
+	}
 	
 	@Test
 	public void testCYK() {
