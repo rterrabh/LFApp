@@ -18,6 +18,14 @@ import br.com.lfaplataform.vo.Rule;
 public class Grammar01Test extends TestCase {
 
 	private Grammar g;
+	
+	/*
+	 S -> AB | BC | BV
+	 C -> AB
+	 A -> BA | a
+	 B -> aa | VC | CV | CC | b
+	 V -> a
+	*/
 
 	@Override
 	protected void setUp() throws Exception {
@@ -107,7 +115,7 @@ public class Grammar01Test extends TestCase {
 	public void testFNC() {
 		Grammar newG = GrammarParser.FNC(this.g);
 		
-		String[] expectedVariables = new String[] { "S", "A", "B", "C", "V" };
+		String[] expectedVariables = new String[] { "S", "A", "B", "C", "V", "T1" };
 		String[] expectedTerminals = new String[] {"a", "b"};
 		String expectedInitialSymbol = "S";
 		String[] expectedRules = new String[] {"S -> AB | BC | BV", "C -> AB",

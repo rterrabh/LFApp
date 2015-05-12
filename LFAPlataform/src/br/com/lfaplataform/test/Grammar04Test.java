@@ -137,7 +137,7 @@ public class Grammar04Test extends TestCase {
 	public void testFNC() {
 		Grammar newG = GrammarParser.FNC(this.g);
 		
-		String[] expectedVariables = new String[] {"S'", "S", "A", "B", "C"};
+		String[] expectedVariables = new String[] {"S'", "S", "A", "B", "C", "T1", "T2", "T3"};
 		String[] expectedTerminals = new String[] {"a", "b"};
 		String expectedInitialSymbol = "S'";
 		String[] expectedRules = new String[] {"S' -> BB | BC | T1S | AT2 | AC | AB | AA | . | CC | b | a",

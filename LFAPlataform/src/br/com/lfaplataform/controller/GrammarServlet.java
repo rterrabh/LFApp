@@ -18,11 +18,6 @@ import br.com.lfaplataform.vo.Rule;
 
 public class GrammarServlet extends HttpServlet {
 
-	/*
-	 * static Grammar parseTxtToGrammar(String txt) { Grammar g = new
-	 * Grammar(txt); return g; }
-	 */
-
 	static void controlInputs(HttpServletRequest req, HttpServletResponse resp, String txtGrammar, Grammar g) throws ServletException, IOException {
 		//Grammar g = new Grammar();
 		String initialSymbol;
@@ -276,31 +271,7 @@ public class GrammarServlet extends HttpServlet {
 					}
 				}				
 			}
-			
-			/*
-			out.println("<html><body>");
-
-			out.println(g.getInitialSymbol());
-			out.println("<br>");
-
-			for (String v : g.getVariables()) {
-				if (v != null)
-					out.println(v);
-			}
-			out.println("<br>");
-			for (String t : g.getTerminals()) {
-				if (t != null)
-					out.println(t);
-			}
-
-			out.println("<br>");
-
-			
-
-			out.println("</body></html>");*/
-
 			out.close();
-
 		}	
 
 	}
