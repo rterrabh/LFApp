@@ -229,6 +229,65 @@ public class GrammarServlet extends HttpServlet {
 				case "Símbolo inicial não recursivo":
 					// chama algoritmo para remoção de símbolo inicial não recursivo
 					g = GrammarParser.getGrammarWithInitialSymbolNotRecursive(g);
+					out.println("Símbolo inicial não recursivo: <br/>");
+					for (Rule element : g.getRules()) {
+						if (g.getInitialSymbol().equals(element.getLeftSide())) {
+							out.print(element.getLeftSide() + "->" + element.getRightSide()+ "<br/>");
+						}
+					}
+					for (String variable : g.getVariables()) {
+						for (Rule element : g.getRules()) {
+							if (element.getLeftSide().equals(variable) && !variable.equals(g.getInitialSymbol())) {
+								out.print(element.getLeftSide() + "->" + element.getRightSide()+ "<br/>");
+							}
+						}				
+					}
+					out.println("_______________________________________________________________________ <br/>");
+					out.println("Essencialmente não contrátil: <br/>");
+					g = GrammarParser.getGrammarEssentiallyNoncontracting(g);
+					for (Rule element : g.getRules()) {
+						if (g.getInitialSymbol().equals(element.getLeftSide())) {
+							out.print(element.getLeftSide() + "->" + element.getRightSide()+ "<br/>");
+						}
+					}
+					for (String variable : g.getVariables()) {
+						for (Rule element : g.getRules()) {
+							if (element.getLeftSide().equals(variable) && !variable.equals(g.getInitialSymbol())) {
+								out.print(element.getLeftSide() + "->" + element.getRightSide()+ "<br/>");
+							}
+						}				
+					}
+					out.println("_______________________________________________________________________ <br/>");
+					out.println("Sem regras da cadeia: <br/>");
+					g = GrammarParser.getGrammarWithoutChainRules(g);
+					for (Rule element : g.getRules()) {
+						if (g.getInitialSymbol().equals(element.getLeftSide())) {
+							out.print(element.getLeftSide() + "->" + element.getRightSide()+ "<br/>");
+						}
+					}
+					for (String variable : g.getVariables()) {
+						for (Rule element : g.getRules()) {
+							if (element.getLeftSide().equals(variable) && !variable.equals(g.getInitialSymbol())) {
+								out.print(element.getLeftSide() + "->" + element.getRightSide()+ "<br/>");
+							}
+						}				
+					}
+					out.println("_______________________________________________________________________ <br/>");
+					out.println("Sem símbolos não terminais: <br/>");
+					g = GrammarParser.getGrammarWithoutNoTerm(g);
+					for (Rule element : g.getRules()) {
+						if (g.getInitialSymbol().equals(element.getLeftSide())) {
+							out.print(element.getLeftSide() + "->" + element.getRightSide()+ "<br/>");
+						}
+					}
+					for (String variable : g.getVariables()) {
+						for (Rule element : g.getRules()) {
+							if (element.getLeftSide().equals(variable) && !variable.equals(g.getInitialSymbol())) {
+								out.print(element.getLeftSide() + "->" + element.getRightSide()+ "<br/>");
+							}
+						}				
+					}
+					out.println("_______________________________________________________________________ <br/>");
 					break;
 				case "Remoção de símbolo lâmbda":
 					// chama algoritmo para remoção de símbolo lâmbda
@@ -255,6 +314,9 @@ public class GrammarServlet extends HttpServlet {
 				case "Remoção de recursão à esquerda direta e indireta":
 					g = GrammarParser.removingLeftRecursion(g);
 					break;
+				case "Forma Normal de Greibach":
+					g = GrammarParser.FNG(g);
+					break;
 				case "CYK":
 					String word = req.getParameter("word");
 					Set<String>[][] CYK = GrammarParser.CYK(g, word);
@@ -264,9 +326,14 @@ public class GrammarServlet extends HttpServlet {
 					req.getRequestDispatcher("cyk_out.jsp").forward(req, resp);
 					break;
 			}
+			for (Rule element : g.getRules()) {
+				if (g.getInitialSymbol().equals(element.getLeftSide())) {
+					out.print(element.getLeftSide() + "->" + element.getRightSide()+ "<br/>");
+				}
+			}
 			for (String variable : g.getVariables()) {
 				for (Rule element : g.getRules()) {
-					if (element.getLeftSide().equals(variable)) {
+					if (element.getLeftSide().equals(variable) && !variable.equals(g.getInitialSymbol())) {
 						out.print(element.getLeftSide() + "->" + element.getRightSide()+ "<br/>");
 					}
 				}				

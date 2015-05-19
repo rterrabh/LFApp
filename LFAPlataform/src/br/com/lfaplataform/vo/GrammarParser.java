@@ -751,7 +751,7 @@ public class GrammarParser {
 	public static boolean verifyChains(Rule element) {
 		boolean chain = true;
 		for (int i = 0; i < element.getRightSide().length() && chain == true; i++) {
-			if (!element.getRightSide().equals(Character.toString(element.getRightSide().charAt(i)))) {
+			if (!element.getLeftSide().equals(Character.toString(element.getRightSide().charAt(i)))) {
 				chain = false;
 			}
 		}
@@ -800,6 +800,9 @@ public class GrammarParser {
 			//estabelece relacao entre variável que gera recursão e a variável que irá resolver esta solução
 			Map<String, String> variablesMapped = new HashMap<String, String>();
 			int counter = 1;
+			while (gc.getVariables().contains("Z" + counter)) {
+				counter++;
+			}
 			for (String element : haveRecursion) {
 				if (!variablesMapped.containsKey(element)) {
 					variablesMapped.put(element, "Z" + counter);
@@ -937,11 +940,12 @@ public class GrammarParser {
 	public static Grammar FNG(final Grammar g) {
 		Grammar gc = (Grammar) g.clone();
 		
-		gc = GrammarParser.FNC(gc);
-		gc = GrammarParser.removingLeftRecursion(gc);
+		//gc = GrammarParser.FNC(gc);
+		//gc = GrammarParser.removingLeftRecursion(gc);
 		
 		//ordenando os símbolos não terminais
 		Map<String, String> variablesInOrder = new HashMap<String, String>(); // mapa que contém variáveis ordenadas
+		Map<String, String> variablesInOrderAux = new HashMap<String, String>(); // mapa que contém variáveis criadas no processo de retirar recursão
 		Set<String> noGreibach = new HashSet<String>(); //conjunto que armazena as variáveis que não estão em FNG
 		Set<String> greibach = new HashSet<String>(); //conjunto que armazena as variáveis que estão em FNG		
 		int counter = 1;
@@ -956,25 +960,184 @@ public class GrammarParser {
 		
 		//enquanto exister regras que não estão em FNG
 		Set<Rule> setOfNewRules = new HashSet<Rule>();
-		while (!noGreibach.isEmpty()) {
+		while (!noGreibach.equals(greibach)) {
 			for (String variable : noGreibach) {
-				if (!isInFNG(variable, gc)) {
-					//testa se é necessário fazer substituições
-					if (canReplace(variable, gc, variablesInOrder)) {
-						//realiza substituições
-												
+				if (!greibach.contains(variable)) {
+					if (!isInFNG(variable, gc)) {
+						//testa se é necessário fazer substituições
+						//RECURSÃO À ESQUERDA!!!
+						gc =GrammarParser.removingTheImmediateLeftRecursion(gc);
+						//noGreibach.addAll(gc.getVariables()); ///se há novas produções após remover recursão, acrescentálas em noGreibach
+						variablesInOrderAux = updateOrderOfVariables(gc, variablesInOrderAux, variablesInOrder);
+						variablesInOrder = updateVariablesInOrder(variablesInOrderAux, variablesInOrder);
+						Set<Rule> newSetOfRules = createNewRules(variable, gc, variablesInOrder); //irá armazenar a nova produção			
+						gc.setRules(updateGrammar(gc, newSetOfRules, variable));
+						newSetOfRules = replaceUppersCase(variable, gc, variablesInOrder, newSetOfRules, greibach); //último passo para deixar em FNG
+						gc.setRules(updateGrammar(gc, newSetOfRules, variable));
 					} else {
-						
+						greibach.add(variable);
 					}
-				} else {
-					noGreibach.remove(variable);
 				}
+			}			
+		}
+		
+		setOfNewRules = new HashSet<Rule>();
+		noGreibach = new HashSet<String>(); //conjunto que armazena as variáveis que não estão em FNG
+		greibach = new HashSet<String>(); //conjunto que armazena as variáveis que estão em FNG		
+		
+		//preenchendo novamente noGreibach
+		for (Rule element : gc.getRules()) {
+			if (variablesInOrderAux.containsKey(element.getLeftSide())) {
+				noGreibach.add(element.getLeftSide());
 			}
-			
+		}
+		
+		while (!noGreibach.equals(greibach)) {
+			for (String variable : noGreibach) {
+				if (!greibach.contains(variable)) {
+					if (!isInFNG(variable, gc)) {
+						//testa se é necessário fazer substituições
+						//RECURSÃO À ESQUERDA!!!
+						gc =GrammarParser.removingTheImmediateLeftRecursion(gc);
+						//noGreibach.addAll(gc.getVariables()); ///se há novas produções após remover recursão, acrescentálas em noGreibach
+						variablesInOrderAux = updateOrderOfVariables(gc, variablesInOrderAux, variablesInOrder);
+						variablesInOrder = updateVariablesInOrder(variablesInOrderAux, variablesInOrder);
+						Set<Rule> newSetOfRules = createNewRules(variable, gc, variablesInOrder); //irá armazenar a nova produção			
+						gc.setRules(updateGrammar(gc, newSetOfRules, variable));
+						newSetOfRules = replaceUppersCase(variable, gc, variablesInOrder, newSetOfRules, greibach); //último passo para deixar em FNG
+						gc.setRules(updateGrammar(gc, newSetOfRules, variable));
+					} else {
+						greibach.add(variable);
+					}
+				}
+			}			
 		}		
 		return gc;
 	}
 	
+	
+	private static Map<String, String> updateVariablesInOrder(
+			Map<String, String> variablesInOrderAux,
+			Map<String, String> variablesInOrder) {
+		Map<String, String> newMap = new HashMap<String, String>();
+		newMap.putAll(variablesInOrder);
+		newMap.putAll(variablesInOrderAux);
+		return newMap;
+	}
+
+	//regras do lado direito estão na ordem certa, porém ainda não estão na forma normal de Greibach
+	private static Set<Rule> replaceUppersCase(String variable, Grammar gc, Map<String, String> variablesInOrder, Set<Rule> newSetOfRules, Set<String> greibach) {
+		boolean test = false;
+		int leftSide = Integer.parseInt(variablesInOrder.get(variable));
+		for (Rule element : newSetOfRules) {
+			if (Character.isUpperCase(element.getRightSide().charAt(0))) {
+				int rightSide = Integer.parseInt(variablesInOrder.get(determinesRightSide(element.getRightSide(), 0)));
+				String firstCharacter = determinesRightSide(element.getRightSide(), 0);
+				if (leftSide <= rightSide && greibach.contains(firstCharacter)) {
+					test = true;
+				}
+			}
+		}
+		if (test) {
+			Set<Rule> newRules = new HashSet<Rule>();
+			for (Rule element : gc.getRules()) {
+				if (variable.equals(element.getLeftSide())) {
+					String firstCharacter = determinesRightSide(element.getRightSide(), 0);
+					if (ruleInFNG(element.getRightSide())) {
+						Rule r = new Rule(variable, element.getRightSide());
+						newRules.add(r);
+					} else {
+						for (Rule secondElement : gc.getRules()) {
+							if (firstCharacter.equals(secondElement.getLeftSide())) {
+								String newSentence = element.getRightSide();
+								newSentence = newSentence.replaceFirst(firstCharacter, secondElement.getRightSide());
+								Rule r = new Rule(variable, newSentence);
+								newRules.add(r);
+							}
+						}
+					}
+				}
+			}
+			newSetOfRules = newRules;
+		} 
+		return newSetOfRules;
+	}
+
+	//verifica se uma regra está na forma normal de Greibach
+	private static boolean ruleInFNG(String rightSide) {
+		boolean test;
+		int counter = 0;
+		for (int i = 0; i < rightSide.length() && counter <= 1; i++) {
+			if (Character.isLowerCase(rightSide.charAt(i)) || rightSide.charAt(i) == '.') {
+				counter++;
+			}
+		}
+		test = (counter == 1) ? (true) : (false);
+		return test;
+	}
+
+	private static Map<String, String> updateOrderOfVariables(Grammar gc, Map<String, String> variablesInOrderAux, Map<String, String> variablesInOrder) {
+		int size = variablesInOrder.size();
+		for (String variable : gc.getVariables()) {
+			if (!variablesInOrderAux.containsKey(variable) && !variablesInOrder.containsKey(variable)) {
+				size++;
+				variablesInOrderAux.put(variable, Integer.toString(size));
+			}
+		}
+		return variablesInOrderAux;
+	}
+
+	private static Set<Rule> updateGrammar(Grammar g, Set<Rule> newSetOfRules , String variable) {
+		Set<Rule> newRules = new HashSet<Rule>();
+		for (Rule element : g.getRules()) {
+			if (!element.getLeftSide().equals(variable)) {
+				newRules.add(element);
+			}
+		}
+		for (Rule element : newSetOfRules) {
+			newRules.add(element);
+		}
+		return newRules;
+	}
+
+	//cria novas regras realizando as substituições necessárias
+	public static Set<Rule> createNewRules(String variable, Grammar gc, Map<String, String> variablesInOrder) {
+		Set<Rule> newSetOfRules = new HashSet<Rule>();
+		for (Rule element : gc.getRules()) {
+			String newProduction = new String();
+			if (variable.equals(element.getLeftSide())) {
+				int leftValue = Integer.parseInt(variablesInOrder.get(variable));
+				int rightValue;
+				boolean test = true;
+				for (int i = 0; i < element.getRightSide().length() && test; i++) {
+					if (Character.isAlphabetic(element.getRightSide().charAt(i)) && Character.isUpperCase(element.getRightSide().charAt(i))) {
+						rightValue = Integer.parseInt(variablesInOrder.get(determinesRightSide(element.getRightSide(), i)));	
+						if (leftValue > rightValue) {
+							test = false;
+							String searchVariable = determinesRightSide(element.getRightSide(), i);
+							for (Rule secondElement : gc.getRules()) {
+								if (searchVariable.equals(secondElement.getLeftSide())) {
+									newProduction = element.getRightSide();
+									newProduction = newProduction.replace(searchVariable, secondElement.getRightSide());
+									Rule r = new Rule(element.getLeftSide(), newProduction);
+									newSetOfRules.add(r);
+								}								
+							}
+						} 
+					} else if (Character.isLowerCase(element.getRightSide().charAt(i))){
+						Rule r = new Rule(variable, element.getRightSide());
+						newSetOfRules.add(r);
+					}
+				}
+				if (test) {
+					Rule r = new Rule(variable, element.getRightSide());
+					newSetOfRules.add(r);
+				}
+			}
+		}
+		return newSetOfRules;
+	}
+
 	//verifica se é necessário realizar substituições
 	public static boolean canReplace(String variable, final Grammar g,  final Map<String, String> variablesInOrder) {
 		boolean test = false;
@@ -983,9 +1146,11 @@ public class GrammarParser {
 				int leftValue = Integer.parseInt(variablesInOrder.get(variable));
 				int rightValue;
 				for (int i = 0; i < element.getRightSide().length(); i++) {
-					rightValue = Integer.parseInt(variablesInOrder.get(determinesRightSide(element.getRightSide(), i)));	
-					if (leftValue > rightValue) {
-						test = true;
+					if (Character.isUpperCase(element.getRightSide().charAt(i))) {
+						rightValue = Integer.parseInt(variablesInOrder.get(determinesRightSide(element.getRightSide(), i)));	
+						if (leftValue > rightValue) {
+							test = true;
+						}
 					}
 				}				
 			}
@@ -999,25 +1164,36 @@ public class GrammarParser {
 			counter++;
 		}
 		String variable = Character.toString(rightSide.charAt(counter));
-		while (Character.isDigit(rightSide.charAt(counter + 1))) {
+		boolean test = true;
+		while (rightSide.length() > counter + 1 &&  test) {
+			if (Character.isDigit(rightSide.charAt(counter + 1))) {
+				variable += Character.toString(rightSide.charAt(counter + 1));
+			}			
 			counter++;
-			variable += Character.toString(rightSide.charAt(counter));
+			if (Character.isAlphabetic(rightSide.charAt(counter))) {
+				test = false;
+			}
 		}
 		return variable;
 	}
 
 	//verifica se uma determinada regra está ou não em uma FNG
 	public static boolean isInFNG(String variable, final Grammar g) {
-		boolean test = false;
-		for (Rule element : g.getRules()) {
+		boolean test = true;
+		Iterator it = g.getRules().iterator();
+		Rule element = new Rule();
+		while (it.hasNext() && test) {
+			element = (Rule) it.next();
 			if (variable.equals(element.getLeftSide())) {
-				int counterOfLowerCase = 0;
-				for (int i = 0; i < element.getRightSide().length(); i++) {
-					if (Character.isLowerCase(element.getRightSide().charAt(i))) {
-						counterOfLowerCase++;
+				if (!element.getRightSide().equals(".")) {
+					int counterOfLowerCase = 0;
+					for (int i = 0; i < element.getRightSide().length(); i++) {
+						if (Character.isLowerCase(element.getRightSide().charAt(i))) {
+							counterOfLowerCase++;
+						}
 					}
+					test = (counterOfLowerCase == 1) ? (true) : (false); 
 				}
-				test = (counterOfLowerCase <= 1) ? (true) : (false); // <= 1 no caso da gramática ser essencialmente não contrátil
 			}
 		}
 		return test;
