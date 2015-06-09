@@ -153,6 +153,30 @@ public class Grammar03Test extends TestCase {
 		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getVariables(), newG.getVariables()));	
 	}
 	
+	@Test
+	public void testFNG() {
+		Grammar newG = GrammarParser.FNG(g);
+		boolean fng = true;
+		for (Rule element : newG.getRules()) {
+			int counter = 0;
+			if (!element.getLeftSide().equals(newG.getInitialSymbol()) && element.getRightSide().equals(".")) {
+				fng = false;
+				counter = 1;
+			} else {
+				for (int i = 0; i < element.getRightSide().length() && fng; i++) {
+					if (Character.isLowerCase(element.getRightSide().charAt(i))) {
+						counter++;
+					}
+				}
+				if (counter > 1) {
+					fng = false;
+				}
+			}
+		}
+		
+		assertEquals(true, fng);
+	}
+	
 	/*@Test
 	public void testCYK() {
 		Set<String>[][] matrix = GrammarParser.CYK(g, "aaabbbb");

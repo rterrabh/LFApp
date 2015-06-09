@@ -24,7 +24,8 @@
 			<div id="align-button"><input type="submit" name="action" 	value="Remoção de recursão à esquerda imediata" /></div>
 			<div id="align-button"><input type="submit" name="action" 	value="Remoção de recursão à esquerda direta e indireta" /></div>
 			<div id="align-button"><input type="submit" name="action" 	value="Forma Normal de Greibach" /></div>
-			<div id="align-button"><input type="submit" name="action" 	value="CYK" /></div>			
+			<div id="align-button"><input type="submit" name="action" 	value="CYK" /></div>
+			<div id="align-button"><input type="submit" name="action" 	value="GLC para AP" /></div>			
 			</div>		
 		</form>
 	</div>

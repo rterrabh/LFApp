@@ -14,7 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import br.com.lfaplataform.vo.Grammar;
 import br.com.lfaplataform.vo.GrammarParser;
+import br.com.lfaplataform.vo.PushdownAutomaton;
 import br.com.lfaplataform.vo.Rule;
+import br.com.lfaplataform.vo.TransitionFunctionPA;
 
 public class GrammarServlet extends HttpServlet {
 
@@ -222,72 +224,13 @@ public class GrammarServlet extends HttpServlet {
 
 			//clona objeto grammar para fazer as devidas modificações
 			//clonar objeto G
-			//FALTA CLONAR OBJETO!!!
+			
 			
 			// REALIZA CONTROLE DE AÇÕES A SEREM FEITAS
 			switch (req.getParameter("action")) {
 				case "Símbolo inicial não recursivo":
 					// chama algoritmo para remoção de símbolo inicial não recursivo
 					g = GrammarParser.getGrammarWithInitialSymbolNotRecursive(g);
-					out.println("Símbolo inicial não recursivo: <br/>");
-					for (Rule element : g.getRules()) {
-						if (g.getInitialSymbol().equals(element.getLeftSide())) {
-							out.print(element.getLeftSide() + "->" + element.getRightSide()+ "<br/>");
-						}
-					}
-					for (String variable : g.getVariables()) {
-						for (Rule element : g.getRules()) {
-							if (element.getLeftSide().equals(variable) && !variable.equals(g.getInitialSymbol())) {
-								out.print(element.getLeftSide() + "->" + element.getRightSide()+ "<br/>");
-							}
-						}				
-					}
-					out.println("_______________________________________________________________________ <br/>");
-					out.println("Essencialmente não contrátil: <br/>");
-					g = GrammarParser.getGrammarEssentiallyNoncontracting(g);
-					for (Rule element : g.getRules()) {
-						if (g.getInitialSymbol().equals(element.getLeftSide())) {
-							out.print(element.getLeftSide() + "->" + element.getRightSide()+ "<br/>");
-						}
-					}
-					for (String variable : g.getVariables()) {
-						for (Rule element : g.getRules()) {
-							if (element.getLeftSide().equals(variable) && !variable.equals(g.getInitialSymbol())) {
-								out.print(element.getLeftSide() + "->" + element.getRightSide()+ "<br/>");
-							}
-						}				
-					}
-					out.println("_______________________________________________________________________ <br/>");
-					out.println("Sem regras da cadeia: <br/>");
-					g = GrammarParser.getGrammarWithoutChainRules(g);
-					for (Rule element : g.getRules()) {
-						if (g.getInitialSymbol().equals(element.getLeftSide())) {
-							out.print(element.getLeftSide() + "->" + element.getRightSide()+ "<br/>");
-						}
-					}
-					for (String variable : g.getVariables()) {
-						for (Rule element : g.getRules()) {
-							if (element.getLeftSide().equals(variable) && !variable.equals(g.getInitialSymbol())) {
-								out.print(element.getLeftSide() + "->" + element.getRightSide()+ "<br/>");
-							}
-						}				
-					}
-					out.println("_______________________________________________________________________ <br/>");
-					out.println("Sem símbolos não terminais: <br/>");
-					g = GrammarParser.getGrammarWithoutNoTerm(g);
-					for (Rule element : g.getRules()) {
-						if (g.getInitialSymbol().equals(element.getLeftSide())) {
-							out.print(element.getLeftSide() + "->" + element.getRightSide()+ "<br/>");
-						}
-					}
-					for (String variable : g.getVariables()) {
-						for (Rule element : g.getRules()) {
-							if (element.getLeftSide().equals(variable) && !variable.equals(g.getInitialSymbol())) {
-								out.print(element.getLeftSide() + "->" + element.getRightSide()+ "<br/>");
-							}
-						}				
-					}
-					out.println("_______________________________________________________________________ <br/>");
 					break;
 				case "Remoção de símbolo lâmbda":
 					// chama algoritmo para remoção de símbolo lâmbda
@@ -325,7 +268,19 @@ public class GrammarServlet extends HttpServlet {
 					req.setAttribute("word", word);
 					req.getRequestDispatcher("cyk_out.jsp").forward(req, resp);
 					break;
+				case "GLC para AP":
+					PushdownAutomaton automaton = GrammarParser.turnsGrammarToPushdownAutomata(g);
+					out.printf("(" + automaton.getStates() + ", " + automaton.getAlphabet() + ", " + automaton.getStackAlphabet() + 
+							", δ, " + automaton.getInitialState());
+					out.print(", " + automaton.getFinalStates() + ")");
+					out.print("<br><br>");	
+					for (TransitionFunctionPA transiction : automaton.getTransictionFunction()) {
+						out.print(transiction);
+						out.print("<br>");
+					}
+					break;
 			}
+			out.println("---------------------------------------------------------------------------------<br>");
 			for (Rule element : g.getRules()) {
 				if (g.getInitialSymbol().equals(element.getLeftSide())) {
 					out.print(element.getLeftSide() + "->" + element.getRightSide()+ "<br/>");
