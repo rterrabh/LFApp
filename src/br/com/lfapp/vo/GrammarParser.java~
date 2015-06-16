@@ -335,7 +335,124 @@ public class GrammarParser {
 		return newSentence;
 	}	
 	
+	/*
+	public static Grammar getGrammarEssentiallyNoncontracting(final Grammar g) {
+		Grammar gc = (Grammar) g.clone();
+		Set<String> nullable = new HashSet<String>();
+		Set<Rule> setOfRules = new HashSet<Rule>();
+		
+		// nullable = nullable U A -> . |  A E V 
+		for (Rule element : gc.getRules()) {
+			if (element.getRightSide().equals(".")) {
+				nullable.add(element.getLeftSide());
+			} else {
+				Rule r = new Rule(element.getLeftSide(), element.getRightSide());
+				setOfRules.add(r);
+			}
+		}
+		
+		//gera conjuntos de variáveis anuláveis
+		Set<String> prev = new HashSet<String>();
+		do {
+			prev.addAll(nullable);
+			for (Rule element : gc.getRules()) {
+				if (prevContainsVariable(prev, element.getRightSide())) {
+					nullable.add(element.getLeftSide());
+				}
+			}
+		} while (!prev.equals(nullable));		
+		Set<Rule> newSetOfRules = new HashSet<Rule>();		
+		for (Rule element : setOfRules) {
+			String aux = element.getRightSide() + " | ";				
+			int i = 0;
+			while (i != element.getRightSide().length()) {
+					aux += permutation(element.getRightSide(), nullable, i, aux);
+					i++;
+			}
+			String[] productionsOnRightSide = aux.split(" | ");
+			for (i = 0; i < productionsOnRightSide.length; i++ ) {
+				productionsOnRightSide[i] = productionsOnRightSide[i].trim();
+				if (!productionsOnRightSide[i].equals("|")) {
+					Rule r = new Rule(element.getLeftSide(), productionsOnRightSide[i]);
+					newSetOfRules.add(r);
+				} 
+			}
+		}
+		
+		if (nullable.contains(gc.getInitialSymbol())) {
+			Rule r = new Rule(gc.getInitialSymbol(), ".");
+			newSetOfRules.add(r);
+		}
+		gc.setRules(newSetOfRules);		
+		return gc;
+	}
+	*/
 	
+	/**
+	 * Verifica a existência de variáveis no conjunto Prev
+
+	 * @param prev
+	 * @param element
+	 * @return
+	 */
+	public static boolean prevContainsVariable(Set<String> prev, String element) {
+		boolean test = true;
+		for (int i = 0; i < element.length() && test == true; i++) {
+			if (!Character.isUpperCase(element.charAt(i)) || !prev.contains(Character.toString(element.charAt(i)))) {
+				test = false;
+			}
+		}
+		return test;
+	}
+
+	/*
+	// remove regras da cadeia
+	// retorna gramática sem regras da cadeia	
+	public static Grammar getGrammarWithoutChainRules(final Grammar g) {
+		Grammar gc = (Grammar) g.clone();
+		
+		//primeiramente, deve-se construir os subconjuntos
+		Map<String, Set<String>> setOfChains = new HashMap<String, Set<String>>();
+		for (String variable : gc.getVariables()) {
+			// conjunto que representa o chain de determinada variável
+			Set<String> chain = new HashSet<String>();
+			Set<String> prev = new HashSet<String>();
+			Set<String> New = new HashSet<String>();
+			chain.add(variable);
+			do {
+				New = chainMinusPrev(chain, prev);
+				prev.addAll(chain);
+				for (String variableInNew : New) {
+					for (Rule element : gc.getRules()) {
+						if (variableInNew.equals(element.getLeftSide()) && (element.getRightSide().length() == 1 && Character.isUpperCase(element.getRightSide().charAt(0)))) {
+							chain.add(element.getRightSide());
+						}
+					}
+				}
+			} while (!chain.equals(prev));
+			setOfChains.put(variable, chain);
+		}
+						
+		//iterações sobre os conjuntos de chains
+		Set<Rule> newSetOfRules = new HashSet<Rule>();
+		for (String variable : gc.getVariables()) {
+			Set<String> chainsOfVariable = setOfChains.get(variable);
+			for (String variableChain : chainsOfVariable) {
+				for (Rule element : gc.getRules()) {
+					if (element.getLeftSide().equals(variableChain)) {
+						if (element.getRightSide().length() != 1 || !Character.isUpperCase(element.getRightSide().charAt(0))) {
+							Rule r = new Rule(variable, element.getRightSide());
+							newSetOfRules.add(r);
+						}
+					}
+				}
+			}
+		}
+		
+		gc.setRules(newSetOfRules);		
+		return gc;
+	}
+	*/
 	
 	/**
 	 * Retorna os elementos que estão no conjunto Chain mas não estão no conjunto Prev
@@ -412,7 +529,46 @@ public class GrammarParser {
 		return newTerminals;
 	}
 
+	/*
+	public static Grammar getGrammarWithoutNoTerm(final Grammar g) {
+		Set<String> term = new HashSet<>();
+		Set<String> prev = new HashSet<>();
+		Grammar gc = (Grammar) g.clone();
 
+		// preenche conjunto term com as variáveis que são terminais
+		for (Rule element : gc.getRules()) {
+			if (element.getRightSide().length() == 1 && (!element.getRightSide().equals("|"))
+						&& (Character.isLowerCase(element.getRightSide().charAt(0)) || element.getRightSide().charAt(0) == '.')) {
+					term.add(element.getLeftSide());
+			}
+		}
+		
+		do {
+			prev.addAll(term);
+			for (Rule element : gc.getRules()) {
+				boolean insertOnTerm = true;
+				for (int j = 0; j < element.getRightSide().length() && insertOnTerm ==  true; j++) {
+					if (Character.isLowerCase(element.getRightSide().charAt(j)) && !gc.getTerminals().contains(Character.toString(element.getRightSide().charAt(j)))) {
+								insertOnTerm = false;
+					} else if (Character.isUpperCase(element.getRightSide().charAt(j)) && !prev.contains(Character.toString(element.getRightSide().charAt(j)))) {
+							insertOnTerm = false;
+					}
+				}
+				if (insertOnTerm) {					
+						term.add(element.getLeftSide());	
+				}
+			}
+		} while (!term.equals(prev));
+		Grammar aux = new Grammar();
+		aux.setVariables(prev);
+		aux.setRules(updateRules(prev, gc));
+		aux.setTerminals(updateTerminals(aux));
+		gc.setVariables(aux.getVariables());
+		gc.setTerminals(aux.getTerminals());
+		gc.setRules(aux.getRules());
+		return gc;
+	}
+	*/
 	
 	/**
 	 * Retorna os elementos que pertencem ao conjunto Term e não pertencem ao conjunto noTerm
@@ -459,7 +615,38 @@ public class GrammarParser {
 		return reach;
 	}
 
-	
+	/*
+	public static Grammar getGrammarWithoutNoReach(final Grammar g) {
+		Set<String> reach = new HashSet<>();
+		Set<String> prev = new HashSet<>();
+		Set<String> New = new HashSet<>();
+		Grammar gc = (Grammar) g.clone();
+		
+		reach.add(gc.getInitialSymbol());
+		do {
+			New.addAll(reachMinusPrev(reach, prev));
+			prev.addAll(reach);
+			for (String element : New) {
+				for (Rule secondElement : gc.getRules()) {
+					if (secondElement.getLeftSide().equals(element)) {
+						reach.addAll(variablesInW(reach,
+								secondElement.getRightSide()));
+					}
+				}
+			}
+		} while (!reach.equals(prev));
+		Grammar aux = new Grammar();
+		aux.setVariables(prev);
+		aux.setInitialSymbol(gc.getInitialSymbol());
+		aux.setRules(updateRules(prev, gc));
+		aux.setTerminals(updateTerminals(aux));
+		gc.setVariables(aux.getVariables());
+		gc.setTerminals(aux.getTerminals());
+		gc.setRules(aux.getRules());
+		
+		return aux;
+	}
+	*/
 
 	/**
 	 * Verifica a existência de determinada produção.
