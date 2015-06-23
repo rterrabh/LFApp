@@ -1,0 +1,398 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical"
+    >
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:background="#FFFFFF"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/layouttext1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Remoção de Recursão no Símbolo Inicial"
+                android:textColor="#000000"
+                android:textSize="20sp" />
+
+            <LinearLayout
+                android:id="@+id/layout1"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:id="@+id/funcionalidade1.1"
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="vertical" >
+
+                    <ScrollView
+                        android:id="@+id/scrollView1.1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"
+                            android:measureWithLargestChild="true"
+                            android:longClickable="true"
+                            android:id="@+id/LayoutAlg1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Algoritmo:"
+                                android:id="@+id/TituloAlgoritmo1"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/DescricaoAlgoritmo1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                        </LinearLayout>
+                    </ScrollView>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/funcionalidade1.2"
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="vertical" >
+
+                    <ScrollView
+                        android:id="@+id/scrollView1.2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"
+                            android:measureWithLargestChild="true"
+                            android:longClickable="true"
+                            android:id="@+id/Alg1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Resultado:"
+                                android:id="@+id/ResultadoAlgoritmo1"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/Algoritmo1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                        </LinearLayout>
+                    </ScrollView>
+
+
+                </LinearLayout>
+            </LinearLayout>
+
+
+
+            <TextView
+                android:id="@+id/layouttext2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="20dp"
+                android:textColor="#000000"
+                android:text="Remoção de Produções Vazias"
+                android:textSize="20sp" />
+
+            <LinearLayout
+                android:id="@+id/layout2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:id="@+id/funcionalidade2.1"
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="vertical" >
+
+                    <ScrollView
+                        android:id="@+id/scrollView2.1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"
+                            android:measureWithLargestChild="true"
+                            android:longClickable="true"
+                            android:id="@+id/LayoutAlg2"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Algoritmo:"
+                                android:id="@+id/TituloAlgoritmo2"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/DescricaoAlgoritmo2"
+                                android:layout_width="match_parent"
+                                android:layout_height="fill_parent"
+                                android:textColor="#000000" />
+
+                        </LinearLayout>
+                    </ScrollView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/funcionalidade2.2"
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="vertical" >
+
+                    <ScrollView
+                        android:id="@+id/scrollView2.2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"
+                            android:measureWithLargestChild="true"
+                            android:longClickable="true"
+                            android:id="@+id/Alg2"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Resultado:"
+                                android:id="@+id/ResultadoAlgoritmo2"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/Algoritmo2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                        </LinearLayout>
+                    </ScrollView>
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/layouttext3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Remoção de Regras da Cadeia"
+                android:textSize="20sp"
+                android:textColor="#000000"
+                android:paddingTop="20dp"
+                />
+
+            <LinearLayout
+                android:id="@+id/layout3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000"
+                    android:text="Pendente. " />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/layouttext4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Remoção de símbolos não terminais"
+                android:textSize="20sp"
+                android:textColor="#000000"
+                android:paddingTop="20dp"
+                />
+
+            <LinearLayout
+                android:id="@+id/layout4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000"
+                    android:text="Pendente." />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/layouttext5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Remoção de símbolos não alcançáveis"
+                android:textSize="20sp"
+                android:textColor="#000000"
+                android:paddingTop="20dp" />
+
+            <LinearLayout
+                android:id="@+id/layout5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                    <TextView
+                        android:id="@+id/textView5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000"
+                        android:text="Pendente." />
+
+                </LinearLayout>
+
+            <TextView
+                android:id="@+id/layouttext6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#000000"
+                android:text="Forma Normal de Chomsky"
+                android:paddingTop="20dp"
+                android:textSize="20sp"  />
+
+            <LinearLayout
+                android:id="@+id/layout6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000"
+                    android:text="Pendente" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/layouttext7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textColor="#000000"
+                android:paddingTop="20dp"
+                android:text="Remoção de Recursão Direta à Esquerda" />
+
+            <LinearLayout
+                android:id="@+id/layout7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/test"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000"
+                    android:text="Pendente." />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/layouttext8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:paddingTop="20dp"
+                android:textColor="#000000"
+                android:text="Remoção de Recursão à Esquerda" />
+
+            <LinearLayout
+                android:id="@+id/layout8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/textView8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000"
+                    android:text="Pendente." />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/layouttext9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:paddingTop="20dp"
+                android:textColor="#000000"
+                android:text="Forma Normal de Greibach" />
+
+            <LinearLayout
+                android:id="@+id/layout9"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/textView9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000"
+                    android:text="Pendente." />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+               android:layout_height="fill_parent">
+
+                <Button
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:text="Voltar"
+                    android:id="@+id/button_Voltar"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>
