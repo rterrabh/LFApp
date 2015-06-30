@@ -23,7 +23,7 @@ public class MainActivity2 extends ActionBarActivity {
     private LinearLayout l1, l2, l3, l4, l5, l6, l7, l8, l9;
     private boolean z1, z2, z3, z4, z5, z6, z7, z8, z9;
     private Button button_Voltar;
-    private TextView step1_1, step1_2, step2_1, step2_2;
+    private TextView step1_1, step1_2, step2_1, step2_2, step2_3, step3_1, step3_2, step3_3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,45 +40,32 @@ public class MainActivity2 extends ActionBarActivity {
                 mensagem = dados.getString("msg");
 
                 Grammar g = new Grammar(mensagem);
+
+                removingInitialRecursiveSymbol(g);
+                removingEmptyProductions(g);
+                removingChainRules(g);
+
                 Grammar gc = (Grammar) g.clone();
-
-                String descricao = new String();
-                String grammarAux = new String();
-
-                //REMOÇÃO DE SÍMBOLO INICIAL RECURSIVO
-                gc = g.getGrammarWithInitialSymbolNotRecursive(g);
-                grammarAux = printRules(gc);
-                descricao = "Assuma uma GLC G = (V, Σ, P, " + g.getInitialSymbol() + ") onde " + g.getInitialSymbol() + " é recurssivo, logo: ";
-                descricao += "\n - G' = (V U {" + gc.getInitialSymbol() +"}, Σ, P U {" + gc.getInitialSymbol() + "->" + g.getInitialSymbol() + "}, "
-            + gc.getInitialSymbol() + ")";
-                descricao += "\n - L(G) = L(G')";
-                step1_1 = (TextView) findViewById(R.id.DescricaoAlgoritmo1);
-                step1_1.setText(descricao);
-
-                step1_2 = (TextView) findViewById(R.id.Algoritmo1);
-                step1_2.setText(grammarAux);
-
-                //REMOÇÃO DE PRODUÇOES VAZIAS
-                descricao = "1.\nNULL = { A | {A -> .} ∈ P}\nrepita\n     PREV = NULL \n     para cada A ∈ V faça";
-                descricao += "\n          se A -> w e w ∈ PREV* faça \n                    NULL = NULL U {A}\n";
-                descricao += "até NULL == PREV\n\n";
-                descricao += "2. \n - Remoção de todos os lambda\n - Busca por variáveis que produzem lambda indiretamente\n - Eliminação " +
-                        "de regras que produzem vazio";
-                step2_1 = (TextView) findViewById(R.id.DescricaoAlgoritmo2);
-                step2_1.setText(descricao);
-
-                gc = g.getGrammarEssentiallyNoncontracting(g);
-                grammarAux = printRules(gc);
-                step2_2 = (TextView) findViewById(R.id.Algoritmo2);
-                step2_2.setText(grammarAux);
-
-
-
             }
         }
 
 
+        acordionMenu();
+        this.button_Voltar = (Button) findViewById(R.id.button_Voltar);
+        this.button_Voltar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent TrocaTela = new Intent(MainActivity2.this, MainActivity.class);
+                startActivity(TrocaTela);
+                finish();
+            }
+        });
 
+
+
+    }
+
+    public void acordionMenu() {
         this.t1 = (TextView) findViewById(R.id.layouttext1);
         this.t2 = (TextView) findViewById(R.id.layouttext2);
         this.t3 = (TextView) findViewById(R.id.layouttext3);
@@ -234,18 +221,76 @@ public class MainActivity2 extends ActionBarActivity {
                 }
             }
         });
+    }
 
-        this.button_Voltar = (Button) findViewById(R.id.button_Voltar);
-        this.button_Voltar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent TrocaTela = new Intent(MainActivity2.this, MainActivity.class);
-                startActivity(TrocaTela);
-                finish();
-            }
-        });
+    public void removingInitialRecursiveSymbol(final Grammar g) {
+        Grammar gc = (Grammar) g.clone();
+        StringBuilder academicSupport = new StringBuilder();
+        gc = g.getGrammarWithInitialSymbolNotRecursive(g, academicSupport);
+        String txtGrammar = printRules(gc);
+
+        step1_1 = (TextView) findViewById(R.id.DescricaoAlgoritmo1);
+        step1_1.setText(academicSupport);
+
+        step1_2 = (TextView) findViewById(R.id.Algoritmo1);
+        step1_2.setText(txtGrammar);
+    }
+
+    public void removingEmptyProductions(final Grammar g) {
+        Grammar gc = (Grammar) g.clone();
+        StringBuilder academicSupport = new StringBuilder();
+        StringBuilder algorithm = new StringBuilder();
+        algorithm.append("\t\t\tNULL  = { A | {A -> .} ∈ P}\n");
+        algorithm.append("\t\t\trepita\n");
+        algorithm.append("\t\t\t\t\tPREV = NULL\n");
+        algorithm.append("\t\t\t\t\t\t\tpara cada A ∈ V faça:\n");
+        algorithm.append("\t\t\t\t\t\t\t\t\t se A -> w e w ∈ PREV* faça:\n");
+        algorithm.append("\t\t\t\t\t\t\t\t\t\t\tNULL = NULL U {A}\n");
+        algorithm.append("\t\t\taté NULL == PREV\n");
 
 
+        gc = g.getGrammarEssentiallyNoncontracting(g, academicSupport);
+        step2_1 = (TextView) findViewById(R.id.PseudocódigoAlgoritmo2);
+        step2_1.setText(algorithm);
+
+        step2_2 = (TextView) findViewById(R.id.DescricaoAlgoritmo2);
+        step2_2.setText(academicSupport);
+
+
+        String txtGrammar = printRules(gc);
+        step2_3 = (TextView) findViewById(R.id.Algoritmo2);
+        step2_3.setText(txtGrammar);
+
+
+
+    }
+
+    public void removingChainRules(final Grammar g) {
+        Grammar gc = (Grammar) g.clone();
+        StringBuilder academicSupport = new StringBuilder();
+        StringBuilder algorithm = new StringBuilder();
+
+        algorithm.append("\t\t\tCHAIN(A) = {A}\n");
+        algorithm.append("\t\t\tPREV = {}\n");
+        algorithm.append("\t\t\trepita\n");
+        algorithm.append("\t\t\t\t\tNEW = CHAIN(A) - PREV\n");
+        algorithm.append("\t\t\t\t\tPREV = CHAIN(A)\n");
+        algorithm.append("\t\t\t\t\t\t\tpara cada B ∈ NEW faça:\n");
+        algorithm.append("\t\t\t\t\t\t\t\t\t para cada B -> C faça\n");
+        algorithm.append("\t\t\t\t\t\t\t\t\t\t\t CHAIN(A) = CHAIN(A) U {C}\n");
+        algorithm.append("\t\t\taté NULL == PREV\n");
+
+        step3_1 = (TextView) findViewById(R.id.PseudocódigoAlgoritmo3);
+        step3_1.setText(algorithm);
+
+        gc = g.getGrammarWithoutChainRules(g, academicSupport);
+
+        step3_2 = (TextView) findViewById(R.id.DescricaoAlgoritmo3);
+        step3_2.setText(academicSupport);
+
+        String txtGrammar = printRules(gc);
+        step3_3 = (TextView) findViewById(R.id.Algoritmo3);
+        step3_3.setText(txtGrammar);
 
     }
 

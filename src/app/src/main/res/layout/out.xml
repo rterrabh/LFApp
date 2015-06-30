@@ -156,10 +156,16 @@
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:id="@+id/DescricaoAlgoritmo2"
+                                android:id="@+id/PseudocódigoAlgoritmo2"
                                 android:layout_width="match_parent"
                                 android:layout_height="fill_parent"
                                 android:textColor="#000000" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="fill_parent"
+                                android:id="@+id/DescricaoAlgoritmo2"
+                                android:layout_gravity="center_horizontal" />
 
                         </LinearLayout>
                     </ScrollView>
@@ -200,11 +206,7 @@
 
                         </LinearLayout>
                     </ScrollView>
-
-
                 </LinearLayout>
-
-
             </LinearLayout>
 
             <TextView
@@ -220,16 +222,92 @@
             <LinearLayout
                 android:id="@+id/layout3"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:orientation="vertical" >
 
-                <TextView
-                    android:id="@+id/textView3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#000000"
-                    android:text="Pendente. " />
+                <LinearLayout
+                    android:id="@+id/funcionalidade3.1"
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="vertical" >
 
+                    <ScrollView
+                        android:id="@+id/scrollView3.1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"
+                            android:measureWithLargestChild="true"
+                            android:longClickable="true"
+                            android:id="@+id/LayoutAlg3"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Algoritmo:"
+                                android:id="@+id/TituloAlgoritmo3"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/PseudocódigoAlgoritmo3"
+                                android:layout_width="match_parent"
+                                android:layout_height="fill_parent"
+                                android:textColor="#000000" />
+
+                            <TextView
+                                android:id="@+id/DescricaoAlgoritmo3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                        </LinearLayout>
+                    </ScrollView>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/funcionalidade3.2"
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="vertical" >
+
+                    <ScrollView
+                        android:id="@+id/scrollView3.2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"
+                            android:measureWithLargestChild="true"
+                            android:longClickable="true"
+                            android:id="@+id/Alg3"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Resultado:"
+                                android:id="@+id/ResultadoAlgoritmo3"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/Algoritmo3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                        </LinearLayout>
+                    </ScrollView>
+
+
+                </LinearLayout>
             </LinearLayout>
 
             <TextView
