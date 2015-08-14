@@ -323,16 +323,92 @@
             <LinearLayout
                 android:id="@+id/layout4"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:orientation="vertical" >
 
-                <TextView
-                    android:id="@+id/textView4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#000000"
-                    android:text="Pendente." />
+                <LinearLayout
+                    android:id="@+id/funcionalidade4.1"
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="vertical" >
 
+                    <ScrollView
+                        android:id="@+id/scrollView4.1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"
+                            android:measureWithLargestChild="true"
+                            android:longClickable="true"
+                            android:id="@+id/LayoutAlg4"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Algoritmo:"
+                                android:id="@+id/TituloAlgoritmo4"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/PseudocódigoAlgoritmo4"
+                                android:layout_width="match_parent"
+                                android:layout_height="fill_parent"
+                                android:textColor="#000000" />
+
+                            <TextView
+                                android:id="@+id/DescricaoAlgoritmo4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                        </LinearLayout>
+                    </ScrollView>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/funcionalidade4.2"
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="vertical" >
+
+                    <ScrollView
+                        android:id="@+id/scrollView4.2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"
+                            android:measureWithLargestChild="true"
+                            android:longClickable="true"
+                            android:id="@+id/Alg4"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Resultado:"
+                                android:id="@+id/ResultadoAlgoritmo4"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/Algoritmo4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                        </LinearLayout>
+                    </ScrollView>
+
+
+                </LinearLayout>
             </LinearLayout>
 
             <TextView
@@ -347,17 +423,93 @@
             <LinearLayout
                 android:id="@+id/layout5"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:orientation="vertical" >
 
-                    <TextView
-                        android:id="@+id/textView5"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="#000000"
-                        android:text="Pendente." />
+                <LinearLayout
+                    android:id="@+id/funcionalidade5.1"
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="vertical" >
+
+                    <ScrollView
+                        android:id="@+id/scrollView5.1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"
+                            android:measureWithLargestChild="true"
+                            android:longClickable="true"
+                            android:id="@+id/LayoutAlg5"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Algoritmo:"
+                                android:id="@+id/TituloAlgoritmo5"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/PseudocódigoAlgoritmo5"
+                                android:layout_width="match_parent"
+                                android:layout_height="fill_parent"
+                                android:textColor="#000000" />
+
+                            <TextView
+                                android:id="@+id/DescricaoAlgoritmo5"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                        </LinearLayout>
+                    </ScrollView>
+
 
                 </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/funcionalidade5.2"
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="vertical" >
+
+                    <ScrollView
+                        android:id="@+id/scrollView5.2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"
+                            android:measureWithLargestChild="true"
+                            android:longClickable="true"
+                            android:id="@+id/Alg5"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Resultado:"
+                                android:id="@+id/ResultadoAlgoritmo5"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/Algoritmo5"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                        </LinearLayout>
+                    </ScrollView>
+
+
+                </LinearLayout>
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/layouttext6"
@@ -395,17 +547,94 @@
             <LinearLayout
                 android:id="@+id/layout7"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:orientation="vertical" >
 
-                <TextView
-                    android:id="@+id/test"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#000000"
-                    android:text="Pendente." />
+                <LinearLayout
+                    android:id="@+id/funcionalidade7.1"
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="vertical" >
 
+                    <ScrollView
+                        android:id="@+id/scrollView7.1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"
+                            android:measureWithLargestChild="true"
+                            android:longClickable="true"
+                            android:id="@+id/LayoutAlg7"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Algoritmo:"
+                                android:id="@+id/TituloAlgoritmo7"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/PseudocódigoAlgoritmo7"
+                                android:layout_width="match_parent"
+                                android:layout_height="fill_parent"
+                                android:textColor="#000000" />
+
+                            <TextView
+                                android:id="@+id/DescricaoAlgoritmo7"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                        </LinearLayout>
+                    </ScrollView>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/funcionalidade7.2"
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="vertical" >
+
+                    <ScrollView
+                        android:id="@+id/scrollView7.2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"
+                            android:measureWithLargestChild="true"
+                            android:longClickable="true"
+                            android:id="@+id/Alg7"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Resultado:"
+                                android:id="@+id/ResultadoAlgoritmo7"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/Algoritmo7"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                        </LinearLayout>
+                    </ScrollView>
+
+
+                </LinearLayout>
             </LinearLayout>
+
 
             <TextView
                 android:id="@+id/layouttext8"
@@ -419,16 +648,92 @@
             <LinearLayout
                 android:id="@+id/layout8"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:orientation="vertical" >
 
-                <TextView
-                    android:id="@+id/textView8"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#000000"
-                    android:text="Pendente." />
+                <LinearLayout
+                    android:id="@+id/funcionalidade8.1"
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="vertical" >
 
+                    <ScrollView
+                        android:id="@+id/scrollView8.1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"
+                            android:measureWithLargestChild="true"
+                            android:longClickable="true"
+                            android:id="@+id/LayoutAlg8"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Algoritmo:"
+                                android:id="@+id/TituloAlgoritmo8"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/PseudocódigoAlgoritmo8"
+                                android:layout_width="match_parent"
+                                android:layout_height="fill_parent"
+                                android:textColor="#000000" />
+
+                            <TextView
+                                android:id="@+id/DescricaoAlgoritmo8"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                        </LinearLayout>
+                    </ScrollView>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/funcionalidade8.2"
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="vertical" >
+
+                    <ScrollView
+                        android:id="@+id/scrollView8.2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"
+                            android:measureWithLargestChild="true"
+                            android:longClickable="true"
+                            android:id="@+id/Alg8"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Resultado:"
+                                android:id="@+id/ResultadoAlgoritmo8"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/Algoritmo8"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                        </LinearLayout>
+                    </ScrollView>
+
+
+                </LinearLayout>
             </LinearLayout>
 
             <TextView
