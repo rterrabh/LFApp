@@ -617,7 +617,7 @@ public class Grammar implements Cloneable {
 		Set<String> haveRecursion = new HashSet<String>();
 		int aux = 1;
 		for (Rule element : gc.getRules()) {
-			if (element.getLeftSide().equals(Character.toString(element.getRightSide().charAt(0)))) {
+				if (element.getLeftSide().equals(Character.toString(element.getRightSide().charAt(0)))) {
 				haveRecursion.add(element.getLeftSide());
 			}
 		}
@@ -774,7 +774,7 @@ public class Grammar implements Cloneable {
 	public Grammar FNG(final Grammar g) {
 		Grammar gc = (Grammar) g.clone();
 		gc = g.FNC(gc);
-		gc = g.removingLeftRecursion(gc);
+		//gc = g.removingLeftRecursion(gc);
 
 		if (GrammarParser.grammarWithCycles(gc)) {
 			while (!GrammarParser.isFNG(gc.getRules())) {

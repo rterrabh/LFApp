@@ -7,52 +7,98 @@
 
     <ScrollView
         android:id="@+id/scrollView1"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
 
-
-
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:background="#FFFFFF"
             android:orientation="vertical" >
 
             <TextView
+                android:id="@+id/layouttext11"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textColor="#000000"
+                android:text="Derivação mais à esquerda" />
+
+            <LinearLayout
+                android:id="@+id/layout11"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/textView11"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000"
+                    android:text="Pendente." />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/layouttext12"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:paddingTop="20dp"
+                android:textColor="#000000"
+                android:text="Derivação mais à direita" />
+
+            <LinearLayout
+                android:id="@+id/layout12"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/textView12"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000"
+                    android:text="Pendente." />
+
+            </LinearLayout>
+
+            <TextView
                 android:id="@+id/layouttext1"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="Remoção de Recursão no Símbolo Inicial"
                 android:textColor="#000000"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:paddingTop="20dp"/>
 
             <LinearLayout
                 android:id="@+id/layout1"
-                android:layout_width="match_parent"
-                android:layout_height="fill_parent"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical" >
 
                 <LinearLayout
                     android:id="@+id/funcionalidade1.1"
-                    android:layout_width="match_parent"
-                    android:layout_height="fill_parent"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical" >
 
                     <ScrollView
                         android:id="@+id/scrollView1.1"
-                        android:layout_width="match_parent"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content" >
 
                         <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="10dp"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
                             android:measureWithLargestChild="true"
                             android:longClickable="true"
                             android:id="@+id/LayoutAlg1"
                             android:orientation="vertical">
 
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:text="Algoritmo:"
                                 android:id="@+id/TituloAlgoritmo1"
@@ -61,7 +107,7 @@
 
                             <TextView
                                 android:id="@+id/DescricaoAlgoritmo1"
-                                android:layout_width="wrap_content"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="#000000" />
 
@@ -73,25 +119,25 @@
 
                 <LinearLayout
                     android:id="@+id/funcionalidade1.2"
-                    android:layout_width="match_parent"
-                    android:layout_height="fill_parent"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical" >
 
                     <ScrollView
                         android:id="@+id/scrollView1.2"
-                        android:layout_width="match_parent"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content" >
 
                         <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="10dp"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
                             android:measureWithLargestChild="true"
                             android:longClickable="true"
                             android:id="@+id/Alg1"
                             android:orientation="vertical">
 
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:text="Resultado:"
                                 android:id="@+id/ResultadoAlgoritmo1"
@@ -100,22 +146,21 @@
 
                             <TextView
                                 android:id="@+id/Algoritmo1"
-                                android:layout_width="wrap_content"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="#000000" />
 
                         </LinearLayout>
+
                     </ScrollView>
 
-
                 </LinearLayout>
+
             </LinearLayout>
-
-
 
             <TextView
                 android:id="@+id/layouttext2"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="20dp"
                 android:textColor="#000000"
@@ -124,74 +169,77 @@
 
             <LinearLayout
                 android:id="@+id/layout2"
-                android:layout_width="match_parent"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" >
 
                 <LinearLayout
                     android:id="@+id/funcionalidade2.1"
-                    android:layout_width="match_parent"
-                    android:layout_height="fill_parent"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical" >
 
                     <ScrollView
                         android:id="@+id/scrollView2.1"
-                        android:layout_width="match_parent"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content" >
 
                         <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="10dp"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
                             android:measureWithLargestChild="true"
                             android:longClickable="true"
                             android:id="@+id/LayoutAlg2"
                             android:orientation="vertical">
 
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:text="Algoritmo:"
                                 android:id="@+id/TituloAlgoritmo2"
                                 android:textColor="#acff000a"
                                 android:textStyle="bold" />
 
-                            <TextView
+                           <TextView
                                 android:id="@+id/PseudocódigoAlgoritmo2"
-                                android:layout_width="match_parent"
-                                android:layout_height="fill_parent"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
                                 android:textColor="#000000" />
 
+
                             <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="fill_parent"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
                                 android:id="@+id/DescricaoAlgoritmo2"
                                 android:layout_gravity="center_horizontal" />
 
                         </LinearLayout>
+
                     </ScrollView>
+
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/funcionalidade2.2"
-                    android:layout_width="match_parent"
-                    android:layout_height="fill_parent"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical" >
 
                     <ScrollView
                         android:id="@+id/scrollView2.2"
-                        android:layout_width="match_parent"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content" >
 
                         <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="10dp"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
                             android:measureWithLargestChild="true"
                             android:longClickable="true"
                             android:id="@+id/Alg2"
                             android:orientation="vertical">
 
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:text="Resultado:"
                                 android:id="@+id/ResultadoAlgoritmo2"
@@ -200,18 +248,21 @@
 
                             <TextView
                                 android:id="@+id/Algoritmo2"
-                                android:layout_width="wrap_content"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="#000000" />
 
                         </LinearLayout>
+
                     </ScrollView>
+
                 </LinearLayout>
+
             </LinearLayout>
 
             <TextView
                 android:id="@+id/layouttext3"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="Remoção de Regras da Cadeia"
                 android:textSize="20sp"
@@ -221,31 +272,31 @@
 
             <LinearLayout
                 android:id="@+id/layout3"
-                android:layout_width="match_parent"
-                android:layout_height="fill_parent"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical" >
 
                 <LinearLayout
                     android:id="@+id/funcionalidade3.1"
-                    android:layout_width="match_parent"
-                    android:layout_height="fill_parent"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical" >
 
                     <ScrollView
                         android:id="@+id/scrollView3.1"
-                        android:layout_width="match_parent"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content" >
 
                         <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="10dp"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
                             android:measureWithLargestChild="true"
                             android:longClickable="true"
                             android:id="@+id/LayoutAlg3"
                             android:orientation="vertical">
 
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:text="Algoritmo:"
                                 android:id="@+id/TituloAlgoritmo3"
@@ -254,43 +305,43 @@
 
                             <TextView
                                 android:id="@+id/PseudocódigoAlgoritmo3"
-                                android:layout_width="match_parent"
-                                android:layout_height="fill_parent"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
                                 android:textColor="#000000" />
 
                             <TextView
                                 android:id="@+id/DescricaoAlgoritmo3"
-                                android:layout_width="wrap_content"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="#000000" />
 
                         </LinearLayout>
-                    </ScrollView>
 
+                    </ScrollView>
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/funcionalidade3.2"
-                    android:layout_width="match_parent"
-                    android:layout_height="fill_parent"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical" >
 
                     <ScrollView
                         android:id="@+id/scrollView3.2"
-                        android:layout_width="match_parent"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content" >
 
                         <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="10dp"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
                             android:measureWithLargestChild="true"
                             android:longClickable="true"
                             android:id="@+id/Alg3"
                             android:orientation="vertical">
 
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:text="Resultado:"
                                 android:id="@+id/ResultadoAlgoritmo3"
@@ -299,20 +350,21 @@
 
                             <TextView
                                 android:id="@+id/Algoritmo3"
-                                android:layout_width="wrap_content"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="#000000" />
 
                         </LinearLayout>
+
                     </ScrollView>
 
-
                 </LinearLayout>
+
             </LinearLayout>
 
             <TextView
                 android:id="@+id/layouttext4"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="Remoção de símbolos não terminais"
                 android:textSize="20sp"
@@ -322,31 +374,31 @@
 
             <LinearLayout
                 android:id="@+id/layout4"
-                android:layout_width="match_parent"
-                android:layout_height="fill_parent"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical" >
 
                 <LinearLayout
                     android:id="@+id/funcionalidade4.1"
-                    android:layout_width="match_parent"
-                    android:layout_height="fill_parent"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical" >
 
                     <ScrollView
                         android:id="@+id/scrollView4.1"
-                        android:layout_width="match_parent"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content" >
 
                         <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="10dp"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
                             android:measureWithLargestChild="true"
                             android:longClickable="true"
                             android:id="@+id/LayoutAlg4"
                             android:orientation="vertical">
 
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:text="Algoritmo:"
                                 android:id="@+id/TituloAlgoritmo4"
@@ -355,43 +407,43 @@
 
                             <TextView
                                 android:id="@+id/PseudocódigoAlgoritmo4"
-                                android:layout_width="match_parent"
-                                android:layout_height="fill_parent"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
                                 android:textColor="#000000" />
 
                             <TextView
                                 android:id="@+id/DescricaoAlgoritmo4"
-                                android:layout_width="wrap_content"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="#000000" />
 
                         </LinearLayout>
-                    </ScrollView>
 
+                    </ScrollView>
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/funcionalidade4.2"
-                    android:layout_width="match_parent"
-                    android:layout_height="fill_parent"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical" >
 
                     <ScrollView
                         android:id="@+id/scrollView4.2"
-                        android:layout_width="match_parent"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content" >
 
                         <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="10dp"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
                             android:measureWithLargestChild="true"
                             android:longClickable="true"
                             android:id="@+id/Alg4"
                             android:orientation="vertical">
 
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:text="Resultado:"
                                 android:id="@+id/ResultadoAlgoritmo4"
@@ -400,20 +452,21 @@
 
                             <TextView
                                 android:id="@+id/Algoritmo4"
-                                android:layout_width="wrap_content"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="#000000" />
 
                         </LinearLayout>
+
                     </ScrollView>
 
-
                 </LinearLayout>
+
             </LinearLayout>
 
             <TextView
                 android:id="@+id/layouttext5"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="Remoção de símbolos não alcançáveis"
                 android:textSize="20sp"
@@ -422,31 +475,31 @@
 
             <LinearLayout
                 android:id="@+id/layout5"
-                android:layout_width="match_parent"
-                android:layout_height="fill_parent"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical" >
 
                 <LinearLayout
                     android:id="@+id/funcionalidade5.1"
-                    android:layout_width="match_parent"
-                    android:layout_height="fill_parent"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical" >
 
                     <ScrollView
                         android:id="@+id/scrollView5.1"
-                        android:layout_width="match_parent"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content" >
 
                         <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="10dp"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
                             android:measureWithLargestChild="true"
                             android:longClickable="true"
                             android:id="@+id/LayoutAlg5"
                             android:orientation="vertical">
 
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:text="Algoritmo:"
                                 android:id="@+id/TituloAlgoritmo5"
@@ -455,43 +508,43 @@
 
                             <TextView
                                 android:id="@+id/PseudocódigoAlgoritmo5"
-                                android:layout_width="match_parent"
-                                android:layout_height="fill_parent"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
                                 android:textColor="#000000" />
 
                             <TextView
                                 android:id="@+id/DescricaoAlgoritmo5"
-                                android:layout_width="wrap_content"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="#000000" />
 
                         </LinearLayout>
-                    </ScrollView>
 
+                    </ScrollView>
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/funcionalidade5.2"
-                    android:layout_width="match_parent"
-                    android:layout_height="fill_parent"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical" >
 
                     <ScrollView
                         android:id="@+id/scrollView5.2"
-                        android:layout_width="match_parent"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content" >
 
                         <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="10dp"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
                             android:measureWithLargestChild="true"
                             android:longClickable="true"
                             android:id="@+id/Alg5"
                             android:orientation="vertical">
 
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:text="Resultado:"
                                 android:id="@+id/ResultadoAlgoritmo5"
@@ -500,44 +553,189 @@
 
                             <TextView
                                 android:id="@+id/Algoritmo5"
-                                android:layout_width="wrap_content"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="#000000" />
 
                         </LinearLayout>
+
                     </ScrollView>
 
+                </LinearLayout>
+
+            </LinearLayout>
+
+        <TextView
+            android:id="@+id/layouttext6"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:text="Forma Normal de Chomsky"
+            android:paddingTop="20dp"
+            android:textSize="20sp"  />
+
+        <LinearLayout
+            android:id="@+id/layout6"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/funcionalidade6.1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <ScrollView
+                android:id="@+id/scrollView6.1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" >
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:measureWithLargestChild="true"
+                    android:longClickable="true"
+                    android:id="@+id/LayoutAlg6"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Algoritmo:"
+                        android:id="@+id/TituloAlgoritmo6"
+                        android:textColor="#acff000a"/>
+
+                    <TextView
+                        android:id="@+id/PseudocódigoAlgoritmo6"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000" />
+
+                    <TextView
+                        android:id="@+id/DescricaoAlgoritmo6"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000" />
 
                 </LinearLayout>
-            </LinearLayout>
 
-            <TextView
-                android:id="@+id/layouttext6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#000000"
-                android:text="Forma Normal de Chomsky"
-                android:paddingTop="20dp"
-                android:textSize="20sp"  />
+            </ScrollView>
 
-            <LinearLayout
-                android:id="@+id/layout6"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" >
+        </LinearLayout>
 
-                <TextView
-                    android:id="@+id/textView6"
-                    android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/funcionalidade6.2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <ScrollView
+                android:id="@+id/scrollView6.2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" >
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="#000000"
-                    android:text="Pendente" />
+                    android:measureWithLargestChild="true"
+                    android:longClickable="true"
+                    android:id="@+id/Alg6.2"
+                    android:orientation="vertical">
 
-            </LinearLayout>
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Resultado:"
+                        android:id="@+id/ResultadoAlgoritmo6"
+                        android:textColor="#acff000a" />
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Remoção de recursão no símbolo inicial:"
+                        android:textStyle="bold"
+                        />
+
+                    <TextView
+                        android:id="@+id/Algoritmo6.1"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Remoção de produções vazias:"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/Algoritmo6.2"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000" />
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Remoção de regras da cadeia:"
+                        android:textStyle="bold"
+                        />
+
+                    <TextView
+                        android:id="@+id/Algoritmo6.3"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000" />
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Remoção de símbolos não terminais:"
+                        android:textStyle="bold"
+                        />
+
+                    <TextView
+                        android:id="@+id/Algoritmo6.4"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000" />
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Remoção de símbolos não alcançáveis:"
+                        android:textStyle="bold"
+                        />
+
+                    <TextView
+                        android:id="@+id/Algoritmo6.5"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000" />
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Forma Normal de Chomsky:"
+                        android:textStyle="bold"
+                        />
+
+                    <TextView
+                        android:id="@+id/Algoritmo6.6"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000" />
+
+                </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
+        </LinearLayout>
 
             <TextView
                 android:id="@+id/layouttext7"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:textColor="#000000"
@@ -546,31 +744,31 @@
 
             <LinearLayout
                 android:id="@+id/layout7"
-                android:layout_width="match_parent"
-                android:layout_height="fill_parent"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical" >
 
                 <LinearLayout
                     android:id="@+id/funcionalidade7.1"
-                    android:layout_width="match_parent"
-                    android:layout_height="fill_parent"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical" >
 
                     <ScrollView
                         android:id="@+id/scrollView7.1"
-                        android:layout_width="match_parent"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content" >
 
                         <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="10dp"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
                             android:measureWithLargestChild="true"
                             android:longClickable="true"
                             android:id="@+id/LayoutAlg7"
                             android:orientation="vertical">
 
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:text="Algoritmo:"
                                 android:id="@+id/TituloAlgoritmo7"
@@ -579,43 +777,43 @@
 
                             <TextView
                                 android:id="@+id/PseudocódigoAlgoritmo7"
-                                android:layout_width="match_parent"
-                                android:layout_height="fill_parent"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
                                 android:textColor="#000000" />
 
                             <TextView
                                 android:id="@+id/DescricaoAlgoritmo7"
-                                android:layout_width="wrap_content"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="#000000" />
 
                         </LinearLayout>
-                    </ScrollView>
 
+                    </ScrollView>
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/funcionalidade7.2"
-                    android:layout_width="match_parent"
-                    android:layout_height="fill_parent"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical" >
 
                     <ScrollView
                         android:id="@+id/scrollView7.2"
-                        android:layout_width="match_parent"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content" >
 
                         <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="10dp"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
                             android:measureWithLargestChild="true"
                             android:longClickable="true"
                             android:id="@+id/Alg7"
                             android:orientation="vertical">
 
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:text="Resultado:"
                                 android:id="@+id/ResultadoAlgoritmo7"
@@ -624,21 +822,21 @@
 
                             <TextView
                                 android:id="@+id/Algoritmo7"
-                                android:layout_width="wrap_content"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="#000000" />
 
                         </LinearLayout>
+
                     </ScrollView>
 
-
                 </LinearLayout>
-            </LinearLayout>
 
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/layouttext8"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:paddingTop="20dp"
@@ -647,31 +845,31 @@
 
             <LinearLayout
                 android:id="@+id/layout8"
-                android:layout_width="match_parent"
-                android:layout_height="fill_parent"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical" >
 
                 <LinearLayout
                     android:id="@+id/funcionalidade8.1"
-                    android:layout_width="match_parent"
-                    android:layout_height="fill_parent"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical" >
 
                     <ScrollView
                         android:id="@+id/scrollView8.1"
-                        android:layout_width="match_parent"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content" >
 
                         <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="10dp"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
                             android:measureWithLargestChild="true"
                             android:longClickable="true"
                             android:id="@+id/LayoutAlg8"
                             android:orientation="vertical">
 
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:text="Algoritmo:"
                                 android:id="@+id/TituloAlgoritmo8"
@@ -680,43 +878,43 @@
 
                             <TextView
                                 android:id="@+id/PseudocódigoAlgoritmo8"
-                                android:layout_width="match_parent"
-                                android:layout_height="fill_parent"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
                                 android:textColor="#000000" />
 
                             <TextView
                                 android:id="@+id/DescricaoAlgoritmo8"
-                                android:layout_width="wrap_content"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="#000000" />
 
                         </LinearLayout>
-                    </ScrollView>
 
+                    </ScrollView>
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/funcionalidade8.2"
-                    android:layout_width="match_parent"
-                    android:layout_height="fill_parent"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical" >
 
                     <ScrollView
                         android:id="@+id/scrollView8.2"
-                        android:layout_width="match_parent"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content" >
 
                         <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="10dp"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
                             android:measureWithLargestChild="true"
                             android:longClickable="true"
                             android:id="@+id/Alg8"
                             android:orientation="vertical">
 
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:text="Resultado:"
                                 android:id="@+id/ResultadoAlgoritmo8"
@@ -725,20 +923,21 @@
 
                             <TextView
                                 android:id="@+id/Algoritmo8"
-                                android:layout_width="wrap_content"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="#000000" />
 
                         </LinearLayout>
+
                     </ScrollView>
 
-
                 </LinearLayout>
+
             </LinearLayout>
 
             <TextView
                 android:id="@+id/layouttext9"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:paddingTop="20dp"
@@ -747,13 +946,37 @@
 
             <LinearLayout
                 android:id="@+id/layout9"
-                android:layout_width="match_parent"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" >
 
                 <TextView
                     android:id="@+id/textView9"
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#000000"
+                    android:text="Pendente." />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/layouttext10"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:paddingTop="20dp"
+                android:textColor="#000000"
+                android:text="CYK" />
+
+            <LinearLayout
+                android:id="@+id/layout10"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/textView10"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:textColor="#000000"
                     android:text="Pendente." />
@@ -762,11 +985,11 @@
 
             <LinearLayout
                 android:layout_width="fill_parent"
-               android:layout_height="fill_parent">
+               android:layout_height="wrap_content">
 
                 <Button
                     android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
+                    android:layout_height="wrap_content"
                     android:text="Voltar"
                     android:id="@+id/button_Voltar"
                     android:layout_centerVertical="true"

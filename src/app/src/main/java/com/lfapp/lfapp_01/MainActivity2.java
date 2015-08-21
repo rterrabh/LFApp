@@ -16,12 +16,13 @@ import vo.*;
 
 public class MainActivity2 extends ActionBarActivity {
 
-    private TextView t1, t2, t3, t4, t5, t6, t7, t8, t9;
-    private LinearLayout l1, l2, l3, l4, l5, l6, l7, l8, l9;
-    private boolean z1, z2, z3, z4, z5, z6, z7, z8, z9;
+    private TextView t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12;
+    private LinearLayout l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12;
+    private boolean z1, z2, z3, z4, z5, z6, z7, z8, z9, z10, z11, z12;
     private Button button_Voltar;
     private TextView step1_1, step1_2, step2_1, step2_2, step2_3, step3_1, step3_2, step3_3, step4_1, step4_2, step4_3;
-    private TextView step5_1, step5_2, step5_3, step7_1, step7_2, step7_3, step8_1, step8_2, step8_3;
+    private TextView step5_1, step5_2, step5_3, step6_1, step6_2, step6_3, step7_1, step7_2, step7_3, step8_1, step8_2, step8_3;
+    private TextView step9_1, step9_2, step9_3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +45,7 @@ public class MainActivity2 extends ActionBarActivity {
                 removingChainRules(g);
                 removingNotTerminalsSymbols(g);
                 removingNotReachableSymbols(g);
-                //chomksky
+                fnc(g);
                 removingTheImmediateLeftRecursion(g);
                 removingLeftRecursion(g);
 
@@ -63,9 +64,6 @@ public class MainActivity2 extends ActionBarActivity {
                 finish();
             }
         });
-
-
-
     }
 
     public void acordionMenu() {
@@ -78,6 +76,9 @@ public class MainActivity2 extends ActionBarActivity {
         this.t7 = (TextView) findViewById(R.id.layouttext7);
         this.t8 = (TextView) findViewById(R.id.layouttext8);
         this.t9 = (TextView) findViewById(R.id.layouttext9);
+        this.t10 = (TextView) findViewById(R.id.layouttext10);
+        this.t11 = (TextView) findViewById(R.id.layouttext11);
+        this.t12 = (TextView) findViewById(R.id.layouttext12);
 
         this.l1 = (LinearLayout) findViewById(R.id.layout1);
         this.l2 = (LinearLayout) findViewById(R.id.layout2);
@@ -88,6 +89,9 @@ public class MainActivity2 extends ActionBarActivity {
         this.l7 = (LinearLayout) findViewById(R.id.layout7);
         this.l8 = (LinearLayout) findViewById(R.id.layout8);
         this.l9 = (LinearLayout) findViewById(R.id.layout9);
+        this.l10 = (LinearLayout) findViewById(R.id.layout10);
+        this.l11 = (LinearLayout) findViewById(R.id.layout11);
+        this.l12 = (LinearLayout) findViewById(R.id.layout12);
 
         this.l1.setVisibility(View.GONE);
         this.l2.setVisibility(View.GONE);
@@ -98,6 +102,10 @@ public class MainActivity2 extends ActionBarActivity {
         this.l7.setVisibility(View.GONE);
         this.l8.setVisibility(View.GONE);
         this.l9.setVisibility(View.GONE);
+        this.l10.setVisibility(View.GONE);
+        this.l11.setVisibility(View.GONE);
+        this.l12.setVisibility(View.GONE);
+
 
         z1 = true;
         this.t1.setOnClickListener(new View.OnClickListener() {
@@ -221,6 +229,48 @@ public class MainActivity2 extends ActionBarActivity {
                 } else {
                     l9.setVisibility(View.VISIBLE);
                     z9 = true;
+                }
+            }
+        });
+
+        z10 = true;
+        this.t10.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (z10) {
+                    l10.setVisibility(View.GONE);
+                    z10 = false;
+                } else {
+                    l10.setVisibility(View.VISIBLE);
+                    z10 = true;
+                }
+            }
+        });
+
+        z11 = true;
+        this.t11.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (z11) {
+                    l11.setVisibility(View.GONE);
+                    z11 = false;
+                } else {
+                    l11.setVisibility(View.VISIBLE);
+                    z11 = true;
+                }
+            }
+        });
+
+        z12 = true;
+        this.t12.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (z12) {
+                    l12.setVisibility(View.GONE);
+                    z12 = false;
+                } else {
+                    l12.setVisibility(View.VISIBLE);
+                    z12 = true;
                 }
             }
         });
@@ -349,6 +399,11 @@ public class MainActivity2 extends ActionBarActivity {
         String txtGrammar = printRules(gc);
         step5_3 = (TextView) findViewById(R.id.Algoritmo5);
         step5_3.setText(txtGrammar);
+
+    }
+
+    public void fnc(final Grammar g) {
+
 
     }
 
