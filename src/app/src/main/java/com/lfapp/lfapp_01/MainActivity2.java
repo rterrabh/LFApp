@@ -1,14 +1,21 @@
 package com.lfapp.lfapp_01;
 
+import android.app.ActionBar;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import vo.*;
 
@@ -16,20 +23,30 @@ import vo.*;
 
 public class MainActivity2 extends ActionBarActivity {
 
-    private TextView t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12;
-    private LinearLayout l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12;
-    private boolean z1, z2, z3, z4, z5, z6, z7, z8, z9, z10, z11, z12;
+    private TableLayout tableGrammarType;
+    private TextView titleGrammarType, titleLeftDerivation, titleRightDerivation, titleRemoveInitialSymbolRecursive;
+    private TextView titleRemoveEmptyProductions, titleChainRules, titleNoTermSymbols, titleNoReachSymbols, titleFnc, titleRemoveLeftDirectRecursion;
+    private TextView titleRemoveLeftRecursion, titleFng, titleCyk;
+    private boolean controlGrammarTypeMenu, controlLeftDerivationMenu, controlRightDerivationMenu, controlInitialSymbolRecursiveMenu, controlEmptyProductionsMenu;
+    private boolean controlChainRulesMenu, controlNoTermSymbolsMenu, controlNoReachSymbolsMenu, controlFncMenu, controlLeftDirectRecursionMenu, controlLeftRecursionMenu;
+    private boolean controlFngMenu, controlCykMenu;
+    private LinearLayout layoutGrammarType, layoutDerivationMoreLeft, layoutDerivationMoreRight, layoutInitialSymbolRecursive, layoutEmptyProductions;
+    private LinearLayout layoutChainRules, layoutNoTermSymbols, layoutNoReachSymbols, layoutFnc, layoutLeftDirectRecursion;
+    private LinearLayout layoutLeftRecursion, layoutFng, layoutCyk;
     private Button button_Voltar;
-    private TextView step1_1, step1_2, step2_1, step2_2, step2_3, step3_1, step3_2, step3_3, step4_1, step4_2, step4_3;
-    private TextView step5_1, step5_2, step5_3, step6_1, step6_2, step6_3, step7_1, step7_2, step7_3, step8_1, step8_2, step8_3;
-    private TextView step9_1, step9_2, step9_3;
+    private TextView step1_1, step1_2, step2_1, step2_2, step2_3, step3_1, step3_2, step3_3, step4_1, step4_2, step4_3, step5_1, step5_2, step5_3, step7_1;
+    private TextView step7_2, step7_3, step8_1, step8_2, step8_3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.out);
 
+        //chama método que gerencia menu
+        acordionMenu();
+
         String mensagem = new String();
+
         //pegando Intent para retirar o que foi enviado da tela anterior
         Intent intent = getIntent();
         if (intent != null) {
@@ -37,9 +54,8 @@ public class MainActivity2 extends ActionBarActivity {
             dados = intent.getExtras();
             if (dados != null) {
                 mensagem = dados.getString("msg");
-
                 Grammar g = new Grammar(mensagem);
-
+                grammarType(g);
                 removingInitialRecursiveSymbol(g);
                 removingEmptyProductions(g);
                 removingChainRules(g);
@@ -53,8 +69,6 @@ public class MainActivity2 extends ActionBarActivity {
             }
         }
 
-
-        acordionMenu();
         this.button_Voltar = (Button) findViewById(R.id.button_Voltar);
         this.button_Voltar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,226 +81,344 @@ public class MainActivity2 extends ActionBarActivity {
     }
 
     public void acordionMenu() {
-        this.t1 = (TextView) findViewById(R.id.layouttext1);
-        this.t2 = (TextView) findViewById(R.id.layouttext2);
-        this.t3 = (TextView) findViewById(R.id.layouttext3);
-        this.t4 = (TextView) findViewById(R.id.layouttext4);
-        this.t5 = (TextView) findViewById(R.id.layouttext5);
-        this.t6 = (TextView) findViewById(R.id.layouttext6);
-        this.t7 = (TextView) findViewById(R.id.layouttext7);
-        this.t8 = (TextView) findViewById(R.id.layouttext8);
-        this.t9 = (TextView) findViewById(R.id.layouttext9);
-        this.t10 = (TextView) findViewById(R.id.layouttext10);
-        this.t11 = (TextView) findViewById(R.id.layouttext11);
-        this.t12 = (TextView) findViewById(R.id.layouttext12);
+        this.layoutGrammarType = (LinearLayout) findViewById(R.id.identifyGrammar);
+        this.titleGrammarType = (TextView) findViewById(R.id.layouttext13);
+        this.layoutGrammarType.setVisibility(View.GONE);
 
-        this.l1 = (LinearLayout) findViewById(R.id.layout1);
-        this.l2 = (LinearLayout) findViewById(R.id.layout2);
-        this.l3 = (LinearLayout) findViewById(R.id.layout3);
-        this.l4 = (LinearLayout) findViewById(R.id.layout4);
-        this.l5 = (LinearLayout) findViewById(R.id.layout5);
-        this.l6 = (LinearLayout) findViewById(R.id.layout6);
-        this.l7 = (LinearLayout) findViewById(R.id.layout7);
-        this.l8 = (LinearLayout) findViewById(R.id.layout8);
-        this.l9 = (LinearLayout) findViewById(R.id.layout9);
-        this.l10 = (LinearLayout) findViewById(R.id.layout10);
-        this.l11 = (LinearLayout) findViewById(R.id.layout11);
-        this.l12 = (LinearLayout) findViewById(R.id.layout12);
+        this.layoutDerivationMoreLeft = (LinearLayout) findViewById(R.id.layout11);
+        this.titleLeftDerivation = (TextView) findViewById(R.id.titleDerivationMoreLeft);
+        this.layoutDerivationMoreLeft.setVisibility(View.GONE);
 
-        this.l1.setVisibility(View.GONE);
-        this.l2.setVisibility(View.GONE);
-        this.l3.setVisibility(View.GONE);
-        this.l4.setVisibility(View.GONE);
-        this.l5.setVisibility(View.GONE);
-        this.l6.setVisibility(View.GONE);
-        this.l7.setVisibility(View.GONE);
-        this.l8.setVisibility(View.GONE);
-        this.l9.setVisibility(View.GONE);
-        this.l10.setVisibility(View.GONE);
-        this.l11.setVisibility(View.GONE);
-        this.l12.setVisibility(View.GONE);
+        this.titleRightDerivation = (TextView) findViewById(R.id.titleDerivationMoreRight);
+        this.layoutDerivationMoreRight = (LinearLayout) findViewById(R.id.layout12);
+        this.layoutDerivationMoreRight.setVisibility(View.GONE);
+
+        this.titleRemoveInitialSymbolRecursive = (TextView) findViewById(R.id.titleRemoveInitialSymbolRecursive);
+        this.layoutInitialSymbolRecursive = (LinearLayout) findViewById(R.id.layout1);
+        this.layoutInitialSymbolRecursive.setVisibility(View.GONE);
+
+        this.titleRemoveEmptyProductions = (TextView) findViewById(R.id.titleEmptyProductions);
+        this.layoutEmptyProductions = (LinearLayout) findViewById(R.id.layout2);
+        this.layoutEmptyProductions.setVisibility(View.GONE);
+
+        this.titleChainRules = (TextView) findViewById(R.id.titleChainRules);
+        this.layoutChainRules = (LinearLayout) findViewById(R.id.layout3);
+        this.layoutChainRules.setVisibility(View.GONE);
+
+        this.titleNoTermSymbols = (TextView) findViewById(R.id.titleNoTermSymbols);
+        this.layoutNoTermSymbols = (LinearLayout) findViewById(R.id.layout4);
+        this.layoutNoTermSymbols.setVisibility(View.GONE);
+
+        this.titleNoReachSymbols = (TextView) findViewById(R.id.titleNoReachSymbols);
+        this.layoutNoReachSymbols = (LinearLayout) findViewById(R.id.layout5);
+        this.layoutNoReachSymbols.setVisibility(View.GONE);
+
+        this.titleFnc = (TextView) findViewById(R.id.titleFNC);
+        this.layoutFnc = (LinearLayout) findViewById(R.id.layout6);
+        this.layoutFnc.setVisibility(View.GONE);
+
+        this.titleRemoveLeftDirectRecursion = (TextView) findViewById(R.id.titleRemoveLeftDirectRecursion);
+        this.layoutLeftDirectRecursion = (LinearLayout) findViewById(R.id.layout7);
+        this.layoutLeftDirectRecursion.setVisibility(View.GONE);
+
+        this.titleRemoveLeftRecursion = (TextView) findViewById(R.id.titleRemoveLeftRecursion);
+        this.layoutLeftRecursion = (LinearLayout) findViewById(R.id.layout8);
+        this.layoutLeftRecursion.setVisibility(View.GONE);
+
+        this.titleFng = (TextView) findViewById(R.id.titleFNG);
+        this.layoutFng = (LinearLayout) findViewById(R.id.layout9);
+        this.layoutFng.setVisibility(View.GONE);
+
+        this.titleCyk = (TextView) findViewById(R.id.titleCYK);
+        this.layoutCyk = (LinearLayout) findViewById(R.id.layout10);
+        this.layoutCyk.setVisibility(View.GONE);
 
 
-        z1 = true;
-        this.t1.setOnClickListener(new View.OnClickListener() {
+        controlGrammarTypeMenu = true;
+        this.titleGrammarType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (z1) {
-                    l1.setVisibility(View.GONE);
-                    z1 = false;
+                if (controlGrammarTypeMenu) {
+                    layoutGrammarType.setVisibility(View.GONE);
+                    controlGrammarTypeMenu = false;
                 } else {
-                    l1.setVisibility(View.VISIBLE);
-                    z1 = true;
+                    layoutGrammarType.setVisibility(View.VISIBLE);
+                    controlGrammarTypeMenu = true;
                 }
             }
         });
 
-        z2 = true;
-        this.t2.setOnClickListener(new View.OnClickListener() {
+        controlLeftDerivationMenu = true;
+        this.titleLeftDerivation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (z2) {
-                    l2.setVisibility(View.GONE);
-                    z2 = false;
+                if (controlLeftDerivationMenu) {
+                    layoutDerivationMoreLeft.setVisibility(View.GONE);
+                    controlLeftDerivationMenu = false;
                 } else {
-                    l2.setVisibility(View.VISIBLE);
-                    z2 = true;
+                    layoutDerivationMoreLeft.setVisibility(View.VISIBLE);
+                    controlLeftDerivationMenu = true;
                 }
             }
         });
 
-        z3 = true;
-        this.t3.setOnClickListener(new View.OnClickListener() {
+        controlRightDerivationMenu = true;
+        this.titleRightDerivation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (z3) {
-                    l3.setVisibility(View.GONE);
-                    z3 = false;
+                if (controlRightDerivationMenu) {
+                    layoutDerivationMoreRight.setVisibility(View.GONE);
+                    controlRightDerivationMenu = false;
                 } else {
-                    l3.setVisibility(View.VISIBLE);
-                    z3 = true;
+                    layoutDerivationMoreRight.setVisibility(View.VISIBLE);
+                    controlRightDerivationMenu = true;
                 }
             }
         });
 
-        z4 = true;
-        this.t4.setOnClickListener(new View.OnClickListener() {
+        controlInitialSymbolRecursiveMenu = true;
+        this.titleRemoveInitialSymbolRecursive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (z4) {
-                    l4.setVisibility(View.GONE);
-                    z4 = false;
+                if (controlInitialSymbolRecursiveMenu) {
+                    layoutInitialSymbolRecursive.setVisibility(View.GONE);
+                    controlInitialSymbolRecursiveMenu = false;
                 } else {
-                    l4.setVisibility(View.VISIBLE);
-                    z4 = true;
+                    layoutInitialSymbolRecursive.setVisibility(View.VISIBLE);
+                    controlInitialSymbolRecursiveMenu = true;
                 }
             }
         });
 
-        z5 = true;
-        this.t5.setOnClickListener(new View.OnClickListener() {
+        controlEmptyProductionsMenu = true;
+        this.titleRemoveEmptyProductions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (z5) {
-                    l5.setVisibility(View.GONE);
-                    z5 = false;
+                if (controlEmptyProductionsMenu) {
+                    layoutEmptyProductions.setVisibility(View.GONE);
+                    controlEmptyProductionsMenu = false;
                 } else {
-                    l5.setVisibility(View.VISIBLE);
-                    z5 = true;
+                    layoutEmptyProductions.setVisibility(View.VISIBLE);
+                    controlEmptyProductionsMenu = true;
                 }
             }
         });
 
-        z6 = true;
-        this.t6.setOnClickListener(new View.OnClickListener() {
+        controlChainRulesMenu = true;
+        this.titleChainRules.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (z6) {
-                    l6.setVisibility(View.GONE);
-                    z6 = false;
+                if (controlChainRulesMenu) {
+                    layoutChainRules.setVisibility(View.GONE);
+                    controlChainRulesMenu = false;
                 } else {
-                    l6.setVisibility(View.VISIBLE);
-                    z6 = true;
+                    layoutChainRules.setVisibility(View.VISIBLE);
+                    controlChainRulesMenu = true;
                 }
             }
         });
 
-        z7 = true;
-        this.t7.setOnClickListener(new View.OnClickListener() {
+        controlNoTermSymbolsMenu = true;
+        this.titleNoTermSymbols.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (z7) {
-                    l7.setVisibility(View.GONE);
-                    z7 = false;
+                if (controlNoTermSymbolsMenu) {
+                    layoutNoTermSymbols.setVisibility(View.GONE);
+                    controlNoTermSymbolsMenu = false;
                 } else {
-                    l7.setVisibility(View.VISIBLE);
-                    z7 = true;
+                    layoutNoTermSymbols.setVisibility(View.VISIBLE);
+                    controlNoTermSymbolsMenu = true;
                 }
             }
         });
 
-        z8 = true;
-        this.t8.setOnClickListener(new View.OnClickListener() {
+        controlNoReachSymbolsMenu = true;
+        this.titleNoReachSymbols.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (z8) {
-                    l8.setVisibility(View.GONE);
-                    z8 = false;
+                if (controlNoReachSymbolsMenu) {
+                    layoutNoReachSymbols.setVisibility(View.GONE);
+                    controlNoReachSymbolsMenu = false;
                 } else {
-                    l8.setVisibility(View.VISIBLE);
-                    z8 = true;
+                    layoutNoReachSymbols.setVisibility(View.VISIBLE);
+                    controlNoReachSymbolsMenu = true;
                 }
             }
         });
 
-        z9 = true;
-        this.t9.setOnClickListener(new View.OnClickListener() {
+        controlFncMenu = true;
+        this.titleFnc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (z9) {
-                    l9.setVisibility(View.GONE);
-                    z9 = false;
+                if (controlFncMenu) {
+                    layoutFnc.setVisibility(View.GONE);
+                    controlFncMenu = false;
                 } else {
-                    l9.setVisibility(View.VISIBLE);
-                    z9 = true;
+                    layoutFnc.setVisibility(View.VISIBLE);
+                    controlFncMenu = true;
                 }
             }
         });
 
-        z10 = true;
-        this.t10.setOnClickListener(new View.OnClickListener() {
+        controlLeftDirectRecursionMenu = true;
+        this.titleRemoveLeftDirectRecursion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (z10) {
-                    l10.setVisibility(View.GONE);
-                    z10 = false;
+                if (controlLeftDirectRecursionMenu) {
+                    layoutLeftDirectRecursion.setVisibility(View.GONE);
+                    controlLeftDirectRecursionMenu = false;
                 } else {
-                    l10.setVisibility(View.VISIBLE);
-                    z10 = true;
+                    layoutLeftDirectRecursion.setVisibility(View.VISIBLE);
+                    controlLeftDirectRecursionMenu = true;
                 }
             }
         });
 
-        z11 = true;
-        this.t11.setOnClickListener(new View.OnClickListener() {
+        controlLeftRecursionMenu = true;
+        this.titleRemoveLeftRecursion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (z11) {
-                    l11.setVisibility(View.GONE);
-                    z11 = false;
+                if (controlLeftRecursionMenu) {
+                    layoutLeftRecursion.setVisibility(View.GONE);
+                    controlLeftRecursionMenu = false;
                 } else {
-                    l11.setVisibility(View.VISIBLE);
-                    z11 = true;
+                    layoutLeftRecursion.setVisibility(View.VISIBLE);
+                    controlLeftRecursionMenu = true;
                 }
             }
         });
 
-        z12 = true;
-        this.t12.setOnClickListener(new View.OnClickListener() {
+        controlFngMenu = true;
+        this.titleFng.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (z12) {
-                    l12.setVisibility(View.GONE);
-                    z12 = false;
+                if (controlFngMenu) {
+                    layoutFng.setVisibility(View.GONE);
+                    controlFngMenu = false;
                 } else {
-                    l12.setVisibility(View.VISIBLE);
-                    z12 = true;
+                    layoutFng.setVisibility(View.VISIBLE);
+                    controlFngMenu = true;
+                }
+            }
+        });
+
+        controlCykMenu = true;
+        this.titleCyk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (controlCykMenu) {
+                    layoutCyk.setVisibility(View.GONE);
+                    controlCykMenu = false;
+                } else {
+                    layoutCyk.setVisibility(View.VISIBLE);
+                    controlCykMenu = true;
                 }
             }
         });
     }
 
+    public void grammarType(final Grammar g) {
+
+        this.tableGrammarType = new TableLayout(this);
+        this.tableGrammarType = (TableLayout) findViewById(R.id.tableGrammarType);
+        this.tableGrammarType.setStretchAllColumns(true);
+
+        //LINHA 1
+        TableRow row0 = new TableRow(this);
+        TextView tv0_0 = new TextView(this);
+        tv0_0.setText("GR");
+        TextView tv0_1 = new TextView(this);
+        tv0_1.setText("u ∈ V");
+        TextView tv0_2 = new TextView(this);
+        tv0_2.setText("v ∈ λ | Σ | ΣV");
+        row0.addView(tv0_0);
+        row0.addView(tv0_1);
+        row0.addView(tv0_2);
+        row0.setBackgroundColor(getResources().getColor(R.color.DarkGray));
+        this.tableGrammarType.addView(row0);
+
+        //LINHA 2
+        TableRow row1 = new TableRow(this);
+        TextView tv1_0 = new TextView(this);
+        tv1_0.setText("GLC");
+        TextView tv1_1 = new TextView(this);
+        tv1_1.setText("u ∈ V");
+        TextView tv1_2 = new TextView(this);
+        tv1_2.setText("ν ∈ (V ∪ Σ)∗");
+        row1.addView(tv1_0);
+        row1.addView(tv1_1);
+        row1.addView(tv1_2);
+        row1.setBackgroundColor(getResources().getColor(R.color.Gainsboro));
+        tableGrammarType.addView(row1);
+
+        //LINHA 3
+        TableRow row2 = new TableRow(this);
+        TextView tv2_0 = new TextView(this);
+        tv2_0.setText("GSC");
+        TextView tv2_1 = new TextView(this);
+        tv2_1.setText("u ∈ (V U Σ)+");
+        TextView tv2_2 = new TextView(this);
+        tv2_2.setText("v ∈ (V ∪ Σ) +");
+        row2.addView(tv2_0);
+        row2.addView(tv2_1);
+        row2.addView(tv2_2);
+        row2.setBackgroundColor(getResources().getColor(R.color.DarkGray));
+        this.tableGrammarType.addView(row2);
+
+        //LINHA 4
+        TableRow row3 = new TableRow(this);
+        TextView tv3_0 = new TextView(this);
+        tv3_0.setText("GI");
+        TextView tv3_1 = new TextView(this);
+        tv3_1.setText("u ∈ (V U Σ)+");
+        TextView tv3_2 = new TextView(this);
+        tv3_2.setText("v ∈ (V ∪ Σ)*");
+        row3.addView(tv3_0);
+        row3.addView(tv3_1);
+        row3.addView(tv3_2);
+        row3.setBackgroundColor(getResources().getColor(R.color.Gainsboro));
+        this.tableGrammarType.addView(row3);
+
+        AcademicSupport academic = new AcademicSupport();
+        academic.setComments("A classificação de uma gramática é feita pelo tipo de suas regras (u → v). " +
+                "A tabela abaixo mostra o formato de regras característicos de cada gramática: \n");
+
+        StringBuilder comments = new StringBuilder();
+        academic.setSolutionDescription(comments.toString() + GrammarParser.classifiesGrammar(g, comments));
+
+        TextView explanation = new TextView(this);
+        explanation = (TextView) findViewById(R.id.explanationGrammarType);
+        explanation.setText(academic.getComments());
+
+        TextView commentsOfSolution = new TextView(this);
+        commentsOfSolution = (TextView) findViewById(R.id.comments);
+        commentsOfSolution.setText(comments + academic.getSolutionDescription());
+    }
+
+
     public void removingInitialRecursiveSymbol(final Grammar g) {
         Grammar gc = (Grammar) g.clone();
-        StringBuilder academicSupport = new StringBuilder();
+        AcademicSupport academicSupport = new AcademicSupport();
         gc = g.getGrammarWithInitialSymbolNotRecursive(g, academicSupport);
         String txtGrammar = printRules(gc);
 
         step1_1 = (TextView) findViewById(R.id.DescricaoAlgoritmo1);
-        step1_1.setText(academicSupport);
+        step1_1.setText(academicSupport.getResult());
 
         step1_2 = (TextView) findViewById(R.id.Algoritmo1);
-        step1_2.setText(txtGrammar);
+        if (academicSupport.getSituation()) {
+            StringBuilder academicInfo = new StringBuilder(academicSupport.getComments());
+            for (int i = 1; i < academicSupport.getFoundProblems().size(); i++) {
+                academicInfo.append(academicSupport.getFoundProblems().get(i));
+            }
+            academicInfo.append(academicSupport.getSolutionDescription());
+            step1_2.setText(academicInfo);
+        } else {
+            step1_2.setText("A gramática inserida não possui regras do tipo S ⇒ ∗ αSβ. Logo, nenhuma alteração foi realizada.");
+        }
+
+
+
     }
 
     public void removingEmptyProductions(final Grammar g) {

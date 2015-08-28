@@ -1,5 +1,7 @@
 package vo;
 
+import com.lfapp.lfapp_01.R;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -58,6 +60,7 @@ public class Grammar implements Cloneable {
 				}
 			}
 		}
+
 	}
 
 	public Grammar(String txt) {
@@ -174,27 +177,46 @@ public class Grammar implements Cloneable {
 	 * @param : gramática livre de contexto
 	 * @return : gramática livre de contexto sem recursão no símbolo inicial
 	 */
-	public Grammar getGrammarWithInitialSymbolNotRecursive(final Grammar g, final StringBuilder academicSupport) {
+	public Grammar getGrammarWithInitialSymbolNotRecursive(final Grammar g, final AcademicSupport academicSupport) {
 		Grammar gc = (Grammar) g.clone();
-
+		StringBuilder comments = new StringBuilder();
+		comments.append("O símbolo inicial deve se limitar a iniciar derivações, não podendo ser uma variável recursiva." +
+				"Logo, não deve ser possível ter derivações do tipo S ⇒ ∗ αSβ.\n");
+		Map<Integer, String> problems = new HashMap<>();
 		String initialSymbol = gc.getInitialSymbol();
 		boolean insert = false;
+		int counter = 1;
 		for (Rule element : gc.getRules()) {
-			if (element.getRightSide().contains(initialSymbol)) {
+			if (element.getLeftSide().equals(initialSymbol) && element.getRightSide().contains(initialSymbol)) {
 				insert = true;
+				problems.put(counter, "Recursão encontrada na regra: " + element.getLeftSide() +" -> " + element.getRightSide() + "\n");
+				counter++;
 			}
 		}
+		boolean situation = false;
+		StringBuilder solutionDescription = new StringBuilder();
 		if (insert == true) {
-			academicSupport.append("A gramática informada possui recursão no símbolo inicial. \n");
+			situation = true;
+			solutionDescription.append("A gramática inserida possui o símbolo inicial recursivo. Logo, é necessário realizar a seguinte transformação: \n");
+			solutionDescription.append("\tAssuma a GLC G = (V , Σ, P, " + gc.getInitialSymbol() + ") onde S é recursivo;\n");
+			solutionDescription.append("\tEntão existe um GLC G' = (V ∪ {" + gc.getInitialSymbol() + "' }, Σ, P ∪ {" +
+			 gc.getInitialSymbol() + "' → " + gc.getInitialSymbol() + "}, " + gc.getInitialSymbol() + "' );\n");
+			solutionDescription.append("\tL(G ) = L(G);\n");
+			solutionDescription.append("\tSímbolo inicial S de G não é mais recursivo.\n");
 			Rule r = new Rule(initialSymbol + "'", initialSymbol);
 			gc.insertRule(r);
-			academicSupport.append("Logo: \n(1) A seguinte regra foi inserida: " + r);
 			gc.setInitialSymbol(initialSymbol + "'");
-			academicSupport.append("\n(2) O símbolo inicial foi alterado de " + g.getInitialSymbol() + " para " + gc.getInitialSymbol() + ".");
 		} else {
-			academicSupport.append("A gramática não possui símbolo inicial recursivo, logo não foram realizadas alterações.");
+			situation = false;
 		}
 		gc.insertVariable(gc.getInitialSymbol());
+
+		//seta feedback acadêmico no objeto
+		academicSupport.setComments(comments.toString());
+		academicSupport.setFoundProblems(problems);
+		academicSupport.setResult(gc);
+		academicSupport.setSituation(situation);
+		academicSupport.setSolutionDescription(solutionDescription.toString());
 		return gc;
 	}
 

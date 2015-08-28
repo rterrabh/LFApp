@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 public class MainActivity extends ActionBarActivity {
 
-    private Button button_OK;
+    private Button button_OK, button_Lambda, button_Pipe, button_Arrow;
     private EditText inputGrammar;
     private String txtGrammar;
 
@@ -25,6 +25,48 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         this.inputGrammar = (EditText) findViewById(R.id.InputGrammar);
+
+        //configura botão ->
+        this.button_Arrow = (Button) findViewById(R.id.button_Arrow);
+        button_Arrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+        public void onClick(View v) {
+                String contentEditingArea = inputGrammar.getText().toString();
+                String arrow = " -> ";
+                inputGrammar.setText(contentEditingArea + arrow);
+                inputGrammar.setSelection(inputGrammar.getText().length());
+            }
+        });
+
+        //configura botão |
+        this.button_Pipe = (Button) findViewById(R.id.button_Pipe);
+        this.button_Pipe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String contentEditingArea = inputGrammar.getText().toString();
+                String arrow = " | ";
+                inputGrammar.setText(contentEditingArea + arrow);
+                inputGrammar.setSelection(inputGrammar.getText().length());
+            }
+        });
+
+        //configura botão .
+        this.button_Lambda = (Button) findViewById(R.id.button_Lambda);
+        this.button_Lambda.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String contentEditingArea = inputGrammar.getText().toString();
+                String arrow = " .";
+                inputGrammar.setText(contentEditingArea + arrow);
+                inputGrammar.setSelection(inputGrammar.getText().length());
+            }
+        });
+
+
+
+
+
+
         this.button_OK = (Button) findViewById(R.id.button_OK);
         button_OK.setOnClickListener(new View.OnClickListener() {
             @Override

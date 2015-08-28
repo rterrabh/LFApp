@@ -187,6 +187,151 @@ public class GrammarParser {
 		return Character.toString(Character.toUpperCase(initialSymbol.charAt(0)));
 	}
 
+
+	/**
+	 * Verifica se a gramática informada é regular
+	 * @param g : Gramática inserida
+	 * @return
+	 */
+	public static boolean regularGrammar(final Grammar g, final StringBuilder academic) {
+		int counter = 0;
+		boolean regular = true;
+		Iterator<Rule> itRules = g.getRules().iterator();
+		while (itRules.hasNext() && regular) {
+			Rule r = itRules.next();
+			for (int i = 0; i < r.getRightSide().length(); i++) {
+				if (g.getVariables().contains(Character.toString(r.getRightSide().charAt(i)))) {
+					counter++;
+				}
+			}
+
+			if (counter == 1) {
+				if (!g.getVariables().contains(Character.toString(r.getRightSide().charAt(0))) && !g.getVariables().contains(Character.toString(r.getRightSide().charAt(r.getRightSide().length() - 1)))) {
+					regular = false;
+					academic.append("- A gramática possui a regra " + r + " que não pertence ao conjunto das gramáticas regulares\n");
+				}
+			} else if (counter > 1) {
+				regular = false;
+				academic.append("- A gramática possui a regra " + r + " que não pertence ao conjunto das gramáticas regulares\n");
+			}
+			counter = 0;
+		}
+		return regular;
+	}
+
+
+
+
+	/**
+	 * Verifica se a gramática informada é livre de contexto
+	 * @param g : Gramática inserida
+	 * @return
+	 */
+	public static boolean contextFreeGrammar(final Grammar g, StringBuilder academic) {
+		boolean contextFree = true;
+		Iterator<Rule> itRules = g.getRules().iterator();
+		while (itRules.hasNext() && contextFree) {
+			Rule r = itRules.next();
+			if (!g.getVariables().contains(r.getLeftSide())) {
+				contextFree = false;
+				academic.append("- A gramática possui a regra " + r + "que não pertence ao conjunto das gramáticas livres de contexto\n");
+			}
+		}
+		return contextFree;
+	}
+
+	/**
+	 * Verifica se a gramática informada é sensível ao contexto
+	 * @param g : gramática inserida
+	 * @return
+	 */
+	private static boolean contextSensibleGrammar(final Grammar g, StringBuilder academic) {
+		boolean contextSensible = true;
+		for (Rule element : g.getRules()) {
+			if (!containsSentence(g, element.getLeftSide()) || !containsSentence(g, element.getRightSide())
+					|| element.getRightSide().length() < element.getLeftSide().length()) {
+				contextSensible = false;
+				academic.append("- A gramática possui a regra " + element + "que não pertence ao conjunto das gramáticas sensíveis contexto\n");
+			}
+		}
+		return contextSensible;
+	}
+
+	/**
+	 * Verifica se a gramática informada é irrestrita
+	 * @param g : gramática inserida
+	 * @return
+	 */
+	private static boolean unrestrictedGrammar(final Grammar g, StringBuilder academic) {
+		boolean unrestricted = true;
+		for (Rule element : g.getRules()) {
+			if ((!containsSentence(g, element.getLeftSide()) || element.getLeftSide().equals(g.lambda)) ||
+					(!containsSentence(g, element.getRightSide()) && !element.getRightSide().equals(g.lambda))) {
+				unrestricted = false;
+				academic.append("- A gramática possui a regra " + element + "que não pertence ao conjunto das gramáticas irrestritas\n");
+			}
+		}
+		return unrestricted;
+	}
+
+	/**
+	 * Verifica se uma sentença está contida no conjunto de variáveis e no conjunto de terminais
+	 * @param g
+	 * @param sentence
+	 * @return
+	 */
+	private static boolean containsSentence(final Grammar g, String sentence) {
+		boolean contains = true;
+		StringBuilder element = new StringBuilder();
+		for (int i = 0; i < sentence.length(); i++) {
+			if (!Character.isDigit(sentence.charAt(i))) {
+				element.append(sentence.charAt(i));
+				int j = i + 1;
+				while (j < sentence.length() && Character.isDigit(sentence.charAt(j))) {
+					element.append(sentence.charAt(j));
+					j++;
+				}
+				if (!(g.getVariables().contains(element.toString()) || g.getTerminals().contains(element.toString()))) {
+					contains = false;
+				}
+				element.delete(0, element.length());
+			}
+		}
+		return contains;
+	}
+
+	/**
+	 * Classifica a gramática
+	 * @return Classificação da gramática
+	 */
+	public static String classifiesGrammar(final Grammar g, final StringBuilder academic) {
+		String grammarType = new String();
+
+		//verifica se a gramática é regular
+		grammarType = (regularGrammar(g, academic)) ? ("A gramática inserida é uma Gramática regular.") : ("");
+
+		if (grammarType.isEmpty()) {
+			grammarType = (contextFreeGrammar(g, academic) ? ("A gramática inserida é uma Gramática livre de contexto.") : (""));
+		}
+
+		if (grammarType.isEmpty()) {
+			grammarType = (contextSensibleGrammar(g, academic) ? ("A gramática inserida é uma Gramática sensível ao contexto.") : (""));
+		}
+
+		if (grammarType.isEmpty()) {
+			grammarType = (unrestrictedGrammar(g, academic) ? ("A gramática inserida é uma Gramática irrestrita.") : (""));
+		}
+
+		if (grammarType.isEmpty()) {
+			grammarType = "A gramática informada é inexistente.";
+		}
+		return grammarType;
+	}
+
+
+
+
+
 	/**
 	 * Procura variáveis anuláveis nas regras
 	 * @param element

@@ -39,6 +39,35 @@
         android:id="@+id/inputWord"
         android:layout_below="@+id/titleWord"/>
 
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="."
+            android:layout_weight="1"
+            android:id="@+id/button_Lambda"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="->"
+            android:layout_weight="1"
+            android:id="@+id/button_Arrow"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="|"
+            android:layout_weight="1"
+            android:id="@+id/button_Pipe"/>
+
+
+    </LinearLayout>
+
 
     <Button
         android:layout_width="fill_parent"
