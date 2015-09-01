@@ -206,6 +206,7 @@ public class Grammar implements Cloneable {
 			Rule r = new Rule(initialSymbol + "'", initialSymbol);
 			gc.insertRule(r);
 			gc.setInitialSymbol(initialSymbol + "'");
+			academicSupport.insertNewRule(r);
 		} else {
 			situation = false;
 		}
@@ -225,33 +226,28 @@ public class Grammar implements Cloneable {
 	 * @param : gramática livre de contexto
 	 * @return : gramática livre de contexto essencialmente não contrátil
 	 */
-	public Grammar getGrammarEssentiallyNoncontracting(final Grammar g, final StringBuilder academicSupport) {
+	public Grammar getGrammarEssentiallyNoncontracting(final Grammar g, final AcademicSupport academicSupport) {
 		Grammar gc = (Grammar) g.clone();
 		Set<String> nullable = new HashSet<String>();
 		Set<Rule> setOfRules = new HashSet<Rule>();
 		boolean nullableVars = false;
-		int counterActions = 1;
-		StringBuilder academicSupportAux = new StringBuilder();
 
 		// nullable = nullable U A -> . | A E V
+		Map<Integer, String> foundProblems = new HashMap<>();
+		int counter = 1;
 		for (Rule element : gc.getRules()) {
 			if (element.getRightSide().equals(".")) {
 				nullable.add(element.getLeftSide());
 				nullableVars = true;
-				academicSupport.append("- Regra: " + element + "\n");
+				academicSupport.insertIrregularRule(element);
+				foundProblems.put(counter, "- A regra " + element + " é uma produção vazia.");
+				counter++;
 			} else {
 				Rule r = new Rule(element.getLeftSide(), element.getRightSide());
 				setOfRules.add(r);
 			}
 		}
-
-		if (nullableVars) {
-			academicSupport.insert(0, "("+counterActions+") Remoção de todos os lambda\n");
-			counterActions++;
-		} else {
-			academicSupport.append("Não existe variáveis anuláveis na gramática informada.");
-		}
-
+		academicSupport.setSituation(nullableVars);
 
 		// gera conjuntos de variáveis anuláveis
 		nullableVars = false;
@@ -262,17 +258,14 @@ public class Grammar implements Cloneable {
 				if (GrammarParser.prevContainsVariable(prev, element.getRightSide())) {
 					nullable.add(element.getLeftSide());
 					nullableVars = true;
-					academicSupportAux.append("- NULL = {"+ GrammarParser.printSet(nullable) +"}, PREV = {"+ GrammarParser.printSet(prev) + "}\n");
+					academicSupport.insertOnFirstSet(nullable);
+					academicSupport.insertOnSecondSet(prev);
 				}
 			}
 		} while (!prev.equals(nullable));
-		if (nullableVars) {
-			counterActions++;
-			academicSupportAux.insert(0, "("+counterActions+") Realizando busca de variáveis anuláveis\n");
-			academicSupport.append(academicSupportAux);
-		}
+
 		Set<Rule> newSetOfRules = new HashSet<Rule>();
-		academicSupportAux.delete(0, academicSupportAux.length());
+		//academicSupportAux.delete(0, academicSupportAux.length());
 		nullableVars = false;
 		for (Rule element : setOfRules) {
 			String aux = element.getRightSide() + " | ";
@@ -287,28 +280,28 @@ public class Grammar implements Cloneable {
 				if (!productionsOnRightSide[i].equals("|")) {
 					if (GrammarParser.newProductions(productionsOnRightSide[i], element.getLeftSide(), gc)) {
 						nullableVars = true;
-						academicSupportAux.append("- Nova regra inserida: " + element.getLeftSide() + " -> " + productionsOnRightSide[i] + "\n");
 					}
 					Rule r = new Rule(element.getLeftSide(), productionsOnRightSide[i]);
 					newSetOfRules.add(r);
+					if (!g.getRules().contains(r)) {
+						academicSupport.insertNewRule(r);
+					}
 				}
 			}
-		}
-
-		if (nullableVars) {
-			academicSupportAux.insert(0, "("+counterActions+") Inserçao de novas regras\n");
-			academicSupport.append(academicSupportAux);
-			counterActions++;
-			nullableVars = false;
-			academicSupportAux.delete(0, academicSupportAux.length());
 		}
 
 		if (nullable.contains(gc.getInitialSymbol())) {
 			Rule r = new Rule(gc.getInitialSymbol(), ".");
 			newSetOfRules.add(r);
-			academicSupport.append("("+counterActions+") Simbolo inicial pertence ao conjunto das variáveis anuláveis, logo a gramática é essencialmente não contrátil. \n");
+
 		}
+
+		//seta feedback acadêmico no objeto
+		academicSupport.setFoundProblems(foundProblems);
+		academicSupport.setResult(gc);
+
 		gc.setRules(newSetOfRules);
+
 		return gc;
 	}
 

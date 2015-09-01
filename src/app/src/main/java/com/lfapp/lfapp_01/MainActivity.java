@@ -24,6 +24,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //configura EditText InputGrammar
         this.inputGrammar = (EditText) findViewById(R.id.InputGrammar);
 
         //configura botão ->
@@ -62,11 +63,7 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-
-
-
-
-
+        //configura  botão OK
         this.button_OK = (Button) findViewById(R.id.button_OK);
         button_OK.setOnClickListener(new View.OnClickListener() {
             @Override

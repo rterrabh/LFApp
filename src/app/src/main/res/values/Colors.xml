@@ -4,5 +4,7 @@
     <color name="Gainsboro">#DCDCDC</color>
     <color name="Gray">#808080</color>
     <color name="DarkGray">#A9A9A9</color>
+    <color name="Blue">#0000FF</color>
+    <color name="Red">#FF0000</color>
 
 </resources>

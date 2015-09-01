@@ -317,6 +317,11 @@ public class MainActivity2 extends ActionBarActivity {
         });
     }
 
+
+    /**
+     * Método que classifica a gramática passada como argumento em GR, GLC, GSC ou GI
+     * @param g : gramática de entrada
+     */
     public void grammarType(final Grammar g) {
 
         this.tableGrammarType = new TableLayout(this);
@@ -381,7 +386,7 @@ public class MainActivity2 extends ActionBarActivity {
 
         AcademicSupport academic = new AcademicSupport();
         academic.setComments("A classificação de uma gramática é feita pelo tipo de suas regras (u → v). " +
-                "A tabela abaixo mostra o formato de regras característicos de cada gramática: \n");
+                "A tabela abaixo mostra o formato de regras características de cada gramática: \n");
 
         StringBuilder comments = new StringBuilder();
         academic.setSolutionDescription(comments.toString() + GrammarParser.classifiesGrammar(g, comments));
@@ -395,15 +400,94 @@ public class MainActivity2 extends ActionBarActivity {
         commentsOfSolution.setText(comments + academic.getSolutionDescription());
     }
 
+    /**
+     * Método que coloca a gramática passada como argumento no TableLayout destacando as alterações
+     * realizadas.
+     * @param table : TableLayout
+     * @param academic : Objeto que armazena as informações acadêmicas
+     * @param g : gramática passada
+     */
+    private void setContentInTable(TableLayout table, AcademicSupport academic, final Grammar g) {
+        TableRow row0 = new TableRow(this);
+        TextView left = new TextView(this);
+        TextView arrow0 = new TextView(this);
+        left.setText(g.getInitialSymbol());
+        arrow0.setText(" -> ");
+        row0.addView(left);
+        row0.addView(arrow0);
+        for (Rule element : g.getRules()) {
+            if (element.getLeftSide().equals(g.getInitialSymbol())) {
+                TextView right = new TextView(this);
+                TextView pipe = new TextView(this);
+                pipe.setText(" | ");
+                if (academic.getInsertedRules().contains(element)) {
+                    right.setTextColor(getResources().getColor(R.color.Blue));
+                    right.setText(element.getRightSide());
+                } else if (academic.getIrregularRules().contains(element)) {
+                    right.setTextColor(getResources().getColor(R.color.Red));
+                    right.setText(element.getRightSide());
+                } else {
+                        right.setText(element.getRightSide());
+                    }
+                row0.addView(right);
+                row0.addView(pipe);
+            }
+        }
+        table.addView(row0);
 
+        for (String variable : g.getVariables()) {
+            if (!variable.equals(g.getInitialSymbol())) {
+                TableRow row1 = new TableRow(this);
+                TextView tv0 = new TextView(this);
+                tv0.setText(variable);
+                row1.addView(tv0);
+                TextView arrow1 = new TextView(this);
+                arrow1.setText("->");
+                row1.addView(arrow1);
+                for (Rule element : g.getRules()) {
+                    if (variable.equals(element.getLeftSide())) {
+                        TextView pipe = new TextView(this);
+                        pipe.setText(" | ");
+                        TextView tv1 = new TextView(this);
+                        if (academic.getInsertedRules().contains(element)) {
+                            tv1.setTextColor(getResources().getColor(R.color.Blue));
+                            tv1.setText(element.getRightSide());
+                        } else if (academic.getIrregularRules().contains(element)) {
+                            tv1.setTextColor(getResources().getColor(R.color.Red));
+                            tv1.setText(element.getRightSide());
+                        } else {
+                            tv1.setText(element.getRightSide());
+                        }
+                        row1.addView(tv1);
+                        row1.addView(pipe);
+                    }
+                }
+                table.addView(row1);
+            }
+        }
+
+    }
+
+
+    /**
+     * Método que realiza a etapa de remoção do símbolo recursivo inicial e acrescenta as informações
+     * acadêmicas.
+     * @param g : gramática
+     */
     public void removingInitialRecursiveSymbol(final Grammar g) {
         Grammar gc = (Grammar) g.clone();
         AcademicSupport academicSupport = new AcademicSupport();
         gc = g.getGrammarWithInitialSymbolNotRecursive(g, academicSupport);
         String txtGrammar = printRules(gc);
 
-        step1_1 = (TextView) findViewById(R.id.DescricaoAlgoritmo1);
-        step1_1.setText(academicSupport.getResult());
+        /*step1_1 = (TextView) findViewById(R.id.DescricaoAlgoritmo1);
+        step1_1.setText(academicSupport.getResult());*/
+
+        TableLayout table = new TableLayout(this);
+        table = (TableLayout) findViewById(R.id.TableRecursiveInitialSymbol);
+        table.setShrinkAllColumns(true);
+        setContentInTable(table, academicSupport, gc);
+
 
         step1_2 = (TextView) findViewById(R.id.Algoritmo1);
         if (academicSupport.getSituation()) {
@@ -416,38 +500,90 @@ public class MainActivity2 extends ActionBarActivity {
         } else {
             step1_2.setText("A gramática inserida não possui regras do tipo S ⇒ ∗ αSβ. Logo, nenhuma alteração foi realizada.");
         }
-
-
-
     }
 
+
+    /**
+     * Método que realiza a remoção de produções vazias e acrescenta as informações acadêmicas.
+     * @param g : Gramática
+     */
     public void removingEmptyProductions(final Grammar g) {
         Grammar gc = (Grammar) g.clone();
-        StringBuilder academicSupport = new StringBuilder();
-        StringBuilder algorithm = new StringBuilder();
-        algorithm.append("\t\t\tNULL  = { A | {A -> .} ∈ P}\n");
-        algorithm.append("\t\t\trepita\n");
-        algorithm.append("\t\t\t\t\tPREV = NULL\n");
-        algorithm.append("\t\t\t\t\t\t\tpara cada A ∈ V faça:\n");
-        algorithm.append("\t\t\t\t\t\t\t\t\t se A -> w e w ∈ PREV* faça:\n");
-        algorithm.append("\t\t\t\t\t\t\t\t\t\t\tNULL = NULL U {A}\n");
-        algorithm.append("\t\t\taté NULL == PREV\n");
+        AcademicSupport academicSupport = new AcademicSupport();
+        StringBuilder academicInfoComments = new StringBuilder();
+
+        academicInfoComments.append("\t\tNa derivação de uma palavra, as formas sentenciais intermediárias podem conter variáveis que não geram " +
+                "símbolos terminais. Estas variáveis são removidas a partir da aplicação do algoritmo λ-rules.\n");
+        academicInfoComments.append("\t\tO objetivo desta transformação é garantir que toda variável na forma sentencial possa contribuir para a formação" +
+                "da palavra que está sendo derivada.\n\n");
+        academicInfoComments.append("\t\tO algoritmo para remoção de regras λ, consiste em 3 passos:\n");
+        academicInfoComments.append("\t\t\t(1) Determinar o conjunto das variáveis anuláveis;\n");
+        academicInfoComments.append("\t\t\t(2) A adição de regras em que as ocorrências de variáveis nulas são omitidas;\n");
+        academicInfoComments.append("\t\t\t(3) Remover as regras λ.\n");
+        academicInfoComments.append("\t\tO algoritmo trabalha sobre dois conjuntos, NULL e PREV, e encerra sua execução quando o conteúdo dos conjuntos são iguais. " +
+                "O conjunto NULL é inicializado com as variaveis que derivam uma palavra vazia em uma aplicação de regra. Após este passo, uma variável é adicionada " +
+                "ao conjunto NULL se essa variável produz uma regra que contenha uma variável anteriormente determinada anulável. Após a determinação de todas as variáveis " +
+                "anuláveis, as mesmas são removidas da gramática.\n");
+
+        academicSupport.setComments(academicInfoComments.toString());
 
 
         gc = g.getGrammarEssentiallyNoncontracting(g, academicSupport);
-        step2_1 = (TextView) findViewById(R.id.PseudocódigoAlgoritmo2);
-        step2_1.setText(algorithm);
+        academicSupport.setResult(gc);
 
-        step2_2 = (TextView) findViewById(R.id.DescricaoAlgoritmo2);
-        step2_2.setText(academicSupport);
+        //configura a gramática de resultado
+        TextView grammarResult = new TextView(this);
+        grammarResult = (TextView) findViewById(R.id.ResultGrammarEmptyProductions);
+        grammarResult.setText(academicSupport.getResult());
+
+        if (academicSupport.getSituation()) {
+            TextView result = new TextView(this);
+            result = (TextView) findViewById(R.id.AnswerOfEmptyProductions);
+            result.setText(academicSupport.getComments());
+            TableLayout tableWithChanges = new TableLayout(this);
+            tableWithChanges = (TableLayout) findViewById(R.id.TableWithChanges);
+            Grammar grammar = new Grammar(joinGrammars(gc, g));
+            tableWithChanges.setShrinkAllColumns(true);
+            setContentInTable(tableWithChanges, academicSupport, grammar);
+
+        } else {
+            TextView result = new TextView(this);
+            result = (TextView) findViewById(R.id.AnswerOfEmptyProductions);
+            result.setText("A gramática inserida não possui produções vazias.");
+        }
 
 
-        String txtGrammar = printRules(gc);
+
+        //step2_1 = (TextView) findViewById(R.id.PseudocódigoAlgoritmo2);
+        //step2_1.setText(algorithm);
+
+        //step2_2 = (TextView) findViewById(R.id.DescricaoAlgoritmo2);
+        //step2_2.setText(academicSupport);
+
+
+        /*String txtGrammar = printRules(gc);
         step2_3 = (TextView) findViewById(R.id.Algoritmo2);
-        step2_3.setText(txtGrammar);
+        step2_3.setText(txtGrammar);*/
+    }
 
 
+    public String joinGrammars(final Grammar grammar1, final Grammar grammar2) {
+        StringBuilder newG = new StringBuilder();
+            for (Rule element : grammar1.getRules()) {
+                    newG.append(element);
+                newG.append("\n");
+            }
 
+
+            for (Rule element : grammar2.getRules()) {
+                if (!grammar1.getRules().contains(element)) {
+                    newG.append(element);
+                    newG.append("\n");
+                }
+            }
+
+
+        return newG.toString();
     }
 
     public void removingChainRules(final Grammar g) {
