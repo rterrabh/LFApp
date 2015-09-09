@@ -22,7 +22,8 @@
                 android:layout_height="wrap_content"
                 android:text="Identificação da gramática"
                 android:textColor="#000000"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:background="@color/Gainsboro"/>
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -69,7 +70,8 @@
                 android:paddingTop="20dp"
                 android:text="Derivação mais à esquerda"
                 android:textColor="#000000"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:background="@color/DarkGray"/>
 
             <LinearLayout
                 android:id="@+id/layout11"
@@ -92,7 +94,8 @@
                 android:textSize="20sp"
                 android:paddingTop="20dp"
                 android:textColor="#000000"
-                android:text="Derivação mais à direita" />
+                android:text="Derivação mais à direita"
+                android:background="@color/Gainsboro"/>
 
             <LinearLayout
                 android:id="@+id/layout12"
@@ -116,7 +119,8 @@
                 android:text="Remoção de Recursão no Símbolo Inicial"
                 android:textColor="#000000"
                 android:textSize="20sp"
-                android:paddingTop="20dp"/>
+                android:paddingTop="20dp"
+                android:background="@color/DarkGray"/>
 
             <LinearLayout
                 android:id="@+id/layout1"
@@ -214,7 +218,8 @@
                 android:paddingTop="20dp"
                 android:textColor="#000000"
                 android:text="Remoção de Produções Vazias"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:background="@color/Gainsboro"/>
 
             <LinearLayout
                 android:id="@+id/layout2"
@@ -294,24 +299,41 @@
                                 android:layout_height="wrap_content"
                                 android:textColor="#000000" />
 
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/ExplanationEmptyRules1"/>
+
                             <TableLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/TableOfSets"
                                 android:layout_gravity="center">
-
                             </TableLayout>
 
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/ExplanationEmptyRules2"/>
 
                             <TableLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/TableWithChanges"
+                                android:id="@+id/AddingRulesTable"
                                 android:layout_gravity="center">
-
                             </TableLayout>
 
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/ExplanationEmptyRules3"/>
 
+                            <TableLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/RemovingRulesTable"
+                                android:layout_gravity="center">
+                            </TableLayout>
 
                         </LinearLayout>
 
@@ -329,7 +351,7 @@
                 android:textSize="20sp"
                 android:textColor="#000000"
                 android:paddingTop="20dp"
-                />
+                android:background="@color/DarkGray"/>
 
             <LinearLayout
                 android:id="@+id/layout3"
@@ -365,16 +387,10 @@
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:id="@+id/PseudocódigoAlgoritmo3"
-                                android:layout_width="fill_parent"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="#000000" />
-
-                            <TextView
-                                android:id="@+id/DescricaoAlgoritmo3"
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="#000000" />
+                                android:id="@+id/ResultGrammarWithoutChainRules"
+                                android:layout_gravity="center"/>
 
                         </LinearLayout>
 
@@ -410,10 +426,35 @@
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:id="@+id/Algoritmo3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/CommentsChainRules"/>
+
+                            <TextView
+                                android:id="@+id/RemovingChainRulesStep1"
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="#000000" />
+
+                            <TableLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/TableOfChains"
+                                android:layout_gravity="center">
+                            </TableLayout>
+
+                            <TextView
+                                android:id="@+id/RemovingChainRulesStep2"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                            <TableLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/GrammarWithoutChains"
+                                android:layout_gravity="center">
+                            </TableLayout>
 
                         </LinearLayout>
 
@@ -431,7 +472,7 @@
                 android:textSize="20sp"
                 android:textColor="#000000"
                 android:paddingTop="20dp"
-                />
+                android:background="@color/Gainsboro"/>
 
             <LinearLayout
                 android:id="@+id/layout4"
@@ -467,17 +508,10 @@
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:id="@+id/PseudocódigoAlgoritmo4"
-                                android:layout_width="fill_parent"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="#000000" />
-
-                            <TextView
-                                android:id="@+id/DescricaoAlgoritmo4"
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="#000000" />
-
+                                android:layout_gravity="center"
+                                android:id="@+id/ResultNoTerm"/>
                         </LinearLayout>
 
                     </ScrollView>
@@ -512,10 +546,36 @@
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:id="@+id/Algoritmo4"
+                                android:id="@+id/CommentsNoTerms"
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="#000000" />
+
+                            <TextView
+                                android:id="@+id/NoTermStep1"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                            <TableLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/TableOfSetsNoTerm"
+                                android:layout_gravity="center">
+                            </TableLayout>
+
+                            <TextView
+                                android:id="@+id/NoTermStep2"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                            <TableLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/GrammarWithNoTerm"
+                                android:layout_gravity="center">
+                            </TableLayout>
 
                         </LinearLayout>
 
@@ -532,7 +592,8 @@
                 android:text="Remoção de símbolos não alcançáveis"
                 android:textSize="20sp"
                 android:textColor="#000000"
-                android:paddingTop="20dp" />
+                android:paddingTop="20dp"
+                android:background="@color/DarkGray"/>
 
             <LinearLayout
                 android:id="@+id/layout5"
@@ -568,16 +629,11 @@
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:id="@+id/PseudocódigoAlgoritmo5"
-                                android:layout_width="fill_parent"
+                                android:id="@+id/ResultNoReach"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="#000000" />
-
-                            <TextView
-                                android:id="@+id/DescricaoAlgoritmo5"
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="#000000" />
+                                android:textColor="#000000"
+                                android:layout_gravity="center"/>
 
                         </LinearLayout>
 
@@ -613,10 +669,36 @@
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:id="@+id/Algoritmo5"
+                                android:id="@+id/CommentsNoReach"
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="#000000" />
+
+                            <TextView
+                                android:id="@+id/NoReachStep1"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                            <TableLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/tableOfSetsNoReach"
+                                android:layout_gravity="center">
+                            </TableLayout>
+
+                            <TextView
+                                android:id="@+id/NoReachStep2"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                            <TableLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/tableOfIrregularRulesReach"
+                                android:layout_gravity="center">
+                            </TableLayout>
 
                         </LinearLayout>
 
@@ -633,7 +715,8 @@
                 android:textColor="#000000"
                 android:text="Forma Normal de Chomsky"
                 android:paddingTop="20dp"
-                android:textSize="20sp"  />
+                android:textSize="20sp"
+                android:background="@color/Gainsboro"/>
 
             <LinearLayout
                 android:id="@+id/layout6"
@@ -801,7 +884,8 @@
                 android:textSize="20sp"
                 android:textColor="#000000"
                 android:paddingTop="20dp"
-                android:text="Remoção de Recursão Direta à Esquerda" />
+                android:text="Remoção de Recursão Direta à Esquerda"
+                android:background="@color/DarkGray"/>
 
             <LinearLayout
                 android:id="@+id/layout7"
@@ -837,16 +921,11 @@
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:id="@+id/PseudocódigoAlgoritmo7"
-                                android:layout_width="fill_parent"
+                                android:id="@+id/ResultGrammarWithoutLeftDirectRecursion"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="#000000" />
-
-                            <TextView
-                                android:id="@+id/DescricaoAlgoritmo7"
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="#000000" />
+                                android:textColor="#000000"
+                                android:layout_gravity="center"/>
 
                         </LinearLayout>
 
@@ -882,10 +961,26 @@
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:id="@+id/Algoritmo7"
+                                android:id="@+id/CommentsDirectLeftRecursion"
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="#000000" />
+
+                            <TextView
+                                android:id="@+id/Step1DirectLeftRecursion"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                            <TableLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:id="@+id/tableOfDirectLeftRecursion">
+
+                            </TableLayout>
+
+
 
                         </LinearLayout>
 
@@ -902,7 +997,8 @@
                 android:textSize="20sp"
                 android:paddingTop="20dp"
                 android:textColor="#000000"
-                android:text="Remoção de Recursão à Esquerda" />
+                android:text="Remoção de Recursão à Esquerda"
+                android:background="@color/Gainsboro"/>
 
             <LinearLayout
                 android:id="@+id/layout8"
@@ -1003,7 +1099,8 @@
                 android:textSize="20sp"
                 android:paddingTop="20dp"
                 android:textColor="#000000"
-                android:text="Forma Normal de Greibach" />
+                android:text="Forma Normal de Greibach"
+                android:background="@color/DarkGray"/>
 
             <LinearLayout
                 android:id="@+id/layout9"
@@ -1027,7 +1124,8 @@
                 android:textSize="20sp"
                 android:paddingTop="20dp"
                 android:textColor="#000000"
-                android:text="CYK" />
+                android:text="CYK"
+                android:background="@color/Gainsboro"/>
 
             <LinearLayout
                 android:id="@+id/layout10"

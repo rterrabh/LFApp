@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -11,43 +11,57 @@
     android:orientation="vertical"
     >
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Gramática: "
-        android:id="@+id/titleGrammar"
-        android:layout_below="@+id/textView"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:id="@+id/l1"
+        android:orientation="vertical">
 
-    <EditText
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/InputGrammar"
-        android:layout_weight="1"
-        android:layout_alignParentBottom="true"
-        />
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Gramática: "
+            android:id="@+id/titleGrammar"
+            android:layout_below="@+id/textView"/>
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Palavra (para CYK e derivação): "
-        android:id="@+id/titleWord"
-        android:layout_below="@+id/inputGrammar" />
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/InputGrammar"
+            android:layout_weight="1"
+            android:layout_alignParentBottom="true"
+            />
 
-    <EditText
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/inputWord"
-        android:layout_below="@+id/titleWord"/>
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Palavra (para CYK e derivação): "
+            android:id="@+id/titleWord"
+            android:layout_below="@+id/inputGrammar" />
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/inputWord"
+            android:layout_below="@+id/titleWord"/>
+
+
+
+    </LinearLayout>
+
 
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:id="@+id/l2"
+        android:orientation="vertical"
+        android:layout_toRightOf="@+id/l1"
+        android:layout_marginLeft="30dp">
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="."
+            android:text="λ"
             android:layout_weight="1"
             android:id="@+id/button_Lambda"/>
 
@@ -66,15 +80,13 @@
             android:id="@+id/button_Pipe"/>
 
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="OK"
+            android:id="@+id/button_OK"
+            android:layout_below="@+id/inputWord"/>
+
     </LinearLayout>
 
-
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="OK"
-        android:id="@+id/button_OK"
-        android:layout_below="@+id/inputWord"/>
-
-
-</LinearLayout>
+</RelativeLayout>

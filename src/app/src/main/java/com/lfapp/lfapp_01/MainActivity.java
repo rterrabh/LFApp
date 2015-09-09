@@ -57,7 +57,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 String contentEditingArea = inputGrammar.getText().toString();
-                String arrow = " .";
+                String arrow = " λ";
                 inputGrammar.setText(contentEditingArea + arrow);
                 inputGrammar.setSelection(inputGrammar.getText().length());
             }

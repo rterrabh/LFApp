@@ -1,5 +1,6 @@
 package vo;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +21,7 @@ public class AcademicSupport {
     private Set<Rule> irregularRules;
     private ArrayList<Set<String>> firstSet;
     private ArrayList<Set<String>> secondSet;
+    private ArrayList<Set<String>> thirdSet;
 
 
     public AcademicSupport() {
@@ -32,10 +34,11 @@ public class AcademicSupport {
         this.irregularRules = new HashSet<>();
         this.firstSet = new ArrayList<>();
         this.secondSet = new ArrayList<>();
+        this.thirdSet = new ArrayList<>();
     }
 
     public AcademicSupport(String comments, boolean situation, HashMap foundProblems, Grammar g, String solutionDescription, Set<Rule> insertedRules, Set<Rule> irregularRules,
-                            ArrayList<Set<String>> firtSet, ArrayList<Set<String>> secondSet) {
+                            ArrayList<Set<String>> firtSet, ArrayList<Set<String>> secondSet, ArrayList<Set<String>> thirdSet) {
         this.comments = comments;
         this.situation = situation;
         this.foundProblems = foundProblems;
@@ -45,6 +48,7 @@ public class AcademicSupport {
         this.irregularRules = irregularRules;
         this.firstSet = firtSet;
         this.secondSet = secondSet;
+        this.thirdSet = thirdSet;
     }
 
     public String getComments() {
@@ -151,16 +155,69 @@ public class AcademicSupport {
         this.secondSet = secondSet;
     }
 
-    public void insertOnFirstSet(Set<String> currentSet) {
-        if (!this.firstSet.contains(currentSet)) {
-            this.firstSet.add(currentSet);
+
+    public ArrayList<Set<String>> getThirdSet() {
+        return thirdSet;
+    }
+
+    public void setThirdSet(ArrayList<Set<String>> thirdSet) {
+        this.thirdSet = thirdSet;
+    }
+
+    public void insertOnFirstSet(Set<String>  currentSet, String decision) {
+        if (decision.equals("Lambda") || decision.equals("TERM") || decision.equals("REACH")) {
+            if (!verifySet(firstSet, currentSet)) {
+                Set<String> aux = new HashSet<>();
+                aux.addAll(currentSet);
+                firstSet.add(aux);
+            }
+        } else if (decision.equals("Chain")) {
+            Set<String> aux = new HashSet<>();
+            aux.addAll(currentSet);
+           firstSet.add(aux);
         }
     }
 
-    public void insertOnSecondSet(Set<String> currentSet) {
-        if (!this.secondSet.contains(currentSet)) {
-            this.secondSet.add(currentSet);
+    public void insertOnSecondSet(Set<String> currentSet, String decision) {
+        if (decision.equals("Lambda") || decision.equals("TERM") || decision.equals("REACH")) {
+            if (!verifySet(secondSet, currentSet)) {
+                Set<String> aux = new HashSet<>();
+                aux.addAll(currentSet);
+                secondSet.add(aux);
+            }
+        } else if (decision.equals("Chain")) {
+            Set<String> aux = new HashSet<>();
+            aux.addAll(currentSet);
+            secondSet.add(aux);
         }
+    }
+
+    public void insertOnThirdSet(Set<String> currentSet, String decision) {
+        if (decision.equals("Lambda") || decision.equals("TERM") || decision.equals("REACH")) {
+            if (!verifySet(thirdSet, currentSet)) {
+                Set<String> aux = new HashSet<>();
+                aux.addAll(currentSet);
+                thirdSet.add(aux);
+            }
+        } else if (decision.equals("Chain")) {
+            Set<String> aux = new HashSet<>();
+            aux.addAll(currentSet);
+            thirdSet.add(aux);
+        }
+        String teste = thirdSet.toString();
+    }
+
+    private boolean verifySet(ArrayList<Set<String>> setOfVariables, Set<String> currentSet) {
+        boolean aux = false;
+        if (setOfVariables.size() != 0) {
+            for (int i = 0; i < setOfVariables.size() && !false; i++) {
+                Set<String> auxSet = setOfVariables.get(setOfVariables.size() - 1);
+                if (auxSet.equals(currentSet)) {
+                    aux = true;
+                }
+            }
+        }
+        return false;
     }
 }
 

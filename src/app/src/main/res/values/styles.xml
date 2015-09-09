@@ -4,5 +4,9 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
     </style>
+    
+    <style name="Featured">
+        <item name="android:textStyle">italic</item>
+    </style>
 
 </resources>

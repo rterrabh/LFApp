@@ -1,15 +1,19 @@
 package vo;
 
+import android.support.annotation.NonNull;
+
 import com.lfapp.lfapp_01.R;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
 public class Grammar implements Cloneable {
 
-	public final String lambda = ".";
+	public final String lambda = "λ";
 	public final String ruleSeparator = "|";
 	public final String ruleProduction = "->";
 	public final String chomskyPrefix = "T";
@@ -181,7 +185,7 @@ public class Grammar implements Cloneable {
 		Grammar gc = (Grammar) g.clone();
 		StringBuilder comments = new StringBuilder();
 		comments.append("O símbolo inicial deve se limitar a iniciar derivações, não podendo ser uma variável recursiva." +
-				"Logo, não deve ser possível ter derivações do tipo S ⇒ ∗ αSβ.\n");
+				"Logo, não deve ser possível ter derivações do tipo " + gc.getInitialSymbol() + " ⇒∗ αSβ.\n");
 		Map<Integer, String> problems = new HashMap<>();
 		String initialSymbol = gc.getInitialSymbol();
 		boolean insert = false;
@@ -236,7 +240,7 @@ public class Grammar implements Cloneable {
 		Map<Integer, String> foundProblems = new HashMap<>();
 		int counter = 1;
 		for (Rule element : gc.getRules()) {
-			if (element.getRightSide().equals(".")) {
+			if (element.getRightSide().equals(g.lambda)) {
 				nullable.add(element.getLeftSide());
 				nullableVars = true;
 				academicSupport.insertIrregularRule(element);
@@ -250,16 +254,18 @@ public class Grammar implements Cloneable {
 		academicSupport.setSituation(nullableVars);
 
 		// gera conjuntos de variáveis anuláveis
+		academicSupport.insertOnFirstSet(nullable, "Lambda");
 		nullableVars = false;
 		Set<String> prev = new HashSet<String>();
 		do {
 			prev.addAll(nullable);
+			academicSupport.insertOnSecondSet(prev, "Lambda");
 			for (Rule element : gc.getRules()) {
 				if (GrammarParser.prevContainsVariable(prev, element.getRightSide())) {
 					nullable.add(element.getLeftSide());
 					nullableVars = true;
-					academicSupport.insertOnFirstSet(nullable);
-					academicSupport.insertOnSecondSet(prev);
+					academicSupport.insertOnFirstSet(nullable, "Lambda");
+
 				}
 			}
 		} while (!prev.equals(nullable));
@@ -291,7 +297,7 @@ public class Grammar implements Cloneable {
 		}
 
 		if (nullable.contains(gc.getInitialSymbol())) {
-			Rule r = new Rule(gc.getInitialSymbol(), ".");
+			Rule r = new Rule(gc.getInitialSymbol(), g.lambda);
 			newSetOfRules.add(r);
 
 		}
@@ -310,12 +316,11 @@ public class Grammar implements Cloneable {
 	 * @param : gramática livre de contexto
 	 * @return : gramática livre de contexto sem regras da cadeia
 	 */
-	public Grammar getGrammarWithoutChainRules(final Grammar g, final StringBuilder academicSupport) {
+	public Grammar getGrammarWithoutChainRules(final Grammar g, final AcademicSupport academicSupport) {
 		Grammar gc = (Grammar) g.clone();
 
 		// primeiramente, deve-se construir os subconjuntos
 		Map<String, Set<String>> setOfChains = new HashMap<String, Set<String>>();
-		academicSupport.append("(1) Montar CHAIN de cada variável\n");
 		StringBuilder academicSupportAux = new StringBuilder();
 		for (String variable : gc.getVariables()) {
 			// conjunto que representa o chain de determinada variável
@@ -335,11 +340,10 @@ public class Grammar implements Cloneable {
 				}
 			} while (!chain.equals(prev));
 			setOfChains.put(variable, chain);
-			String chainsOfVariable = chain.toString().replace("[", "{");
-			chainsOfVariable = chainsOfVariable.replace("]", "}");
-			academicSupportAux.append("CHAIN("+variable+") = " + chainsOfVariable + "\n");
-			academicSupport.append(academicSupportAux);
-			academicSupportAux.delete(0, academicSupportAux.length());
+			Set<String> setOfVariables = new HashSet<>();
+			setOfVariables.add(variable);
+			academicSupport.insertOnFirstSet(setOfVariables, "Chain");
+			academicSupport.insertOnSecondSet(chain, "Chain");
 		}
 
 		// iterações sobre os conjuntos de chains
@@ -352,6 +356,9 @@ public class Grammar implements Cloneable {
 						if (element.getRightSide().length() != 1 || !Character.isUpperCase(element.getRightSide().charAt(0))) {
 							Rule r = new Rule(variable, element.getRightSide());
 							newSetOfRules.add(r);
+							if (chainsOfVariable.size() != 1 && !gc.getRules().contains(r)) {
+								academicSupport.insertNewRule(r);
+							}
 						}
 					}
 				}
@@ -367,7 +374,7 @@ public class Grammar implements Cloneable {
 	 * @param : gramática livre de contexto
 	 * @return : gramática livre de contexto sem símbolos não terminais
 	 */
-	public Grammar getGrammarWithoutNoTerm(final Grammar g, final StringBuilder academicSupport) {
+	public Grammar getGrammarWithoutNoTerm(final Grammar g, final AcademicSupport academicSupport) {
 		Set<String> term = new HashSet<>();
 		Set<String> prev = new HashSet<>();
 		Grammar gc = (Grammar) g.clone();
@@ -378,16 +385,18 @@ public class Grammar implements Cloneable {
 			if (element.getRightSide().length() == 1 && (!element.getRightSide().equals("|")) && (Character.isLowerCase(element.getRightSide().charAt(0)) || element.getRightSide().charAt(0) == '.')) {
 				if (!term.contains(element.getLeftSide())) {
 					term.add(element.getLeftSide());
-					String setOfTerm = term.toString().replace("[", "{");
-					setOfTerm = setOfTerm.replace("]", "}");
-					academicSupport.append("(" + cont + ") A variável " + element.getLeftSide() + " produz uma sentença terminal diretamente. Logo é acrescentada ao conjunto TERM. " + setOfTerm + "\n");
 					cont++;
 				}
 			}
 		}
 
+		academicSupport.insertOnFirstSet(term, "TERM");
+		academicSupport.insertOnSecondSet(prev, "TERM");
+		String term1 = term.toString();
 		do {
 			prev.addAll(term);
+			String prev1 = prev.toString();
+			academicSupport.insertOnSecondSet(prev, "TERM");
 			for (Rule element : gc.getRules()) {
 				boolean insertOnTerm = true;
 				for (int j = 0; j < element.getRightSide().length()
@@ -401,42 +410,27 @@ public class Grammar implements Cloneable {
 				if (insertOnTerm) {
 					if (!term.contains(element.getLeftSide())) {
 						term.add(element.getLeftSide());
-						String setOfTerm = term.toString().replace("[", "{");
-						setOfTerm = setOfTerm.replace("]", "}");
-						academicSupport.append("(" + cont + ") A variável " + element.getLeftSide() + " produz uma sentença terminal indiretamente. Logo é acrescentada ao conjunto TERM. " + setOfTerm + "\n");
+						academicSupport.insertOnFirstSet(term, "TERM");
+						String term2 = term.toString();
 						cont++;
 					}
 				}
 			}
 		} while (!term.equals(prev));
 
-		if (!academicSupport.equals("")) {
-			Grammar aux = new Grammar();
-			aux.setVariables(prev);
-			aux.setRules(GrammarParser.updateRules(prev, gc));
-			aux.setTerminals(GrammarParser.updateTerminals(aux));
-			if (!aux.getVariables().equals(gc.getVariables())) {
-				String newVariables = aux.getVariables().toString().replace("[", "{");
-				newVariables = newVariables.replace("]", "}");
-				academicSupport.append("(" + cont + ") Atualiza as variáveis da gramática após rodar o algoritmo. " + newVariables + "\n");
-				cont++;
-			}
-			if (!aux.getTerminals().equals(gc.getTerminals())) {
-				String newTerminals = aux.getTerminals().toString().replace("[", "{");
-				newTerminals = newTerminals.replace("]", "}");
-				academicSupport.append("(" + cont + ") Atualiza os terminais da gramática após rodar o algoritmo. " + newTerminals + "\n");
-				cont++;
-			}
-
-			if (!aux.getTerminals().equals(gc.getTerminals()) && !aux.getVariables().equals(gc.getVariables())) {
-				academicSupport.append("(" + cont + ") Remove produções que continham as variáveis não terminais.\n");
-			}
-			gc.setVariables(aux.getVariables());
-			gc.setTerminals(aux.getTerminals());
-			gc.setRules(aux.getRules());
+		if (term.size() != gc.getVariables().size()) {
+			academicSupport.setSituation(true);
 		} else {
-			academicSupport.append("A gramática inserida não possui regras não terminais, logo o algoritmo não é executado.\n");
+			academicSupport.setSituation(false);
 		}
+
+		Grammar aux = new Grammar();
+		aux.setVariables(prev);
+		aux.setRules(GrammarParser.updateRules(prev, gc, academicSupport));
+		aux.setTerminals(GrammarParser.updateTerminals(aux));
+		gc.setVariables(aux.getVariables());
+		gc.setTerminals(aux.getTerminals());
+		gc.setRules(aux.getRules());
 
 		return gc;
 	}
@@ -446,26 +440,24 @@ public class Grammar implements Cloneable {
 	 * @param : gramática livre de contexto
 	 * @return : gramática livre de contexto sem símbolos não alcançáveis
 	 */
-	public Grammar getGrammarWithoutNoReach(final Grammar g, final StringBuilder academicSupport) {
+	public Grammar getGrammarWithoutNoReach(final Grammar g, final AcademicSupport academicSupport) {
 		Set<String> reach = new HashSet<>();
 		Set<String> prev = new HashSet<>();
 		Set<String> New = new HashSet<>();
 		Grammar gc = (Grammar) g.clone();
 		reach.add(gc.getInitialSymbol());
-		int cont = 1;
-		academicSupport.append("("+cont+") Adiciona símbolo inicial ao conjunto de variáveis alcançáveis.\n");
-		cont++;
+		academicSupport.insertOnFirstSet(reach, "REACH");
+		academicSupport.setSituation(true);
 		do {
-			New.addAll(GrammarParser.reachMinusPrev(reach, prev));
+			New = GrammarParser.reachMinusPrev(reach, prev);
+			academicSupport.insertOnThirdSet(New, "REACH");
 			prev.addAll(reach);
+			academicSupport.insertOnSecondSet(prev, "REACH");
 			for (String element : New) {
 				for (Rule secondElement : gc.getRules()) {
 					if (secondElement.getLeftSide().equals(element)) {
 						reach.addAll(GrammarParser.variablesInW(reach, secondElement.getRightSide()));
-						String auxReach = reach.toString().replace("[", "{");
-						auxReach = auxReach.replace("]", "}");
-						academicSupport.append("("+cont+") Adiciona todas as variáveis que são produzidas por " + element + ". " + auxReach + "\n");
-						cont++;
+						academicSupport.insertOnFirstSet(reach, "REACH");
 					}
 				}
 			}
@@ -473,24 +465,8 @@ public class Grammar implements Cloneable {
 		Grammar aux = new Grammar();
 		aux.setVariables(prev);
 		aux.setInitialSymbol(gc.getInitialSymbol());
-		aux.setRules(GrammarParser.updateRules(prev, gc));
+		aux.setRules(GrammarParser.updateRules(prev, gc, academicSupport));
 		aux.setTerminals(GrammarParser.updateTerminals(aux));
-		if (!aux.getVariables().equals(gc.getVariables())) {
-			String newVariables = aux.getVariables().toString().replace("[", "{");
-			newVariables = newVariables.replace("]", "}");
-			academicSupport.append("(" + cont + ") Atualiza as variáveis da gramática após rodar o algoritmo. " + newVariables + "\n");
-			cont++;
-		}
-		if (!aux.getTerminals().equals(gc.getTerminals())) {
-			String newTerminals = aux.getTerminals().toString().replace("[", "{");
-			newTerminals = newTerminals.replace("]", "}");
-			academicSupport.append("(" + cont + ") Atualiza os terminais da gramática após rodar o algoritmo. " + newTerminals + "\n");
-			cont++;
-		}
-
-		if (!aux.getTerminals().equals(gc.getTerminals()) && !aux.getVariables().equals(gc.getVariables())) {
-			academicSupport.append("(" + cont + ") Remove produções que continham as variáveis não alcançáveis.\n");
-		}
 		gc.setVariables(aux.getVariables());
 		gc.setTerminals(aux.getTerminals());
 		gc.setRules(aux.getRules());
@@ -620,7 +596,7 @@ public class Grammar implements Cloneable {
 	 * @param : gramática livre de contexto
 	 * @return : gramática livre de contexto sem recursão direta
 	 */
-	public Grammar removingTheImmediateLeftRecursion(final Grammar g, final StringBuilder academicSupport) {
+	public Grammar removingTheImmediateLeftRecursion(final Grammar g, final AcademicSupport academicSupport) {
 
 		Grammar gc = (Grammar) g.clone();
 
@@ -669,7 +645,7 @@ public class Grammar implements Cloneable {
 					secondProduction.setLeftSide(firstProduction.getLeftSide());
 					secondProduction.setRightSide(element.getRightSide().substring(1));
 					newSetOfRules.add(secondProduction);
-					academicSupport.append("("+aux+") Recursão encontrada em "+element+". Adicionando regras " + firstProduction + " e " + secondProduction + ".\n");
+					//academicSupport.append("("+aux+") Recursão encontrada em "+element+". Adicionando regras " + firstProduction + " e " + secondProduction + ".\n");
 					aux++;
 				} else {
 					// sem recursão, mas tratamento é necessário
@@ -681,8 +657,8 @@ public class Grammar implements Cloneable {
 					secondProduction.setLeftSide(firstProduction.getLeftSide());
 					secondProduction.setRightSide(element.getRightSide() + variablesMapped.get(element.getLeftSide()));
 					newSetOfRules.add(secondProduction);
-					academicSupport.append("("+aux+") Não existe recursão na regra " + element +", porém tratamento é necessário. Pois outras regras produzidas" +
-							"por esta variável são recursivas. São inseridas as regras " + firstProduction + " e " + secondProduction + "\n.");
+					//academicSupport.append("("+aux+") Não existe recursão na regra " + element +", porém tratamento é necessário. Pois outras regras produzidas" +
+					//		"por esta variável são recursivas. São inseridas as regras " + firstProduction + " e " + secondProduction + "\n.");
 					aux++;
 				}
 			} else {
@@ -697,10 +673,6 @@ public class Grammar implements Cloneable {
 		// adiciona variáveis criadas no processo à gramática clonada
 		for (String variable : newSetOfVariables) {
 			gc.insertVariable(variable);
-		}
-
-		if (academicSupport.equals("")) {
-			academicSupport.append("Não há recursões na gramática inserida. Logo, nenhuma alteração é realizada. \n");
 		}
 
 		return gc;

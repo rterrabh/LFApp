@@ -524,23 +524,21 @@ public class GrammarParser {
 	 * @param g
 	 * @return
 	 */
-	public static Set<Rule> updateRules(Set<String> prev, Grammar g) {
+	public static Set<Rule> updateRules(Set<String> prev, Grammar g, final AcademicSupport academic) {
 		Set<Rule> newRules = new HashSet<>();
 		for (Rule element : g.getRules()) {
 			if (prev.contains(element.getLeftSide())) {
 				String newRule = new String();
 					boolean insertOnNewRule = true;
-					for (int j = 0; j < element.getRightSide().length()
-							&& insertOnNewRule != false; j++) {
+					for (int j = 0; j < element.getRightSide().length() && insertOnNewRule != false; j++) {
 						if (Character.isUpperCase(element.getRightSide().charAt(j))) {
-							if (prev.contains(Character.toString(element.getRightSide()
-									.charAt(j))))
+							if (prev.contains(Character.toString(element.getRightSide().charAt(j))))
 								insertOnNewRule = true;
 							else
 								insertOnNewRule = false;
 						} else if (Character.isLowerCase(element.getRightSide().charAt(j))) {
 							insertOnNewRule = true;
-						} else if (element.getRightSide().charAt(j) == '.'){
+						} else if (element.getRightSide().charAt(j) == '.') {
 							insertOnNewRule = true;
 						} else {
 							insertOnNewRule = false;
@@ -548,6 +546,8 @@ public class GrammarParser {
 					}
 					if (insertOnNewRule) {
 						newRule += element.getRightSide();
+					} else {
+						academic.insertIrregularRule(new Rule(element));
 					}
 				if (newRule.length() != 0) {
 					Rule r = new Rule();
@@ -555,6 +555,8 @@ public class GrammarParser {
 					r.setRightSide(newRule);
 					newRules.add(r);
 				}
+			} else {
+				academic.insertIrregularRule(new Rule(element));
 			}
 		}
 		return newRules;
