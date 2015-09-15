@@ -831,175 +831,32 @@ public class GrammarParser {
 	 * @param g
 	 * @return
 	 */
-	static boolean checksGrammar(final Grammar g) {
+	static boolean checksGrammar(final Grammar g, AcademicSupport academicSupport) {
 		boolean grammarTest = true;
 		for (Rule element : g.getRules()) {
 			//verifica se é essencialmente não contrátil
-			if (element.getRightSide().equals(".") && !g.getInitialSymbol().equals(element.getLeftSide())) {
+			if (element.getRightSide().equals(g.lambda) && !g.getInitialSymbol().equals(element.getLeftSide())) {
 				grammarTest = false;
+				academicSupport.setSolutionDescription("A gramática inserida possui produções vazias.");
 			}			
 		}
 		//verifica se possui recursão no símbolo inicial
 		for (Rule element : g.getRules()) {
 			if (element.getLeftSide().equals(g.getInitialSymbol()) && element.getRightSide().contains(g.getInitialSymbol())) {
 				grammarTest = false;
+				academicSupport.setSolutionDescription("A gramática inserida possui recursão no símbolo inicial.");
 			}
 		}
 		//verifica se as produções possuem ciclos
 		for (Rule element : g.getRules()) {
 			if (verifyChains(element)) {
 				grammarTest = false;
+				academicSupport.setSolutionDescription("A gramática inserida possui ciclos.");
 			}
 		}
 		return grammarTest;
 	}	
-	
-	/**
-	 * Remoção de recursão direta à esquerda.
-	 * @param g
-	 * @return
-	 */
-	public static Grammar removingTheImmediateLeftRecursion(final Grammar g) {
-		Grammar gc = (Grammar) g.clone();
-		
-		//se gramática não for não contrátil ou essencialmente não contrátil, método não aceita e retorna 
-		// a mesma gramática, caso contrário, a remoção é feita
-		if (checksGrammar(gc)) {
-			//primeira coisa: verificar quais variáveis possuem recursão à esquerda
-			Set<String> haveRecursion = new HashSet<String>();
-			for (Rule element : gc.getRules()) {
-				if (element.getLeftSide().equals(Character.toString(element.getRightSide().charAt(0)))) {
-					haveRecursion.add(element.getLeftSide());
-				}			
-			}
-			
-			//estabelece relacao entre variável que gera recursão e a variável que irá resolver esta solução
-			Map<String, String> variablesMapped = new HashMap<String, String>();
-			int counter = 1;
-			while (gc.getVariables().contains("Z" + counter)) {
-				counter++;
-			}
-			for (String element : haveRecursion) {
-				if (!variablesMapped.containsKey(element)) {
-					variablesMapped.put(element, "Z" + counter);
-					counter++;
-				}
-			}
-			
-			//já é posśivel saber quem possui recursão e onde ela está, sendo possível removê-la
-			Set<Rule> newSetOfRules = new HashSet<Rule>();
-			Set<String> newSetOfVariables = new HashSet<String>();
-			for (Rule element : gc.getRules()) {
-				if (variablesMapped.containsKey(element.getLeftSide()) && !element.getRightSide().equals(".")) {
-					if (element.getLeftSide().equals(Character.toString(element.getRightSide().charAt(0)))) {
-						//recursão encontrada
-						Rule firstProduction = new Rule();
-						firstProduction.setLeftSide(variablesMapped.get(element.getLeftSide()));
-						firstProduction.setRightSide(element.getRightSide().substring(1) + variablesMapped.get(element.getLeftSide()));
-						newSetOfRules.add(firstProduction);
-						newSetOfVariables.add(variablesMapped.get(element.getLeftSide()));
-						Rule secondProduction = new Rule();
-						secondProduction.setLeftSide(firstProduction.getLeftSide());
-						secondProduction.setRightSide(element.getRightSide().substring(1));
-						newSetOfRules.add(secondProduction);
-					} else {
-						//sem recursão, mas tratamento é necessário
-						Rule firstProduction = new Rule();
-						firstProduction.setLeftSide(element.getLeftSide());
-						firstProduction.setRightSide(element.getRightSide());
-						newSetOfRules.add(firstProduction);
-						Rule secondProduction = new Rule();
-						secondProduction.setLeftSide(firstProduction.getLeftSide());
-						secondProduction.setRightSide(element.getRightSide() + variablesMapped.get(element.getLeftSide()));
-						newSetOfRules.add(secondProduction);
-					}				
-				} else {
-					//variável não produz recursão à esquerda
-					newSetOfRules.add(element);
-				}			
-			}
-			
-			//seta as regras alteradas à gramática clonada 
-			gc.setRules(newSetOfRules);
-			
-			//adiciona variáveis criadas no processo à gramática clonada
-			for (String variable : newSetOfVariables) {
-				gc.insertVariable(variable);
-			}		
-		}
-		return gc;
-	}
-	
-		/**
-		 * Remoção de recursão à esquerda.
-		 * @param g
-		 * @return
-		 */
-		public static Grammar removingLeftRecursion(final Grammar g) {
-			Grammar gc = (Grammar) g.clone();			
-			Set<String> olderVariables = gc.getVariables();
-			
-			if (checksGrammar(gc)) {
-				//ordenando os símbolos não terminais
-				Map<String, String> variablesInOrder = new HashMap<String, String>();
-				int counter = 1;
-				variablesInOrder.put(gc.getInitialSymbol(), Integer.toString(counter));
-				for (String element : gc.getVariables()) {
-					if (!element.equals(gc.getInitialSymbol())) {
-						counter++;
-						variablesInOrder.put(element, Integer.toString(counter));		
-					}
-				}
-							
-				while (existsRecursion(gc, variablesInOrder, olderVariables)) {
-					//verifica se gramática possui recursão direta
-					if (existsDirectRecursion(gc)) {
-						gc = GrammarParser.removingTheImmediateLeftRecursion(gc);
-					}
-					
-					//gramática possui recursão indireta
-					Set<Rule> newSetOfRules = new HashSet<Rule>();
-					for (String variable : gc.getVariables()) {
-						if (olderVariables.contains(variable)) {
-							for (Rule element : gc.getRules()) {
-								if (variable.equals(element.getLeftSide())) {
-									int u = Integer.parseInt(variablesInOrder.get(variable));
-									String rightSide = getsFirstCharacter(element.getRightSide());	
-									if (Character.isLowerCase(rightSide.charAt(0)) || ".".equals(rightSide)) {
-										Rule r = new Rule(variable, element.getRightSide());
-										newSetOfRules.add(r);
-									} else {
-										int v = Integer.parseInt(variablesInOrder.get(rightSide));
-										if (u > v) {
-											for (Rule secondElement : gc.getRules()) {
-												if (rightSide.equals(secondElement.getLeftSide())) {
-													String newProduction = secondElement.getRightSide();
-													newProduction += element.getRightSide().substring(indexOfFirstChar(element.getRightSide()));
-													Rule r = new Rule(variable, newProduction);
-													newSetOfRules.add(r);
-												}
-											}
-										} else {
-											Rule r = new Rule(variable, element.getRightSide());
-											newSetOfRules.add(r);
-										}
-									}
-								}
-							}
-						}
-					}
-					//atualiza newSetOfRules
-					for  (Rule element : gc.getRules()) {
-						if (!olderVariables.contains(element.getLeftSide())) {
-							Rule r = new Rule(element.getLeftSide(), element.getRightSide());
-							newSetOfRules.add(r);
-						}
-					}
-					gc.setRules(newSetOfRules);		
-				}
-			}		
-			return gc;		
-		}
+
 		
 		/**
 		 * Retorna o índice do primeiro elemento de uma produção
@@ -1234,9 +1091,10 @@ public class GrammarParser {
 	 */
 	public static PushdownAutomaton turnsGrammarToPushdownAutomata(final Grammar g) {
 		Grammar gc = (Grammar) g.clone();
+		AcademicSupport academic = new AcademicSupport();
 		
 		if (!isFNG(gc.getRules())) {
-			gc = g.FNG(gc);
+			gc = g.FNG(gc, academic);
 		}
 		
 		PushdownAutomaton automaton = new PushdownAutomaton();

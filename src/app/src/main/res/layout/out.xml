@@ -6,6 +6,32 @@
     >
 
     <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+        android:layout_gravity="center">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Gramática de entrada:"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/GramaticaVerde"/>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <ScrollView
         android:id="@+id/scrollView1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
@@ -20,6 +46,7 @@
                 android:id="@+id/layouttext13"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:paddingTop="20dp"
                 android:text="Identificação da gramática"
                 android:textColor="#000000"
                 android:textSize="20sp"
@@ -134,39 +161,20 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical" >
 
-                    <ScrollView
-                        android:id="@+id/scrollView1.1"
+                    <TextView
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:text="Resultado:"
+                        android:id="@+id/TituloAlgoritmo1"
+                        android:textColor="#acff000a"
+                        android:textStyle="bold" />
 
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:measureWithLargestChild="true"
-                            android:longClickable="true"
-                            android:id="@+id/LayoutAlg1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Resultado:"
-                                android:id="@+id/TituloAlgoritmo1"
-                                android:textColor="#acff000a"
-                                android:textStyle="bold" />
-
-                            <TableLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:id="@+id/TableRecursiveInitialSymbol">
-
-
-                            </TableLayout>
-
-                        </LinearLayout>
-                    </ScrollView>
-
+                    <TableLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:id="@+id/TableRecursiveInitialSymbol">
+                    </TableLayout>
 
                 </LinearLayout>
 
@@ -176,36 +184,19 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical" >
 
-                    <ScrollView
-                        android:id="@+id/scrollView1.2"
+                    <TextView
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:text="Algoritmo:"
+                        android:id="@+id/ResultadoAlgoritmo1"
+                        android:textColor="#acff000a"
+                        android:textStyle="bold" />
 
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:measureWithLargestChild="true"
-                            android:longClickable="true"
-                            android:id="@+id/Alg1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Algoritmo:"
-                                android:id="@+id/ResultadoAlgoritmo1"
-                                android:textColor="#acff000a"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:id="@+id/Algoritmo1"
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="#000000" />
-
-                        </LinearLayout>
-
-                    </ScrollView>
+                    <TextView
+                        android:id="@+id/Algoritmo1"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000" />
 
                 </LinearLayout>
 
@@ -233,36 +224,19 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical" >
 
-                    <ScrollView
-                        android:id="@+id/scrollView2.1"
+                    <TextView
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:text="Resultado:"
+                        android:id="@+id/TituloAlgoritmo2"
+                        android:textColor="#acff000a"
+                        android:textStyle="bold" />
 
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:measureWithLargestChild="true"
-                            android:longClickable="true"
-                            android:id="@+id/LayoutAlg2"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Resultado:"
-                                android:id="@+id/TituloAlgoritmo2"
-                                android:textColor="#acff000a"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:id="@+id/ResultGrammarEmptyProductions"/>
-
-                        </LinearLayout>
-
-                    </ScrollView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:id="@+id/ResultGrammarEmptyProductions"/>
 
                 </LinearLayout>
 
@@ -272,72 +246,55 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical" >
 
-                    <ScrollView
-                        android:id="@+id/scrollView2.2"
+                    <TextView
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:text="Algoritmo:"
+                        android:id="@+id/ResultadoAlgoritmo2"
+                        android:textColor="#acff000a"
+                        android:textStyle="bold" />
 
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:measureWithLargestChild="true"
-                            android:longClickable="true"
-                            android:id="@+id/Alg2"
-                            android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/AnswerOfEmptyProductions"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000" />
 
-                            <TextView
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Algoritmo:"
-                                android:id="@+id/ResultadoAlgoritmo2"
-                                android:textColor="#acff000a"
-                                android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/ExplanationEmptyRules1"/>
 
-                            <TextView
-                                android:id="@+id/AnswerOfEmptyProductions"
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="#000000" />
+                    <TableLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/TableOfSets"
+                        android:layout_gravity="center">
+                    </TableLayout>
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/ExplanationEmptyRules1"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/ExplanationEmptyRules2"/>
 
-                            <TableLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/TableOfSets"
-                                android:layout_gravity="center">
-                            </TableLayout>
+                    <TableLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/AddingRulesTable"
+                        android:layout_gravity="center">
+                    </TableLayout>
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/ExplanationEmptyRules2"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/ExplanationEmptyRules3"/>
 
-                            <TableLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/AddingRulesTable"
-                                android:layout_gravity="center">
-                            </TableLayout>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/ExplanationEmptyRules3"/>
-
-                            <TableLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/RemovingRulesTable"
-                                android:layout_gravity="center">
-                            </TableLayout>
-
-                        </LinearLayout>
-
-                    </ScrollView>
+                    <TableLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/RemovingRulesTable"
+                        android:layout_gravity="center">
+                    </TableLayout>
 
                 </LinearLayout>
 
@@ -365,36 +322,19 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical" >
 
-                    <ScrollView
-                        android:id="@+id/scrollView3.1"
+                    <TextView
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:text="Resultado:"
+                        android:id="@+id/TituloAlgoritmo3"
+                        android:textColor="#acff000a"
+                        android:textStyle="bold" />
 
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:measureWithLargestChild="true"
-                            android:longClickable="true"
-                            android:id="@+id/LayoutAlg3"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Resultado:"
-                                android:id="@+id/TituloAlgoritmo3"
-                                android:textColor="#acff000a"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/ResultGrammarWithoutChainRules"
-                                android:layout_gravity="center"/>
-
-                        </LinearLayout>
-
-                    </ScrollView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/ResultGrammarWithoutChainRules"
+                        android:layout_gravity="center"/>
 
                 </LinearLayout>
 
@@ -404,61 +344,44 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical" >
 
-                    <ScrollView
-                        android:id="@+id/scrollView3.2"
+                    <TextView
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:text="Algoritmo:"
+                        android:id="@+id/ResultadoAlgoritmo3"
+                        android:textColor="#acff000a"
+                        android:textStyle="bold" />
 
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:measureWithLargestChild="true"
-                            android:longClickable="true"
-                            android:id="@+id/Alg3"
-                            android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/CommentsChainRules"/>
 
-                            <TextView
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Algoritmo:"
-                                android:id="@+id/ResultadoAlgoritmo3"
-                                android:textColor="#acff000a"
-                                android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/RemovingChainRulesStep1"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/CommentsChainRules"/>
+                    <TableLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/TableOfChains"
+                        android:layout_gravity="center">
+                    </TableLayout>
 
-                            <TextView
-                                android:id="@+id/RemovingChainRulesStep1"
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="#000000" />
+                    <TextView
+                        android:id="@+id/RemovingChainRulesStep2"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000" />
 
-                            <TableLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/TableOfChains"
-                                android:layout_gravity="center">
-                            </TableLayout>
-
-                            <TextView
-                                android:id="@+id/RemovingChainRulesStep2"
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="#000000" />
-
-                            <TableLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/GrammarWithoutChains"
-                                android:layout_gravity="center">
-                            </TableLayout>
-
-                        </LinearLayout>
-
-                    </ScrollView>
+                    <TableLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/GrammarWithoutChains"
+                        android:layout_gravity="center">
+                    </TableLayout>
 
                 </LinearLayout>
 
@@ -486,35 +409,19 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical" >
 
-                    <ScrollView
-                        android:id="@+id/scrollView4.1"
+                    <TextView
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:text="Resultado:"
+                        android:id="@+id/TituloAlgoritmo4"
+                        android:textColor="#acff000a"
+                        android:textStyle="bold" />
 
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:measureWithLargestChild="true"
-                            android:longClickable="true"
-                            android:id="@+id/LayoutAlg4"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Resultado:"
-                                android:id="@+id/TituloAlgoritmo4"
-                                android:textColor="#acff000a"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:id="@+id/ResultNoTerm"/>
-                        </LinearLayout>
-
-                    </ScrollView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:id="@+id/ResultNoTerm"/>
 
                 </LinearLayout>
 
@@ -524,62 +431,45 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical" >
 
-                    <ScrollView
-                        android:id="@+id/scrollView4.2"
+                    <TextView
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:text="Algoritmo:"
+                        android:id="@+id/ResultadoAlgoritmo4"
+                        android:textColor="#acff000a"
+                        android:textStyle="bold" />
 
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:measureWithLargestChild="true"
-                            android:longClickable="true"
-                            android:id="@+id/Alg4"
-                            android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/CommentsNoTerms"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000" />
 
-                            <TextView
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Algoritmo:"
-                                android:id="@+id/ResultadoAlgoritmo4"
-                                android:textColor="#acff000a"
-                                android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/NoTermStep1"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000" />
 
-                            <TextView
-                                android:id="@+id/CommentsNoTerms"
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="#000000" />
+                    <TableLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/TableOfSetsNoTerm"
+                        android:layout_gravity="center">
+                    </TableLayout>
 
-                            <TextView
-                                android:id="@+id/NoTermStep1"
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="#000000" />
+                    <TextView
+                        android:id="@+id/NoTermStep2"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000" />
 
-                            <TableLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/TableOfSetsNoTerm"
-                                android:layout_gravity="center">
-                            </TableLayout>
-
-                            <TextView
-                                android:id="@+id/NoTermStep2"
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="#000000" />
-
-                            <TableLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/GrammarWithNoTerm"
-                                android:layout_gravity="center">
-                            </TableLayout>
-
-                        </LinearLayout>
-
-                    </ScrollView>
+                    <TableLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/GrammarWithNoTerm"
+                        android:layout_gravity="center">
+                    </TableLayout>
 
                 </LinearLayout>
 
@@ -607,37 +497,20 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical" >
 
-                    <ScrollView
-                        android:id="@+id/scrollView5.1"
+                    <TextView
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:text="Resultado:"
+                        android:id="@+id/TituloAlgoritmo5"
+                        android:textColor="#acff000a"
+                        android:textStyle="bold" />
 
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:measureWithLargestChild="true"
-                            android:longClickable="true"
-                            android:id="@+id/LayoutAlg5"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Resultado:"
-                                android:id="@+id/TituloAlgoritmo5"
-                                android:textColor="#acff000a"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:id="@+id/ResultNoReach"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textColor="#000000"
-                                android:layout_gravity="center"/>
-
-                        </LinearLayout>
-
-                    </ScrollView>
+                    <TextView
+                        android:id="@+id/ResultNoReach"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000"
+                        android:layout_gravity="center"/>
 
                 </LinearLayout>
 
@@ -647,62 +520,45 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical" >
 
-                    <ScrollView
-                        android:id="@+id/scrollView5.2"
+                    <TextView
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:text="Algoritmo:"
+                        android:id="@+id/ResultadoAlgoritmo5"
+                        android:textColor="#acff000a"
+                        android:textStyle="bold" />
 
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:measureWithLargestChild="true"
-                            android:longClickable="true"
-                            android:id="@+id/Alg5"
-                            android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/CommentsNoReach"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000" />
 
-                            <TextView
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Algoritmo:"
-                                android:id="@+id/ResultadoAlgoritmo5"
-                                android:textColor="#acff000a"
-                                android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/NoReachStep1"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000" />
 
-                            <TextView
-                                android:id="@+id/CommentsNoReach"
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="#000000" />
+                    <TableLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/tableOfSetsNoReach"
+                        android:layout_gravity="center">
+                    </TableLayout>
 
-                            <TextView
-                                android:id="@+id/NoReachStep1"
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="#000000" />
+                    <TextView
+                        android:id="@+id/NoReachStep2"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000" />
 
-                            <TableLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/tableOfSetsNoReach"
-                                android:layout_gravity="center">
-                            </TableLayout>
-
-                            <TextView
-                                android:id="@+id/NoReachStep2"
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="#000000" />
-
-                            <TableLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/tableOfIrregularRulesReach"
-                                android:layout_gravity="center">
-                            </TableLayout>
-
-                        </LinearLayout>
-
-                    </ScrollView>
+                    <TableLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/tableOfIrregularRulesReach"
+                        android:layout_gravity="center">
+                    </TableLayout>
 
                 </LinearLayout>
 
@@ -724,157 +580,506 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical" >
 
-                <LinearLayout
-                    android:id="@+id/funcionalidade6.1"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" >
-
-                    <ScrollView
-                        android:id="@+id/scrollView6.1"
+                    <TextView
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:text="Remoção de recursão no símbolo inicial:"
+                        android:textStyle="bold"
+                        android:id="@+id/FncStep1"
+                        />
+
+                    <LinearLayout
+                        android:id="@+id/LayoutFNC1"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" >
+
+                        <LinearLayout
+                            android:id="@+id/FNC1.1"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical" >
+
+                            <TextView
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Resultado:"
+                                android:id="@+id/ResultadoFNC1"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:id="@+id/GramaticaSemRecursividadeNoSimboloInicialFNC">
+                            </TextView>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/FNC1.2"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical" >
+
+                            <TextView
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Algoritmo:"
+                                android:id="@+id/ComentarioFNC1"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/ExplicacaoFNC1"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Remoção de produções vazias:"
+                        android:textStyle="bold"
+                        android:id="@+id/FncStep2"/>
+
+                    <LinearLayout
+                        android:id="@+id/LayoutFNC2"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" >
 
                         <LinearLayout
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:measureWithLargestChild="true"
                             android:longClickable="true"
-                            android:id="@+id/LayoutAlg6"
+                            android:id="@+id/FNC2.1"
                             android:orientation="vertical">
 
                             <TextView
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:text="Resultado:"
-                                android:id="@+id/TituloAlgoritmo6"
-                                android:textColor="#acff000a"/>
+                                android:id="@+id/ResultadoFNC2"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
 
                             <TextView
-                                android:id="@+id/PseudocódigoAlgoritmo6"
-                                android:layout_width="fill_parent"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="#000000" />
-
-                            <TextView
-                                android:id="@+id/DescricaoAlgoritmo6"
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="#000000" />
+                                android:layout_gravity="center"
+                                android:id="@+id/GramaticaSemProducoesVaziasFNC"/>
 
                         </LinearLayout>
 
-                    </ScrollView>
 
-                </LinearLayout>
+                        <LinearLayout
+                            android:id="@+id/FNC2.2"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical" >
 
-                <LinearLayout
-                    android:id="@+id/funcionalidade6.2"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" >
+                            <TextView
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Algoritmo:"
+                                android:id="@+id/ResultadoAlgoritmo2FNC"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
 
-                    <ScrollView
-                        android:id="@+id/scrollView6.2"
+                            <TextView
+                                android:id="@+id/Explicacao1ProducoesVaziasFNC"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/ComentariosFNC2"/>
+
+                            <TableLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/TabelaConjuntosFNC2"
+                                android:layout_gravity="center">
+                            </TableLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/ExplicacaoGramaticaSemProducoesVaziasFNC"/>
+
+                            <TableLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/GramaticaAzul2FNC"
+                                android:layout_gravity="center">
+                            </TableLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/ExplicacaoGramaticaComNovasProducoesFNC"/>
+
+                            <TableLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/GramaticaVermelha2FNC"
+                                android:layout_gravity="center">
+                            </TableLayout>
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <TextView
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:text="Remoção de regras da cadeia:"
+                        android:textStyle="bold"
+                        android:id="@+id/FncStep3"
+                        />
+
+                    <LinearLayout
+                        android:id="@+id/LayoutFNC3"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" >
+
+                        <LinearLayout
+                            android:id="@+id/FNC3.1"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical" >
+
+                            <TextView
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Resultado:"
+                                android:id="@+id/ResultadoFNC3"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/GramaticaSemRegrasDaCadeiaFNC"
+                                android:layout_gravity="center"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/FNC3.2"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical" >
+
+                            <TextView
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Algoritmo:"
+                                android:id="@+id/ExplicacaoRegrasDaCadeiaFNC"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/ComentarioFNC3"/>
+
+                            <TextView
+                                android:id="@+id/Passo2RegrasDaCadeiaFNC"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                            <TableLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/Passo2RegrasDaCadeiaFNC_Resultado"
+                                android:layout_gravity="center">
+                            </TableLayout>
+
+                            <TextView
+                                android:id="@+id/Passo3RegrasDaCadeiaFNC"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                            <TableLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/Passo3RegrasDaCadeiaFNC_Resultado"
+                                android:layout_gravity="center">
+                            </TableLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Remoção de símbolos não terminais:"
+                        android:textStyle="bold"
+                        android:id="@+id/FncStep4"/>
+
+                    <LinearLayout
+                        android:id="@+id/LayoutFNC4"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" >
 
                         <LinearLayout
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
                             android:measureWithLargestChild="true"
                             android:longClickable="true"
-                            android:id="@+id/Alg6.2"
+                            android:id="@+id/FNC4.1"
                             android:orientation="vertical">
 
                             <TextView
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Algoritmo:"
-                                android:id="@+id/ResultadoAlgoritmo6"
-                                android:textColor="#acff000a" />
+                                android:text="Resultado:"
+                                android:id="@+id/ResultadoFNC4"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
 
                             <TextView
-                                android:layout_width="fill_parent"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Remoção de recursão no símbolo inicial:"
-                                android:textStyle="bold"
-                                />
-
-                            <TextView
-                                android:id="@+id/Algoritmo6.1"
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="#000000"
-                                android:textStyle="bold"/>
-
-                            <TextView
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Remoção de produções vazias:"
-                                android:textStyle="bold"/>
-
-                            <TextView
-                                android:id="@+id/Algoritmo6.2"
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="#000000" />
-
-                            <TextView
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Remoção de regras da cadeia:"
-                                android:textStyle="bold"
-                                />
-
-                            <TextView
-                                android:id="@+id/Algoritmo6.3"
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="#000000" />
-
-                            <TextView
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Remoção de símbolos não terminais:"
-                                android:textStyle="bold"
-                                />
-
-                            <TextView
-                                android:id="@+id/Algoritmo6.4"
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="#000000" />
-
-                            <TextView
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Remoção de símbolos não alcançáveis:"
-                                android:textStyle="bold"
-                                />
-
-                            <TextView
-                                android:id="@+id/Algoritmo6.5"
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="#000000" />
-
-                            <TextView
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Forma Normal de Chomsky:"
-                                android:textStyle="bold"
-                                />
-
-                            <TextView
-                                android:id="@+id/Algoritmo6.6"
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="#000000" />
+                                android:layout_gravity="center"
+                                android:id="@+id/GramaticaSemSimbolosNaoTerminaisFNC"/>
 
                         </LinearLayout>
-                    </ScrollView>
-                </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/FNC4.2"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical" >
+
+                            <TextView
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Algoritmo:"
+                                android:id="@+id/ExplicacaoSimbolosNaoTerminaisFNC"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/ComentariosNaoTerminaisFNC"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                            <TextView
+                                android:id="@+id/Passo2NaoTerminaisFNC"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                            <TableLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/Passo2NaoTerminaisFNC_Resultado"
+                                android:layout_gravity="center">
+                            </TableLayout>
+
+                            <TextView
+                                android:id="@+id/Passo3NaoTerminaisFNC"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                            <TableLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/Passo3NaoTerminaisFNC_Resultado"
+                                android:layout_gravity="center">
+                            </TableLayout>
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Remoção de símbolos não alcançáveis:"
+                        android:textStyle="bold"
+                        android:id="@+id/FncStep5"
+                        />
+
+                    <LinearLayout
+                        android:id="@+id/LayoutFNC5"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" >
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:measureWithLargestChild="true"
+                            android:longClickable="true"
+                            android:id="@+id/FNC5.1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Resultado:"
+                                android:id="@+id/ResultadoFNC5"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/GramaticaSemSimbolosNaoAlcancaveisFNC"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000"
+                                android:layout_gravity="center"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/FNC5.2"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical" >
+
+                            <TextView
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Algoritmo:"
+                                android:id="@+id/ExplicacaoRemocaoDeSimbolosNaoAlcancaveisFNC"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/ComentariosFNC5"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                            <TextView
+                                android:id="@+id/Passo2RemocaoDeRegrasNaoAlcancaveisFNC"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                            <TableLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/Passo2RemocaoDeSimbolosNaoAlcancaveisFNC_Resultado"
+                                android:layout_gravity="center">
+                            </TableLayout>
+
+                            <TextView
+                                android:id="@+id/Passo3RemocaoDeSimbolosNaoAlcancaveisFNC"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                            <TableLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/Passo3RemocaoDeSimbolosNaoAlcancaveisFNC_Resultado"
+                                android:layout_gravity="center">
+                            </TableLayout>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Forma Normal de Chomsky:"
+                        android:textStyle="bold"
+                        android:id="@+id/FncStep6"
+                        />
+
+                    <LinearLayout
+                        android:id="@+id/LayoutFNC6"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" >
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:measureWithLargestChild="true"
+                            android:longClickable="true"
+                            android:id="@+id/FNC6.1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Resultado:"
+                                android:id="@+id/ResultadoFNC6"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/FNCResultado"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000"
+                                android:layout_gravity="center"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/FNC6.2"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical" >
+
+                            <TextView
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Algoritmo:"
+                                android:id="@+id/ExplicacaoFNC6"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/ComentariosFNC6"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                            <TextView
+                                android:id="@+id/Passo2FNC"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                            <TableLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/Passo2FNC_Resultado"
+                                android:layout_gravity="center">
+                            </TableLayout>
+
+                            <TextView
+                                android:id="@+id/Passo3FNC"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                            <TableLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/Passo3FNC_Resultado"
+                                android:layout_gravity="center">
+                            </TableLayout>
+
+                        </LinearLayout>
+                    </LinearLayout>
             </LinearLayout>
 
             <TextView
@@ -899,37 +1104,20 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical" >
 
-                    <ScrollView
-                        android:id="@+id/scrollView7.1"
+                    <TextView
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:text="Resultado:"
+                        android:id="@+id/TituloAlgoritmo7"
+                        android:textColor="#acff000a"
+                        android:textStyle="bold" />
 
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:measureWithLargestChild="true"
-                            android:longClickable="true"
-                            android:id="@+id/LayoutAlg7"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Resultado:"
-                                android:id="@+id/TituloAlgoritmo7"
-                                android:textColor="#acff000a"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:id="@+id/ResultGrammarWithoutLeftDirectRecursion"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textColor="#000000"
-                                android:layout_gravity="center"/>
-
-                        </LinearLayout>
-
-                    </ScrollView>
+                    <TextView
+                        android:id="@+id/ResultGrammarWithoutLeftDirectRecursion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000"
+                        android:layout_gravity="center"/>
 
                 </LinearLayout>
 
@@ -939,52 +1127,45 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical" >
 
-                    <ScrollView
-                        android:id="@+id/scrollView7.2"
+                    <TextView
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:text="Algoritmo:"
+                        android:id="@+id/ResultadoAlgoritmo7"
+                        android:textColor="#acff000a"
+                        android:textStyle="bold" />
 
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:measureWithLargestChild="true"
-                            android:longClickable="true"
-                            android:id="@+id/Alg7"
-                            android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/CommentsDirectLeftRecursion"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000" />
 
-                            <TextView
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Algoritmo:"
-                                android:id="@+id/ResultadoAlgoritmo7"
-                                android:textColor="#acff000a"
-                                android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/Step1DirectLeftRecursion"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000" />
 
-                            <TextView
-                                android:id="@+id/CommentsDirectLeftRecursion"
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="#000000" />
+                    <TableLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:id="@+id/tableWithDirectLeftRecursion">
+                    </TableLayout>
 
-                            <TextView
-                                android:id="@+id/Step1DirectLeftRecursion"
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="#000000" />
+                    <TextView
+                        android:id="@+id/Step2DirectLeftRecursion"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000" />
 
-                            <TableLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:id="@+id/tableOfDirectLeftRecursion">
-
-                            </TableLayout>
-
-
-
-                        </LinearLayout>
-
-                    </ScrollView>
+                    <TableLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:id="@+id/tableWithoutDirectLeftRecursion">
+                    </TableLayout>
 
                 </LinearLayout>
 
@@ -1034,16 +1215,11 @@
                                 android:textStyle="bold" />
 
                             <TextView
-                                android:id="@+id/PseudocódigoAlgoritmo8"
-                                android:layout_width="fill_parent"
+                                android:id="@+id/RemovalLeftRecursion"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="#000000" />
-
-                            <TextView
-                                android:id="@+id/DescricaoAlgoritmo8"
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="#000000" />
+                                android:textColor="#000000"
+                                android:layout_gravity="center"/>
 
                         </LinearLayout>
 
@@ -1057,36 +1233,58 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical" >
 
-                    <ScrollView
-                        android:id="@+id/scrollView8.2"
+                    <TextView
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:text="Algoritmo:"
+                        android:id="@+id/ResultadoAlgoritmo8"
+                        android:textColor="#acff000a"
+                        android:textStyle="bold" />
 
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:measureWithLargestChild="true"
-                            android:longClickable="true"
-                            android:id="@+id/Alg8"
-                            android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/commentsOfRemovalLeftRecursion"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000" />
 
-                            <TextView
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Algoritmo:"
-                                android:id="@+id/ResultadoAlgoritmo8"
-                                android:textColor="#acff000a"
-                                android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/step1RemovalLeftRecursion"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000" />
 
-                            <TextView
-                                android:id="@+id/Algoritmo8"
-                                android:layout_width="fill_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="#000000" />
+                    <TableLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:id="@+id/tableOfSortedVariables">
+                    </TableLayout>
 
-                        </LinearLayout>
+                    <TextView
+                        android:id="@+id/step2RemovalLeftRecursion"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000" />
 
-                    </ScrollView>
+                    <TableLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:id="@+id/tableOfLeftRecursion">
+                    </TableLayout>
+
+                    <TextView
+                        android:id="@+id/step3RemovalLeftRecursion"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000" />
+
+                    <TableLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:id="@+id/tableWithoutLeftRecursion">
+                    </TableLayout>
 
                 </LinearLayout>
 
@@ -1109,11 +1307,190 @@
                 android:orientation="vertical" >
 
                 <TextView
-                    android:id="@+id/textView9"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="#000000"
-                    android:text="Pendente." />
+                    android:text="Remoção de recursão à esquerda:"
+                    android:textStyle="bold"
+                    android:id="@+id/FngStep1"
+                    />
+
+                <LinearLayout
+                    android:id="@+id/LayoutFNG1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <LinearLayout
+                        android:id="@+id/fng1.1"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" >
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Resultado:"
+                            android:id="@+id/TituloResultadoFNG1"
+                            android:textColor="#acff000a"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/ResultadoFNG1_1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#000000"
+                            android:layout_gravity="center"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/fng1.2"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" >
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Algoritmo:"
+                            android:id="@+id/TituloFNG1.2"
+                            android:textColor="#acff000a"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/FNGComentarios1"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="#000000" />
+
+                        <TextView
+                            android:id="@+id/FNGPasso1_1"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="#000000" />
+
+                        <TableLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:id="@+id/FNGStep1_1_Resultado">
+                        </TableLayout>
+
+                        <TextView
+                            android:id="@+id/FNGPasso1_2"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="#000000" />
+
+                        <TableLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:id="@+id/FNGPasso1_2_Resultado">
+                        </TableLayout>
+
+                        <TextView
+                            android:id="@+id/FNGPasso1_3"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="#000000" />
+
+                        <TableLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:id="@+id/FNGPasso1_3_Resultado">
+                        </TableLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Forma normal de Greibach:"
+                    android:textStyle="bold"
+                    android:id="@+id/FngStep2"
+                    />
+
+                <LinearLayout
+                    android:id="@+id/LayoutFNG2"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <LinearLayout
+                        android:id="@+id/fng2_1"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" >
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Resultado:"
+                            android:id="@+id/TituloResultadoFNG2"
+                            android:textColor="#acff000a"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/ResultadoFNG2_1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#000000"
+                            android:layout_gravity="center"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/fng2_2"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" >
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Algoritmo:"
+                            android:id="@+id/TituloFNG2.2"
+                            android:textColor="#acff000a"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/FNGComentarios2"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="#000000" />
+
+                        <TextView
+                            android:id="@+id/FNGPasso2_1"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="#000000" />
+
+                        <TableLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:id="@+id/FNGStep2_1_Resultado">
+                        </TableLayout>
+
+                        <TextView
+                            android:id="@+id/FNGPasso2_2"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="#000000" />
+
+                        <TableLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:id="@+id/FNGPasso2_2_Resultado">
+                        </TableLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
 
             </LinearLayout>
 

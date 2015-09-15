@@ -10,5 +10,6 @@
     <color name="Gainsboro">#DCDCDC</color>
     <color name="Blue">#0000FF</color>
     <color name="Red">#FF0000</color>
+    <color name ="MediumSpringGreen">#00FA9A</color>
 
 </resources>

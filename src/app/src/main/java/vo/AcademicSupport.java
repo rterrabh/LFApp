@@ -22,6 +22,7 @@ public class AcademicSupport {
     private ArrayList<Set<String>> firstSet;
     private ArrayList<Set<String>> secondSet;
     private ArrayList<Set<String>> thirdSet;
+    private Grammar grammar;
 
 
     public AcademicSupport() {
@@ -35,10 +36,11 @@ public class AcademicSupport {
         this.firstSet = new ArrayList<>();
         this.secondSet = new ArrayList<>();
         this.thirdSet = new ArrayList<>();
+        this.grammar = new Grammar();
     }
 
     public AcademicSupport(String comments, boolean situation, HashMap foundProblems, Grammar g, String solutionDescription, Set<Rule> insertedRules, Set<Rule> irregularRules,
-                            ArrayList<Set<String>> firtSet, ArrayList<Set<String>> secondSet, ArrayList<Set<String>> thirdSet) {
+                            ArrayList<Set<String>> firtSet, ArrayList<Set<String>> secondSet, ArrayList<Set<String>> thirdSet, Grammar grammar) {
         this.comments = comments;
         this.situation = situation;
         this.foundProblems = foundProblems;
@@ -49,6 +51,7 @@ public class AcademicSupport {
         this.firstSet = firtSet;
         this.secondSet = secondSet;
         this.thirdSet = thirdSet;
+        this.grammar = grammar;
     }
 
     public String getComments() {
@@ -73,6 +76,15 @@ public class AcademicSupport {
 
     public void setFoundProblems(Map<Integer, String> foundProblems) {
         this.foundProblems = foundProblems;
+    }
+
+
+    public Grammar getGrammar() {
+        return grammar;
+    }
+
+    public void setGrammar(Grammar grammar) {
+        this.grammar = (Grammar) grammar.clone();
     }
 
     public String getResult() {

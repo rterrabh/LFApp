@@ -63,21 +63,27 @@
             android:layout_height="wrap_content"
             android:text="λ"
             android:layout_weight="1"
-            android:id="@+id/button_Lambda"/>
+            android:id="@+id/button_Lambda"
+            android:textAllCaps="false"
+            android:background="@color/DarkGray"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="->"
             android:layout_weight="1"
-            android:id="@+id/button_Arrow"/>
+            android:id="@+id/button_Arrow"
+            android:background="@color/DarkGray"
+            android:layout_marginTop="10dp"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="|"
             android:layout_weight="1"
-            android:id="@+id/button_Pipe"/>
+            android:id="@+id/button_Pipe"
+            android:background="@color/DarkGray"
+            android:layout_marginTop="10dp"/>
 
 
         <Button
@@ -85,7 +91,9 @@
             android:layout_height="wrap_content"
             android:text="OK"
             android:id="@+id/button_OK"
-            android:layout_below="@+id/inputWord"/>
+            android:layout_below="@+id/inputWord"
+            android:background="@color/DarkGray"
+            android:layout_marginTop="10dp"/>
 
     </LinearLayout>
 
