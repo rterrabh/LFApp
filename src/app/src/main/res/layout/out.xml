@@ -277,24 +277,34 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/ExplanationEmptyRules2"/>
 
-                    <TableLayout
+                    <HorizontalScrollView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/AddingRulesTable"
-                        android:layout_gravity="center">
-                    </TableLayout>
+                        android:layout_height="wrap_content">
+
+                        <TableLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/AddingRulesTable">
+                        </TableLayout>
+
+                    </HorizontalScrollView>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:id="@+id/ExplanationEmptyRules3"/>
 
-                    <TableLayout
+                    <HorizontalScrollView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/RemovingRulesTable"
-                        android:layout_gravity="center">
-                    </TableLayout>
+                        android:layout_height="wrap_content">
+
+                        <TableLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/RemovingRulesTable">
+                        </TableLayout>
+
+                    </HorizontalScrollView>
 
                 </LinearLayout>
 
@@ -376,12 +386,17 @@
                         android:layout_height="wrap_content"
                         android:textColor="#000000" />
 
-                    <TableLayout
+                    <HorizontalScrollView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/GrammarWithoutChains"
-                        android:layout_gravity="center">
-                    </TableLayout>
+                        android:layout_height="wrap_content">
+
+                        <TableLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/GrammarWithoutChains">
+                        </TableLayout>
+
+                    </HorizontalScrollView>
 
                 </LinearLayout>
 
@@ -464,12 +479,17 @@
                         android:layout_height="wrap_content"
                         android:textColor="#000000" />
 
-                    <TableLayout
+                    <HorizontalScrollView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/GrammarWithNoTerm"
-                        android:layout_gravity="center">
-                    </TableLayout>
+                        android:layout_height="wrap_content">
+
+                        <TableLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/GrammarWithNoTerm">
+                        </TableLayout>
+
+                    </HorizontalScrollView>
 
                 </LinearLayout>
 
@@ -553,12 +573,17 @@
                         android:layout_height="wrap_content"
                         android:textColor="#000000" />
 
-                    <TableLayout
+                    <HorizontalScrollView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/tableOfIrregularRulesReach"
-                        android:layout_gravity="center">
-                    </TableLayout>
+                        android:layout_height="wrap_content">
+
+                        <TableLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/tableOfIrregularRulesReach">
+                        </TableLayout>
+
+                    </HorizontalScrollView>
 
                 </LinearLayout>
 
@@ -715,24 +740,34 @@
                                 android:layout_height="wrap_content"
                                 android:id="@+id/ExplicacaoGramaticaSemProducoesVaziasFNC"/>
 
-                            <TableLayout
+                            <HorizontalScrollView
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/GramaticaAzul2FNC"
-                                android:layout_gravity="center">
-                            </TableLayout>
+                                android:layout_height="wrap_content">
+
+                                <TableLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/GramaticaAzul2FNC">
+                                </TableLayout>
+
+                            </HorizontalScrollView>
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:id="@+id/ExplicacaoGramaticaComNovasProducoesFNC"/>
 
-                            <TableLayout
+                            <HorizontalScrollView
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/GramaticaVermelha2FNC"
-                                android:layout_gravity="center">
-                            </TableLayout>
+                                android:layout_height="wrap_content">
+
+                                <TableLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/GramaticaVermelha2FNC">
+                                </TableLayout>
+
+                            </HorizontalScrollView>
 
                         </LinearLayout>
                     </LinearLayout>
@@ -811,12 +846,17 @@
                                 android:layout_height="wrap_content"
                                 android:textColor="#000000" />
 
-                            <TableLayout
+                            <HorizontalScrollView
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/Passo3RegrasDaCadeiaFNC_Resultado"
-                                android:layout_gravity="center">
-                            </TableLayout>
+                                android:layout_height="wrap_content">
+
+                                <TableLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/Passo3RegrasDaCadeiaFNC_Resultado">
+                                </TableLayout>
+
+                            </HorizontalScrollView>
                         </LinearLayout>
                     </LinearLayout>
 
@@ -896,12 +936,17 @@
                                 android:layout_height="wrap_content"
                                 android:textColor="#000000" />
 
-                            <TableLayout
+                            <HorizontalScrollView
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/Passo3NaoTerminaisFNC_Resultado"
-                                android:layout_gravity="center">
-                            </TableLayout>
+                                android:layout_height="wrap_content">
+
+                                <TableLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/Passo3NaoTerminaisFNC_Resultado">
+                                </TableLayout>
+
+                            </HorizontalScrollView>
 
                         </LinearLayout>
                     </LinearLayout>
@@ -983,12 +1028,17 @@
                                 android:layout_height="wrap_content"
                                 android:textColor="#000000" />
 
-                            <TableLayout
+                            <HorizontalScrollView
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/Passo3RemocaoDeSimbolosNaoAlcancaveisFNC_Resultado"
-                                android:layout_gravity="center">
-                            </TableLayout>
+                                android:layout_height="wrap_content">
+
+                                <TableLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/Passo3RemocaoDeSimbolosNaoAlcancaveisFNC_Resultado">
+                                </TableLayout>
+
+                            </HorizontalScrollView>
 
                         </LinearLayout>
 
@@ -1058,12 +1108,17 @@
                                 android:layout_height="wrap_content"
                                 android:textColor="#000000" />
 
-                            <TableLayout
+                            <HorizontalScrollView
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/Passo2FNC_Resultado"
-                                android:layout_gravity="center">
-                            </TableLayout>
+                                android:layout_height="wrap_content">
+
+                                <TableLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/Passo2FNC_Resultado">
+                                </TableLayout>
+
+                            </HorizontalScrollView>
 
                             <TextView
                                 android:id="@+id/Passo3FNC"
@@ -1071,12 +1126,17 @@
                                 android:layout_height="wrap_content"
                                 android:textColor="#000000" />
 
-                            <TableLayout
+                            <HorizontalScrollView
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/Passo3FNC_Resultado"
-                                android:layout_gravity="center">
-                            </TableLayout>
+                                android:layout_height="wrap_content">
+
+                                <TableLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/Passo3FNC_Resultado">
+                                </TableLayout>
+
+                            </HorizontalScrollView>
 
                         </LinearLayout>
                     </LinearLayout>
@@ -1147,12 +1207,17 @@
                         android:layout_height="wrap_content"
                         android:textColor="#000000" />
 
-                    <TableLayout
+                    <HorizontalScrollView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:id="@+id/tableWithDirectLeftRecursion">
-                    </TableLayout>
+                        android:layout_height="wrap_content">
+
+                        <TableLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/tableWithDirectLeftRecursion">
+                        </TableLayout>
+
+                    </HorizontalScrollView>
 
                     <TextView
                         android:id="@+id/Step2DirectLeftRecursion"
@@ -1160,12 +1225,18 @@
                         android:layout_height="wrap_content"
                         android:textColor="#000000" />
 
-                    <TableLayout
+                    <HorizontalScrollView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:id="@+id/tableWithoutDirectLeftRecursion">
-                    </TableLayout>
+                        android:layout_height="wrap_content">
+
+                        <TableLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/tableWithoutDirectLeftRecursion">
+                        </TableLayout>
+
+                    </HorizontalScrollView>
+
 
                 </LinearLayout>
 
@@ -1266,12 +1337,18 @@
                         android:layout_height="wrap_content"
                         android:textColor="#000000" />
 
-                    <TableLayout
+                    <HorizontalScrollView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:id="@+id/tableOfLeftRecursion">
-                    </TableLayout>
+                        android:layout_height="wrap_content">
+
+                        <TableLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/tableOfLeftRecursion">
+                        </TableLayout>
+
+                    </HorizontalScrollView>
+
 
                     <TextView
                         android:id="@+id/step3RemovalLeftRecursion"
@@ -1279,12 +1356,17 @@
                         android:layout_height="wrap_content"
                         android:textColor="#000000" />
 
-                    <TableLayout
+                    <HorizontalScrollView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:id="@+id/tableWithoutLeftRecursion">
-                    </TableLayout>
+                        android:layout_height="wrap_content">
+
+                        <TableLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/tableWithoutLeftRecursion">
+                        </TableLayout>
+
+                    </HorizontalScrollView>
 
                 </LinearLayout>
 
@@ -1381,12 +1463,17 @@
                             android:layout_height="wrap_content"
                             android:textColor="#000000" />
 
-                        <TableLayout
+                        <HorizontalScrollView
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:id="@+id/FNGPasso1_2_Resultado">
-                        </TableLayout>
+                            android:layout_height="wrap_content">
+
+                            <TableLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/FNGPasso1_2_Resultado">
+                            </TableLayout>
+
+                        </HorizontalScrollView>
 
                         <TextView
                             android:id="@+id/FNGPasso1_3"
@@ -1394,12 +1481,18 @@
                             android:layout_height="wrap_content"
                             android:textColor="#000000" />
 
-                        <TableLayout
+                        <HorizontalScrollView
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:id="@+id/FNGPasso1_3_Resultado">
-                        </TableLayout>
+                            android:layout_height="wrap_content">
+
+                            <TableLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/FNGPasso1_3_Resultado">
+                            </TableLayout>
+
+                        </HorizontalScrollView>
+
 
                     </LinearLayout>
 
@@ -1467,12 +1560,18 @@
                             android:layout_height="wrap_content"
                             android:textColor="#000000" />
 
-                        <TableLayout
+                        <HorizontalScrollView
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:id="@+id/FNGStep2_1_Resultado">
-                        </TableLayout>
+                            android:layout_height="wrap_content">
+
+                            <TableLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/FNGStep2_1_Resultado">
+                            </TableLayout>
+
+                        </HorizontalScrollView>
+
 
                         <TextView
                             android:id="@+id/FNGPasso2_2"
@@ -1480,12 +1579,18 @@
                             android:layout_height="wrap_content"
                             android:textColor="#000000" />
 
-                        <TableLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:id="@+id/FNGPasso2_2_Resultado">
-                        </TableLayout>
+                        <HorizontalScrollView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content">
+
+                            <TableLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/FNGPasso2_2_Resultado">
+                            </TableLayout>
+
+                        </HorizontalScrollView>
+
 
                     </LinearLayout>
 
@@ -1510,13 +1615,51 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical" >
 
-                <TextView
-                    android:id="@+id/textView10"
+                <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="#000000"
-                    android:text="Pendente." />
+                    android:id="@+id/LayoutCYK1"
+                    android:orientation="vertical">
 
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Resultado:"
+                        android:id="@+id/TituloResultadoCYK"
+                        android:textColor="#acff000a"
+                        android:textStyle="bold" />
+
+                    <TableLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:id="@+id/CYKTabelaResultado">
+                    </TableLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/LayoutCYK2"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Algoritmo:"
+                        android:id="@+id/TituloAlgoritomCYK"
+                        android:textColor="#acff000a"
+                        android:textStyle="bold" />
+
+                    <TableLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:id="@+id/CYKTabelaExplicacao">
+                    </TableLayout>
+
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout

@@ -1,5 +1,6 @@
 package com.lfapp.lfapp_01;
 
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
@@ -11,13 +12,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import vo.GrammarParser;
 
 
 public class MainActivity extends ActionBarActivity {
 
     private Button button_OK, button_Lambda, button_Pipe, button_Arrow;
-    private EditText inputGrammar;
-    private String txtGrammar;
+    private EditText inputGrammar, inputWord;
+    private String txtGrammar, word;
+    private AlertDialog alert;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +30,21 @@ public class MainActivity extends ActionBarActivity {
 
         //configura EditText InputGrammar
         this.inputGrammar = (EditText) findViewById(R.id.InputGrammar);
+
+        //configura EditText InputWord
+        this.inputWord = (EditText) findViewById(R.id.inputWord);
+
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            Bundle data = new Bundle();
+            data = intent.getExtras();
+            if (data != null) {
+                String returnGrammar = data.get("grammar").toString();
+                this.inputGrammar.setText(returnGrammar);
+            }
+        }
+
 
         //configura botão ->
         this.button_Arrow = (Button) findViewById(R.id.button_Arrow);
@@ -69,14 +88,48 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 txtGrammar = inputGrammar.getText().toString();
+                word = inputWord.getText().toString();
                 Intent TrocaTela = new Intent(MainActivity.this, MainActivity2.class);
                 if (!txtGrammar.isEmpty()) {
-                    Bundle params = new Bundle();
-                    params.putString("msg", txtGrammar);
-                    TrocaTela.putExtras(params);
+                    StringBuilder reason = new StringBuilder();
+                    if (GrammarParser.verifyInputGrammar(txtGrammar)) {
+                        if (GrammarParser.inputValidate(txtGrammar, reason)) {
+                            Bundle params = new Bundle();
+                            params.putString("grammar", txtGrammar);
+                            params.putString("word", word);
+                            TrocaTela.putExtras(params);
+                            MainActivity.this.startActivity(TrocaTela);
+                            MainActivity.this.finish();
+                        } else {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                            builder.setTitle("Aviso");
+                            builder.setMessage(reason);
+                            builder.setNegativeButton("OK",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            //dialog.cancel();
+                                        }
+                                    });
+                            alert = builder.create();
+                            alert.show();
+                        }
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        builder.setTitle("Aviso");
+                        builder.setMessage("A entrada não é um padrão de gramática reconhecido!");
+                        builder.setNegativeButton("OK",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //dialog.cancel();
+                                    }
+                                });
+                        alert = builder.create();
+                        alert.show();
+                    }
+
                 }
-                MainActivity.this.startActivity(TrocaTela);
-                MainActivity.this.finish();
             }
         });
 

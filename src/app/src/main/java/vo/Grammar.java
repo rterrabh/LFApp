@@ -7,6 +7,7 @@ import com.lfapp.lfapp_01.R;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.TreeSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -191,9 +192,9 @@ public class Grammar implements Cloneable {
 		boolean insert = false;
 		int counter = 1;
 		for (Rule element : gc.getRules()) {
-			if (element.getLeftSide().equals(initialSymbol) && element.getRightSide().contains(initialSymbol)) {
+			if (element.getRightSide().contains(initialSymbol)) {
 				insert = true;
-				problems.put(counter, "Recursão encontrada na regra: " + element.getLeftSide() +" -> " + element.getRightSide() + "\n");
+				//problems.put(counter, "Recursão encontrada na regra: " + element.getLeftSide() +" -> " + element.getRightSide() + "\n");
 				counter++;
 			}
 		}
@@ -335,6 +336,7 @@ public class Grammar implements Cloneable {
 					for (Rule element : gc.getRules()) {
 						if (variableInNew.equals(element.getLeftSide()) && (element.getRightSide().length() == 1 && Character.isUpperCase(element.getRightSide().charAt(0)))) {
 							chain.add(element.getRightSide());
+							academicSupport.insertIrregularRule(element);
 						}
 					}
 				}
@@ -796,6 +798,42 @@ public class Grammar implements Cloneable {
 			}
 		}
 		return gc;
+	}
+
+
+
+	// ALGORITMO DE RECONHECIMENTO CYK
+	public static Set<String>[][] CYK(Grammar g, String word) {
+		// inicializando a tabela
+		Set<String>[][] X = new TreeSet[word.length() + 1][word.length()];
+		for (int i = 0; i < word.length() + 1; i++) {
+			for (int j = 0; j < word.length(); j++) {
+				X[i][j] = new TreeSet<String>();
+			}
+		}
+
+		// inserindo a palavra na base da tabela
+		for (int i = 0; i < word.length(); i++) {
+			X[word.length()][i].add(Character.toString(word.charAt(i)));
+		}
+
+		// preenchendo a primeira linha da tabela
+		X = GrammarParser.fillFirstLine(X, g, word);
+
+		if (word.length() >= 2) {
+			// preenchendo a segunda linha da tabela
+			X = GrammarParser.fillSecondLine(X, g, word);
+
+			if (word.length() >= 3) {
+				// preenchendo o restante da tabela
+				int line = word.length() - 1;
+				int column = 0;
+				int count = 3;
+
+				X = GrammarParser.fillOthersLines(X, g, count, line, column, word);
+			}
+		}
+		return X;
 	}
 
 }
