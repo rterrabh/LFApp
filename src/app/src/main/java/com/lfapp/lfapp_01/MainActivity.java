@@ -117,7 +117,7 @@ public class MainActivity extends ActionBarActivity {
                     } else {
                         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                         builder.setTitle("Aviso");
-                        builder.setMessage("A entrada não é um padrão de gramática reconhecido!");
+                        builder.setMessage("Gramática inválida.");
                         builder.setNegativeButton("OK",
                                 new DialogInterface.OnClickListener() {
                                     @Override

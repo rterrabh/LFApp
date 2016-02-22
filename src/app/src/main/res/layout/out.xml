@@ -115,31 +115,6 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/titleDerivationMoreRight"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:paddingTop="20dp"
-                android:textColor="#000000"
-                android:text="Derivação mais à direita"
-                android:background="@color/Gainsboro"/>
-
-            <LinearLayout
-                android:id="@+id/layout12"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/textView12"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="#000000"
-                    android:text="Pendente." />
-
-            </LinearLayout>
-
-            <TextView
                 android:id="@+id/titleRemoveInitialSymbolRecursive"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -265,6 +240,12 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/ExplanationEmptyRules1"/>
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/PseudoNullableAlgorith"
+                        android:layout_gravity="center"/>
+
                     <TableLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -314,7 +295,7 @@
                 android:id="@+id/titleChainRules"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="Remoção de Regras da Cadeia"
+                android:text="Remoção de Regras de Cadeia"
                 android:textSize="20sp"
                 android:textColor="#000000"
                 android:paddingTop="20dp"
@@ -373,6 +354,12 @@
                         android:layout_height="wrap_content"
                         android:textColor="#000000" />
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/PseudoChainAlgorithm"
+                        android:layout_gravity="center"/>
+
                     <TableLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -406,7 +393,7 @@
                 android:id="@+id/titleNoTermSymbols"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="Remoção de símbolos não terminais"
+                android:text="Remoção de variáveis que não geram terminais"
                 android:textSize="20sp"
                 android:textColor="#000000"
                 android:paddingTop="20dp"
@@ -465,6 +452,12 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:textColor="#000000" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/PseudoTermAlgorithm"
+                        android:layout_gravity="center"/>
 
                     <TableLayout
                         android:layout_width="wrap_content"
@@ -559,6 +552,12 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:textColor="#000000" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/PseudoReachAlgorithm"
+                        android:layout_gravity="center"/>
 
                     <TableLayout
                         android:layout_width="wrap_content"
@@ -728,6 +727,12 @@
                                 android:layout_height="wrap_content"
                                 android:id="@+id/ComentariosFNC2"/>
 
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/PseudoNullableAlgorithFNC"
+                                android:layout_gravity="center"/>
+
                             <TableLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -775,7 +780,7 @@
                     <TextView
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:text="Remoção de regras da cadeia:"
+                        android:text="Remoção de regras de cadeia:"
                         android:textStyle="bold"
                         android:id="@+id/FncStep3"
                         />
@@ -832,6 +837,12 @@
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="#000000" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/PseudoChainAlgorithmFNC"
+                                android:layout_gravity="center"/>
 
                             <TableLayout
                                 android:layout_width="wrap_content"
@@ -922,6 +933,12 @@
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="#000000" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/PseudoTermAlgorithmFNC"
+                                android:layout_gravity="center"/>
 
                             <TableLayout
                                 android:layout_width="wrap_content"
@@ -1014,6 +1031,12 @@
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
                                 android:textColor="#000000" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/PseudoReachAlgorithmFNC"
+                                android:layout_gravity="center"/>
 
                             <TableLayout
                                 android:layout_width="wrap_content"
@@ -1206,6 +1229,12 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:textColor="#000000" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/PseudoDirectLeftRecursionAlgorithm"
+                        android:layout_gravity="center"/>
 
                     <HorizontalScrollView
                         android:layout_width="wrap_content"

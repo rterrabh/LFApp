@@ -2,6 +2,7 @@ package vo;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -112,27 +113,60 @@ public class AcademicSupport {
     }
 
     public String formatResultGrammar(final Grammar g) {
+        ArrayList<String> listOfVariables = new ArrayList<>(g.getVariables());
+        Collections.sort(listOfVariables);
         StringBuilder txtGrammar = new StringBuilder(g.getInitialSymbol() + " ->");
         for (Rule element : g.getRules()) {
             if (element.getLeftSide().equals(g.getInitialSymbol())) {
-                txtGrammar.append(" " + element.getRightSide() + " |");
+                txtGrammar.append(" " + putSentenceOnSubstring(element.getRightSide()) + " |");
             }
         }
         txtGrammar.deleteCharAt(txtGrammar.length() - 1);
-        txtGrammar.append("\n");
-        for (String variable : g.getVariables()) {
-            if (!variable.equals(g.getInitialSymbol())) {
-                txtGrammar.append(variable + " ->");
-                for (Rule element : g.getRules()) {
-                    if (variable.equals(element.getLeftSide())) {
-                        txtGrammar.append(" " + element.getRightSide() + " |");
+        txtGrammar.append("<br>");
+        for (int i = 0; i < listOfVariables.size(); i++) {
+            for (String variable : g.getVariables()) {
+                if (!variable.equals(g.getInitialSymbol()) && listOfVariables.get(i).equals(variable)) {
+                    if (variable.length() > 1) {
+                        txtGrammar.append(variable.substring(0, 1));
+                        txtGrammar.append("<sub>" + variable.substring(1) + "</sub>");
+                    } else {
+                        txtGrammar.append(variable);
                     }
+                    txtGrammar.append(" ->");
+                    for (Rule element : g.getRules()) {
+                        if (variable.equals(element.getLeftSide())) {
+                            txtGrammar.append(" " + putSentenceOnSubstring(element.getRightSide()));
+                            txtGrammar.append(" |");
+                        }
+                    }
+                    txtGrammar.deleteCharAt(txtGrammar.length() - 1);
+                    txtGrammar.append("<br>");
                 }
-                txtGrammar.deleteCharAt(txtGrammar.length() - 1);
-                txtGrammar.append("\n");
             }
         }
         return txtGrammar.toString();
+    }
+
+    public String putSentenceOnSubstring(String element) {
+        StringBuilder newSentence = new StringBuilder();
+        boolean isDigit = false;
+        for (int i = 0; i < element.length(); i++) {
+            if (Character.isDigit(element.charAt(i)) && !isDigit) {
+                newSentence.append("<sub>" + element.charAt(i));
+                isDigit = true;
+            } else if (Character.isDigit(element.charAt(i)) && isDigit) {
+                newSentence.append(element.charAt(i));
+            } else if (!Character.isDigit(element.charAt(i)) && isDigit) {
+                newSentence.append("</sub>" + element.charAt(i));
+                isDigit = false;
+            } else {
+                newSentence.append(element.charAt(i));
+            }
+        }
+        if (isDigit) {
+            newSentence.append("</sub>");
+        }
+        return newSentence.toString();
     }
 
     public void insertNewRule(Rule newRule) {

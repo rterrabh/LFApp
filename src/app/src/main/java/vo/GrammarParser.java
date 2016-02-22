@@ -268,7 +268,7 @@ public class GrammarParser {
                 }
                 if (!setOfVariables.contains(variable.toString())) {
                     test= false;
-                    reason.append("A variável " + variable + " não possui produções.");
+                    reason.append("Não foram atribuídas produções à variável '" + variable + "'.");
                 }
             }
             variable.delete(0, variable.length());
@@ -297,11 +297,11 @@ public class GrammarParser {
             if (counter == 1) {
                 if (!g.getVariables().contains(Character.toString(r.getRightSide().charAt(0))) && !g.getVariables().contains(Character.toString(r.getRightSide().charAt(r.getRightSide().length() - 1)))) {
                     regular = false;
-                    academic.append("- A gramática possui a regra " + r + " que não pertence ao conjunto das gramáticas regulares\n");
+                    academic.append("- A regra " + r + " não pertence ao conjunto das gramáticas regulares.\n");
                 }
             } else if (counter > 1) {
                 regular = false;
-                academic.append("- A gramática possui a regra " + r + " que não pertence ao conjunto das gramáticas regulares\n");
+                academic.append("- A regra " + r + " não pertence ao conjunto das gramáticas regulares.\n");
             }
             counter = 0;
         }
@@ -323,7 +323,7 @@ public class GrammarParser {
             Rule r = itRules.next();
             if (!g.getVariables().contains(r.getLeftSide())) {
                 contextFree = false;
-                academic.append("- A gramática possui a regra " + r + "que não pertence ao conjunto das gramáticas livres de contexto\n");
+                academic.append("- A regra " + r + "não pertence ao conjunto das gramáticas livres de contexto.\n");
             }
         }
         return contextFree;
@@ -340,7 +340,7 @@ public class GrammarParser {
             if (!containsSentence(g, element.getLeftSide()) || !containsSentence(g, element.getRightSide())
                     || element.getRightSide().length() < element.getLeftSide().length()) {
                 contextSensible = false;
-                academic.append("- A gramática possui a regra " + element + "que não pertence ao conjunto das gramáticas sensíveis contexto\n");
+                academic.append("- A regra " + element + "não pertence ao conjunto das gramáticas sensíveis contexto.\n");
             }
         }
         return contextSensible;
@@ -357,7 +357,7 @@ public class GrammarParser {
             if ((!containsSentence(g, element.getLeftSide()) || element.getLeftSide().equals(g.lambda)) ||
                     (!containsSentence(g, element.getRightSide()) && !element.getRightSide().equals(g.lambda))) {
                 unrestricted = false;
-                academic.append("- A gramática possui a regra " + element + "que não pertence ao conjunto das gramáticas irrestritas\n");
+                academic.append("- A regra " + element + "não pertence ao conjunto das gramáticas irrestritas.\n");
             }
         }
         return unrestricted;
@@ -397,18 +397,18 @@ public class GrammarParser {
         String grammarType = new String();
 
         //verifica se a gramática é regular
-        grammarType = (regularGrammar(g, academic)) ? ("A gramática inserida é uma Gramática regular.") : ("");
+        grammarType = (regularGrammar(g, academic)) ? ("Logo a gramática inserida é uma Gramática Regular (GR).") : ("");
 
         if (grammarType.isEmpty()) {
-            grammarType = (contextFreeGrammar(g, academic) ? ("A gramática inserida é uma Gramática livre de contexto.") : (""));
+            grammarType = (contextFreeGrammar(g, academic) ? ("Logo a gramática inserida é uma Gramática Livre de Contexto. (GLC)") : (""));
         }
 
         if (grammarType.isEmpty()) {
-            grammarType = (contextSensibleGrammar(g, academic) ? ("A gramática inserida é uma Gramática sensível ao contexto.") : (""));
+            grammarType = (contextSensibleGrammar(g, academic) ? ("Logo a gramática inserida é uma Gramática Sensível ao Contexto (GSC).") : (""));
         }
 
         if (grammarType.isEmpty()) {
-            grammarType = (unrestrictedGrammar(g, academic) ? ("A gramática inserida é uma Gramática irrestrita.") : (""));
+            grammarType = (unrestrictedGrammar(g, academic) ? ("Logo a gramática inserida é uma Gramática Irrestrita GI.") : (""));
         }
 
         if (grammarType.isEmpty()) {
@@ -1267,7 +1267,8 @@ public class GrammarParser {
                         //sentence += Character.toString(firstCell.charAt(counterOfFirstCell)).trim();
                         sentence += firstCell.substring(counterOfFirstCell, getLengthOfSentence(firstCell, counterOfFirstCell));
                         for (int counterOfSecondCell = 0; counterOfSecondCell < secondCell.length(); ) {
-                            sentence += Character.toString(secondCell.charAt(counterOfSecondCell)).trim();
+                            //sentence += Character.toString(secondCell.charAt(counterOfSecondCell)).trim();
+                            sentence += secondCell.substring(counterOfSecondCell, getLengthOfSentence(secondCell, counterOfSecondCell));
                             Set<String> aux = checksEquality(g, word, sentence);
                             x[targetLine][targetColumn].addAll(aux);
                             //sentence = sentence.substring(0, sentence.length() - 1);

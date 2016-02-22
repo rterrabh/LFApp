@@ -185,8 +185,9 @@ public class Grammar implements Cloneable {
 	public Grammar getGrammarWithInitialSymbolNotRecursive(final Grammar g, final AcademicSupport academicSupport) {
 		Grammar gc = (Grammar) g.clone();
 		StringBuilder comments = new StringBuilder();
-		comments.append("O símbolo inicial deve se limitar a iniciar derivações, não podendo ser uma variável recursiva." +
-				"Logo, não deve ser possível ter derivações do tipo " + gc.getInitialSymbol() + " ⇒∗ αSβ.\n");
+		String align = "justify";
+		comments.append("<p align="+ align + ">O símbolo inicial deve se limitar a iniciar derivações, não podendo ser uma variável recursiva. " +
+				"Logo, não deve ser possível ter derivações do tipo " + gc.getInitialSymbol() + " ⇒∗ αSβ.<br><br>");
 		Map<Integer, String> problems = new HashMap<>();
 		String initialSymbol = gc.getInitialSymbol();
 		boolean insert = false;
@@ -202,12 +203,9 @@ public class Grammar implements Cloneable {
 		StringBuilder solutionDescription = new StringBuilder();
 		if (insert == true) {
 			situation = true;
-			solutionDescription.append("A gramática inserida possui o símbolo inicial recursivo. Logo, é necessário realizar a seguinte transformação: \n");
-			solutionDescription.append("\tAssuma a GLC G = (V , Σ, P, " + gc.getInitialSymbol() + ") onde S é recursivo;\n");
-			solutionDescription.append("\tEntão existe um GLC G' = (V ∪ {" + gc.getInitialSymbol() + "' }, Σ, P ∪ {" +
-			 gc.getInitialSymbol() + "' → " + gc.getInitialSymbol() + "}, " + gc.getInitialSymbol() + "' );\n");
-			solutionDescription.append("\tL(G ) = L(G);\n");
-			solutionDescription.append("\tSímbolo inicial S de G não é mais recursivo.\n");
+			solutionDescription.append("A gramática G = (V, Σ, P, " + gc.getInitialSymbol() + ") possui o símbolo inicial " + gc.getInitialSymbol() + " recursivo. Logo,");
+			solutionDescription.append("existe uma GLC G' = (V ∪ {" + gc.getInitialSymbol() + "' }, Σ, P ∪ {" +
+			 gc.getInitialSymbol() + "' → " + gc.getInitialSymbol() + "}, " + gc.getInitialSymbol() + "' ), tal que L(G') = L(G) e o novo símbolo inicial " + gc.getInitialSymbol() +" não é recursivo.</p><br>");
 			Rule r = new Rule(initialSymbol + "'", initialSymbol);
 			gc.insertRule(r);
 			gc.setInitialSymbol(initialSymbol + "'");

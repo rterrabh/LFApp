@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,10 +18,15 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import vo.*;
 
@@ -75,7 +81,7 @@ public class MainActivity2 extends ActionBarActivity {
                     inputGrammar = (TextView) findViewById(R.id.GramaticaVerde);
                     AcademicSupport academic = new AcademicSupport();
                     academic.setResult(g);
-                    inputGrammar.setText(academic.getResult());
+                    inputGrammar.setText(Html.fromHtml(academic.getResult()));
                     inputGrammar.setTextColor(getResources().getColor(R.color.DarkGray));
                 }
 
@@ -133,10 +139,6 @@ public class MainActivity2 extends ActionBarActivity {
         this.layoutDerivationMoreLeft = (LinearLayout) findViewById(R.id.layout11);
         this.titleLeftDerivation = (TextView) findViewById(R.id.titleDerivationMoreLeft);
         this.layoutDerivationMoreLeft.setVisibility(View.GONE);
-
-        this.titleRightDerivation = (TextView) findViewById(R.id.titleDerivationMoreRight);
-        this.layoutDerivationMoreRight = (LinearLayout) findViewById(R.id.layout12);
-        this.layoutDerivationMoreRight.setVisibility(View.GONE);
 
         this.titleRemoveInitialSymbolRecursive = (TextView) findViewById(R.id.titleRemoveInitialSymbolRecursive);
         this.layoutInitialSymbolRecursive = (LinearLayout) findViewById(R.id.layout1);
@@ -362,20 +364,6 @@ public class MainActivity2 extends ActionBarActivity {
             }
         });
 
-        controlRightDerivationMenu = true;
-        this.titleRightDerivation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (controlRightDerivationMenu) {
-                    layoutDerivationMoreRight.setVisibility(View.GONE);
-                    controlRightDerivationMenu = false;
-                } else {
-                    layoutDerivationMoreRight.setVisibility(View.VISIBLE);
-                    controlRightDerivationMenu = true;
-                }
-            }
-        });
-
         controlInitialSymbolRecursiveMenu = true;
         this.titleRemoveInitialSymbolRecursive.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -531,7 +519,7 @@ public class MainActivity2 extends ActionBarActivity {
         //LINHA 1
         TableRow row0 = new TableRow(this);
         TextView tv0_0 = new TextView(this);
-        tv0_0.setText("GR");
+        tv0_0.setText("(3) GR");
         TextView tv0_1 = new TextView(this);
         tv0_1.setText("u ∈ V");
         TextView tv0_2 = new TextView(this);
@@ -545,7 +533,7 @@ public class MainActivity2 extends ActionBarActivity {
         //LINHA 2
         TableRow row1 = new TableRow(this);
         TextView tv1_0 = new TextView(this);
-        tv1_0.setText("GLC");
+        tv1_0.setText("(2) GLC");
         TextView tv1_1 = new TextView(this);
         tv1_1.setText("u ∈ V");
         TextView tv1_2 = new TextView(this);
@@ -559,7 +547,7 @@ public class MainActivity2 extends ActionBarActivity {
         //LINHA 3
         TableRow row2 = new TableRow(this);
         TextView tv2_0 = new TextView(this);
-        tv2_0.setText("GSC");
+        tv2_0.setText("(1) GSC");
         TextView tv2_1 = new TextView(this);
         tv2_1.setText("u ∈ (V U Σ)+");
         TextView tv2_2 = new TextView(this);
@@ -573,7 +561,7 @@ public class MainActivity2 extends ActionBarActivity {
         //LINHA 4
         TableRow row3 = new TableRow(this);
         TextView tv3_0 = new TextView(this);
-        tv3_0.setText("GI");
+        tv3_0.setText("(0) GI");
         TextView tv3_1 = new TextView(this);
         tv3_1.setText("u ∈ (V U Σ)+");
         TextView tv3_2 = new TextView(this);
@@ -586,7 +574,7 @@ public class MainActivity2 extends ActionBarActivity {
 
         AcademicSupport academic = new AcademicSupport();
         academic.setComments("A classificação de uma gramática é feita pelo tipo de suas regras (u → v). " +
-                "A tabela abaixo mostra o formato de regras características de cada gramática: \n");
+                "A tabela abaixo mostra o formato de regras características de cada nível: \n");
 
         StringBuilder comments = new StringBuilder();
         academic.setSolutionDescription(comments.toString() + GrammarParser.classifiesGrammar(g, comments));
@@ -611,6 +599,8 @@ public class MainActivity2 extends ActionBarActivity {
         TableRow row0 = new TableRow(this);
         TextView left = new TextView(this);
         TextView arrow0 = new TextView(this);
+        ArrayList<String> variablesOrdenated = new ArrayList<>(g.getVariables());
+        Collections.sort(variablesOrdenated);
         left.setText(g.getInitialSymbol());
         arrow0.setText(" -> ");
         row0.addView(left);
@@ -638,40 +628,42 @@ public class MainActivity2 extends ActionBarActivity {
         row0.removeViewAt(contViews - 1);
         table.addView(row0);
 
-        for (String variable : g.getVariables()) {
-            if (!variable.equals(g.getInitialSymbol())) {
-                TableRow row1 = new TableRow(this);
-                TextView tv0 = new TextView(this);
-                tv0.setText(variable);
-                row1.addView(tv0);
-                TextView arrow1 = new TextView(this);
-                arrow1.setText("->");
-                row1.addView(arrow1);
-                contViews = 2;
-                for (Rule element : g.getRules()) {
-                    if (variable.equals(element.getLeftSide())) {
-                        TextView pipe = new TextView(this);
-                        pipe.setText(" | ");
-                        TextView tv1 = new TextView(this);
-                        if (academic.getInsertedRules().contains(element)) {
-                            tv1.setTextColor(getResources().getColor(R.color.Blue));
-                            tv1.setText(element.getRightSide());
-                        } else if (academic.getIrregularRules().contains(element)) {
-                            tv1.setTextColor(getResources().getColor(R.color.Red));
-                            tv1.setText(element.getRightSide());
-                        } else {
-                            tv1.setText(element.getRightSide());
+
+        for (int i = 0; i < variablesOrdenated.size(); i++) {
+            for (String variable : g.getVariables()) {
+                if (!variable.equals(g.getInitialSymbol()) && variablesOrdenated.get(i).equals(variable)) {
+                    TableRow row1 = new TableRow(this);
+                    TextView tv0 = new TextView(this);
+                    tv0.setText(variable);
+                    row1.addView(tv0);
+                    TextView arrow1 = new TextView(this);
+                    arrow1.setText("->");
+                    row1.addView(arrow1);
+                    contViews = 2;
+                    for (Rule element : g.getRules()) {
+                        if (variable.equals(element.getLeftSide())) {
+                            TextView pipe = new TextView(this);
+                            pipe.setText(" | ");
+                            TextView tv1 = new TextView(this);
+                            if (academic.getInsertedRules().contains(element)) {
+                                tv1.setTextColor(getResources().getColor(R.color.Blue));
+                                tv1.setText(element.getRightSide());
+                            } else if (academic.getIrregularRules().contains(element)) {
+                                tv1.setTextColor(getResources().getColor(R.color.Red));
+                                tv1.setText(element.getRightSide());
+                            } else {
+                                tv1.setText(element.getRightSide());
+                            }
+                            row1.addView(tv1);
+                            row1.addView(pipe);
+                            contViews += 2;
                         }
-                        row1.addView(tv1);
-                        row1.addView(pipe);
-                        contViews += 2;
                     }
+                    row1.removeViewAt(contViews - 1);
+                    table.addView(row1);
                 }
-                row1.removeViewAt(contViews - 1);
-                table.addView(row1);
             }
         }
-
     }
 
 
@@ -686,9 +678,6 @@ public class MainActivity2 extends ActionBarActivity {
         gc = g.getGrammarWithInitialSymbolNotRecursive(g, academicSupport);
         String txtGrammar = printRules(gc);
 
-        /*step1_1 = (TextView) findViewById(R.id.DescricaoAlgoritmo1);
-        step1_1.setText(academicSupport.getResult());*/
-
         TableLayout table = new TableLayout(this);
         table = (TableLayout) findViewById(R.id.TableRecursiveInitialSymbol);
         table.setShrinkAllColumns(true);
@@ -702,9 +691,10 @@ public class MainActivity2 extends ActionBarActivity {
                 academicInfo.append(academicSupport.getFoundProblems().get(i));
             }
             academicInfo.append(academicSupport.getSolutionDescription());
-            step1_2.setText(academicInfo);
+            step1_2.setText(Html.fromHtml(academicInfo.toString()));
         } else {
-            step1_2.setText("A gramática inserida não possui regras do tipo " + g.getInitialSymbol() + " ⇒*αSβ. Logo, nenhuma alteração foi realizada.");
+            String align = "justify";
+            step1_2.setText(Html.fromHtml("A gramática inserida não possui regras do tipo " + g.getInitialSymbol() + " ⇒<sup>*</sup>αSβ. Logo, nenhuma alteração foi realizada."));
         }
     }
 
@@ -719,11 +709,8 @@ public class MainActivity2 extends ActionBarActivity {
         StringBuilder academicInfoComments = new StringBuilder();
 
         //Configura comentários sobre o processo
-        academicInfoComments.append("\t\tQuando alguma regra não contribuir para o processo de derivação, aplica-se o algoritmo λ-rules, para" +
-                "remover as produção vazias.\n");
-        academicInfoComments.append("\t\tO objetivo desta transformação é garantir que toda variável na forma sentencial possa contribuir para a formação " +
-                "da palavra que está sendo derivada.\n\n");
-        academicInfoComments.append("\t\tO algoritmo para remoção de regras λ, consiste em 3 passos:");
+        String align = "justify";
+        academicInfoComments.append(Html.fromHtml("<p align=" + align + ">O algoritmo para remoção de regras λ consiste em 3 passos:"));
         academicSupport.setComments(academicInfoComments.toString());
 
         //Realiza processo
@@ -733,7 +720,7 @@ public class MainActivity2 extends ActionBarActivity {
         //configura a gramática de resultado
         TextView grammarResult = new TextView(this);
         grammarResult = (TextView) findViewById(R.id.ResultGrammarEmptyProductions);
-        grammarResult.setText(academicSupport.getResult());
+        grammarResult.setText(Html.fromHtml(academicSupport.getResult()));
 
         if (academicSupport.getSituation()) {
             //Configura os comentários sobre a solução
@@ -744,7 +731,10 @@ public class MainActivity2 extends ActionBarActivity {
             //Configuração do passo 1 (Tabela dos conjuntos)
             TextView explanation1 = new TextView(this);
             explanation1 = (TextView) findViewById(R.id.ExplanationEmptyRules1);
-            explanation1.setText("(1) Determinar o conjunto das variáveis anuláveis;");
+            explanation1.setText(Html.fromHtml("(1) Determinar o conjunto das variáveis anuláveis.</p>"));
+            TextView pseudo = new TextView(this);
+            pseudo = (TextView) findViewById(R.id.PseudoNullableAlgorith);
+            pseudo.setText(Html.fromHtml(getNullableAlgorith()));
             TableLayout tableOfSets = new TableLayout(this);
             tableOfSets = (TableLayout) findViewById(R.id.TableOfSets);
             tableOfSets.setShrinkAllColumns(true);
@@ -755,7 +745,8 @@ public class MainActivity2 extends ActionBarActivity {
             if (academicSupport.getInsertedRules().size() != 0) {
                 TextView explanation2 = new TextView(this);
                 explanation2 = (TextView) findViewById(R.id.ExplanationEmptyRules2);
-                explanation2.setText("(2) A adição de regras em que as ocorrências de variáveis nulas são omitidas;");
+                explanation2.setText("(2) Adicionar regras em que as ocorrências de variáveis nulas são omitidas. Por exemplo, assuma a regra A -> BABa e B" +
+                        " é uma variável anulável. Logo, são inseridas as seguintes regras: A -> ABa, A -> BAa e A -> Aa.");
                 TableLayout grammarWithNewRules = new TableLayout(this);
                 grammarWithNewRules = (TableLayout) findViewById(R.id.AddingRulesTable);
                 Grammar blueGrammar = new Grammar(joinGrammars(gc, g));
@@ -778,7 +769,7 @@ public class MainActivity2 extends ActionBarActivity {
             } else {
                 TextView explanation3 = new TextView(this);
                 explanation3 = (TextView) findViewById(R.id.ExplanationEmptyRules3);
-                explanation3.setText("(3) Não há regras a serem removidas.");
+                explanation3.setText("(3) Não há regras a serem removidas.</p>");
             }
 
         } else {
@@ -794,9 +785,8 @@ public class MainActivity2 extends ActionBarActivity {
 
         //Realiza comentários sobre o processo
         StringBuilder comments = new StringBuilder();
-        comments.append("\t\tA remoção de regras da cadeia consiste em um processo de renomeação.\n");
-        comments.append("\t\tO algoritmo para a remoção de regras da cadeia realiza a análise da cadeia de cada variável e logo em seguida subistitui as ocorrências " +
-                "de cadeia, quando for o caso, adicionando diretamente as regras da variável que criou a cadeia.\n");
+        comments.append("\t\tA remoção de regras de cadeia substitui as ocorrências " +
+                "de uma cadeia diretamente pelas regras da variável renomeada.\n");
 
         //Realiza processo
         gc = g.getGrammarWithoutChainRules(g, academic);
@@ -805,7 +795,7 @@ public class MainActivity2 extends ActionBarActivity {
         //Configura a gramática de resultado
         TextView grammarResult = new TextView(this);
         grammarResult = (TextView) findViewById(R.id.ResultGrammarWithoutChainRules);
-        grammarResult.setText(academic.getResult());
+        grammarResult.setText(Html.fromHtml(academic.getResult()));
 
         //Configura os comentários do processo
         academic.setComments(comments.toString());
@@ -817,6 +807,9 @@ public class MainActivity2 extends ActionBarActivity {
         TextView creatingSetOfChains = new TextView(this);
         creatingSetOfChains = (TextView) findViewById(R.id.RemovingChainRulesStep1);
         creatingSetOfChains.setText("(1) O primeiro passo do algoritmo é montar as cadeias de cada variável.");
+        TextView pseudo = new TextView(this);
+        pseudo = (TextView) findViewById(R.id.PseudoChainAlgorithm);
+        pseudo.setText(Html.fromHtml(getChainAlgorithm()));
         TableLayout tableOfChains = new TableLayout(this);
         tableOfChains = (TableLayout) findViewById(R.id.TableOfChains);
         tableOfChains.setShrinkAllColumns(true);
@@ -851,25 +844,27 @@ public class MainActivity2 extends ActionBarActivity {
 
         //Realiza comentários sobre o processo
         StringBuilder comments = new StringBuilder();
-        comments.append("\t\tEsta transformação tem o objetivo de remover as regras que não são terminais, ou seja, todo o símbolo que não for capaz " +
-                "de terminar uma forma sentencial, será removido.");
+        comments.append("\t\tRemove as regras que não geram terminais. Consiste de dois passos: ");
 
         //Configura a gramática de resultado
         TextView resultGrammar = new TextView(this);
         resultGrammar = (TextView) findViewById(R.id.ResultNoTerm);
-        resultGrammar.setText(academicSupport.getResult());
+        resultGrammar.setText(Html.fromHtml(academicSupport.getResult()));
 
         if (academicSupport.getSituation()) {
             //Configura os comentários
             academicSupport.setComments(comments.toString());
             TextView result = new TextView(this);
             result = (TextView) findViewById(R.id.CommentsNoTerms);
-            result.setText(academicSupport.getComments());
+            result.setText(Html.fromHtml(academicSupport.getComments()));
 
             //Configura o primeiro passo (Montar conjuntos)
             TextView creatingSetOfChains = new TextView(this);
             creatingSetOfChains = (TextView) findViewById(R.id.NoTermStep1);
-            creatingSetOfChains.setText("(1) O primeiro passo do algoritmo é determinar quais símbolos são terminais.");
+            creatingSetOfChains.setText("(1) Determinar quais variáveis geram terminais direta e indiretamente.");
+            TextView pseudo = new TextView(this);
+            pseudo = (TextView) findViewById(R.id.PseudoTermAlgorithm);
+            pseudo.setText(Html.fromHtml(getTermAlgorithm()));
             TableLayout tableOfSets = new TableLayout(this);
             tableOfSets = (TableLayout) findViewById(R.id.TableOfSetsNoTerm);
             tableOfSets.setShrinkAllColumns(true);
@@ -879,7 +874,7 @@ public class MainActivity2 extends ActionBarActivity {
             //Configura o segundo passo (Regras que foram removidas)
             TextView eliminatingNoTermRules = new TextView(this);
             creatingSetOfChains = (TextView) findViewById(R.id.NoTermStep2);
-            creatingSetOfChains.setText("(2) O primeiro passo do algoritmo é remover os símbolos não terminais.");
+            creatingSetOfChains.setText("(2) Remover as variáveis que não geram terminais.");
             TableLayout grammarWithoutOldRules = new TableLayout(this);
             grammarWithoutOldRules = (TableLayout) findViewById(R.id.GrammarWithNoTerm);
             printOldGrammarOfTermAndReach(g, grammarWithoutOldRules, academicSupport);
@@ -900,12 +895,12 @@ public class MainActivity2 extends ActionBarActivity {
         academic.setResult(gc);
 
         //Realiza comentários sobre o processo
-        comments.append("\t\tEsta transformação tem o objetivo de remover os símbolos que não alcançáveis no processo de derivação de uma palavra.\n");
+        comments.append("\t\tRemover as variáveis não alcançáveis no processo de derivação de uma palavra.\n");
 
         //Mostra o resultado do processo
         TextView tableOfResult = new TextView(this);
         tableOfResult = (TextView) findViewById(R.id.ResultNoReach);
-        tableOfResult.setText(academic.getResult());
+        tableOfResult.setText(Html.fromHtml(academic.getResult()));
 
         if (academic.getSituation()) {
             //Configura comentários
@@ -917,7 +912,10 @@ public class MainActivity2 extends ActionBarActivity {
             //Primeiro passo do processo (Construção dos Conjuntos)
             TextView step1 = new TextView(this);
             step1 = (TextView) findViewById(R.id.NoReachStep1);
-            step1.setText("(1) O primeiro passo do algoritmo é determinar quais símbolos são alcançáveis.");
+            step1.setText("(1) Determinar quais variáveis são alcançáveis a partir do símbolo inicial " + gc.getInitialSymbol() + ".");
+            TextView pseudo = new TextView(this);
+            pseudo = (TextView) findViewById(R.id.PseudoReachAlgorithm);
+            pseudo.setText(Html.fromHtml(getReachAlgorithm()));
             TableLayout tableOfSets = new TableLayout(this);
             tableOfSets = (TableLayout) findViewById(R.id.tableOfSetsNoReach);
             tableOfSets.setShrinkAllColumns(true);
@@ -928,7 +926,7 @@ public class MainActivity2 extends ActionBarActivity {
             if (academic.getIrregularRules().size() != 0) {
                 TextView step2 = new TextView(this);
                 step2 = (TextView) findViewById(R.id.NoReachStep2);
-                step2.setText("(2) O segundo passo do algoritmo é remover os símbolos que não são alcançáveis.");
+                step2.setText("(2) Remover as variáveis que não são alcançáveis.");
                 TableLayout tableResult = new TableLayout(this);
                 tableResult = (TableLayout) findViewById(R.id.tableOfIrregularRulesReach);
                 printOldGrammarOfTermAndReach(g, tableResult, academic);
@@ -955,7 +953,7 @@ public class MainActivity2 extends ActionBarActivity {
         academic.setResult(gc);
         TextView result = new TextView(this);
         result = (TextView) findViewById(R.id.GramaticaSemRecursividadeNoSimboloInicialFNC);
-        result.setText(academic.getResult());
+        result.setText(Html.fromHtml(academic.getResult()));
 
         TextView explanationStep1 = new TextView(this);
         explanationStep1 = (TextView) findViewById(R.id.ExplicacaoFNC1);
@@ -978,11 +976,7 @@ public class MainActivity2 extends ActionBarActivity {
         StringBuilder academicInfoComments = new StringBuilder();
 
         //Configura comentários sobre o processo
-        academicInfoComments.append("\t\tQuando alguma regra não contribuir para o processo de derivação, aplica-se o algoritmo λ-rules, para" +
-                "remover as produção vazias.\n");
-        academicInfoComments.append("\t\tO objetivo desta transformação é garantir que toda variável na forma sentencial possa contribuir para a formação " +
-                "da palavra que está sendo derivada.\n\n");
-        academicInfoComments.append("\t\tO algoritmo para remoção de regras λ, consiste em 3 passos:");
+        academicInfoComments.append("\t\tO algoritmo para remoção de regras λ consiste em 3 passos:");
         academic.setComments(academicInfoComments.toString());
         academic.setComments(academicInfoComments.toString());
 
@@ -991,13 +985,16 @@ public class MainActivity2 extends ActionBarActivity {
         //configura a gramática de resultado
         result = new TextView(this);
         result = (TextView) findViewById(R.id.GramaticaSemProducoesVaziasFNC);
-        result.setText(academic.getResult());
+        result.setText(Html.fromHtml(academic.getResult()));
 
         if (academic.getSituation()) {
             //Configuração do passo 1 (Tabela dos conjuntos)
             TextView explanation1 = new TextView(this);
             explanation1 = (TextView) findViewById(R.id.ComentariosFNC2);
-            explanation1.setText("(1) Determinar o conjunto das variáveis anuláveis;");
+            explanation1.setText("(1) Determinar o conjunto das variáveis anuláveis.");
+            TextView pseudo1 = new TextView(this);
+            pseudo1 = (TextView) findViewById(R.id.PseudoNullableAlgorithFNC);
+            pseudo1.setText(Html.fromHtml(getNullableAlgorith()));
             TableLayout tableOfSets = new TableLayout(this);
             tableOfSets = (TableLayout) findViewById(R.id.TabelaConjuntosFNC2);
             tableOfSets.setShrinkAllColumns(true);
@@ -1008,7 +1005,8 @@ public class MainActivity2 extends ActionBarActivity {
             if (academic.getInsertedRules().size() != 0) {
                 TextView explanation2 = new TextView(this);
                 explanation2 = (TextView) findViewById(R.id.ExplicacaoGramaticaSemProducoesVaziasFNC);
-                explanation2.setText("(2) A adição de regras em que as ocorrências de variáveis nulas são omitidas;");
+                explanation2.setText("(2) Adicionar regras em que as ocorrências de variáveis nulas são omitidas. Por exemplo, assuma a regra" +
+                        " A -> BABa e B é uma variável anulável. Logo, são inseridas as seguintes regras A -> ABa, A -> BAa e A -> Aa.");
                 TableLayout grammarWithNewRules = new TableLayout(this);
                 grammarWithNewRules = (TableLayout) findViewById(R.id.GramaticaAzul2FNC);
                 Grammar blueGrammar = new Grammar(joinGrammars(gc, g));
@@ -1045,9 +1043,8 @@ public class MainActivity2 extends ActionBarActivity {
 
         //Realiza comentários sobre o processo
         StringBuilder comments = new StringBuilder();
-        comments.append("\t\tA remoção de regras da cadeia consiste em um processo de renomeação.\n");
-        comments.append("\t\tO algoritmo para a remoção de regras da cadeia realiza a análise da cadeia de cada variável e logo em seguida subistitui as ocorrências " +
-                "de cadeia, quando for o caso, adicionando diretamente as regras da variável que criou a cadeia.\n");
+        comments.append("\t\tA remoção de regras de cadeia substitui as ocorrências " +
+                "de uma cadeia diretamente pelas regras da variável.\n");
 
         //Realiza processo
         gc = gc.getGrammarWithoutChainRules(gc, academic);
@@ -1056,7 +1053,7 @@ public class MainActivity2 extends ActionBarActivity {
         //Configura a gramática de resultado
         result = new TextView(this);
         result = (TextView) findViewById(R.id.GramaticaSemRegrasDaCadeiaFNC);
-        result.setText(academic.getResult());
+        result.setText(Html.fromHtml(academic.getResult()));
 
         //Configura os comentários do processo
         academic.setComments(comments.toString());
@@ -1067,7 +1064,10 @@ public class MainActivity2 extends ActionBarActivity {
         //Configura o primeiro passo do processo
         TextView creatingSetOfChains = new TextView(this);
         creatingSetOfChains = (TextView) findViewById(R.id.Passo2RegrasDaCadeiaFNC);
-        creatingSetOfChains.setText("(1) O primeiro passo do algoritmo é montar as cadeias de cada variável.");
+        creatingSetOfChains.setText("(1) O primeiro passo do algoritmo é obter as cadeias de cada variável.");
+        TextView pseudo2 = new TextView(this);
+        pseudo2 = (TextView) findViewById(R.id.PseudoChainAlgorithmFNC);
+        pseudo2.setText(Html.fromHtml(getChainAlgorithm()));
         TableLayout tableOfChains = new TableLayout(this);
         tableOfChains = (TableLayout) findViewById(R.id.Passo2RegrasDaCadeiaFNC_Resultado);
         tableOfChains.setShrinkAllColumns(true);
@@ -1077,7 +1077,7 @@ public class MainActivity2 extends ActionBarActivity {
         if (academic.getInsertedRules().size() != 0) {
             TextView creatingGrammarWithoutChains = new TextView(this);
             creatingGrammarWithoutChains = (TextView) findViewById(R.id.Passo3RegrasDaCadeiaFNC);
-            creatingGrammarWithoutChains.setText("(2) Subistituir as cadeias encontradas.");
+            creatingGrammarWithoutChains.setText("(2) Substituir as cadeias encontradas.");
             TableLayout tableWithoutChains = new TableLayout(this);
             tableWithoutChains = (TableLayout) findViewById(R.id.Passo3RegrasDaCadeiaFNC_Resultado);
             printGrammarWithNewRules(gc, tableWithoutChains, academic);
@@ -1102,13 +1102,12 @@ public class MainActivity2 extends ActionBarActivity {
 
         //Realiza comentários sobre o processo
         comments = new StringBuilder();
-        comments.append("\t\tEsta transformação tem o objetivo de remover as regras que não são terminais, ou seja, todo o símbolo que não for capaz " +
-                "de terminar uma forma sentencial, será removido.");
+        comments.append("\t\tRemove as regras que não geram terminais. Consiste de dois passos:");
 
         //Configura a gramática de resultado
         TextView resultGrammar = new TextView(this);
         resultGrammar = (TextView) findViewById(R.id.GramaticaSemSimbolosNaoTerminaisFNC);
-        resultGrammar.setText(academic.getResult());
+        resultGrammar.setText(Html.fromHtml(academic.getResult()));
 
         if (academic.getSituation()) {
             //Configura os comentários
@@ -1120,7 +1119,10 @@ public class MainActivity2 extends ActionBarActivity {
             //Configura o primeiro passo (Montar conjuntos)
              creatingSetOfChains = new TextView(this);
             creatingSetOfChains = (TextView) findViewById(R.id.Passo2NaoTerminaisFNC);
-            creatingSetOfChains.setText("(1) O primeiro passo do algoritmo é determinar quais símbolos são terminais.");
+            creatingSetOfChains.setText("(1) Determinar quais variáveis geram terminais.");
+            TextView pseudo3 = new TextView(this);
+            pseudo3 = (TextView) findViewById(R.id.PseudoTermAlgorithmFNC);
+            pseudo3.setText(Html.fromHtml(getTermAlgorithm()));
             TableLayout tableOfSets = new TableLayout(this);
             tableOfSets = (TableLayout) findViewById(R.id.Passo2NaoTerminaisFNC_Resultado);
             tableOfSets.setShrinkAllColumns(true);
@@ -1130,7 +1132,7 @@ public class MainActivity2 extends ActionBarActivity {
             //Configura o segundo passo (Regras que foram removidas)
             TextView eliminatingNoTermRules = new TextView(this);
             eliminatingNoTermRules = (TextView) findViewById(R.id.Passo3NaoTerminaisFNC);
-            eliminatingNoTermRules.setText("(2) O segundo passo do algoritmo é remover os símbolos não terminais.");
+            eliminatingNoTermRules.setText("(2) Remover as variáveis que não geram terminais.");
             TableLayout grammarWithoutOldRules = new TableLayout(this);
             grammarWithoutOldRules = (TableLayout) findViewById(R.id.Passo3NaoTerminaisFNC_Resultado);
         } else {
@@ -1150,13 +1152,13 @@ public class MainActivity2 extends ActionBarActivity {
         comments = new StringBuilder();
 
         //Realiza comentários sobre o processo
-        comments.append("\t\tEsta transformação tem o objetivo de remover os símbolos que não alcançáveis no processo de derivação de uma palavra.\n");
+        comments.append("\t\tRemover as variáveis que não são alcançáveis no processo de derivação de uma palavra.\n");
 
 
         //Mostra o resultado do processo
         TextView tableOfResult = new TextView(this);
         tableOfResult = (TextView) findViewById(R.id.GramaticaSemSimbolosNaoAlcancaveisFNC);
-        tableOfResult.setText(academic.getResult());
+        tableOfResult.setText(Html.fromHtml(academic.getResult()));
 
         if (academic.getSituation()) {
             //Configura comentários
@@ -1168,7 +1170,10 @@ public class MainActivity2 extends ActionBarActivity {
             //Primeiro passo do processo (Construção dos Conjuntos)
             TextView step1 = new TextView(this);
             step1 = (TextView) findViewById(R.id.Passo2RemocaoDeRegrasNaoAlcancaveisFNC);
-            step1.setText("(1) O primeiro passo do algoritmo é determinar quais símbolos são alcançáveis.");
+            step1.setText("(1) Determinar quais símbolos são alcançáveis a partir do símbolo inicial " + gc.getInitialSymbol() +".");
+            TextView pseudo4 = new TextView(this);
+            pseudo4 = (TextView) findViewById(R.id.PseudoReachAlgorithmFNC);
+            pseudo4.setText(Html.fromHtml(getReachAlgorithm()));
             TableLayout tableOfSets = new TableLayout(this);
             tableOfSets = (TableLayout) findViewById(R.id.Passo2RemocaoDeSimbolosNaoAlcancaveisFNC_Resultado);
             tableOfSets.setShrinkAllColumns(true);
@@ -1179,20 +1184,20 @@ public class MainActivity2 extends ActionBarActivity {
             if (academic.getIrregularRules().size() != 0) {
                 TextView step2 = new TextView(this);
                 step2 = (TextView) findViewById(R.id.Passo3RemocaoDeSimbolosNaoAlcancaveisFNC);
-                step2.setText("(2) O segundo passo do algoritmo é remover os símbolos que não são alcançáveis.");
+                step2.setText("(2) Remover as variáveis que não são alcançáveis.");
                 TableLayout tableResult = new TableLayout(this);
                 tableResult = (TableLayout) findViewById(R.id.Passo3RemocaoDeSimbolosNaoAlcancaveisFNC_Resultado);
                 printOldGrammarOfTermAndReach(gAux, tableResult, academic);
             } else {
                 TextView step2 = new TextView(this);
                 step2 = (TextView) findViewById(R.id.Passo3RemocaoDeSimbolosNaoAlcancaveisFNC);
-                step2.setText("(2) Todos os símbolos são alcançáveis.");
+                step2.setText("(2) Todas as variáveis são alcançáveis.");
             }
 
         } else {
             TextView commentsOfNoReach = new TextView(this);
             commentsOfNoReach = (TextView) findViewById(R.id.Passo3RemocaoDeSimbolosNaoAlcancaveisFNC);
-            commentsOfNoReach.setText("\t\tNão há símbolos alcançáveis na gramática inserida.");
+            commentsOfNoReach.setText("\t\tNão há variáveis não alcançáveis na gramática inserida.");
         }
 
         //Realiza o passo número 5 no processo (Forma Normal de Chomsky)
@@ -1204,7 +1209,7 @@ public class MainActivity2 extends ActionBarActivity {
         comments = new StringBuilder();
 
         //Realiza comentários sobre o processo
-        comments.append("\t\tUma GLC G = (V,Σ,P,S) está na Forma Normal de Chomsky se suas regras tem uma das seguinte propriedades:\n" +
+        comments.append("\t\tUma GLC G = (V,Σ,P,S) está na Forma Normal de Chomsky se suas regras tem uma das seguintes formas:\n" +
                         "\t\t- A -> BC\t onde B, C ∈ V − {S}\n" +
                         "\t\t- A -> a\t onde a ∈ Σ\n" +
                         "\t\t- S → λ");
@@ -1212,7 +1217,7 @@ public class MainActivity2 extends ActionBarActivity {
         //Coloca resultado de FNC na tela
         TextView chomskyResult = new TextView(this);
         chomskyResult = (TextView) findViewById(R.id.FNCResultado);
-        chomskyResult.setText(academic.getResult());
+        chomskyResult.setText(Html.fromHtml(academic.getResult()));
 
         if (academic.getSituation()) {
             //Coloca comentários do processo na tela
@@ -1232,7 +1237,7 @@ public class MainActivity2 extends ActionBarActivity {
             //Realiza o terceiro passo do processo (Mostra gramática com destaques em FNC)
             TextView step2FNC = new TextView(this);
             step2FNC = (TextView) findViewById(R.id.Passo3FNC);
-            step2FNC.setText("(2) Deixar as regras em um dos formatos aceitos pela formalização.");
+            step2FNC.setText("(2) Transformar tais regras em um dos formatos válidos.");
             TableLayout blueGrammar  = new TableLayout(this);
             blueGrammar = (TableLayout) findViewById(R.id.Passo3FNC_Resultado);
             printGrammarWithNewRules(gc, blueGrammar, academic);
@@ -1258,7 +1263,7 @@ public class MainActivity2 extends ActionBarActivity {
         //Insere o resultado do processo
         TextView resultOfProcess = new TextView(this);
         resultOfProcess = (TextView) findViewById(R.id.ResultGrammarWithoutLeftDirectRecursion);
-        resultOfProcess.setText(academicSupport.getResult());
+        resultOfProcess.setText(Html.fromHtml(academicSupport.getResult()));
 
         if (academicSupport.getSituation()) {
             //Insere comentários
@@ -1271,9 +1276,13 @@ public class MainActivity2 extends ActionBarActivity {
             TextView step1 = new TextView(this);
             step1 = (TextView) findViewById(R.id.Step1DirectLeftRecursion);
             step1.setText("(1) O primeiro passo é identificar a recursão.");
+            TextView pseudo = new TextView(this);
+            pseudo = (TextView) findViewById(R.id.PseudoDirectLeftRecursionAlgorithm);
+            pseudo.setText(Html.fromHtml(getLeftRecursionAlgorithm()));
             TableLayout tableOfRecursion = new TableLayout(this);
             tableOfRecursion = (TableLayout) findViewById(R.id.tableWithDirectLeftRecursion);
-            printGrammarWithoutOldRules(g, tableOfRecursion, academicSupport);
+            //printGrammarWithoutOldRules(g, tableOfRecursion, academicSupport);
+            printGrammarWithRecursiveRules(g, tableOfRecursion, academicSupport);
 
             //Segundo passo do processo
             TextView step2 = new TextView(this);
@@ -1300,20 +1309,20 @@ public class MainActivity2 extends ActionBarActivity {
         academicSupport.setResult(gc);
         TextView resultGrammar = new TextView(this);
         resultGrammar = (TextView) findViewById(R.id.RemovalLeftRecursion);
-        resultGrammar.setText(academicSupport.getResult());
+        resultGrammar.setText(Html.fromHtml(academicSupport.getResult()));
 
        if (academicSupport.getSituation()) {
            //Realiza comentários sobre o processo
            TextView text = new TextView(this);
            text = (TextView) findViewById(R.id.commentsOfRemovalLeftRecursion);
            text.setText("A remoção de recursão à esquerda consiste em ordenar as variáveis da gramática e organizar as regras da forma que a variável do lado" +
-                   "esquerdo sempre possua valor menor do que a variável do lado direito.");
+                   " esquerdo sempre possua valor menor do que a variável do lado direito.");
            academicSupport.setComments(text.toString());
 
            //Realiza o primeiro passo do processo (Ordenação das variáveis)
            TextView step1 = new TextView(this);
            step1 = (TextView) findViewById(R.id.step1RemovalLeftRecursion);
-           step1.setText("(1) O primeiro passo é ordenar as variáveis da gramática.");
+           step1.setText("(1) Ordenar as variáveis da gramática.");
            TableLayout tableOfSortedVariables = new TableLayout(this);
            tableOfSortedVariables = (TableLayout) findViewById(R.id.tableOfSortedVariables);
            tableOfSortedVariables.setShrinkAllColumns(true);
@@ -1322,7 +1331,7 @@ public class MainActivity2 extends ActionBarActivity {
            //Realiza segundo passo do processo (Destaca recursões encontradas)
            TextView step2 = new TextView(this);
            step1 = (TextView) findViewById(R.id.step2RemovalLeftRecursion);
-           step1.setText("(2) O segundo passo é localizar as recursões.");
+           step1.setText("(2) Localizar as recursões.");
            TableLayout tableOfIrregularRules = new TableLayout(this);
            tableOfIrregularRules = (TableLayout) findViewById(R.id.tableOfLeftRecursion);
            printGrammarWithoutOldRules(academicSupport.getGrammar(), tableOfIrregularRules, academicSupport);
@@ -1346,9 +1355,6 @@ public class MainActivity2 extends ActionBarActivity {
            }
 
        }
-
-
-
     }
 
     public void fng(final Grammar g) {
@@ -1384,20 +1390,20 @@ public class MainActivity2 extends ActionBarActivity {
         academic.setResult(gc);
         TextView resultGrammar = new TextView(this);
         resultGrammar = (TextView) findViewById(R.id.ResultadoFNG1_1);
-        resultGrammar.setText(academic.getResult());
+        resultGrammar.setText(Html.fromHtml(academic.getResult()));
 
         if (academic.getSituation()) {
             //Realiza comentários sobre o processo
             TextView text = new TextView(this);
             text = (TextView) findViewById(R.id.FNGComentarios1);
             text.setText("A remoção de recursão à esquerda consiste em ordenar as variáveis da gramática e organizar as regras da forma que a variável do lado" +
-                    "esquerdo sempre possua valor menor do que a variável do lado direito.");
+                    " esquerdo sempre possua valor menor do que a variável do lado direito.");
             academic.setComments(text.toString());
 
             //Realiza o primeiro passo do processo (Ordenação das variáveis)
             TextView step1 = new TextView(this);
             step1 = (TextView) findViewById(R.id.FNGPasso1_1);
-            step1.setText("(1) O primeiro passo é ordenar as variáveis da gramática.");
+            step1.setText("(1) Ordenar as variáveis da gramática.");
             TableLayout tableOfSortedVariables = new TableLayout(this);
             tableOfSortedVariables = (TableLayout) findViewById(R.id.FNGStep1_1_Resultado);
             tableOfSortedVariables.setShrinkAllColumns(true);
@@ -1406,7 +1412,7 @@ public class MainActivity2 extends ActionBarActivity {
             //Realiza segundo passo do processo (Destaca recursões encontradas)
             TextView step2 = new TextView(this);
             step1 = (TextView) findViewById(R.id.FNGPasso1_2);
-            step1.setText("(2) O segundo passo é localizar as recursões.");
+            step1.setText("(2) Localizar as recursões.");
             TableLayout tableOfIrregularRules = new TableLayout(this);
             tableOfIrregularRules = (TableLayout) findViewById(R.id.FNGPasso1_2_Resultado);
             printGrammarWithoutOldRules(academic.getGrammar(), tableOfIrregularRules, academic);
@@ -1438,21 +1444,17 @@ public class MainActivity2 extends ActionBarActivity {
         //Coloca resultado na tela
         TextView resultFNG = new TextView(this);
         resultFNG = (TextView) findViewById(R.id.ResultadoFNG2_1);
-        resultFNG.setText(academic.getResult());
-
-        //Realiza comentários do processo
-        StringBuilder comments = new StringBuilder();
-        comments.append("\t\tUma GLC G = (V , Σ, P, S) está na FN de Greibach se suas\n" +
-                "regras têm uma das seguintes formas:\n" +
-                "- A -> A1A2A3...An\t\t onde a ∈ Σ e A1..n ∈ V − {S}]\n" +
-                "- A -> a\t\t onde a ∈ Σ\n" +
-                "- A -> λ");
+        resultFNG.setText(Html.fromHtml(academic.getResult()));
 
         if (academic.getSituation()) {
             //Insere os comentários na tela
             TextView commentsOfFNG = new TextView(this);
             commentsOfFNG = (TextView) findViewById(R.id.FNGComentarios2);
-            commentsOfFNG.setText(comments.toString());
+            commentsOfFNG.append("Uma GLC G = (V , Σ, P, S) está na FN de Greibach se suas regras têm uma das seguintes formas:\n");
+            commentsOfFNG.append(Html.fromHtml("- A -> A<sub><small>1</small></sub>A<sub><small>2</small></sub>A<sub><small>3</small></sub>...A<sub><small>n</small></sub>"));
+            commentsOfFNG.append(Html.fromHtml("\t\t onde a ∈ Σ e A<sub><small>1</small></sub>... A<sub><small>n</small></sub> ∈ V − {S}\n"));
+            commentsOfFNG.append("- A -> a\t\t onde a ∈ Σ\n");
+            commentsOfFNG.append("- A -> λ");
 
             //Realiza o primeiro passo do processo (Destacar regras irregulares)
             TextView step1FNG = new TextView(this);
@@ -1465,7 +1467,7 @@ public class MainActivity2 extends ActionBarActivity {
             //Realiza o segundo passo do processo (Destacar as novas regras inseridas no processo)
             TextView step2FNG = new TextView(this);
             step2FNG = (TextView) findViewById(R.id.FNGPasso2_2);
-            step2FNG.setText("(2) Criar as regras referentes à formalização.");
+            step2FNG.setText("(2) Transformar tais regras em um dos formatos válidos.");
             TableLayout blueGrammar = new TableLayout(this);
             blueGrammar = (TableLayout) findViewById(R.id.FNGPasso2_2_Resultado);
             printGrammarWithNewRules(gc, blueGrammar, academic);
@@ -1510,28 +1512,217 @@ public class MainActivity2 extends ActionBarActivity {
         TableLayout explanationTable = new TableLayout(this);
         explanationTable = (TableLayout) findViewById(R.id.CYKTabelaExplicacao);
 
-        int flag = 1;
-        int edge = word.length();
-        while (flag <= edge) {
-            TableRow row = new TableRow(this);
-            TextView explanation = new TextView(this);
-            TableLayout newTable = new TableLayout(this);
-            newTable.setShrinkAllColumns(true);
-            if (flag == 1) {
-                explanation.setText("(" + flag + ") Adiciona à tabela as variáveis que produzem os \nterminais diretamente.");
-            } else if (flag == 2) {
-                explanation.setText("(" + flag + ") Adiciona à tabela as variáveis que produzem \njunções das duas colunas anteriores.");
-            } else {
-                explanation.setText("(" + flag + ") Adiciona à tabela as variáveis que produzem \njunções da pirâmide.");
-            }
-            row.addView(explanation);
-            explanationTable.addView(row);
-            printCYKTable(newTable, flag, cykOut, word.length(), word.length(), 20);
-            TableRow newRow = new TableRow(this);
-            newRow.addView(newTable);
-            explanationTable.addView(newRow);
-            flag++;
+        //explicando linha 1 CYK
+        TableLayout auxTable = new TableLayout(this);
+        TableRow row = new TableRow(this);
+        TextView explanationTextView = new TextView(this);
+        TableRow explanationTableRow = new TableRow(this);
+
+        explanationTextView.setText("(1) O primeiro passo do algoritmo é adicionar à tabela as \nvariáveis que produzem os respectivos terminais \n diretamente.");
+        explanationTableRow.addView(explanationTextView);
+        explanationTable.addView(explanationTableRow);
+
+        //configura a primeira busca na tabela
+        String[] firstCell;
+        StringBuilder aux;
+        if (word.length() > 1) {
+            firstCell = cykOut[word.length()][0].split(" ");
+            explanationTextView = new TextView(this);
+            explanationTableRow = new TableRow(this);
+            aux = new StringBuilder();
+            explanationTextView.append("Há alguma regra que gere " + firstCell[0] + " diretamente? ");
+            explanationTextView.append((checkRules(g, firstCell[0], aux)) ? ("Sim.") : ("Não."));
+            explanationTextView.append("\n" + aux.toString());
+            explanationTableRow.addView(explanationTextView);
+            explanationTable.addView(explanationTableRow);
         }
+
+        for (int i = word.length() - 1; i <= word.length(); i++) {
+            TableRow newRow = new TableRow(this);
+            for (int j = 0; j < word.length(); j++) {
+                if (!cykOut[i][j].isEmpty()) {
+                    TextView tv = new TextView(this);
+                    setColorOfTheCell(tv, i, j);
+                    tv.setPadding(10, 10, 10, 10);
+                    if ((i == word.length() && j == 0) || (i == word.length() - 1 && j == 0 )) {
+                        tv.setBackgroundColor(getResources().getColor(R.color.SkyBlue));
+                    }
+                    setSubscriptItem(tv, cykOut[i][j]);
+                    //tv.setText(cykTable[i][j]);
+                    newRow.addView(tv);
+                } else {
+                    TextView tv = new TextView(this);
+                    tv.setPadding(10, 10, 10, 10);
+                    newRow.addView(tv);
+                }
+            }
+            auxTable.addView(newRow);
+        }
+        row.addView(auxTable);
+        explanationTable.addView(row);
+
+        //passo 2 explicação
+        auxTable = new TableLayout(this);
+        row = new TableRow(this);
+        explanationTextView = new TextView(this);
+        explanationTableRow = new TableRow(this);
+        explanationTextView.setText("(2) O segundo passo do algoritmo é adicionar à tabela as \nvariáveis que produzem as sentenças de tamanho dois.");
+        explanationTableRow.addView(explanationTextView);
+        explanationTable.addView(explanationTableRow);
+
+        //configura segunda busca na tela
+        String[] secondCell;
+        if (word.length() > 2) {
+            explanationTextView = new TextView(this);
+            explanationTableRow = new TableRow(this);
+            firstCell = cykOut[word.length() - 1][0].split(" ");
+            secondCell = cykOut[word.length() - 1][1].split(" ");
+            aux = new StringBuilder();
+            explanationTextView.append("Há alguma regra que gere " + permutationOfVariables(firstCell, secondCell) + "? ");
+            explanationTextView.append((checkRules(g, firstCell, secondCell, aux)) ? ("Sim.") : ("Não."));
+            explanationTextView.append("\n" + aux.toString());
+            explanationTableRow.addView(explanationTextView);
+            explanationTable.addView(explanationTableRow);
+        }
+
+        for (int i = word.length() - 2; i <= word.length(); i++) {
+            TableRow newRow = new TableRow(this);
+            for (int j = 0; j < word.length(); j++) {
+                if (!cykOut[i][j].isEmpty()) {
+                    TextView tv = new TextView(this);
+                    setColorOfTheCell(tv, i, j);
+                    tv.setPadding(10, 10, 10, 10);
+                    if (((i == word.length() - 1 && (j == 0 || j == 1))) || (i == word.length() - 2 && j == 0)) {
+                        tv.setBackgroundColor(getResources().getColor(R.color.SkyBlue));
+                    }
+                    setSubscriptItem(tv, cykOut[i][j]);
+                    //tv.setText(cykTable[i][j]);
+                    newRow.addView(tv);
+                } else {
+                    TextView tv = new TextView(this);
+                    tv.setPadding(10, 10, 10, 10);
+                    newRow.addView(tv);
+                }
+            }
+            auxTable.addView(newRow);
+        }
+        row.addView(auxTable);
+        explanationTable.addView(row);
+
+
+        //passo 3 explicação
+        auxTable = new TableLayout(this);
+        row = new TableRow(this);
+        explanationTextView = new TextView(this);
+        explanationTableRow = new TableRow(this);
+        explanationTextView.setText("(3) O terceiro passo do algoritmo é adicionar à tabela as \nvariáveis que produzem os sentenças de tamanho três.");
+        explanationTableRow.addView(explanationTextView);
+        explanationTable.addView(explanationTableRow);
+
+
+        //configura terceira busca na tela
+        if (word.length() > 3) {
+            explanationTextView = new TextView(this);
+            explanationTableRow = new TableRow(this);
+            firstCell = cykOut[word.length() - 1][0].split(" ");
+            secondCell = cykOut[word.length() - 2][1].split(" ");
+            String[] thirdCell = cykOut[word.length() - 2][0].split(" ");
+            String[] fourthCell = cykOut[word.length() - 1][2].split(" ");
+            aux = new StringBuilder();
+            explanationTextView.append("Há alguma regra que gere " + permutationOfVariables(firstCell, secondCell) + ", " +  permutationOfVariables(thirdCell, fourthCell) + "? ");
+            explanationTextView.append((checkRules(g, firstCell, secondCell, aux) | (checkRules(g, thirdCell, fourthCell, aux))) ? ("Sim.") : ("Não."));
+            explanationTextView.append("\n" + aux.toString());
+            explanationTableRow.addView(explanationTextView);
+            explanationTable.addView(explanationTableRow);
+        }
+
+        for (int i = word.length() - 3; i <= word.length(); i++) {
+            TableRow newRow = new TableRow(this);
+            for (int j = 0; j < word.length(); j++) {
+                if (!cykOut[i][j].isEmpty()) {
+                    TextView tv = new TextView(this);
+                    setColorOfTheCell(tv, i, j);
+                    tv.setPadding(10, 10, 10, 10);
+                    if ((i == word.length() - 1 && (j == 0 || j == 1 || j == 2)) || ((i == word.length() - 2 && (j == 0 || j == 1))) || (i == word.length() - 3 && j == 0)) {
+                        tv.setBackgroundColor(getResources().getColor(R.color.SkyBlue));
+                    }
+                    setSubscriptItem(tv, cykOut[i][j]);
+                    //tv.setText(cykTable[i][j]);
+                    newRow.addView(tv);
+                } else {
+                    TextView tv = new TextView(this);
+                    tv.setPadding(10, 10, 10, 10);
+                    newRow.addView(tv);
+                }
+            }
+            auxTable.addView(newRow);
+        }
+        row.addView(auxTable);
+        explanationTable.addView(row);
+
+
+        explanationTextView = new TextView(this);
+        explanationTableRow = new TableRow(this);
+
+        if (word.length() >= 4) {
+            explanationTextView.setText("E assim por diante.");
+            explanationTableRow.addView(explanationTextView);
+            explanationTable.addView(explanationTableRow);
+        }
+    }
+
+    private String permutationOfVariables(final String[] firstCell, final String[] secondCell) {
+        StringBuilder newSentence = new StringBuilder();
+        for (int i = 0; i < firstCell.length; i++) {
+            firstCell[i] = firstCell[i].trim();
+            for (int j = 0; j < secondCell.length; j++) {
+               secondCell[j] = secondCell[j].trim();
+                if (!firstCell.equals("-") && !secondCell.equals("-")) {
+                    newSentence.append(firstCell[i] + secondCell[j] + ", ");
+                }
+            }
+        }
+        newSentence.delete(newSentence.length() - 2, newSentence.length());
+        return newSentence.toString();
+    }
+
+    private boolean checkRules(final Grammar g, final String sentence, final StringBuilder newSentence) {
+        boolean flag = false;
+        Iterator<Rule> it = g.getRules().iterator();
+        while (it.hasNext()) {
+            Rule r = it.next();
+            if (r.getRightSide().equals(sentence)) {
+                flag = true;
+                newSentence.append( r.toString() + ", ");
+            }
+        }
+        if (newSentence.length() != 0) {
+            newSentence.delete(newSentence.length() - 2, newSentence.length());
+            newSentence.append(".");
+        }
+        return flag;
+    }
+
+    private boolean checkRules(final Grammar g, final String[] firstCell, final String[] secondCell, final StringBuilder sentence) {
+        boolean flag = false;
+        for (int i = 0; i < firstCell.length; i++) {
+            firstCell[i] = firstCell[i].trim();
+            for (int j = 0; j < secondCell.length; j++) {
+                secondCell[j] = secondCell[j].trim();
+                String newSentence = new String(firstCell[i] + secondCell[j]);
+                for (Rule element : g.getRules()) {
+                    if (element.getRightSide().equals(sentence)) {
+                        sentence.append(element + ", ");
+                        flag = true;
+                    }
+                }
+            }
+        }
+        if (sentence.length() != 0) {
+            sentence.delete(sentence.length() - 2, sentence.length());
+            sentence.append(".");
+        }
+        return flag;
     }
 
     @Override
@@ -1582,7 +1773,8 @@ public class MainActivity2 extends ActionBarActivity {
                     TextView tv = new TextView(this);
                     setColorOfTheCell(tv, i, j);
                     tv.setPadding(padding, padding, padding, padding);
-                    tv.setText(cykTable[i][j]);
+                    setSubscriptItem(tv, cykTable[i][j]);
+                    //tv.setText(cykTable[i][j]);
                     row.addView(tv);
                 } else {
                     TextView tv = new TextView(this);
@@ -1639,6 +1831,173 @@ public class MainActivity2 extends ActionBarActivity {
     }
 
     /**
+     * Método que retorna o pseudocódigo do algoritmo nullable
+     * @return
+     */
+    public String getNullableAlgorith() {
+        StringBuilder algol = new StringBuilder();
+        algol.append("NULL = {A | {A -> λ} ∈ P}<br>");
+        algol.append("<b>repita</b><br>");
+        algol.append("&nbsp;&nbsp;&nbsp;&nbsp;PREV = NULL<br>");
+        algol.append("&nbsp;&nbsp;&nbsp;&nbsp;<b>para cada</b> A ∈ V <b>faça</b><br>");
+        algol.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>se</b> A → w e w ∈ PREV∗ <b>faça</b><br>");
+        algol.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NULL = NULL ∪ {A}<br>");
+        algol.append("<b>até</b> NULL == PREV");
+        return algol.toString();
+    }
+
+    /**
+     * Método que retorna o pseudocódigo do algoritmo chain
+     * @return
+     */
+    public String getChainAlgorithm() {
+        StringBuilder algol = new StringBuilder();
+        algol.append("CHAIN(A) = {A}<br>");
+        algol.append("PREV = ∅<br>");
+        algol.append("<b>repita</b><br>");
+        algol.append("&nbsp;&nbsp;NEW = CHAIN(A) − PREV<br>");
+        algol.append("&nbsp;&nbsp;PREV = CHAIN(A)<br>");
+        algol.append("&nbsp;&nbsp;<b>para cada</b> B ∈ NEW <b>faça</b><br>");
+        algol.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>para cada</b> B → C <b>faça</b><br>");
+        algol.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CHAIN(A) = CHAIN(A) ∪ {C}<br>");
+        algol.append("<b>até</b> CHAIN(A) == PREV");
+        return algol.toString();
+    }
+
+    /**
+     * Método que retorna o pseudocódigo do algoritmo TERM
+     * @return
+     */
+    public String getTermAlgorithm() {
+        StringBuilder algol = new StringBuilder();
+        algol.append("TERM = {A | existe uma regra A → w ∈ P, com w ∈ Σ∗ }<br>");
+        algol.append("<b>repita</b><br>");
+        algol.append("&nbsp;&nbsp;PREV = TERM<br>");
+        algol.append("&nbsp;&nbsp;<b>para cada</b> A ∈ V <b>faça</b><br>");
+        algol.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>se</b> A → w ∈ P e w ∈ (PREV ∪ Σ) ∗ <b>então</b><br>");
+        algol.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TERM = TERM ∪ A<br>");
+        algol.append("<b>até</b> PREV == TERM");
+        return algol.toString();
+    }
+
+    /**
+     * Método que retorna o pseudocódigo do algoritmo  REACH
+     * @return
+     */
+    public String getReachAlgorithm() {
+        StringBuilder algol = new StringBuilder();
+        algol.append("REACH = {S}<br>");
+        algol.append("PREV = ∅<br>");
+        algol.append("<b>repita</b><br>");
+        algol.append("&nbsp;&nbsp;&nbsp;NEW = REACH − PREV<br>");
+        algol.append("&nbsp;&nbsp;&nbsp;PREV = REACH<br>");
+        algol.append("&nbsp;&nbsp;&nbsp;<b>para cada</b> A ∈ NEW <b>faça</b><br>");
+        algol.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>para cada</b> A → w <b>faça</b><br>");
+        algol.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;adiocione as variáveis de w em REACH" +
+                "<br>");
+        algol.append("<b>até</b> REACH == PREV");
+        return algol.toString();
+    }
+
+    /**
+     * Método que retorna o pseudocódigo do algortmo para remoção de recursão direta
+     * @return
+     */
+    public String getLeftRecursionAlgorithm() {
+        StringBuilder algol = new StringBuilder();
+        algol.append("Suponha a regra genérica diretamente recursiva à esq.:<br>");
+        algol.append("A → Aμ<sub><small>1</small></sub> | Aμ<sub><small>2</small></sub> | ... | Aμ<sub><small>m</small></sub> | ν<sub><small>1</small></sub> | ν<sub><small>2</small></sub> | ... | ν<sub><small>n</small></sub><br><br>");
+        algol.append("Regra equivalente não-recursiva à esquerda:<br>");
+        algol.append("A → ν<sub><small>1</small></sub> | ν<sub><small>2</small></sub> | ... | ν<sub><small>n</small></sub> | ν<sub><small>1</small></sub>Z | ν<sub><small>2</small></sub>Z | ... | ν<sub><small>n</small></sub>Z<br>");
+        algol.append("Z → μ<sub><small>1</small></sub>Z | μ<sub><small>2</small></sub>Z | ... | μ<sub><small>m</small></sub>Z | μ<sub><small>1</small></sub> | μ<sub><small>2</small></sub> | ... | μ<sub><small>m</small></sub><br><br>");
+        return algol.toString();
+    }
+
+    /**
+     * Método que imprime a gramática com as regras irregulares recursivas em destaque
+     * @param grammar
+     * @param table
+     * @param academic
+     */
+    private void printGrammarWithRecursiveRules(final Grammar grammar, TableLayout table, final AcademicSupport academic) {
+        TableRow row0 = new TableRow(this);
+        TextView left = new TextView(this);
+        TextView arrow0 = new TextView(this);
+        left.setText(grammar.getInitialSymbol());
+        arrow0.setText(" -> ");
+        row0.addView(left);
+        row0.addView(arrow0);
+        int contViews = 2;
+        ArrayList<String> variables = new ArrayList<>(grammar.getVariables());
+        Collections.sort(variables);
+        for (Rule element : grammar.getRules()) {
+            if (element.getLeftSide().equals(grammar.getInitialSymbol())) {
+                TextView right = new TextView(this);
+                TextView pipe = new TextView(this);
+                pipe.setText(" | ");
+                if (academic.getIrregularRules().contains(element)) {
+                    String firstElement = getFirstElement(element.getRightSide());
+                    right.setText(Html.fromHtml("<font color=" + getResources().getColor(R.color.Red) + ">" + firstElement + "</font>" +  element.getRightSide().substring(firstElement.length())));
+                } else {
+                    right.setText(element.getRightSide());
+                }
+                row0.addView(right);
+                row0.addView(pipe);
+                contViews += 2;
+            }
+        }
+        row0.removeViewAt(contViews - 1);
+        table.addView(row0);
+        String teste = grammar.getVariables().toString();
+        for (int i = 0; i < variables.size(); i++) {
+            for (String variable : grammar.getVariables()) {
+                if (!variable.equals(grammar.getInitialSymbol()) && variables.get(i).equals(variable)) {
+                    TableRow row1 = new TableRow(this);
+                    TextView tv0 = new TextView(this);
+                    tv0.setText(variable);
+                    row1.addView(tv0);
+                    TextView arrow1 = new TextView(this);
+                    arrow1.setText("->");
+                    row1.addView(arrow1);
+                    contViews = 2;
+                    for (Rule element : grammar.getRules()) {
+                        if (variable.equals(element.getLeftSide())) {
+                            TextView pipe = new TextView(this);
+                            pipe.setText(" | ");
+                            TextView tv1 = new TextView(this);
+                            if (academic.getIrregularRules().contains(element)) {
+                                String firstElement = getFirstElement(element.getRightSide());
+                                tv1.setText(Html.fromHtml("<font color=" + getResources().getColor(R.color.Red) + ">" + firstElement + "</font>" + element.getRightSide().substring(firstElement.length())));
+                            } else {
+                                tv1.setText(element.getRightSide());
+                            }
+                            row1.addView(tv1);
+                            row1.addView(pipe);
+                            contViews += 2;
+                        }
+                    }
+                    row1.removeViewAt(contViews - 1);
+                    table.addView(row1);
+                }
+            }
+        }
+    }
+
+    /**
+     * Método que retorna o primeiro elemento de uma sentença
+     * @param element
+     * @return
+     */
+    private String getFirstElement(final String element) {
+        StringBuilder firstElement = new StringBuilder();
+        firstElement.append(element.charAt(0));
+        for (int i = 1; i < element.length() && Character.isDigit(element.charAt(i)); i++) {
+            firstElement.append(element.charAt(i));
+        }
+        return firstElement.toString();
+    }
+
+    /**
      * Método que imprime a gramática com as regras irregulares em destaque
      * @param table
      * @param academic
@@ -1651,6 +2010,8 @@ public class MainActivity2 extends ActionBarActivity {
         arrow0.setText(" -> ");
         row0.addView(left);
         row0.addView(arrow0);
+        ArrayList<String> variables = new ArrayList<>(grammar.getVariables());
+        Collections.sort(variables);
         int contViews = 2;
         for (Rule element : grammar.getRules()) {
             if (element.getLeftSide().equals(grammar.getInitialSymbol())) {
@@ -1658,9 +2019,11 @@ public class MainActivity2 extends ActionBarActivity {
                 TextView pipe = new TextView(this);
                 pipe.setText(" | ");
                 if (academic.getIrregularRules().contains(element)) {
+                    setSubscriptItem(right, element.getRightSide());
                     right.setTextColor(getResources().getColor(R.color.Red));
-                    right.setText(element.getRightSide());
-                } else {
+                } else if (containsDigit(element.getRightSide())) {
+                    setSubscriptItem(right, element.getRightSide());
+                }else {
                     right.setText(element.getRightSide());
                 }
                 row0.addView(right);
@@ -1670,35 +2033,39 @@ public class MainActivity2 extends ActionBarActivity {
         }
         row0.removeViewAt(contViews - 1);
         table.addView(row0);
-        String teste = grammar.getVariables().toString();
-        for (String variable : grammar.getVariables()) {
-            if (!variable.equals(grammar.getInitialSymbol())) {
-                TableRow row1 = new TableRow(this);
-                TextView tv0 = new TextView(this);
-                tv0.setText(variable);
-                row1.addView(tv0);
-                TextView arrow1 = new TextView(this);
-                arrow1.setText("->");
-                row1.addView(arrow1);
-                contViews = 2;
-                for (Rule element : grammar.getRules()) {
-                    if (variable.equals(element.getLeftSide())) {
-                        TextView pipe = new TextView(this);
-                        pipe.setText(" | ");
-                        TextView tv1 = new TextView(this);
-                        if (academic.getIrregularRules().contains(element)) {
-                            tv1.setTextColor(getResources().getColor(R.color.Red));
-                            tv1.setText(element.getRightSide());
-                        } else {
-                            tv1.setText(element.getRightSide());
+
+        for (int i = 0; i < variables.size(); i++) {
+            for (String variable : grammar.getVariables()) {
+                if (!variable.equals(grammar.getInitialSymbol()) && variables.get(i).equals(variable)) {
+                    TableRow row1 = new TableRow(this);
+                    TextView tv0 = new TextView(this);
+                    setSubscriptItem(tv0, variable);
+                    row1.addView(tv0);
+                    TextView arrow1 = new TextView(this);
+                    arrow1.setText("->");
+                    row1.addView(arrow1);
+                    contViews = 2;
+                    for (Rule element : grammar.getRules()) {
+                        if (variable.equals(element.getLeftSide())) {
+                            TextView pipe = new TextView(this);
+                            pipe.setText(" | ");
+                            TextView tv1 = new TextView(this);
+                            if (academic.getIrregularRules().contains(element)) {
+                                setSubscriptItem(tv1, element.getRightSide());
+                                tv1.setTextColor(getResources().getColor(R.color.Red));
+                            } else if(containsDigit(element.getRightSide())) {
+                                setSubscriptItem(tv1, element.getRightSide());
+                            } else {
+                                tv1.setText(element.getRightSide());
+                            }
+                            row1.addView(tv1);
+                            row1.addView(pipe);
+                            contViews += 2;
                         }
-                        row1.addView(tv1);
-                        row1.addView(pipe);
-                        contViews += 2;
                     }
+                    row1.removeViewAt(contViews - 1);
+                    table.addView(row1);
                 }
-                row1.removeViewAt(contViews - 1);
-                table.addView(row1);
             }
         }
     }
@@ -1781,6 +2148,8 @@ public class MainActivity2 extends ActionBarActivity {
         TextView arrow0 = new TextView(this);
         int contViews = 0;
         boolean initialSymbolIrregular = false;
+        ArrayList<String> orderVariables = new ArrayList<>(grammar.getVariables());
+        Collections.sort(orderVariables);
         for (Rule element : grammar.getRules()) {
             if (element.equals(grammar.getInitialSymbol())) {
                 if (academic.getIrregularRules().contains(element)) {
@@ -1815,51 +2184,90 @@ public class MainActivity2 extends ActionBarActivity {
         row0.removeViewAt(contViews - 1);
         table.addView(row0);
 
-        for (String variable : grammar.getVariables()) {
-            contViews = 0;
-            if (!variable.equals(grammar.getInitialSymbol())) {
-                TableRow row1 = new TableRow(this);
-                TextView tv0 = new TextView(this);
-                tv0.setText(variable);
-                TextView arrow1 = new TextView(this);
-                arrow1.setText("->");
-                boolean irregularVariable = false;
-                for (Rule element : grammar.getRules()) {
-                    if (element.getLeftSide().equals(variable)) {
-                        if (academic.getIrregularRules().contains(element) && !academic.getFirstSet().get(academic.getFirstSet().size() - 1).contains(variable)) {
-                            irregularVariable = true;
+        for (int i = 0; i < orderVariables.size(); i++) {
+            for (String variable : grammar.getVariables()) {
+                contViews = 0;
+                if (!variable.equals(grammar.getInitialSymbol()) && orderVariables.get(i).equals(variable)) {
+                    TableRow row1 = new TableRow(this);
+                    TextView tv0 = new TextView(this);
+                    tv0.setText(variable);
+                    TextView arrow1 = new TextView(this);
+                    arrow1.setText("->");
+                    boolean irregularVariable = false;
+                    for (Rule element : grammar.getRules()) {
+                        if (element.getLeftSide().equals(variable)) {
+                            if (academic.getIrregularRules().contains(element) && !academic.getFirstSet().get(academic.getFirstSet().size() - 1).contains(variable)) {
+                                irregularVariable = true;
+                            }
                         }
                     }
-                }
 
-                if (irregularVariable) {
-                    tv0.setTextColor(getResources().getColor(R.color.Red));
-                }
-                row1.addView(tv0);
-                row1.addView(arrow1);
-                contViews += 2;
-
-                for (Rule element : grammar.getRules()) {
-                    if (variable.equals(element.getLeftSide())) {
-                        TextView pipe = new TextView(this);
-                        pipe.setText(" | ");
-                        TextView tv1 = new TextView(this);
-                        if (academic.getIrregularRules().contains(element)) {
-                            tv1.setTextColor(getResources().getColor(R.color.Red));
-                            tv1.setText(element.getRightSide());
-                        } else {
-                            tv1.setText(element.getRightSide());
-                        }
-                        row1.addView(tv1);
-                        row1.addView(pipe);
-                        contViews += 2;
+                    if (irregularVariable) {
+                        tv0.setTextColor(getResources().getColor(R.color.Red));
                     }
+                    row1.addView(tv0);
+                    row1.addView(arrow1);
+                    contViews += 2;
+
+                    for (Rule element : grammar.getRules()) {
+                        if (variable.equals(element.getLeftSide())) {
+                            TextView pipe = new TextView(this);
+                            pipe.setText(" | ");
+                            TextView tv1 = new TextView(this);
+                            if (academic.getIrregularRules().contains(element)) {
+                                tv1.setTextColor(getResources().getColor(R.color.Red));
+                                tv1.setText(element.getRightSide());
+                            } else {
+                                tv1.setText(element.getRightSide());
+                            }
+                            row1.addView(tv1);
+                            row1.addView(pipe);
+                            contViews += 2;
+                        }
+                    }
+                    row1.removeViewAt(contViews - 1);
+                    table.addView(row1);
                 }
-                row1.removeViewAt(contViews - 1);
-                table.addView(row1);
             }
         }
+    }
 
+    /**
+     * Método que conta o número de dígitos a partir do índice fornecido
+     * @param index
+     * @param element
+     * @return
+     */
+    private int getNumberOfDigits(int index, String element) {
+        int i = index;
+        for (; i < element.length() && Character.isDigit(element.charAt(i)); i++);
+        //i = (i == element.length() ? (i - 1) : (i));
+        return i;
+    }
+
+    private void setSubscriptItem(TextView tv, String element) {
+        for (int i = 0; i < element.length();) {
+            if (Character.isDigit(element.charAt(i))) {
+                int index = getNumberOfDigits(i, element);
+                tv.append(Html.fromHtml("<sub><small>" + element.substring(i, index) + "</small></sub>"));
+                i = index;
+            } else {
+                StringBuilder text = new StringBuilder();
+                text.append(element.charAt(i));
+                tv.append(text.toString());
+                i++;
+            }
+        }
+    }
+
+    private boolean containsDigit(String sentence) {
+        boolean test = false;
+        for (int i = 0; i < sentence.length() && !test; i++) {
+            if (Character.isDigit(sentence.charAt(i))) {
+                test = true;
+            }
+        }
+        return test;
     }
 
     /**
@@ -1875,6 +2283,10 @@ public class MainActivity2 extends ActionBarActivity {
         arrow0.setText(" -> ");
         row0.addView(left);
         row0.addView(arrow0);
+        ArrayList<String> orderVariables = new ArrayList<>(grammar.getVariables());
+        Collections.sort(orderVariables);
+        String test = orderVariables.toString();
+        String x = grammar.getInitialSymbol();
         int contViews = 2;
         for (Rule element : grammar.getRules()) {
             if (element.getLeftSide().equals(grammar.getInitialSymbol())) {
@@ -1882,10 +2294,12 @@ public class MainActivity2 extends ActionBarActivity {
                 TextView pipe = new TextView(this);
                 pipe.setText(" | ");
                 if (academic.getInsertedRules().contains(element)) {
+                    setSubscriptItem(right, element.getRightSide());
                     right.setTextColor(getResources().getColor(R.color.Blue));
-                    right.setText(element.getRightSide());
+                } else if (containsDigit(element.getRightSide())) {
+                    setSubscriptItem(right, element.getRightSide());
                 } else {
-                    right.setText(element.getRightSide());
+                    right.append(element.getRightSide());
                 }
                 row0.addView(right);
                 row0.addView(pipe);
@@ -1895,34 +2309,38 @@ public class MainActivity2 extends ActionBarActivity {
         row0.removeViewAt(contViews - 1);
         table.addView(row0);
 
-        for (String variable : grammar.getVariables()) {
-            if (!variable.equals(grammar.getInitialSymbol())) {
-                TableRow row1 = new TableRow(this);
-                TextView tv0 = new TextView(this);
-                tv0.setText(variable);
-                row1.addView(tv0);
-                TextView arrow1 = new TextView(this);
-                arrow1.setText("->");
-                row1.addView(arrow1);
-                contViews = 2;
-                for (Rule element : grammar.getRules()) {
-                    if (variable.equals(element.getLeftSide())) {
-                        TextView pipe = new TextView(this);
-                        pipe.setText(" | ");
-                        TextView tv1 = new TextView(this);
-                        if (academic.getInsertedRules().contains(element)) {
-                            tv1.setTextColor(getResources().getColor(R.color.Blue));
-                            tv1.setText(element.getRightSide());
-                        } else {
-                            tv1.setText(element.getRightSide());
+        for (int i = 0; i < orderVariables.size(); i++) {
+            for (String variable : grammar.getVariables()) {
+                if (!variable.equals(grammar.getInitialSymbol()) && orderVariables.get(i).equals(variable)) {
+                    TableRow row1 = new TableRow(this);
+                    TextView tv0 = new TextView(this);
+                    setSubscriptItem(tv0, variable);
+                    row1.addView(tv0);
+                    TextView arrow1 = new TextView(this);
+                    arrow1.setText("->");
+                    row1.addView(arrow1);
+                    contViews = 2;
+                    for (Rule element : grammar.getRules()) {
+                        if (variable.equals(element.getLeftSide())) {
+                            TextView pipe = new TextView(this);
+                            pipe.setText(" | ");
+                            TextView tv1 = new TextView(this);
+                            if (academic.getInsertedRules().contains(element)) {
+                                setSubscriptItem(tv1, element.getRightSide());
+                                tv1.setTextColor(getResources().getColor(R.color.Blue));
+                            } else if (containsDigit(element.getRightSide())) {
+                                setSubscriptItem(tv1, element.getRightSide());
+                            } else {
+                                tv1.append(element.getRightSide());
+                            }
+                            row1.addView(tv1);
+                            row1.addView(pipe);
+                            contViews += 2;
                         }
-                        row1.addView(tv1);
-                        row1.addView(pipe);
-                        contViews += 2;
                     }
+                    row1.removeViewAt(contViews - 1);
+                    table.addView(row1);
                 }
-                row1.removeViewAt(contViews - 1);
-                table.addView(row1);
             }
         }
     }
@@ -1938,6 +2356,8 @@ public class MainActivity2 extends ActionBarActivity {
         row0.addView(left);
         row0.addView(arrow0);
         int contViews = 1;
+        ArrayList<String> orderVariables = new ArrayList<>(grammar.getVariables());
+        Collections.sort(orderVariables);
         for (Rule element : grammar.getRules()) {
             if (element.getLeftSide().equals(grammar.getInitialSymbol())) {
                 TextView right = new TextView(this);
@@ -1974,56 +2394,57 @@ public class MainActivity2 extends ActionBarActivity {
         //table.addView(row0);
         table.addView(table0);
 
-        for (String variable : grammar.getVariables()) {
-            if (!variable.equals(grammar.getInitialSymbol())) {
-                TableLayout table1 = new TableLayout(this);
-                table1.setShrinkAllColumns(true);
-                TableRow row1 = new TableRow(this);
-                TextView tv0 = new TextView(this);
-                tv0.setText(variable);
-                row1.addView(tv0);
-                TextView arrow1 = new TextView(this);
-                arrow1.setText("->");
-                row1.addView(arrow1);
-                contViews = 1;
-                for (Rule element : grammar.getRules()) {
-                    if (variable.equals(element.getLeftSide())) {
-                        //TextView pipe = new TextView(this);
-                        //pipe.setText(" | ");
-                        TextView tv1 = new TextView(this);
-                        if (academic.getInsertedRules().contains(element)) {
-                            tv1.setTextColor(getResources().getColor(R.color.Blue));
-                            tv1.setText(element.getRightSide());
-                        } else {
-                            tv1.setText(element.getRightSide());
+        for (int i = 0; i < orderVariables.size(); i++) {
+            for (String variable : grammar.getVariables()) {
+                if (!variable.equals(grammar.getInitialSymbol()) && orderVariables.get(i).equals(variable)) {
+                    TableLayout table1 = new TableLayout(this);
+                    table1.setShrinkAllColumns(true);
+                    TableRow row1 = new TableRow(this);
+                    TextView tv0 = new TextView(this);
+                    tv0.setText(variable);
+                    row1.addView(tv0);
+                    TextView arrow1 = new TextView(this);
+                    arrow1.setText("->");
+                    row1.addView(arrow1);
+                    contViews = 1;
+                    for (Rule element : grammar.getRules()) {
+                        if (variable.equals(element.getLeftSide())) {
+                            //TextView pipe = new TextView(this);
+                            //pipe.setText(" | ");
+                            TextView tv1 = new TextView(this);
+                            if (academic.getInsertedRules().contains(element)) {
+                                tv1.setTextColor(getResources().getColor(R.color.Blue));
+                                tv1.setText(element.getRightSide());
+                            } else {
+                                tv1.setText(element.getRightSide());
+                            }
+                            TableRow row = new TableRow(this);
+                            if (contViews == 1) {
+                                row1.addView(tv1);
+                                row1.addView(new TextView(this));
+                                table1.addView(row1);
+                            } else {
+                                TextView variableTxt = new TextView(this);
+                                variableTxt.setText(variable);
+                                TextView arrowAux = new TextView(this);
+                                arrowAux.setText("->");
+                                row.addView(variableTxt);
+                                row.addView(arrowAux);
+                                row.addView(tv1);
+                                row.addView(new TextView(this));
+                                table1.addView(row);
+                            }
+                            contViews++;
+                            //row1.addView(pipe);
+                            //contViews += 2;
                         }
-                        TableRow row = new TableRow(this);
-                        if (contViews == 1) {
-                            row1.addView(tv1);
-                            row1.addView(new TextView(this));
-                            table1.addView(row1);
-                        } else {
-                            TextView variableTxt = new TextView(this);
-                            variableTxt.setText(variable);
-                            TextView arrowAux = new TextView(this);
-                            arrowAux.setText("->");
-                            row.addView(variableTxt);
-                            row.addView(arrowAux);
-                            row.addView(tv1);
-                            row.addView(new TextView(this));
-                            table1.addView(row);
-                        }
-                        contViews++;
-                        //row1.addView(pipe);
-                        //contViews += 2;
                     }
+                    //row1.removeViewAt(contViews - 1);
+                    //table.addView(row1);
+                    table.addView(table1);
                 }
-                //row1.removeViewAt(contViews - 1);
-                //table.addView(row1);
-                table.addView(table1);
             }
         }
-
     }
 
     private void printFNGWithOldRules(final Grammar grammar, TableLayout table, final AcademicSupport academic) {
@@ -2037,6 +2458,8 @@ public class MainActivity2 extends ActionBarActivity {
         row0.addView(left);
         row0.addView(arrow0);
         int contViews = 1;
+        ArrayList<String> orderVariables = new ArrayList<>(grammar.getVariables());
+        Collections.sort(orderVariables);
         for (Rule element : grammar.getRules()) {
             if (element.getLeftSide().equals(grammar.getInitialSymbol())) {
                 TextView right = new TextView(this);
@@ -2073,56 +2496,57 @@ public class MainActivity2 extends ActionBarActivity {
         //table.addView(row0);
         table.addView(table0);
 
-        for (String variable : grammar.getVariables()) {
-            if (!variable.equals(grammar.getInitialSymbol())) {
-                TableLayout table1 = new TableLayout(this);
-                table1.setShrinkAllColumns(true);
-                TableRow row1 = new TableRow(this);
-                TextView tv0 = new TextView(this);
-                tv0.setText(variable);
-                row1.addView(tv0);
-                TextView arrow1 = new TextView(this);
-                arrow1.setText("->");
-                row1.addView(arrow1);
-                contViews = 1;
-                for (Rule element : grammar.getRules()) {
-                    if (variable.equals(element.getLeftSide())) {
-                        //TextView pipe = new TextView(this);
-                        //pipe.setText(" | ");
-                        TextView tv1 = new TextView(this);
-                        if (academic.getIrregularRules().contains(element)) {
-                            tv1.setTextColor(getResources().getColor(R.color.Red));
-                            tv1.setText(element.getRightSide());
-                        } else {
-                            tv1.setText(element.getRightSide());
+        for (int i = 0; i < orderVariables.size(); i++) {
+            for (String variable : grammar.getVariables()) {
+                if (!variable.equals(grammar.getInitialSymbol()) && orderVariables.get(i).equals(variable)) {
+                    TableLayout table1 = new TableLayout(this);
+                    table1.setShrinkAllColumns(true);
+                    TableRow row1 = new TableRow(this);
+                    TextView tv0 = new TextView(this);
+                    tv0.setText(variable);
+                    row1.addView(tv0);
+                    TextView arrow1 = new TextView(this);
+                    arrow1.setText("->");
+                    row1.addView(arrow1);
+                    contViews = 1;
+                    for (Rule element : grammar.getRules()) {
+                        if (variable.equals(element.getLeftSide())) {
+                            //TextView pipe = new TextView(this);
+                            //pipe.setText(" | ");
+                            TextView tv1 = new TextView(this);
+                            if (academic.getIrregularRules().contains(element)) {
+                                tv1.setTextColor(getResources().getColor(R.color.Red));
+                                tv1.setText(element.getRightSide());
+                            } else {
+                                tv1.setText(element.getRightSide());
+                            }
+                            TableRow row = new TableRow(this);
+                            if (contViews == 1) {
+                                row1.addView(tv1);
+                                row1.addView(new TextView(this));
+                                table1.addView(row1);
+                            } else {
+                                TextView variableTxt = new TextView(this);
+                                variableTxt.setText(variable);
+                                TextView arrowAux = new TextView(this);
+                                arrowAux.setText("->");
+                                row.addView(variableTxt);
+                                row.addView(arrowAux);
+                                row.addView(tv1);
+                                row.addView(new TextView(this));
+                                table1.addView(row);
+                            }
+                            contViews++;
+                            //row1.addView(pipe);
+                            //contViews += 2;
                         }
-                        TableRow row = new TableRow(this);
-                        if (contViews == 1) {
-                            row1.addView(tv1);
-                            row1.addView(new TextView(this));
-                            table1.addView(row1);
-                        } else {
-                            TextView variableTxt = new TextView(this);
-                            variableTxt.setText(variable);
-                            TextView arrowAux = new TextView(this);
-                            arrowAux.setText("->");
-                            row.addView(variableTxt);
-                            row.addView(arrowAux);
-                            row.addView(tv1);
-                            row.addView(new TextView(this));
-                            table1.addView(row);
-                        }
-                        contViews++;
-                        //row1.addView(pipe);
-                        //contViews += 2;
                     }
+                    //row1.removeViewAt(contViews - 1);
+                    //table.addView(row1);
+                    table.addView(table1);
                 }
-                //row1.removeViewAt(contViews - 1);
-                //table.addView(row1);
-                table.addView(table1);
             }
         }
-
     }
 
     /**
