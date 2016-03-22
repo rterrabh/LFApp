@@ -380,6 +380,24 @@
                         <TableLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:id="@+id/GrammarWithChains">
+                        </TableLayout>
+
+                    </HorizontalScrollView>
+
+                    <TextView
+                        android:id="@+id/RemovingChainRulesStep3"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#000000" />
+
+                    <HorizontalScrollView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <TableLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:id="@+id/GrammarWithoutChains">
                         </TableLayout>
 
@@ -1278,7 +1296,7 @@
                 android:textSize="20sp"
                 android:paddingTop="20dp"
                 android:textColor="#000000"
-                android:text="Remoção de Recursão à Esquerda"
+                android:text="Remoção de Recursão Direta e Indireta à Esquerda"
                 android:background="@color/Gainsboro"/>
 
             <LinearLayout

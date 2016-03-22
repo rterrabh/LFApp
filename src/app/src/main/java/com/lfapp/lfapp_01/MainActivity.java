@@ -17,7 +17,7 @@ import vo.GrammarParser;
 
 public class MainActivity extends ActionBarActivity {
 
-    private Button button_OK, button_Lambda, button_Pipe, button_Arrow;
+    private Button button_OK, button_Lambda, button_Pipe, button_Arrow, button_Info;
     private EditText inputGrammar, inputWord;
     private String txtGrammar, word;
     private AlertDialog alert;
@@ -81,6 +81,17 @@ public class MainActivity extends ActionBarActivity {
                 inputGrammar.setSelection(inputGrammar.getText().length());
             }
         });
+
+        //configura botão info
+        /*this.button_Info = (Button) findViewById(R.id.button_Info);
+        button_Info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent trocaTela = new Intent(MainActivity.this, InfoActivity.class);
+                MainActivity.this.startActivity(trocaTela);
+                //MainActivity.this.finish();
+            }
+        });*/
 
         //configura  botão OK
         this.button_OK = (Button) findViewById(R.id.button_OK);

@@ -11,7 +11,8 @@
     <color name="Blue">#0000FF</color>
     <color name="SkyBlue">#ADD8E6</color>
     <color name="Red">#FF0000</color>
-    <color name ="MediumSpringGreen">#00FA9A</color>
+    <color name="MediumSpringGreen">#00FA9A</color>
+    <color name="MediumAquamarine">#66CDAA</color>
     <color name="Wheat">#F5DEB3	</color>
 
 </resources>

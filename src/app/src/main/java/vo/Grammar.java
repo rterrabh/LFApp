@@ -187,7 +187,7 @@ public class Grammar implements Cloneable {
 		StringBuilder comments = new StringBuilder();
 		String align = "justify";
 		comments.append("<p align="+ align + ">O símbolo inicial deve se limitar a iniciar derivações, não podendo ser uma variável recursiva. " +
-				"Logo, não deve ser possível ter derivações do tipo " + gc.getInitialSymbol() + " ⇒∗ αSβ.<br><br>");
+				" Logo, não deve ser possível ter derivações do tipo " + gc.getInitialSymbol() + " ⇒<sup>∗</sup> αSβ.<br><br>");
 		Map<Integer, String> problems = new HashMap<>();
 		String initialSymbol = gc.getInitialSymbol();
 		boolean insert = false;
@@ -204,7 +204,7 @@ public class Grammar implements Cloneable {
 		if (insert == true) {
 			situation = true;
 			solutionDescription.append("A gramática G = (V, Σ, P, " + gc.getInitialSymbol() + ") possui o símbolo inicial " + gc.getInitialSymbol() + " recursivo. Logo,");
-			solutionDescription.append("existe uma GLC G' = (V ∪ {" + gc.getInitialSymbol() + "' }, Σ, P ∪ {" +
+			solutionDescription.append(" existe uma GLC G' = (V ∪ {" + gc.getInitialSymbol() + "' }, Σ, P ∪ {" +
 			 gc.getInitialSymbol() + "' → " + gc.getInitialSymbol() + "}, " + gc.getInitialSymbol() + "' ), tal que L(G') = L(G) e o novo símbolo inicial " + gc.getInitialSymbol() +" não é recursivo.</p><br>");
 			Rule r = new Rule(initialSymbol + "'", initialSymbol);
 			gc.insertRule(r);
@@ -232,6 +232,7 @@ public class Grammar implements Cloneable {
 	public Grammar getGrammarEssentiallyNoncontracting(final Grammar g, final AcademicSupport academicSupport) {
 		Grammar gc = (Grammar) g.clone();
 		Set<String> nullable = new HashSet<String>();
+		Set<String> prev = new HashSet<String>();
 		Set<Rule> setOfRules = new HashSet<Rule>();
 		boolean nullableVars = false;
 
@@ -254,8 +255,11 @@ public class Grammar implements Cloneable {
 
 		// gera conjuntos de variáveis anuláveis
 		academicSupport.insertOnFirstSet(nullable, "Lambda");
+		academicSupport.insertOnFirstSet(nullable, "Lambda");
+		Set<String> auxSet = new HashSet<>();
+		auxSet.add("");
+		academicSupport.insertOnSecondSet(auxSet, "Lambda");
 		nullableVars = false;
-		Set<String> prev = new HashSet<String>();
 		do {
 			prev.addAll(nullable);
 			academicSupport.insertOnSecondSet(prev, "Lambda");
@@ -447,6 +451,10 @@ public class Grammar implements Cloneable {
 		Grammar gc = (Grammar) g.clone();
 		reach.add(gc.getInitialSymbol());
 		academicSupport.insertOnFirstSet(reach, "REACH");
+		HashSet<String> auxSet = new HashSet<>();
+		auxSet.add("");
+		academicSupport.insertOnSecondSet(auxSet, "REACH");
+		academicSupport.insertOnThirdSet(auxSet, "REACH");
 		academicSupport.setSituation(true);
 		do {
 			New = GrammarParser.reachMinusPrev(reach, prev);

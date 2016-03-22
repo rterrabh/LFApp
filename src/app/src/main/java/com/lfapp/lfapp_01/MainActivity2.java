@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.TreeSet;
 
 import vo.*;
@@ -88,7 +89,6 @@ public class MainActivity2 extends ActionBarActivity {
                 grammarType(g);
                 if (!word.equals("")) {
                    //moreLeftDerivation(g);
-                   //moreRightDerivation(g);
                    cyk(g, word);
                 }
                 removingInitialRecursiveSymbol(g);
@@ -537,7 +537,7 @@ public class MainActivity2 extends ActionBarActivity {
         TextView tv1_1 = new TextView(this);
         tv1_1.setText("u ∈ V");
         TextView tv1_2 = new TextView(this);
-        tv1_2.setText("ν ∈ (V ∪ Σ)∗");
+        tv1_2.setText(Html.fromHtml("ν ∈ (V ∪ Σ)<sup>*</sup>"));
         row1.addView(tv1_0);
         row1.addView(tv1_1);
         row1.addView(tv1_2);
@@ -549,9 +549,9 @@ public class MainActivity2 extends ActionBarActivity {
         TextView tv2_0 = new TextView(this);
         tv2_0.setText("(1) GSC");
         TextView tv2_1 = new TextView(this);
-        tv2_1.setText("u ∈ (V U Σ)+");
+        tv2_1.setText(Html.fromHtml("u ∈ (V U Σ)<sup>+</sup>"));
         TextView tv2_2 = new TextView(this);
-        tv2_2.setText("v ∈ (V ∪ Σ) +");
+        tv2_2.setText(Html.fromHtml("v ∈ (V ∪ Σ)<sup>+</sup>"));
         row2.addView(tv2_0);
         row2.addView(tv2_1);
         row2.addView(tv2_2);
@@ -563,9 +563,9 @@ public class MainActivity2 extends ActionBarActivity {
         TextView tv3_0 = new TextView(this);
         tv3_0.setText("(0) GI");
         TextView tv3_1 = new TextView(this);
-        tv3_1.setText("u ∈ (V U Σ)+");
+        tv3_1.setText(Html.fromHtml("u ∈ (V U Σ)<sup>+</sup>"));
         TextView tv3_2 = new TextView(this);
-        tv3_2.setText("v ∈ (V ∪ Σ)*");
+        tv3_2.setText(Html.fromHtml("v ∈ (V ∪ Σ)<sup>*</sup >"));
         row3.addView(tv3_0);
         row3.addView(tv3_1);
         row3.addView(tv3_2);
@@ -585,7 +585,7 @@ public class MainActivity2 extends ActionBarActivity {
 
         TextView commentsOfSolution = new TextView(this);
         commentsOfSolution = (TextView) findViewById(R.id.comments);
-        commentsOfSolution.setText(comments + academic.getSolutionDescription());
+        commentsOfSolution.setText(Html.fromHtml("<b><font color=red>Resultado:</b><br>" + comments + "<br>" + academic.getSolutionDescription()));
     }
 
     /**
@@ -595,12 +595,13 @@ public class MainActivity2 extends ActionBarActivity {
      * @param academic : Objeto que armazena as informações acadêmicas
      * @param g : gramática passada
      */
-    private void setContentInTable(TableLayout table, AcademicSupport academic, final Grammar g) {
+    private void setContentInTable(TableLayout table, AcademicSupport academic, final Grammar g, final Grammar oldGrammar) {
         TableRow row0 = new TableRow(this);
         TextView left = new TextView(this);
         TextView arrow0 = new TextView(this);
         ArrayList<String> variablesOrdenated = new ArrayList<>(g.getVariables());
         Collections.sort(variablesOrdenated);
+        variablesOrdenated.remove(oldGrammar.getInitialSymbol());
         left.setText(g.getInitialSymbol());
         arrow0.setText(" -> ");
         row0.addView(left);
@@ -620,6 +621,36 @@ public class MainActivity2 extends ActionBarActivity {
                 } else {
                         right.setText(element.getRightSide());
                     }
+                row0.addView(right);
+                row0.addView(pipe);
+                contViews += 2;
+            }
+        }
+        row0.removeViewAt(contViews - 1);
+        table.addView(row0);
+
+        left = new TextView(this);
+        left.setText(oldGrammar.getInitialSymbol());
+        arrow0 = new TextView(this);
+        arrow0.setText(" -> ");
+        row0 = new TableRow(this);
+        row0.addView(left);
+        row0.addView(arrow0);
+        contViews = 2;
+        for (Rule element : g.getRules()) {
+            if (element.getLeftSide().equals(oldGrammar.getInitialSymbol())) {
+                TextView right = new TextView(this);
+                TextView pipe = new TextView(this);
+                pipe.setText(" | ");
+                if (academic.getInsertedRules().contains(element)) {
+                    right.setTextColor(getResources().getColor(R.color.Blue));
+                    right.setText(element.getRightSide());
+                } else if (academic.getIrregularRules().contains(element)) {
+                    right.setTextColor(getResources().getColor(R.color.Red));
+                    right.setText(element.getRightSide());
+                } else {
+                    right.setText(element.getRightSide());
+                }
                 row0.addView(right);
                 row0.addView(pipe);
                 contViews += 2;
@@ -681,7 +712,7 @@ public class MainActivity2 extends ActionBarActivity {
         TableLayout table = new TableLayout(this);
         table = (TableLayout) findViewById(R.id.TableRecursiveInitialSymbol);
         table.setShrinkAllColumns(true);
-        setContentInTable(table, academicSupport, gc);
+        setContentInTable(table, academicSupport, gc, g);
 
 
         step1_2 = (TextView) findViewById(R.id.Algoritmo1);
@@ -815,14 +846,14 @@ public class MainActivity2 extends ActionBarActivity {
         tableOfChains.setShrinkAllColumns(true);
         printTableOfChains(tableOfChains, academic, "Variável", "Cadeia");
 
-        //Configura o segundo passo do processo
+        //configura o segundo passo do processo
         if (academic.getInsertedRules().size() != 0) {
             TextView creatingGrammarWithoutChains = new TextView(this);
             creatingGrammarWithoutChains = (TextView) findViewById(R.id.RemovingChainRulesStep2);
-            creatingGrammarWithoutChains.setText("(2) Subistituir as cadeias encontradas.");
+            creatingGrammarWithoutChains.setText("(2) Destacar as cadeias encontradas.");
             TableLayout tableWithoutChains = new TableLayout(this);
-            tableWithoutChains = (TableLayout) findViewById(R.id.GrammarWithoutChains);
-            printGrammarWithNewRules(gc, tableWithoutChains, academic);
+            tableWithoutChains = (TableLayout) findViewById(R.id.GrammarWithChains);
+            printGrammarWithoutOldRules(g, tableWithoutChains, academic);
         } else if (academic.getIrregularRules().size() != 0) {
             TextView creatingGrammarWithoutChains = new TextView(this);
             creatingGrammarWithoutChains = (TextView) findViewById(R.id.RemovingChainRulesStep2);
@@ -831,6 +862,24 @@ public class MainActivity2 extends ActionBarActivity {
             TextView creatingGrammarWithoutChains = new TextView(this);
             creatingGrammarWithoutChains = (TextView) findViewById(R.id.RemovingChainRulesStep2);
             creatingGrammarWithoutChains.setText("(2) Não há cadeias na gramática inserida.");
+        }
+
+        //Configura o terceiro passo do processo
+        if (academic.getInsertedRules().size() != 0) {
+            TextView creatingGrammarWithoutChains = new TextView(this);
+            creatingGrammarWithoutChains = (TextView) findViewById(R.id.RemovingChainRulesStep3);
+            creatingGrammarWithoutChains.setText("(3) Subistituir as cadeias encontradas.");
+            TableLayout tableWithoutChains = new TableLayout(this);
+            tableWithoutChains = (TableLayout) findViewById(R.id.GrammarWithoutChains);
+            printGrammarWithNewRules(gc, tableWithoutChains, academic);
+        } else if (academic.getIrregularRules().size() != 0) {
+            TextView creatingGrammarWithoutChains = new TextView(this);
+            creatingGrammarWithoutChains = (TextView) findViewById(R.id.RemovingChainRulesStep3);
+            creatingGrammarWithoutChains.setText("(3) Na gramática inserida, existem auto cadeias. Esse tipo de regra também deve ser removida.");
+        } else {
+            TextView creatingGrammarWithoutChains = new TextView(this);
+            creatingGrammarWithoutChains = (TextView) findViewById(R.id.RemovingChainRulesStep3);
+            creatingGrammarWithoutChains.setText("(3) Não há cadeias na gramática inserida.");
         }
 
     }
@@ -874,7 +923,12 @@ public class MainActivity2 extends ActionBarActivity {
             //Configura o segundo passo (Regras que foram removidas)
             TextView eliminatingNoTermRules = new TextView(this);
             creatingSetOfChains = (TextView) findViewById(R.id.NoTermStep2);
-            creatingSetOfChains.setText("(2) Remover as variáveis que não geram terminais.");
+            ArrayList<String> array = convertSetToArray(academicSupport.getFirstSet().get(academicSupport.getFirstSet().size() - 1), gc);
+            String variables = array.toString();
+            variables = variables.replace("[", "{");
+            variables = variables.replace("]", "}");
+            String othersVariables = selectOthersVariables(g, academicSupport.getFirstSet().get(academicSupport.getFirstSet().size() - 1));
+            creatingSetOfChains.setText("(2) Remover as variáveis que não estão em " + variables +", \n i.e., "+ othersVariables +".");
             TableLayout grammarWithoutOldRules = new TableLayout(this);
             grammarWithoutOldRules = (TableLayout) findViewById(R.id.GrammarWithNoTerm);
             printOldGrammarOfTermAndReach(g, grammarWithoutOldRules, academicSupport);
@@ -883,6 +937,32 @@ public class MainActivity2 extends ActionBarActivity {
             result = (TextView) findViewById(R.id.CommentsNoTerms);
             result.setText("A gramática inserida não possui símbolos não terminais.");
         }
+    }
+
+    private String selectOthersVariables(Grammar g, Set<String> set) {
+        ArrayList<String> array = new ArrayList<String>();
+        for (String variable : g.getVariables()) {
+            if (!set.contains(variable))
+            array.add(variable);
+        }
+        Collections.sort(array);
+        String aux = array.toString();
+        aux = aux.replace("[", "{");
+        aux = aux.replace("]", "}");
+        return aux;
+    }
+
+    //converte um set em arraylist ordenando-o com o simbolo inicial da gramatica na primeira posicao
+    private ArrayList<String> convertSetToArray(Set<String> set, Grammar grammar) {
+        ArrayList<String> array = new ArrayList<String>();
+        for (String variable : set) {
+            if (!variable.equals(grammar.getInitialSymbol())) {
+                array.add(variable);
+            }
+        }
+        Collections.sort(array);
+        array.add(0, grammar.getInitialSymbol());
+        return array;
     }
 
     public void removingNotReachableSymbols(final Grammar g) {
@@ -926,7 +1006,12 @@ public class MainActivity2 extends ActionBarActivity {
             if (academic.getIrregularRules().size() != 0) {
                 TextView step2 = new TextView(this);
                 step2 = (TextView) findViewById(R.id.NoReachStep2);
-                step2.setText("(2) Remover as variáveis que não são alcançáveis.");
+                ArrayList<String> array = convertSetToArray(academic.getFirstSet().get(academic.getFirstSet().size() - 1), gc);
+                String variables = array.toString();
+                variables = variables.replace("[", "{");
+                variables = variables.replace("]", "}");
+                String othersVariables = selectOthersVariables(g, academic.getFirstSet().get(academic.getFirstSet().size() - 1));
+                step2.setText("(2) Remover as variáveis que não estão em " + variables + ", i.e., " + othersVariables +".");
                 TableLayout tableResult = new TableLayout(this);
                 tableResult = (TableLayout) findViewById(R.id.tableOfIrregularRulesReach);
                 printOldGrammarOfTermAndReach(g, tableResult, academic);
@@ -1132,7 +1217,12 @@ public class MainActivity2 extends ActionBarActivity {
             //Configura o segundo passo (Regras que foram removidas)
             TextView eliminatingNoTermRules = new TextView(this);
             eliminatingNoTermRules = (TextView) findViewById(R.id.Passo3NaoTerminaisFNC);
-            eliminatingNoTermRules.setText("(2) Remover as variáveis que não geram terminais.");
+            ArrayList<String> array = convertSetToArray(academic.getFirstSet().get(academic.getFirstSet().size() - 1), gc);
+            String variables = array.toString();
+            variables = variables.replace("[", "{");
+            variables = variables.replace("]", "}");
+            String othersVariables = selectOthersVariables(g, academic.getFirstSet().get(academic.getFirstSet().size() - 1));
+            creatingSetOfChains.setText("(2) Remover as variáveis que não estão em " + variables +", i.e., " + othersVariables + ".");
             TableLayout grammarWithoutOldRules = new TableLayout(this);
             grammarWithoutOldRules = (TableLayout) findViewById(R.id.Passo3NaoTerminaisFNC_Resultado);
         } else {
@@ -1184,6 +1274,12 @@ public class MainActivity2 extends ActionBarActivity {
             if (academic.getIrregularRules().size() != 0) {
                 TextView step2 = new TextView(this);
                 step2 = (TextView) findViewById(R.id.Passo3RemocaoDeSimbolosNaoAlcancaveisFNC);
+                ArrayList<String> array = convertSetToArray(academic.getFirstSet().get(academic.getFirstSet().size() - 1), gc);
+                String variables = array.toString();
+                variables = variables.replace("[", "{");
+                variables = variables.replace("]", "}");
+                String othersVariables = selectOthersVariables(g, academic.getFirstSet().get(academic.getFirstSet().size() - 1));
+                creatingSetOfChains.setText("(2) Remover as variáveis que não estão em " + variables +", i.e., " + othersVariables +".");
                 step2.setText("(2) Remover as variáveis que não são alcançáveis.");
                 TableLayout tableResult = new TableLayout(this);
                 tableResult = (TableLayout) findViewById(R.id.Passo3RemocaoDeSimbolosNaoAlcancaveisFNC_Resultado);
@@ -1451,8 +1547,8 @@ public class MainActivity2 extends ActionBarActivity {
             TextView commentsOfFNG = new TextView(this);
             commentsOfFNG = (TextView) findViewById(R.id.FNGComentarios2);
             commentsOfFNG.append("Uma GLC G = (V , Σ, P, S) está na FN de Greibach se suas regras têm uma das seguintes formas:\n");
-            commentsOfFNG.append(Html.fromHtml("- A -> A<sub><small>1</small></sub>A<sub><small>2</small></sub>A<sub><small>3</small></sub>...A<sub><small>n</small></sub>"));
-            commentsOfFNG.append(Html.fromHtml("\t\t onde a ∈ Σ e A<sub><small>1</small></sub>... A<sub><small>n</small></sub> ∈ V − {S}\n"));
+            commentsOfFNG.append(Html.fromHtml("- A -> aA<sub><small>1</small></sub>A<sub><small>2</small></sub>A<sub><small>3</small></sub>...A<sub><small>n</small></sub>"));
+            commentsOfFNG.append(Html.fromHtml("\t\t onde a ∈ Σ e A<sub><small>1</small></sub>... A<sub><small>n</small></sub> ∈ V − {S}<br>"));
             commentsOfFNG.append("- A -> a\t\t onde a ∈ Σ\n");
             commentsOfFNG.append("- A -> λ");
 
@@ -1531,7 +1627,7 @@ public class MainActivity2 extends ActionBarActivity {
             explanationTableRow = new TableRow(this);
             aux = new StringBuilder();
             explanationTextView.append("Há alguma regra que gere " + firstCell[0] + " diretamente? ");
-            explanationTextView.append((checkRules(g, firstCell[0], aux)) ? ("Sim.") : ("Não."));
+            explanationTextView.append((checkRules(gc, firstCell[0], aux)) ? ("Sim.") : ("Não."));
             explanationTextView.append("\n" + aux.toString());
             explanationTableRow.addView(explanationTextView);
             explanationTable.addView(explanationTableRow);
@@ -1578,9 +1674,9 @@ public class MainActivity2 extends ActionBarActivity {
             firstCell = cykOut[word.length() - 1][0].split(" ");
             secondCell = cykOut[word.length() - 1][1].split(" ");
             aux = new StringBuilder();
-            explanationTextView.append("Há alguma regra que gere " + permutationOfVariables(firstCell, secondCell) + "? ");
-            explanationTextView.append((checkRules(g, firstCell, secondCell, aux)) ? ("Sim.") : ("Não."));
-            explanationTextView.append("\n" + aux.toString());
+            explanationTextView.append(Html.fromHtml("Há alguma regra que gere " + permutationOfVariables(firstCell, secondCell) + "? "));
+            explanationTextView.append(Html.fromHtml((checkRules(g, firstCell, secondCell, aux)) ? ("Sim.") : ("Não.")));
+            explanationTextView.append(Html.fromHtml("<br>" + aux.toString()));
             explanationTableRow.addView(explanationTextView);
             explanationTable.addView(explanationTableRow);
         }
@@ -1615,7 +1711,7 @@ public class MainActivity2 extends ActionBarActivity {
         row = new TableRow(this);
         explanationTextView = new TextView(this);
         explanationTableRow = new TableRow(this);
-        explanationTextView.setText("(3) O terceiro passo do algoritmo é adicionar à tabela as \nvariáveis que produzem os sentenças de tamanho três.");
+        explanationTextView.setText("(3) O terceiro passo do algoritmo é adicionar à tabela as \nvariáveis que produzem as sentenças de tamanho três.");
         explanationTableRow.addView(explanationTextView);
         explanationTable.addView(explanationTableRow);
 
@@ -1629,9 +1725,9 @@ public class MainActivity2 extends ActionBarActivity {
             String[] thirdCell = cykOut[word.length() - 2][0].split(" ");
             String[] fourthCell = cykOut[word.length() - 1][2].split(" ");
             aux = new StringBuilder();
-            explanationTextView.append("Há alguma regra que gere " + permutationOfVariables(firstCell, secondCell) + ", " +  permutationOfVariables(thirdCell, fourthCell) + "? ");
-            explanationTextView.append((checkRules(g, firstCell, secondCell, aux) | (checkRules(g, thirdCell, fourthCell, aux))) ? ("Sim.") : ("Não."));
-            explanationTextView.append("\n" + aux.toString());
+            explanationTextView.append(Html.fromHtml("Há alguma regra que gere " + permutationOfVariables(firstCell, secondCell) + ", " +  permutationOfVariables(thirdCell, fourthCell) + "? "));
+            explanationTextView.append(Html.fromHtml((checkRules(g, firstCell, secondCell, aux) | (checkRules(g, thirdCell, fourthCell, aux))) ? ("Sim.") : ("Não.")));
+            explanationTextView.append(Html.fromHtml("<br>" + aux.toString()));
             explanationTableRow.addView(explanationTextView);
             explanationTable.addView(explanationTableRow);
         }
@@ -1673,15 +1769,55 @@ public class MainActivity2 extends ActionBarActivity {
 
     private String permutationOfVariables(final String[] firstCell, final String[] secondCell) {
         StringBuilder newSentence = new StringBuilder();
+        String cell1 = new String();
         for (int i = 0; i < firstCell.length; i++) {
-            firstCell[i] = firstCell[i].trim();
-            for (int j = 0; j < secondCell.length; j++) {
-               secondCell[j] = secondCell[j].trim();
+            cell1 += firstCell[i];
+        }
+        cell1 = cell1.replace("{", "");
+        cell1 = cell1.replace("}", "");
+
+        StringTokenizer token1 = new StringTokenizer(cell1, ",");
+        int cont = 1;
+        while (token1.hasMoreTokens()) {
+            String primeiroToken = token1.nextToken().toString();
+            primeiroToken.trim();
+
+            String cell2 = new String();
+            for (int i = 0; i < secondCell.length; i++) {
+                cell2 += secondCell[i];
+            }
+            cell2 = cell2.replace("{", "");
+            cell2 = cell2.replace("}", "");
+
+
+            StringTokenizer token2 = new StringTokenizer(cell2, ",");
+            while (token2.hasMoreTokens()) {
+                String segundoToken = token2.nextToken().toString();
+                segundoToken.trim();
+
                 if (!firstCell.equals("-") && !secondCell.equals("-")) {
-                    newSentence.append(firstCell[i] + secondCell[j] + ", ");
+                    if (primeiroToken.length() > 1 && Character.isDigit(primeiroToken.charAt(1))) {
+                        StringBuilder aux = new StringBuilder();
+                        aux.append(primeiroToken.charAt(0));
+                        aux.append("<sub>" + primeiroToken.substring(1) + "</sub>");
+                        primeiroToken = aux.toString();
+                    }
+                    if (segundoToken.length() > 1 && Character.isDigit(segundoToken.charAt(1))) {
+                        StringBuilder aux = new StringBuilder();
+                        aux.append(segundoToken.charAt(0));
+                        aux.append("<sub>" + segundoToken.substring(1) + "</sub>");
+                        segundoToken = aux.toString();
+                    }
+                    newSentence.append(primeiroToken + segundoToken + ", ");
+                    if (cont == 6 || cont == 12 || cont == 18) {
+                        newSentence.append("<br>");
+                    }
+                    cont++;
                 }
+
             }
         }
+
         newSentence.delete(newSentence.length() - 2, newSentence.length());
         return newSentence.toString();
     }
@@ -1818,11 +1954,26 @@ public class MainActivity2 extends ActionBarActivity {
     public String joinGrammars(final Grammar grammar1, final Grammar grammar2) {
         StringBuilder newG = new StringBuilder();
         for (Rule element : grammar1.getRules()) {
-            newG.append(element);
-            newG.append("\n");
+            if (element.getLeftSide().equals(grammar1.getInitialSymbol())) {
+                newG.append(element);
+                newG.append("\n");
+            }
         }
         for (Rule element : grammar2.getRules()) {
-            if (!grammar1.getRules().contains(element)) {
+            if (element.getLeftSide().equals(grammar1.getInitialSymbol()) && !grammar1.getRules().contains(element)) {
+                newG.append(element);
+                newG.append("\n");
+            }
+        }
+
+        for (Rule element : grammar1.getRules()) {
+            if (!element.getLeftSide().equals(grammar1.getInitialSymbol())) {
+                newG.append(element);
+                newG.append("\n");
+            }
+        }
+        for (Rule element : grammar2.getRules()) {
+            if (!element.getLeftSide().equals(grammar1.getInitialSymbol()) && !grammar1.getRules().contains(element)) {
                 newG.append(element);
                 newG.append("\n");
             }
@@ -1840,7 +1991,7 @@ public class MainActivity2 extends ActionBarActivity {
         algol.append("<b>repita</b><br>");
         algol.append("&nbsp;&nbsp;&nbsp;&nbsp;PREV = NULL<br>");
         algol.append("&nbsp;&nbsp;&nbsp;&nbsp;<b>para cada</b> A ∈ V <b>faça</b><br>");
-        algol.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>se</b> A → w e w ∈ PREV∗ <b>faça</b><br>");
+        algol.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>se</b> A → w e w ∈ PREV<sup>∗</sup> <b>faça</b><br>");
         algol.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NULL = NULL ∪ {A}<br>");
         algol.append("<b>até</b> NULL == PREV");
         return algol.toString();
@@ -1870,12 +2021,12 @@ public class MainActivity2 extends ActionBarActivity {
      */
     public String getTermAlgorithm() {
         StringBuilder algol = new StringBuilder();
-        algol.append("TERM = {A | existe uma regra A → w ∈ P, com w ∈ Σ∗ }<br>");
+        algol.append("TERM = {A | existe uma regra A → w ∈ P, com w ∈ Σ<sup>∗</sup> }<br>");
         algol.append("<b>repita</b><br>");
         algol.append("&nbsp;&nbsp;PREV = TERM<br>");
         algol.append("&nbsp;&nbsp;<b>para cada</b> A ∈ V <b>faça</b><br>");
-        algol.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>se</b> A → w ∈ P e w ∈ (PREV ∪ Σ) ∗ <b>então</b><br>");
-        algol.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TERM = TERM ∪ A<br>");
+        algol.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>se</b> A → w ∈ P e w ∈ (PREV ∪ Σ)<sup>∗</sup> <b>então</b><br>");
+        algol.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TERM = TERM ∪ {A}<br>");
         algol.append("<b>até</b> PREV == TERM");
         return algol.toString();
     }
@@ -1893,7 +2044,7 @@ public class MainActivity2 extends ActionBarActivity {
         algol.append("&nbsp;&nbsp;&nbsp;PREV = REACH<br>");
         algol.append("&nbsp;&nbsp;&nbsp;<b>para cada</b> A ∈ NEW <b>faça</b><br>");
         algol.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>para cada</b> A → w <b>faça</b><br>");
-        algol.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;adiocione as variáveis de w em REACH" +
+        algol.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;adicione as variáveis de w em REACH" +
                 "<br>");
         algol.append("<b>até</b> REACH == PREV");
         return algol.toString();
@@ -2078,7 +2229,7 @@ public class MainActivity2 extends ActionBarActivity {
         int i = 0;
         TableRow header = new TableRow(this);
         TextView htv0 = new TextView(this);
-        htv0.setText("(" + i + ")");
+        htv0.setText("");
         htv0.setPadding(10, 10, 10, 10);
         htv0.setTextColor(getResources().getColor(R.color.Black));
         TextView htv1 = new TextView(this);
@@ -2094,7 +2245,6 @@ public class MainActivity2 extends ActionBarActivity {
         header.addView(htv1);
         header.addView(htv2);
         table.addView(header);
-        i++;
 
         Iterator<Set<Rule>> iteratorOfFirstCell = (Iterator) academic.getFirstSet().iterator();
         Iterator<Set<Rule>> iteratorOfSecondCell = (Iterator) academic.getSecondSet().iterator();
@@ -2578,7 +2728,6 @@ public class MainActivity2 extends ActionBarActivity {
         Iterator<Set<Rule>> iteratorOfFirstCell = (Iterator) academic.getFirstSet().iterator();
         Iterator<Set<Rule>> iteratorOfSecondCell = (Iterator) academic.getSecondSet().iterator();
 
-
         while (iteratorOfFirstCell.hasNext()) {
             Set<Rule> firstSet = iteratorOfFirstCell.next();
             Set<Rule> secondSet = iteratorOfSecondCell.next();
@@ -2626,7 +2775,7 @@ public class MainActivity2 extends ActionBarActivity {
         int i = 0;
         TableRow header = new TableRow(this);
         TextView htv0 = new TextView(this);
-        htv0.setText("(" + i + ")");
+        htv0.setText("");
         htv0.setPadding(10, 10, 10, 10);
         htv0.setTextColor(getResources().getColor(R.color.Black));
         TextView htv1 = new TextView(this);
@@ -2648,7 +2797,6 @@ public class MainActivity2 extends ActionBarActivity {
         header.addView(htv2);
         header.addView(htv3);
         table.addView(header);
-        i++;
 
         Iterator<Set<Rule>> iteratorOfFirstCell = (Iterator) academic.getFirstSet().iterator();
         Iterator<Set<Rule>> iteratorOfSecondCell = (Iterator) academic.getSecondSet().iterator();

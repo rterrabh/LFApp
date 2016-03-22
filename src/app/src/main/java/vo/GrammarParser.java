@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
+import java.util.ArrayList;
 
 
 public class GrammarParser {
@@ -297,11 +298,11 @@ public class GrammarParser {
             if (counter == 1) {
                 if (!g.getVariables().contains(Character.toString(r.getRightSide().charAt(0))) && !g.getVariables().contains(Character.toString(r.getRightSide().charAt(r.getRightSide().length() - 1)))) {
                     regular = false;
-                    academic.append("- A regra " + r + " não pertence ao conjunto das gramáticas regulares.\n");
+                    academic.append("- Na gramática informada, a " + r + " não pertence ao conjunto das gramáticas regulares.\n");
                 }
             } else if (counter > 1) {
                 regular = false;
-                academic.append("- A regra " + r + " não pertence ao conjunto das gramáticas regulares.\n");
+                academic.append("- Na gramática informada, a regra " + r + " não pertence ao conjunto das gramáticas regulares.\n");
             }
             counter = 0;
         }
@@ -323,7 +324,7 @@ public class GrammarParser {
             Rule r = itRules.next();
             if (!g.getVariables().contains(r.getLeftSide())) {
                 contextFree = false;
-                academic.append("- A regra " + r + "não pertence ao conjunto das gramáticas livres de contexto.\n");
+                academic.append("- Na gramática informada, a regra " + r + "não pertence ao conjunto das gramáticas livres de contexto.\n");
             }
         }
         return contextFree;
@@ -340,7 +341,7 @@ public class GrammarParser {
             if (!containsSentence(g, element.getLeftSide()) || !containsSentence(g, element.getRightSide())
                     || element.getRightSide().length() < element.getLeftSide().length()) {
                 contextSensible = false;
-                academic.append("- A regra " + element + "não pertence ao conjunto das gramáticas sensíveis contexto.\n");
+                academic.append("- Na gramática informada, a regra " + element + "não pertence ao conjunto das gramáticas sensíveis contexto.\n");
             }
         }
         return contextSensible;
@@ -357,7 +358,7 @@ public class GrammarParser {
             if ((!containsSentence(g, element.getLeftSide()) || element.getLeftSide().equals(g.lambda)) ||
                     (!containsSentence(g, element.getRightSide()) && !element.getRightSide().equals(g.lambda))) {
                 unrestricted = false;
-                academic.append("- A regra " + element + "não pertence ao conjunto das gramáticas irrestritas.\n");
+                academic.append("- Na gramática informada, a regra " + element + "não pertence ao conjunto das gramáticas irrestritas.\n");
             }
         }
         return unrestricted;
@@ -397,18 +398,18 @@ public class GrammarParser {
         String grammarType = new String();
 
         //verifica se a gramática é regular
-        grammarType = (regularGrammar(g, academic)) ? ("Logo a gramática inserida é uma Gramática Regular (GR).") : ("");
+        grammarType = (regularGrammar(g, academic)) ? ("Logo, a gramática inserida é uma Gramática Regular (GR).") : ("");
 
         if (grammarType.isEmpty()) {
-            grammarType = (contextFreeGrammar(g, academic) ? ("Logo a gramática inserida é uma Gramática Livre de Contexto. (GLC)") : (""));
+            grammarType = (contextFreeGrammar(g, academic) ? ("Logo, a gramática inserida é uma Gramática Livre de Contexto (GLC).") : (""));
         }
 
         if (grammarType.isEmpty()) {
-            grammarType = (contextSensibleGrammar(g, academic) ? ("Logo a gramática inserida é uma Gramática Sensível ao Contexto (GSC).") : (""));
+            grammarType = (contextSensibleGrammar(g, academic) ? ("Logo, a gramática inserida é uma Gramática Sensível ao Contexto (GSC).") : (""));
         }
 
         if (grammarType.isEmpty()) {
-            grammarType = (unrestrictedGrammar(g, academic) ? ("Logo a gramática inserida é uma Gramática Irrestrita GI.") : (""));
+            grammarType = (unrestrictedGrammar(g, academic) ? ("Logo, a gramática inserida é uma Gramática Irrestrita GI.") : (""));
         }
 
         if (grammarType.isEmpty()) {
@@ -445,6 +446,283 @@ public class GrammarParser {
         }
         return containsVariables;
     }
+
+    /* INICIA PROCESSO PARA DERIVAÇÃO DE GRAMÁTICAS */
+
+    /**
+     * Converte uma gramática para um automato com pilha
+     * @param g
+     * @return
+     */
+    private static PushdownAutomaton turnsGrammarToPushdownDescendingAutomaton(final Grammar g) {
+        //remover recursão à esquerda da gramática
+
+        PushdownAutomaton automaton = new PushdownAutomaton();
+
+        //adiciona conjunto de estados
+        Set<String> states = new HashSet<String>();
+        states.add("q0");
+        states.add("q1");
+        states.add("q2");
+        automaton.setStates(states);
+
+        //adiciona estado inicial
+        automaton.setInitialState("q0");
+
+        //adiciona estado finail
+        Set<String> finalState = new HashSet<String>();
+        finalState.add("q2");
+        automaton.setFinalStates(finalState);
+
+        //adiciona o alfabeto da máquina
+        automaton.setAlphabet(g.getTerminals());
+
+        //adiciona o alfabeto da pilha
+        Set<String> stackAlphabet = new HashSet<String>();
+        stackAlphabet.addAll(g.getVariables());
+        stackAlphabet.addAll(g.getTerminals());
+        stackAlphabet.add(g.lambda);
+        automaton.setStackAlphabet(stackAlphabet);
+
+        //adiciona função de transição
+        //adiciona transição inicial
+        Set<TransitionFunctionPA> transitions = new HashSet<TransitionFunctionPA>();
+        transitions.add(new TransitionFunctionPA("q0", g.getInitialSymbol(), "q1", g.lambda, g.lambda));
+
+        //adiciona transições
+        for (String variable : g.getVariables()) {
+            for (Rule element : g.getRules()) {
+                if (variable.equals(element.getLeftSide())) {
+                    transitions.add(new TransitionFunctionPA("q1", g.lambda, "q1", element.getRightSide(), element.getLeftSide()));
+                }
+            }
+        }
+
+        //adiciona transições que esvaziam a pilha
+        for (String terminal : g.getTerminals()) {
+            transitions.add(new TransitionFunctionPA("q1", terminal, "q1", g.lambda, terminal));
+        }
+
+        //adiciona transição final
+        transitions.add(new TransitionFunctionPA("q1", g.lambda, "q2", g.lambda, g.lambda));
+
+        automaton.setTransictionFunction(transitions);
+        return automaton;
+    }
+
+    private static Set<String> variablesStackingTerminals(final PushdownAutomaton automaton, final Grammar g) {
+        Set<String> variables = new HashSet<String>();
+        for (TransitionFunctionPA transition : automaton.getTransictionFunction()) {
+            if (g.getTerminals().contains(transition.getStacking())) {
+                variables.add(transition.getPops());
+            }
+        }
+        return variables;
+    }
+
+
+    /*public static void moreLeftDerivation(Grammar g, final StringBuilder derivation, final String word, final StringBuilder academic) {
+        Grammar gc = (Grammar) g.clone();
+
+        StringBuilder wordCopy = new StringBuilder(word);
+
+        Grammar gcAux = (Grammar) gc.clone();
+
+
+        //coloca gramática na Forma Normal de Chomsky, caso ainda não esteja
+        if (!GrammarParser.isFNC(gcAux)) {
+            gcAux = gcAux.FNC(gcAux);
+        }
+        //primeiro, é necessário verificar se a palavra pertence à linguagem
+        Set<String>[][] cykOut = Grammar.CYK(gcAux, word);
+        String[][] result = GrammarParser.turnsTreesetOnArray(cykOut, word);
+        if (result[0][0].contains(gcAux.getInitialSymbol())) {
+
+            PushdownAutomaton automaton = turnsGrammarToPushdownDescendingAutomaton(gcAux);
+            int currentIndex = 0;
+            int counter = 0;
+            int counterOfAttempts = 0;
+            boolean flag = false;
+
+            //declara estruturas auxiliares para o processo
+            StringBuilder generatedSentence = new StringBuilder();
+            ArrayList<TransitionFunctionPA> usedTransitions = new ArrayList<TransitionFunctionPA>();
+            ArrayList<ArrayList<String>> stacks = new ArrayList<ArrayList<String>>();
+            TransitionFunctionPA currentTransition = new TransitionFunctionPA();
+            ArrayList<ArrayList<TransitionFunctionPA>> listOfAttempts = new ArrayList<ArrayList<TransitionFunctionPA>>();
+            ArrayList<TransitionFunctionPA> attempt = new ArrayList<TransitionFunctionPA>();
+            Set<String> variablesThatGeneratedTerminals = new HashSet<String>();
+            variablesThatGeneratedTerminals = variablesStackingTerminals(automaton, gc);
+            //TransitionFunctionPA auxTransition = new TransitionFunctionPA();
+
+            //realiza passo 1 do algoritmo: empilha símbolo inicial
+            automaton.push(gcAux.getInitialSymbol());
+            //System.out.println(automaton.getStack());
+            attempt.add(new TransitionFunctionPA("q0", gc.getInitialSymbol(), "q1", gc.lambda, gc.lambda));
+
+            loop:
+            do {
+//				System.out.println("Stack: " + automaton.getStack());
+//				System.out.println("Top: " + automaton.getTopOfStack());
+                if (gcAux.getVariables().contains(automaton.getTopOfStack())) {
+                    //variável no topo da pilha
+                    //pega o topo da pilha
+                    String variableAtTop = automaton.getTopOfStack();
+
+                    //seleciona uma transição válida
+                    currentTransition = selectTransition(automaton, attempt, listOfAttempts, variableAtTop, counterOfAttempts);
+                    //currentTransition = selectTransition(usedTransitions, automaton);
+
+                    //salva estado atual da pilha
+                    if (saveStack(variableAtTop, automaton) && !stacks.contains(automaton.getStack()) && compareWithLengthOfWord(word, generatedSentence, automaton)) {
+                        stacks.add(new ArrayList<String>(automaton.getStack()));
+                    }
+
+                    //desempilha o topo atual
+                    automaton.pop();
+                    //System.out.println(automaton.getStack());
+
+                    //empilha
+                    automaton.push(currentTransition.getStacking());
+                    //System.out.println(automaton.getStack());
+                    attempt.add(new TransitionFunctionPA(currentTransition));
+                    //attempt.add(new PushdownAutomaton(automaton));
+
+                } else if (gcAux.getTerminals().contains(automaton.getTopOfStack()) || automaton.getTopOfStack().equals(Grammar.lambda)) {
+                    //terminal no topo da pilha
+                    //verifica o próximo terminal da expressão está no topo da pilha
+                    StringBuilder charAtVariable = new StringBuilder();
+                    if (currentIndex > word.length()) {
+                        usedTransitions.addAll(attempt);
+                        counter--;
+                        //automaton.setStack(new ArrayList<String>(stacks.get(getIndexOfStack(stacks, automaton, currentIndex, word, variablesThatGeneratedTerminals))));
+                        automaton.setStack(new ArrayList<String>(stacks.get((currentIndex < word.length()) ? (currentIndex - 1) : (stacks.size() - 1))));
+                        //counterOfStacks--;
+                        currentIndex = updateCurrentIndex(automaton, stacks);
+                        listOfAttempts.add(new ArrayList<TransitionFunctionPA>(attempt));
+                        attempt = new ArrayList<TransitionFunctionPA>(getNewList(attempt, automaton));
+                        counterOfAttempts++;
+                        break loop;
+                    } else {
+                        charAtVariable.append(word.charAt(currentIndex));
+                    }
+                    //charAtVariable.append(word.charAt((currentIndex < word.length()) ? (currentIndex) : (word.length() - 1)));
+                    //charAtVariable.append(word.charAt(generatedSentence.length()));
+                    if (automaton.getTopOfStack().equals(charAtVariable.toString()) && currentIndex < word.length()) {
+                        currentIndex++;
+                        generatedSentence.append(automaton.getTopOfStack());
+                        automaton.pop();
+                        usedTransitions = new ArrayList<TransitionFunctionPA>();
+                        counter++;
+                    } else {
+                        usedTransitions.addAll(attempt);
+                        counter--;
+                        //automaton.setStack(new ArrayList<String>(stacks.get(getIndexOfStack(stacks, automaton, currentIndex, word, variablesThatGeneratedTerminals))));
+                        automaton.setStack(new ArrayList<String>(stacks.get((currentIndex < word.length()) ? (currentIndex - 1) : (stacks.size() - 1))));
+                        //counterOfStacks--;
+                        currentIndex = updateCurrentIndex(automaton, stacks);
+                        listOfAttempts.add(new ArrayList<TransitionFunctionPA>(attempt));
+                        attempt = new ArrayList<TransitionFunctionPA>(getNewList(attempt, automaton));
+                        counterOfAttempts++;
+                    }
+                } else {
+                    counter--;
+                    currentIndex--;
+                    automaton.setStack(stacks.get(counter));
+                }
+            } while (!automaton.getStack().isEmpty());
+        }
+			/*ArrayList<TransitionFunctionPA> resultOfDerivation = new ArrayList<TransitionFunctionPA>(attempt);
+			int i = 0;
+			while (i < 1000 && !flag) {
+				automaton = turnsGrammarToPushdownDescendingAutomaton(g);
+				currentIndex = 0;
+				counter = 0;
+				counterOfAttempts = 0;
+				counterOfStacks = 0;
+
+				//declara estruturas auxiliares para o processo
+				generatedSentence = new StringBuilder();
+				usedTransitions = new ArrayList<TransitionFunctionPA>();
+				stacks = new ArrayList<ArrayList<String>>();
+				currentTransition = new TransitionFunctionPA();
+				listOfAttempts = new ArrayList<ArrayList<TransitionFunctionPA>>();
+				attempt = new ArrayList<TransitionFunctionPA>();
+				variablesThatGeneratedTerminals = new HashSet<String>();
+				variablesThatGeneratedTerminals = variablesStackingTerminals(automaton, gc);
+				//TransitionFunctionPA auxTransition = new TransitionFunctionPA();
+
+				//realiza passo 1 do algoritmo: empilha símbolo inicial
+				automaton.push(g.getInitialSymbol());
+				System.out.println(automaton.getStack());
+				attempt.add(new TransitionFunctionPA("q0", gc.getInitialSymbol(), "q1", gc.lambda, gc.lambda));
+
+				do {
+					System.out.println("Stack: " + automaton.getStack());
+					System.out.println("Top: " + automaton.getTopOfStack());
+					if (g.getVariables().contains(automaton.getTopOfStack())) {
+						//variável no topo da pilha
+						//pega o topo da pilha
+						String variableAtTop = automaton.getTopOfStack();
+
+						//seleciona uma transição válida
+						currentTransition = selectTransition(automaton, attempt, listOfAttempts, variableAtTop, counterOfAttempts);
+						//currentTransition = selectTransition(usedTransitions, automaton);
+
+						//salva estado atual da pilha
+						if (saveStack(variableAtTop, automaton) && !stacks.contains(automaton.getStack()) && compareWithLengthOfWord(word, generatedSentence, automaton)) {
+							stacks.add(new ArrayList<String>(automaton.getStack()));
+							counterOfStacks = stacks.size() - 1;
+						}
+
+						//desempilha o topo atual
+						automaton.pop();
+						System.out.println(automaton.getStack());
+
+						//empilha
+						automaton.push(currentTransition.getStacking());
+						System.out.println(automaton.getStack());
+						attempt.add(new TransitionFunctionPA(currentTransition));
+						//attempt.add(new PushdownAutomaton(automaton));
+
+					} else if (g.getTerminals().contains(automaton.getTopOfStack())) {
+						//terminal no topo da pilha
+						//verifica o próximo terminal da expressão está no topo da pilha
+						StringBuilder charAtVariable = new StringBuilder();
+						charAtVariable.append(word.charAt((currentIndex < word.length()) ? (currentIndex) : (word.length() - 1)));
+						//charAtVariable.append(word.charAt(generatedSentence.length()));
+						if (automaton.getTopOfStack().equals(charAtVariable.toString()) && currentIndex < word.length()) {
+							currentIndex++;
+							generatedSentence.append(automaton.getTopOfStack());
+							automaton.pop();
+							usedTransitions = new ArrayList<TransitionFunctionPA>();
+							counter++;
+						} else {
+							usedTransitions.addAll(attempt);
+							counter--;
+							//automaton.setStack(new ArrayList<String>(stacks.get(getIndexOfStack(stacks, automaton, currentIndex, word, variablesThatGeneratedTerminals))));
+							automaton.setStack(new ArrayList<String>(stacks.get((currentIndex < word.length()) ? (currentIndex - 1) : (stacks.size() - 1))));
+							//counterOfStacks--;
+							currentIndex = updateCurrentIndex(automaton, stacks);
+							listOfAttempts.add(new ArrayList<TransitionFunctionPA>(attempt));
+							attempt = new ArrayList<TransitionFunctionPA>(getNewList(attempt, automaton));
+							counterOfAttempts++;
+						}
+					} else {
+						counter--;
+						currentIndex--;
+						automaton.setStack(stacks.get(counter));
+					}
+				} while (!automaton.getStack().isEmpty());
+				if (resultOfDerivation.equals(attempt)) {
+					flag = true;
+				}
+				i++;
+			}
+		} else {
+			academic.append("A palavra inserida não pertence à gramática, logo, não existe possíveis derivações.");
+		}*/
+    //}
 
     /**
      * verifica quais variáveis estão presentes no conjunto Prev
@@ -940,7 +1218,7 @@ public class GrammarParser {
         for (Rule element : g.getRules()) {
             if (verifyChains(element)) {
                 grammarTest = false;
-                academicSupport.setSolutionDescription("A gramática inserida possui ciclos.");
+                academicSupport.setSolutionDescription("A gramática inserida possui ciclos.\nA regra " + element + " é um ciclo.");
             }
         }
         return grammarTest;
@@ -1409,12 +1687,17 @@ public class GrammarParser {
         for (int i = 0; i < word.length()+1; i++) {
             for (int j = 0; j < word.length(); j++) {
                 if (j <= i) {
-                    String sentence = returnsAlphabeticSymbols(CYK[i][j]);
+                    Set sentence = CYK[i][j];
                     String newSentence = new String();
-                    for (int k = 0; k < sentence.length(); k++) {
-                        newSentence += Character.toString(sentence.charAt(k)) + " ";
+                    newSentence = sentence.toString();
+                    if (i + 1 == word.length()+1) {
+                        newSentence = newSentence.replace("[", "");
+                        newSentence = newSentence.replace("]", "");
+                    } else {
+                        newSentence = newSentence.replace("[", "{");
+                        newSentence = newSentence.replace("]", "}");
                     }
-                    newSentence = (newSentence.equals("") ? ("-") : (newSentence.substring(0, newSentence.length()-1)));
+                    newSentence = (newSentence.equals("{}") ? ("-") : (newSentence));
                     cykOut[i][j] = newSentence;
                 } else {
                     cykOut[i][j] = "";
