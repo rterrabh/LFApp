@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">LFApp</string>
+
+    <string name="hello_world"></string>
+    <string name="action_settings">Settings</string>
+    <string name="type">Tipo</string>
+    <string name="leftSide">u</string>
+    <string name="rightSide">v</string>
+    <string name="gr">Gramática Regular</string>
+    <string name="gr_u">u ∈ V</string>
+    <string name="gr_v">v ∈ λ | Σ | ΣV</string>
+    <string name="glc">Gramática Livre de Contexto</string>
+    <string name="glc_u">u ∈ V</string>
+    <string name="glc_v">v ∈ (V ∪ Σ)∗</string>
+    <string name="gsc">Gramática Sensível ao Contexto</string>
+    <string name="gsc_u">u ∈ (V ∪ Σ)+</string>
+    <string name="gsc_v">v ∈ (V ∪ Σ)+</string>
+    <string name="gsc_condition">|u| ≤ |v|</string>
+    <string name="gi">Gramática Irrestrita</string>
+    <string name="gi_u">u ∈ (V ∪ Σ)+</string>
+    <string name="gi_v">v ∈ (V ∪ Σ)*</string>
+</resources>
