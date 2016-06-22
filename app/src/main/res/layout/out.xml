@@ -622,565 +622,565 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical" >
 
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Remoção de recursão no símbolo inicial:"
-                    android:textStyle="bold"
-                    android:id="@+id/FncStep1"
-                    />
-
-                <LinearLayout
-                    android:id="@+id/LayoutFNC1"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" >
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Remoção de recursão no símbolo inicial:"
+                        android:textStyle="bold"
+                        android:id="@+id/FncStep1"
+                        />
 
                     <LinearLayout
-                        android:id="@+id/FNC1.1"
+                        android:id="@+id/LayoutFNC1"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical" >
 
-                        <TextView
+                        <LinearLayout
+                            android:id="@+id/FNC1.1"
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
-                            android:text="Resultado:"
-                            android:id="@+id/ResultadoFNC1"
-                            android:textColor="#acff000a"
-                            android:textStyle="bold" />
+                            android:orientation="vertical" >
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                            <TextView
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Resultado:"
+                                android:id="@+id/ResultadoFNC1"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:id="@+id/GramaticaSemRecursividadeNoSimboloInicialFNC">
+                            </TextView>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/FNC1.2"
+                            android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:id="@+id/GramaticaSemRecursividadeNoSimboloInicialFNC">
-                        </TextView>
+                            android:orientation="vertical" >
 
+                            <TextView
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Algoritmo:"
+                                android:id="@+id/ComentarioFNC1"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/ExplicacaoFNC1"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                        </LinearLayout>
                     </LinearLayout>
 
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Remoção de produções vazias:"
+                        android:textStyle="bold"
+                        android:id="@+id/FncStep2"/>
+
                     <LinearLayout
-                        android:id="@+id/FNC1.2"
+                        android:id="@+id/LayoutFNC2"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical" >
 
-                        <TextView
+                        <LinearLayout
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
-                            android:text="Algoritmo:"
-                            android:id="@+id/ComentarioFNC1"
-                            android:textColor="#acff000a"
-                            android:textStyle="bold" />
+                            android:measureWithLargestChild="true"
+                            android:longClickable="true"
+                            android:id="@+id/FNC2.1"
+                            android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/ExplicacaoFNC1"
+                            <TextView
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Resultado:"
+                                android:id="@+id/ResultadoFNC2"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:id="@+id/GramaticaSemProducoesVaziasFNC"/>
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:id="@+id/FNC2.2"
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="#000000" />
+                            android:orientation="vertical" >
 
-                    </LinearLayout>
-                </LinearLayout>
+                            <TextView
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Algoritmo:"
+                                android:id="@+id/ResultadoAlgoritmo2FNC"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Remoção de produções vazias:"
-                    android:textStyle="bold"
-                    android:id="@+id/FncStep2"/>
+                            <TextView
+                                android:id="@+id/Explicacao1ProducoesVaziasFNC"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
 
-                <LinearLayout
-                    android:id="@+id/LayoutFNC2"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" >
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/ComentariosFNC2"/>
 
-                    <LinearLayout
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:measureWithLargestChild="true"
-                        android:longClickable="true"
-                        android:id="@+id/FNC2.1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Resultado:"
-                            android:id="@+id/ResultadoFNC2"
-                            android:textColor="#acff000a"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:id="@+id/GramaticaSemProducoesVaziasFNC"/>
-
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:id="@+id/FNC2.2"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical" >
-
-                        <TextView
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Algoritmo:"
-                            android:id="@+id/ResultadoAlgoritmo2FNC"
-                            android:textColor="#acff000a"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/Explicacao1ProducoesVaziasFNC"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="#000000" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/ComentariosFNC2"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/PseudoNullableAlgorithFNC"
-                            android:layout_gravity="center"/>
-
-                        <TableLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/TabelaConjuntosFNC2"
-                            android:layout_gravity="center">
-                        </TableLayout>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/ExplicacaoGramaticaSemProducoesVaziasFNC"/>
-
-                        <HorizontalScrollView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/PseudoNullableAlgorithFNC"
+                                android:layout_gravity="center"/>
 
                             <TableLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/GramaticaAzul2FNC">
+                                android:id="@+id/TabelaConjuntosFNC2"
+                                android:layout_gravity="center">
                             </TableLayout>
 
-                        </HorizontalScrollView>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/ExplicacaoGramaticaComNovasProducoesFNC"/>
-
-                        <HorizontalScrollView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
-
-                            <TableLayout
+                            <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/GramaticaVermelha2FNC">
-                            </TableLayout>
+                                android:id="@+id/ExplicacaoGramaticaSemProducoesVaziasFNC"/>
 
-                        </HorizontalScrollView>
+                            <HorizontalScrollView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
 
+                                <TableLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/GramaticaAzul2FNC">
+                                </TableLayout>
+
+                            </HorizontalScrollView>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/ExplicacaoGramaticaComNovasProducoesFNC"/>
+
+                            <HorizontalScrollView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+
+                                <TableLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/GramaticaVermelha2FNC">
+                                </TableLayout>
+
+                            </HorizontalScrollView>
+
+                        </LinearLayout>
                     </LinearLayout>
-                </LinearLayout>
 
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Remoção de regras de cadeia:"
-                    android:textStyle="bold"
-                    android:id="@+id/FncStep3"
-                    />
-
-                <LinearLayout
-                    android:id="@+id/LayoutFNC3"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" >
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Remoção de regras de cadeia:"
+                        android:textStyle="bold"
+                        android:id="@+id/FncStep3"
+                        />
 
                     <LinearLayout
-                        android:id="@+id/FNC3.1"
+                        android:id="@+id/LayoutFNC3"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical" >
 
-                        <TextView
+                        <LinearLayout
+                            android:id="@+id/FNC3.1"
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
-                            android:text="Resultado:"
-                            android:id="@+id/ResultadoFNC3"
-                            android:textColor="#acff000a"
-                            android:textStyle="bold" />
+                            android:orientation="vertical" >
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                            <TextView
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Resultado:"
+                                android:id="@+id/ResultadoFNC3"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/GramaticaSemRegrasDaCadeiaFNC"
+                                android:layout_gravity="center"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/FNC3.2"
+                            android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
-                            android:id="@+id/GramaticaSemRegrasDaCadeiaFNC"
-                            android:layout_gravity="center"/>
+                            android:orientation="vertical" >
 
+                            <TextView
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Algoritmo:"
+                                android:id="@+id/ExplicacaoRegrasDaCadeiaFNC"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/ComentarioFNC3"/>
+
+                            <TextView
+                                android:id="@+id/Passo2RegrasDaCadeiaFNC"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/PseudoChainAlgorithmFNC"
+                                android:layout_gravity="center"/>
+
+                            <TableLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/Passo2RegrasDaCadeiaFNC_Resultado"
+                                android:layout_gravity="center">
+                            </TableLayout>
+
+                            <TextView
+                                android:id="@+id/Passo3RegrasDaCadeiaFNC"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                            <HorizontalScrollView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+
+                                <TableLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/Passo3RegrasDaCadeiaFNC_Resultado">
+                                </TableLayout>
+
+                            </HorizontalScrollView>
+                        </LinearLayout>
                     </LinearLayout>
 
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Remoção de símbolos não terminais:"
+                        android:textStyle="bold"
+                        android:id="@+id/FncStep4"/>
+
                     <LinearLayout
-                        android:id="@+id/FNC3.2"
+                        android:id="@+id/LayoutFNC4"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical" >
 
-                        <TextView
+                        <LinearLayout
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
-                            android:text="Algoritmo:"
-                            android:id="@+id/ExplicacaoRegrasDaCadeiaFNC"
-                            android:textColor="#acff000a"
-                            android:textStyle="bold" />
+                            android:measureWithLargestChild="true"
+                            android:longClickable="true"
+                            android:id="@+id/FNC4.1"
+                            android:orientation="vertical">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/ComentarioFNC3"/>
+                            <TextView
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Resultado:"
+                                android:id="@+id/ResultadoFNC4"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/Passo2RegrasDaCadeiaFNC"
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:id="@+id/GramaticaSemSimbolosNaoTerminaisFNC"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/FNC4.2"
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="#000000" />
+                            android:orientation="vertical" >
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/PseudoChainAlgorithmFNC"
-                            android:layout_gravity="center"/>
+                            <TextView
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Algoritmo:"
+                                android:id="@+id/ExplicacaoSimbolosNaoTerminaisFNC"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
 
-                        <TableLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/Passo2RegrasDaCadeiaFNC_Resultado"
-                            android:layout_gravity="center">
-                        </TableLayout>
+                            <TextView
+                                android:id="@+id/ComentariosNaoTerminaisFNC"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
 
-                        <TextView
-                            android:id="@+id/Passo3RegrasDaCadeiaFNC"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="#000000" />
+                            <TextView
+                                android:id="@+id/Passo2NaoTerminaisFNC"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
 
-                        <HorizontalScrollView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/PseudoTermAlgorithmFNC"
+                                android:layout_gravity="center"/>
 
                             <TableLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/Passo3RegrasDaCadeiaFNC_Resultado">
+                                android:id="@+id/Passo2NaoTerminaisFNC_Resultado"
+                                android:layout_gravity="center">
                             </TableLayout>
 
-                        </HorizontalScrollView>
+                            <TextView
+                                android:id="@+id/Passo3NaoTerminaisFNC"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                            <HorizontalScrollView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+
+                                <TableLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/Passo3NaoTerminaisFNC_Resultado">
+                                </TableLayout>
+
+                            </HorizontalScrollView>
+
+                        </LinearLayout>
                     </LinearLayout>
-                </LinearLayout>
 
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Remoção de símbolos não terminais:"
-                    android:textStyle="bold"
-                    android:id="@+id/FncStep4"/>
-
-                <LinearLayout
-                    android:id="@+id/LayoutFNC4"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" >
-
-                    <LinearLayout
+                    <TextView
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:measureWithLargestChild="true"
-                        android:longClickable="true"
-                        android:id="@+id/FNC4.1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Resultado:"
-                            android:id="@+id/ResultadoFNC4"
-                            android:textColor="#acff000a"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:id="@+id/GramaticaSemSimbolosNaoTerminaisFNC"/>
-
-                    </LinearLayout>
+                        android:text="Remoção de símbolos não alcançáveis:"
+                        android:textStyle="bold"
+                        android:id="@+id/FncStep5"
+                        />
 
                     <LinearLayout
-                        android:id="@+id/FNC4.2"
+                        android:id="@+id/LayoutFNC5"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical" >
 
-                        <TextView
+                        <LinearLayout
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
-                            android:text="Algoritmo:"
-                            android:id="@+id/ExplicacaoSimbolosNaoTerminaisFNC"
-                            android:textColor="#acff000a"
-                            android:textStyle="bold" />
+                            android:measureWithLargestChild="true"
+                            android:longClickable="true"
+                            android:id="@+id/FNC5.1"
+                            android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/ComentariosNaoTerminaisFNC"
+                            <TextView
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Resultado:"
+                                android:id="@+id/ResultadoFNC5"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/GramaticaSemSimbolosNaoAlcancaveisFNC"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000"
+                                android:layout_gravity="center"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/FNC5.2"
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="#000000" />
+                            android:orientation="vertical" >
 
-                        <TextView
-                            android:id="@+id/Passo2NaoTerminaisFNC"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="#000000" />
+                            <TextView
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Algoritmo:"
+                                android:id="@+id/ExplicacaoRemocaoDeSimbolosNaoAlcancaveisFNC"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/PseudoTermAlgorithmFNC"
-                            android:layout_gravity="center"/>
+                            <TextView
+                                android:id="@+id/ComentariosFNC5"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
 
-                        <TableLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/Passo2NaoTerminaisFNC_Resultado"
-                            android:layout_gravity="center">
-                        </TableLayout>
+                            <TextView
+                                android:id="@+id/Passo2RemocaoDeRegrasNaoAlcancaveisFNC"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
 
-                        <TextView
-                            android:id="@+id/Passo3NaoTerminaisFNC"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="#000000" />
-
-                        <HorizontalScrollView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/PseudoReachAlgorithmFNC"
+                                android:layout_gravity="center"/>
 
                             <TableLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/Passo3NaoTerminaisFNC_Resultado">
+                                android:id="@+id/Passo2RemocaoDeSimbolosNaoAlcancaveisFNC_Resultado"
+                                android:layout_gravity="center">
                             </TableLayout>
 
-                        </HorizontalScrollView>
-
-                    </LinearLayout>
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Remoção de símbolos não alcançáveis:"
-                    android:textStyle="bold"
-                    android:id="@+id/FncStep5"
-                    />
-
-                <LinearLayout
-                    android:id="@+id/LayoutFNC5"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" >
-
-                    <LinearLayout
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:measureWithLargestChild="true"
-                        android:longClickable="true"
-                        android:id="@+id/FNC5.1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Resultado:"
-                            android:id="@+id/ResultadoFNC5"
-                            android:textColor="#acff000a"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/GramaticaSemSimbolosNaoAlcancaveisFNC"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="#000000"
-                            android:layout_gravity="center"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/FNC5.2"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical" >
-
-                        <TextView
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Algoritmo:"
-                            android:id="@+id/ExplicacaoRemocaoDeSimbolosNaoAlcancaveisFNC"
-                            android:textColor="#acff000a"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/ComentariosFNC5"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="#000000" />
-
-                        <TextView
-                            android:id="@+id/Passo2RemocaoDeRegrasNaoAlcancaveisFNC"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="#000000" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/PseudoReachAlgorithmFNC"
-                            android:layout_gravity="center"/>
-
-                        <TableLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/Passo2RemocaoDeSimbolosNaoAlcancaveisFNC_Resultado"
-                            android:layout_gravity="center">
-                        </TableLayout>
-
-                        <TextView
-                            android:id="@+id/Passo3RemocaoDeSimbolosNaoAlcancaveisFNC"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="#000000" />
-
-                        <HorizontalScrollView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
-
-                            <TableLayout
-                                android:layout_width="wrap_content"
+                            <TextView
+                                android:id="@+id/Passo3RemocaoDeSimbolosNaoAlcancaveisFNC"
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/Passo3RemocaoDeSimbolosNaoAlcancaveisFNC_Resultado">
-                            </TableLayout>
+                                android:textColor="#000000" />
 
-                        </HorizontalScrollView>
+                            <HorizontalScrollView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+
+                                <TableLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/Passo3RemocaoDeSimbolosNaoAlcancaveisFNC_Resultado">
+                                </TableLayout>
+
+                            </HorizontalScrollView>
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Forma Normal de Chomsky:"
-                    android:textStyle="bold"
-                    android:id="@+id/FncStep6"
-                    />
-
-                <LinearLayout
-                    android:id="@+id/LayoutFNC6"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" >
-
-                    <LinearLayout
+                    <TextView
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:measureWithLargestChild="true"
-                        android:longClickable="true"
-                        android:id="@+id/FNC6.1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Resultado:"
-                            android:id="@+id/ResultadoFNC6"
-                            android:textColor="#acff000a"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/FNCResultado"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="#000000"
-                            android:layout_gravity="center"/>
-                    </LinearLayout>
+                        android:text="Forma Normal de Chomsky:"
+                        android:textStyle="bold"
+                        android:id="@+id/FncStep6"
+                        />
 
                     <LinearLayout
-                        android:id="@+id/FNC6.2"
+                        android:id="@+id/LayoutFNC6"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical" >
 
-                        <TextView
+                        <LinearLayout
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
-                            android:text="Algoritmo:"
-                            android:id="@+id/ExplicacaoFNC6"
-                            android:textColor="#acff000a"
-                            android:textStyle="bold" />
+                            android:measureWithLargestChild="true"
+                            android:longClickable="true"
+                            android:id="@+id/FNC6.1"
+                            android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/ComentariosFNC6"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="#000000" />
+                            <TextView
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Resultado:"
+                                android:id="@+id/ResultadoFNC6"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/Passo2FNC"
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="#000000" />
-
-                        <HorizontalScrollView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
-
-                            <TableLayout
+                            <TextView
+                                android:id="@+id/FNCResultado"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/Passo2FNC_Resultado">
-                            </TableLayout>
+                                android:textColor="#000000"
+                                android:layout_gravity="center"/>
+                        </LinearLayout>
 
-                        </HorizontalScrollView>
-
-                        <TextView
-                            android:id="@+id/Passo3FNC"
+                        <LinearLayout
+                            android:id="@+id/FNC6.2"
                             android:layout_width="fill_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="#000000" />
+                            android:orientation="vertical" >
 
-                        <HorizontalScrollView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
-
-                            <TableLayout
-                                android:layout_width="wrap_content"
+                            <TextView
+                                android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/Passo3FNC_Resultado">
-                            </TableLayout>
+                                android:text="Algoritmo:"
+                                android:id="@+id/ExplicacaoFNC6"
+                                android:textColor="#acff000a"
+                                android:textStyle="bold" />
 
-                        </HorizontalScrollView>
+                            <TextView
+                                android:id="@+id/ComentariosFNC6"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
 
+                            <TextView
+                                android:id="@+id/Passo2FNC"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                            <HorizontalScrollView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+
+                                <TableLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/Passo2FNC_Resultado">
+                                </TableLayout>
+
+                            </HorizontalScrollView>
+
+                            <TextView
+                                android:id="@+id/Passo3FNC"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000000" />
+
+                            <HorizontalScrollView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+
+                                <TableLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/Passo3FNC_Resultado">
+                                </TableLayout>
+
+                            </HorizontalScrollView>
+
+                        </LinearLayout>
                     </LinearLayout>
-                </LinearLayout>
             </LinearLayout>
 
             <TextView
