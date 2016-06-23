@@ -37,7 +37,7 @@ public class Grammar01Test extends TestCase {
 	@Test
 	public void testInitialSymbolNotRecursive() {
 		
-		Grammar newG = GrammarParser.getGrammarWithInitialSymbolNotRecursive(this.g);
+		Grammar newG = g.getGrammarWithInitialSymbolNotRecursive(this.g, new AcademicSupport());
 		Grammar expectedGrammar = setGrammar();
 		
 		assertEquals(expectedGrammar.getInitialSymbol(), newG.getInitialSymbol());
@@ -52,7 +52,7 @@ public class Grammar01Test extends TestCase {
 	@Test
 	public void testGrammarEssentiallyNonContracting() {
 		
-		Grammar newG = GrammarParser.getGrammarEssentiallyNoncontracting(this.g);
+		Grammar newG = g.getGrammarEssentiallyNoncontracting(this.g, new AcademicSupport());
 		Grammar expectedGrammar = setGrammar();
 		
 		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getRules(), newG.getRules()));
@@ -67,7 +67,7 @@ public class Grammar01Test extends TestCase {
 	@Test
 	public void testChainRules() {
 		
-		Grammar newG = GrammarParser.getGrammarWithoutChainRules(this.g);
+		Grammar newG = g.getGrammarWithoutChainRules(this.g, new AcademicSupport());
 		Grammar expectedGrammar = setGrammar();
 		
 		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getRules(), newG.getRules()));
@@ -81,7 +81,7 @@ public class Grammar01Test extends TestCase {
 	
 	@Test
 	public void testNoTerminals() {
-		Grammar newG = GrammarParser.getGrammarWithoutNoTerm(this.g);
+		Grammar newG = g.getGrammarWithoutNoTerm(this.g, new AcademicSupport());
 		Grammar expectedGrammar = setGrammar();
 		
 		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getRules(), newG.getRules()));
@@ -95,7 +95,7 @@ public class Grammar01Test extends TestCase {
 	
 	@Test
 	public void testNoReach() {
-		Grammar newG = GrammarParser.getGrammarWithoutNoReach(this.g);
+		Grammar newG = g.getGrammarWithoutNoReach(this.g, new AcademicSupport());
 		Grammar expectedGrammar = setGrammar();
 		
 		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getRules(), newG.getRules()));
@@ -110,7 +110,7 @@ public class Grammar01Test extends TestCase {
 	
 	@Test
 	public void testFNC() {
-		Grammar newG = GrammarParser.FNC(this.g);
+		Grammar newG = g.FNC(this.g, new AcademicSupport());
 		
 		String[] expectedVariables = new String[] { "S", "A", "B", "C", "V", "T1" };
 		String[] expectedTerminals = new String[] {"a", "b"};
@@ -132,7 +132,7 @@ public class Grammar01Test extends TestCase {
 	
 	@Test
 	public void testFNG() {
-		Grammar newG = GrammarParser.FNG(g);
+		Grammar newG = g.FNG(g, new AcademicSupport());
 		boolean fng = true;
 		for (Rule element : newG.getRules()) {
 			int counter = 0;
@@ -158,7 +158,7 @@ public class Grammar01Test extends TestCase {
 	
 	@Test
 	public void testCYK() {
-		Set<String>[][] matrix = GrammarParser.CYK(g, "bbabaa");
+		Set<String>[][] matrix = g.CYK(g, "bbabaa");
 		
 		assertNotNull(matrix);
 		assertNotNull(matrix[0][0]);

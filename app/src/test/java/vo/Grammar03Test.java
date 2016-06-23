@@ -34,7 +34,7 @@ public class Grammar03Test extends TestCase {
 	@Test
 	public void testInitialSymbolNotRecursive() {
 		
-		Grammar newG = GrammarParser.getGrammarWithInitialSymbolNotRecursive(this.g);
+		Grammar newG = g.getGrammarWithInitialSymbolNotRecursive(this.g, new AcademicSupport());
 		
 		String[] expectedVariables = new String[]{"S'", "S", "A", "B", "C"};
 		String[] expectedTerminals = new String[]{"a", "b", "c", "d", "e"};
@@ -55,7 +55,7 @@ public class Grammar03Test extends TestCase {
 	@Test
 	public void testGrammarEssentiallyNonContracting() {
 		
-		Grammar newG = GrammarParser.getGrammarEssentiallyNoncontracting(this.g);
+		Grammar newG = g.getGrammarEssentiallyNoncontracting(this.g, new AcademicSupport());
 		
 		String[] expectedVariables = new String[] {"S", "A", "B", "C"};
 		String[] expectedTerminals = new String[] {"a", "b", "c", "d", "e"};
@@ -75,7 +75,7 @@ public class Grammar03Test extends TestCase {
 	
 	@Test
 	public void testChainRules() {
-		Grammar newG = GrammarParser.getGrammarWithoutChainRules(this.g);
+		Grammar newG = g.getGrammarWithoutChainRules(this.g, new AcademicSupport());
 		
 		String[] expectedVariables = new String[] {"S", "A", "B", "C"};
 		String[] expectedTerminals = new String[] {"a", "b", "c", "d", "e"};
@@ -95,7 +95,7 @@ public class Grammar03Test extends TestCase {
 	
 	@Test
 	public void  testNoTerminals() {
-		Grammar newG = GrammarParser.getGrammarWithoutNoTerm(this.g);
+		Grammar newG = g.getGrammarWithoutNoTerm(this.g, new AcademicSupport());
 		
 		String[] expectedVariables = new String[] {"S", "A", "B", "C"};
 		String[] expectedTerminals = new String[] {"a", "b", "c", "d", "e"};
@@ -115,7 +115,7 @@ public class Grammar03Test extends TestCase {
 	
 	@Test
 	public void testNoReach() {
-		Grammar newG = GrammarParser.getGrammarWithoutNoReach(this.g);
+		Grammar newG = g.getGrammarWithoutNoReach(this.g, new AcademicSupport());
 		
 		String[] expectedVariables = new String[] {"S", "A", "B", "C"};
 		String[] expectedTerminals = new String[] {"a", "b", "c", "d", "e"};
@@ -135,7 +135,7 @@ public class Grammar03Test extends TestCase {
 	
 	@Test
 	public void testFNC() {
-		Grammar newG = GrammarParser.FNC(this.g);
+		Grammar newG = g.FNC(this.g, new AcademicSupport());
 		
 		String[] expectedVariables = new String[] {"S'", "S", "A", "B", "C", "T1", "T2", "T3", "T4", "T5", "T6", "T7"};
 		String[] expectedTerminals = new String[] {"a", "b", "c", "d", "e"};
@@ -155,7 +155,7 @@ public class Grammar03Test extends TestCase {
 	
 	@Test
 	public void testFNG() {
-		Grammar newG = GrammarParser.FNG(g);
+		Grammar newG = g.FNG(g, new AcademicSupport());
 		boolean fng = true;
 		for (Rule element : newG.getRules()) {
 			int counter = 0;

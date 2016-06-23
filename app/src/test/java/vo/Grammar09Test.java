@@ -7,20 +7,20 @@ import org.junit.Test;
 
 import junit.framework.*;
 
-public class Grammar08Test extends TestCase{
+public class Grammar09Test extends TestCase{
 
 	private Grammar g;
 	
 	/*
-	  A -> Aa | Aab | bb | b	 
+	  A -> Aa | Ab | b | c	 
 	 */
 	
 	@Override
 	protected void setUp() throws Exception {
 		String[] variables = new String[]{"A"};
-		String[] terminals = new String[]{"a", "b"};
+		String[] terminals = new String[]{"a", "b", "c"};
 		String initialSymbol = "A";
-		String[] rules = new String[]{"A -> Aa | Aab | bb | b"};
+		String[] rules = new String[]{"A -> Aa | Ab | b | c"};
 		
 		this.g = new Grammar(variables, terminals, initialSymbol, rules);	
 	}
@@ -28,12 +28,12 @@ public class Grammar08Test extends TestCase{
 	@Test
 	public void testRemovingTheImmediateLeftRecursion() {
 		
-		Grammar newG = GrammarParser.removingTheImmediateLeftRecursion(this.g);
+		Grammar newG = g.removingTheImmediateLeftRecursion(this.g, new AcademicSupport());
 		
 		String[] expectedVariables = new String[]{"A","Z1"};
-		String[] expectedTerminals = new String[]{"a", "b"};
+		String[] expectedTerminals = new String[]{"a", "b", "c"};
 		String expectedInitialSymbol = "A";
-		String[] expectedRules = new String[]{"A -> bb | b | bbZ1 | bZ1", "Z1 -> aZ1 | abZ1 | a | ab"};
+		String[] expectedRules = new String[]{"A -> bZ1 | cZ1 | b | c", "Z1 -> aZ1 | bZ1 | a | b"};
 		
 		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);		
 		

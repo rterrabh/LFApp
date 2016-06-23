@@ -1,45 +1,42 @@
 package vo;
 
 import static org.junit.Assert.*;
-
-import java.util.Set;
-
 import junit.framework.*;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.junit.Test;
 
-public class Grammar05Test extends TestCase{
+public class Grammar06Test extends TestCase {
 	
 	private Grammar g;
-	
+
 	/*
-	S -> AT | AB
-	T -> XB
-	X -> AT | AB
-	A -> a
-	B -> b
-	*/
+	S -> AB | .
+	A -> AB | CB | a
+	B -> AB | b
+	C -> AC | c 	 
+	 */
 	
 	@Override
-	protected void setUp() throws Exception {		
-		String[] variables = new String[]{"S", "T", "X", "A", "B"};
-		String[] terminals = new String[]{"a", "b"};
+	protected void setUp() throws Exception {
+		String[] variables = new String[]{"S", "A", "B", "C"};
+		String[] terminals = new String[]{"a","c", "b"};
 		String initialSymbol = "S";
-		String[] rules = new String[]{"S -> AT | AB", "T -> XB", "X -> AT | AB", "A -> a", "B -> b"};
+		String[] rules = new String[]{"S -> AB | .", "A -> AB | CB | a", "B -> AB | b", "C -> AC | c"};
 		
-		this.g = new Grammar(variables, terminals, initialSymbol, rules);		
+		this.g = new Grammar(variables, terminals, initialSymbol, rules);
 	}
+	
 	
 	@Test
 	public void testInitialSymbolNotRecursive() {
 		
-		Grammar newG = GrammarParser.getGrammarWithInitialSymbolNotRecursive(this.g);
+		Grammar newG = g.getGrammarWithInitialSymbolNotRecursive(this.g, new AcademicSupport());
 		
-		String[] expectedVariables = new String[]{"S", "T", "X", "A", "B"};
-		String[] expectedTerminals = new String[]{"a", "b"};
+		String[] expectedVariables = new String[]{"S", "A", "B", "C"};
+		String[] expectedTerminals = new String[]{"a", "c", "b"};
 		String expectedInitialSymbol = "S";
-		String[] expectedRules = new String[]{"S -> AT | AB", "T -> XB", "X -> AT | AB", "A -> a", "B -> b"};
+		String[] expectedRules = new String[]{"S -> AB | .", "A -> AB | CB | a", "B -> AB | b", "C -> AC | c"};
 		
 		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);
 		
@@ -51,36 +48,36 @@ public class Grammar05Test extends TestCase{
 		
 		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getVariables(), newG.getVariables()));
 	}
-
+	
 	@Test
 	public void testGrammarEssentiallyNonContracting() {
 		
-		Grammar newG = GrammarParser.getGrammarEssentiallyNoncontracting(this.g);
+		Grammar newG = g.getGrammarEssentiallyNoncontracting(this.g, new AcademicSupport());
 		
-		String[] expectedVariables = new String[]{"S", "T", "X", "A", "B"};
-		String[] expectedTerminals = new String[]{"a", "b"};
+		String[] expectedVariables = new String[] {"S", "A", "B", "C"};
+		String[] expectedTerminals = new String[] {"a", "c", "b"};
 		String expectedInitialSymbol = "S";
-		String[] expectedRules = new String[]{"S -> AT | AB", "T -> XB", "X -> AT | AB", "A -> a", "B -> b"};
+		String[] expectedRules = new String[] {"S -> AB | .", "A -> AB | CB | a", "B -> AB | b", "C -> AC | c"};
 		
 		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);
 		
 		assertEquals(expectedGrammar.getInitialSymbol(), newG.getInitialSymbol());
 		
 		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getTerminals(), newG.getTerminals()));
-	
+		
 		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getRules(), newG.getRules()));
 		
 		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getVariables(), newG.getVariables()));		
 	}
-
+	
 	@Test
 	public void testChainRules() {
-		Grammar newG = GrammarParser.getGrammarWithoutChainRules(this.g);
+		Grammar newG = g.getGrammarWithoutChainRules(this.g, new AcademicSupport());
 		
-		String[] expectedVariables = new String[]{"S", "T", "X", "A", "B"};
-		String[] expectedTerminals = new String[]{"a", "b"};
+		String[] expectedVariables = new String[] {"S", "A", "B", "C"};
+		String[] expectedTerminals = new String[] {"a", "c", "b"};
 		String expectedInitialSymbol = "S";
-		String[] expectedRules = new String[]{"S -> AT | AB", "T -> XB", "X -> AT | AB", "A -> a", "B -> b"};
+		String[] expectedRules = new String[] {"S -> AB | .", "A -> AB | CB | a", "B -> AB | b", "C -> AC | c"};
 		
 		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);
 		
@@ -95,12 +92,12 @@ public class Grammar05Test extends TestCase{
 	
 	@Test
 	public void  testNoTerminals() {
-		Grammar newG = GrammarParser.getGrammarWithoutNoTerm(this.g);
+		Grammar newG = g.getGrammarWithoutNoTerm(this.g, new AcademicSupport());
 		
-		String[] expectedVariables = new String[]{"S", "T", "X", "A", "B"};
-		String[] expectedTerminals = new String[]{"a", "b"};
+		String[] expectedVariables = new String[] {"S", "A", "B", "C"};
+		String[] expectedTerminals = new String[] {"a", "c", "b"};
 		String expectedInitialSymbol = "S";
-		String[] expectedRules = new String[]{"S -> AT | AB", "T -> XB", "X -> AT | AB", "A -> a", "B -> b"};
+		String[] expectedRules = new String[] {"S -> AB | .", "A -> AB | CB | a", "B -> AB | b", "C -> AC | c"};
 		
 		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);
 		
@@ -113,15 +110,15 @@ public class Grammar05Test extends TestCase{
 		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getVariables(), newG.getVariables()));			
 	}
 	
+	
 	@Test
-	public void testFNC() {
-		Grammar newG = GrammarParser.FNC(this.g);
+	public void testNoReach() {
+		Grammar newG = g.getGrammarWithoutNoReach(this.g, new AcademicSupport());
 		
-		String[] expectedVariables = new String[] {"S", "T", "X", "A", "B"};
-		String[] expectedTerminals = new String[] {"a", "b"};
+		String[] expectedVariables = new String[] {"S", "A", "B", "C"};
+		String[] expectedTerminals = new String[] {"a", "c", "b"};
 		String expectedInitialSymbol = "S";
-		String[] expectedRules = new String[] {"S->AB | AT", 
-				"X->AB | AT", "T -> XB", "B->b", "A->a"};		
+		String[] expectedRules = new String[] {"S -> AB | .", "A -> AB | CB | a", "B -> AB | b", "C -> AC | c"};
 		
 		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);
 		
@@ -131,13 +128,12 @@ public class Grammar05Test extends TestCase{
 		
 		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getTerminals(), newG.getTerminals()));
 		
-		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getVariables(), newG.getVariables()));	
-		
+		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getVariables(), newG.getVariables()));
 	}
 	
 	@Test
 	public void testFNG() {
-		Grammar newG = GrammarParser.FNG(g);
+		Grammar newG = g.FNG(g, new AcademicSupport());
 		boolean fng = true;
 		for (Rule element : newG.getRules()) {
 			int counter = 0;
@@ -158,24 +154,4 @@ public class Grammar05Test extends TestCase{
 		
 		assertEquals(true, fng);
 	}
-	
-	
-	
-	
-	@Test
-	public void testCYK() {
-		Set<String>[][] matrix = GrammarParser.CYK(g, "aaabbb");
-		
-		assertNotNull(matrix);
-		assertNotNull(matrix[0][0]);
-		assertNotEquals("", matrix[0][0]);
-		
-		Set<String> topVariables = matrix[0][0];
-		
-		assertEquals(2, topVariables.size());
-
-		assertTrue(topVariables.contains("S"));
-		assertTrue(topVariables.contains("X"));
-	}
-	
 }

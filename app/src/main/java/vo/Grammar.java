@@ -1,20 +1,16 @@
 package vo;
 
-import android.support.annotation.NonNull;
-
-import com.lfapp.lfapp_01.R;
-
-import java.util.Collection;
+import java.util.Map;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
 public class Grammar implements Cloneable {
 
-	public final String lambda = "λ";
+	public final String LAMBDA = "λ";
 	public final String ruleSeparator = "|";
 	public final String ruleProduction = "->";
 	public final String chomskyPrefix = "T";
@@ -56,16 +52,15 @@ public class Grammar implements Cloneable {
 		for (String x : rules) {
 			auxRule = x.split("->");
 			r.setLeftSide(auxRule[0].trim());
-			String[] rulesOnTheRightSide = auxRule[1].split(" | ");
+			String[] rulesOnTheRightSide = auxRule[1].split("[|]");
 			for (String production : rulesOnTheRightSide) {
 				production = production.trim();
-				if (!production.isEmpty() && !production.equals("|")) {
+				if (!production.isEmpty()) {
 					r.setRightSide(production);
 					this.rules.add(new Rule(r));
 				}
 			}
 		}
-
 	}
 
 	public Grammar(String txt) {
@@ -240,7 +235,7 @@ public class Grammar implements Cloneable {
 		Map<Integer, String> foundProblems = new HashMap<>();
 		int counter = 1;
 		for (Rule element : gc.getRules()) {
-			if (element.getRightSide().equals(g.lambda)) {
+			if (element.getRightSide().equals(g.LAMBDA)) {
 				nullable.add(element.getLeftSide());
 				nullableVars = true;
 				academicSupport.insertIrregularRule(element);
@@ -283,24 +278,22 @@ public class Grammar implements Cloneable {
 				aux += GrammarParser.permutation(element.getRightSide(), nullable, i, aux);
 				i++;
 			}
-			String[] productionsOnRightSide = aux.split(" | ");
+			String[] productionsOnRightSide = aux.split("[|]");
 			for (i = 0; i < productionsOnRightSide.length; i++) {
 				productionsOnRightSide[i] = productionsOnRightSide[i].trim();
-				if (!productionsOnRightSide[i].equals("|")) {
-					if (GrammarParser.newProductions(productionsOnRightSide[i], element.getLeftSide(), gc)) {
-						nullableVars = true;
-					}
-					Rule r = new Rule(element.getLeftSide(), productionsOnRightSide[i]);
-					newSetOfRules.add(r);
-					if (!g.getRules().contains(r)) {
-						academicSupport.insertNewRule(r);
-					}
+				if (GrammarParser.newProductions(productionsOnRightSide[i], element.getLeftSide(), gc)) {
+					nullableVars = true;
+				}
+				Rule r = new Rule(element.getLeftSide(), productionsOnRightSide[i]);
+				newSetOfRules.add(r);
+				if (!g.getRules().contains(r)) {
+					academicSupport.insertNewRule(r);
 				}
 			}
 		}
 
 		if (nullable.contains(gc.getInitialSymbol())) {
-			Rule r = new Rule(gc.getInitialSymbol(), g.lambda);
+			Rule r = new Rule(gc.getInitialSymbol(), g.LAMBDA);
 			newSetOfRules.add(r);
 
 		}
@@ -716,7 +709,7 @@ public class Grammar implements Cloneable {
 							if (variable.equals(element.getLeftSide())) {
 								int u = Integer.parseInt(variablesInOrder.get(variable));
 								String rightSide = GrammarParser.getsFirstCharacter(element.getRightSide());
-								if (Character.isLowerCase(rightSide.charAt(0)) || gc.lambda.equals(rightSide)) {
+								if (Character.isLowerCase(rightSide.charAt(0)) || gc.LAMBDA.equals(rightSide)) {
 									Rule r = new Rule(variable, element.getRightSide());
 									newSetOfRules.add(r);
 								} else {
@@ -772,14 +765,14 @@ public class Grammar implements Cloneable {
 	public Grammar FNG(final Grammar g, final AcademicSupport academic) {
 		Grammar gc = (Grammar) g.clone();
 
+		Set<Rule> newSetOfRules = new HashSet<Rule>();
 		if (GrammarParser.grammarWithCycles(gc)) {
 			while (!GrammarParser.isFNG(gc.getRules())) {
 				academic.setSituation(true);
-				Set<Rule> newSetOfRules = new HashSet<Rule>();
 				for (String variable : gc.getVariables()) {
 					for (Rule element : gc.getRules()) {
 						if (variable.equals(element.getLeftSide())) {
-							if (!Character.isLowerCase(element.getRightSide().charAt(0)) && !element.getRightSide().equals(gc.lambda)) {
+							if (!Character.isLowerCase(element.getRightSide().charAt(0)) && !element.getRightSide().equals(gc.LAMBDA)) {
 								academic.insertIrregularRule(element);
 								String firstCharacter = GrammarParser.getsFirstCharacter(element.getRightSide());
 								for (Rule secondElement : gc.getRules()) {
@@ -801,6 +794,8 @@ public class Grammar implements Cloneable {
 					}
 				}
 				gc.setRules(newSetOfRules);
+				newSetOfRules.clear();
+
 			}
 		}
 		return gc;
@@ -840,6 +835,36 @@ public class Grammar implements Cloneable {
 			}
 		}
 		return X;
+	}
+
+	public Map<String, Set<String>> getRulesMapUToV() {
+		Map<String, Set<String>> rulesMapUToV = new TreeMap<>();
+		Set<String> rightSide;
+		for(Rule rule : rules) {
+			if(rulesMapUToV.containsKey(rule.getLeftSide())) {
+				rightSide = rulesMapUToV.get(rule.getLeftSide());
+				rightSide.add(rule.getRightSide());
+				rulesMapUToV.put(rule.getLeftSide(), rightSide);
+			} else {
+				rightSide = new TreeSet<String>();
+				rightSide.add(rule.getRightSide());
+				rulesMapUToV.put(rule.getLeftSide(), rightSide);
+			}
+		}
+		return rulesMapUToV;
+	}
+
+	public String toStringRulesMapUToV() {
+		StringBuilder sb = new StringBuilder();
+		for(Map.Entry<String, Set<String>> entry : getRulesMapUToV().entrySet()) {
+			sb.append(entry.getKey() + " -> ");
+			for(String rightSide : entry.getValue()) {
+				sb.append(rightSide + " | ");
+			}
+			sb.delete(sb.length()-3, sb.length());
+			sb.append("\n");
+		}
+		return sb.toString();
 	}
 
 }

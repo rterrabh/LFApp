@@ -1,5 +1,7 @@
 package vo;
 
+import java.util.ArrayList;
+
 public class Rule {
 	
 	//attributes 
@@ -20,7 +22,6 @@ public class Rule {
 	//accessors
 
 	public Rule(Rule r) {
-		// TODO Auto-generated constructor stub
 		this.leftSide = r.getLeftSide();
 		this.rightSide = r.getRightSide();
 	}
@@ -54,23 +55,30 @@ public class Rule {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		Rule other = (Rule) obj;
 		if (leftSide == null) {
-			if (other.leftSide != null)
+			if (other.leftSide != null) {
 				return false;
-		} else if (!leftSide.equals(other.leftSide))
+			}
+		} else if (!leftSide.equals(other.leftSide)) {
 			return false;
+		}
 		if (rightSide == null) {
-			if (other.rightSide != null)
+			if (other.rightSide != null) {
 				return false;
-		} else if (!rightSide.equals(other.rightSide))
+			}
+		} else if (!rightSide.equals(other.rightSide)) {
 			return false;
+		}
 		return true;
 	}
 	
@@ -88,6 +96,7 @@ public class Rule {
 	public String toString() {
 		return this.leftSide + " -> " + this.rightSide;
 	}
-	
+
+
 	
 }

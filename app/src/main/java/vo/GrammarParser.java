@@ -1,13 +1,11 @@
 package vo;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
-import java.util.ArrayList;
 
 
 public class GrammarParser {
@@ -355,8 +353,8 @@ public class GrammarParser {
     private static boolean unrestrictedGrammar(final Grammar g, StringBuilder academic) {
         boolean unrestricted = true;
         for (Rule element : g.getRules()) {
-            if ((!containsSentence(g, element.getLeftSide()) || element.getLeftSide().equals(g.lambda)) ||
-                    (!containsSentence(g, element.getRightSide()) && !element.getRightSide().equals(g.lambda))) {
+            if ((!containsSentence(g, element.getLeftSide()) || element.getLeftSide().equals(g.LAMBDA)) ||
+                    (!containsSentence(g, element.getRightSide()) && !element.getRightSide().equals(g.LAMBDA))) {
                 unrestricted = false;
                 academic.append("- Na gramática informada, a regra " + element + "não pertence ao conjunto das gramáticas irrestritas.\n");
             }
@@ -481,30 +479,30 @@ public class GrammarParser {
         Set<String> stackAlphabet = new HashSet<String>();
         stackAlphabet.addAll(g.getVariables());
         stackAlphabet.addAll(g.getTerminals());
-        stackAlphabet.add(g.lambda);
+        stackAlphabet.add(g.LAMBDA);
         automaton.setStackAlphabet(stackAlphabet);
 
         //adiciona função de transição
         //adiciona transição inicial
         Set<TransitionFunctionPA> transitions = new HashSet<TransitionFunctionPA>();
-        transitions.add(new TransitionFunctionPA("q0", g.getInitialSymbol(), "q1", g.lambda, g.lambda));
+        transitions.add(new TransitionFunctionPA("q0", g.getInitialSymbol(), "q1", g.LAMBDA, g.LAMBDA));
 
         //adiciona transições
         for (String variable : g.getVariables()) {
             for (Rule element : g.getRules()) {
                 if (variable.equals(element.getLeftSide())) {
-                    transitions.add(new TransitionFunctionPA("q1", g.lambda, "q1", element.getRightSide(), element.getLeftSide()));
+                    transitions.add(new TransitionFunctionPA("q1", g.LAMBDA, "q1", element.getRightSide(), element.getLeftSide()));
                 }
             }
         }
 
         //adiciona transições que esvaziam a pilha
         for (String terminal : g.getTerminals()) {
-            transitions.add(new TransitionFunctionPA("q1", terminal, "q1", g.lambda, terminal));
+            transitions.add(new TransitionFunctionPA("q1", terminal, "q1", g.LAMBDA, terminal));
         }
 
         //adiciona transição final
-        transitions.add(new TransitionFunctionPA("q1", g.lambda, "q2", g.lambda, g.lambda));
+        transitions.add(new TransitionFunctionPA("q1", g.LAMBDA, "q2", g.LAMBDA, g.LAMBDA));
 
         automaton.setTransictionFunction(transitions);
         return automaton;
@@ -558,7 +556,7 @@ public class GrammarParser {
             //realiza passo 1 do algoritmo: empilha símbolo inicial
             automaton.push(gcAux.getInitialSymbol());
             //System.out.println(automaton.getStack());
-            attempt.add(new TransitionFunctionPA("q0", gc.getInitialSymbol(), "q1", gc.lambda, gc.lambda));
+            attempt.add(new TransitionFunctionPA("q0", gc.getInitialSymbol(), "q1", gc.LAMBDA, gc.LAMBDA));
 
             loop:
             do {
@@ -588,7 +586,7 @@ public class GrammarParser {
                     attempt.add(new TransitionFunctionPA(currentTransition));
                     //attempt.add(new PushdownAutomaton(automaton));
 
-                } else if (gcAux.getTerminals().contains(automaton.getTopOfStack()) || automaton.getTopOfStack().equals(Grammar.lambda)) {
+                } else if (gcAux.getTerminals().contains(automaton.getTopOfStack()) || automaton.getTopOfStack().equals(Grammar.LAMBDA)) {
                     //terminal no topo da pilha
                     //verifica o próximo terminal da expressão está no topo da pilha
                     StringBuilder charAtVariable = new StringBuilder();
@@ -655,7 +653,7 @@ public class GrammarParser {
 				//realiza passo 1 do algoritmo: empilha símbolo inicial
 				automaton.push(g.getInitialSymbol());
 				System.out.println(automaton.getStack());
-				attempt.add(new TransitionFunctionPA("q0", gc.getInitialSymbol(), "q1", gc.lambda, gc.lambda));
+				attempt.add(new TransitionFunctionPA("q0", gc.getInitialSymbol(), "q1", gc.LAMBDA, gc.LAMBDA));
 
 				do {
 					System.out.println("Stack: " + automaton.getStack());
@@ -740,7 +738,7 @@ public class GrammarParser {
     }
 
     /**
-     * Substitui lambda por vazio
+     * Substitui LAMBDA por vazio
      * @param element
      * @param gc
      * @return
@@ -807,15 +805,14 @@ public class GrammarParser {
     }
 
     public static boolean newProductions(String production, String leftSide, Grammar g) {
-        boolean newProduction = true;
         for (Rule element : g.getRules()) {
             if (element.getLeftSide().equals(leftSide)) {
                 if (element.getRightSide().equals(production)) {
-                    newProduction = false;
+                    return false;
                 }
             }
         }
-        return newProduction;
+        return true;
     }
 
     /**
@@ -859,13 +856,12 @@ public class GrammarParser {
      * @return
      */
     public static boolean prevContainsVariable(Set<String> prev, String element) {
-        boolean test = true;
-        for (int i = 0; i < element.length() && test == true; i++) {
+        for (int i = 0; i < element.length(); i++) {
             if (!Character.isUpperCase(element.charAt(i)) || !prev.contains(Character.toString(element.charAt(i)))) {
-                test = false;
+                return false;
             }
         }
-        return test;
+        return true;
     }
 
 
@@ -1202,7 +1198,7 @@ public class GrammarParser {
         boolean grammarTest = true;
         for (Rule element : g.getRules()) {
             //verifica se é essencialmente não contrátil
-            if (element.getRightSide().equals(g.lambda) && !g.getInitialSymbol().equals(element.getLeftSide())) {
+            if (element.getRightSide().equals(g.LAMBDA) && !g.getInitialSymbol().equals(element.getLeftSide())) {
                 grammarTest = false;
                 academicSupport.setSolutionDescription("A gramática inserida possui produções vazias.");
             }
