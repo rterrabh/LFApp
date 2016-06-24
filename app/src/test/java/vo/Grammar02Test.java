@@ -54,9 +54,6 @@ public class Grammar02Test extends TestCase {
 		String[] expectedRules = new String[] {"S' -> S", "S -> aS | AB | AC", " A -> aA | .", "B -> bB | b", "C -> cC | ."};
 		
 		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);
-		System.out.println(newG.getInitialSymbol());
-		System.out.println(newG.getTerminals());
-		System.out.println(newG.getVariables());
 		
 		assertEquals(expectedGrammar.getInitialSymbol(), newG.getInitialSymbol());
 		

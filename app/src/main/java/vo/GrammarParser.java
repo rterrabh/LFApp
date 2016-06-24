@@ -1,7 +1,9 @@
 package vo;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -353,8 +355,8 @@ public class GrammarParser {
     private static boolean unrestrictedGrammar(final Grammar g, StringBuilder academic) {
         boolean unrestricted = true;
         for (Rule element : g.getRules()) {
-            if ((!containsSentence(g, element.getLeftSide()) || element.getLeftSide().equals(g.LAMBDA)) ||
-                    (!containsSentence(g, element.getRightSide()) && !element.getRightSide().equals(g.LAMBDA))) {
+            if ((!containsSentence(g, element.getLeftSide()) || element.getLeftSide().equals(Grammar.LAMBDA)) ||
+                    (!containsSentence(g, element.getRightSide()) && !element.getRightSide().equals(Grammar.LAMBDA))) {
                 unrestricted = false;
                 academic.append("- Na gramática informada, a regra " + element + "não pertence ao conjunto das gramáticas irrestritas.\n");
             }
@@ -479,30 +481,30 @@ public class GrammarParser {
         Set<String> stackAlphabet = new HashSet<String>();
         stackAlphabet.addAll(g.getVariables());
         stackAlphabet.addAll(g.getTerminals());
-        stackAlphabet.add(g.LAMBDA);
+        stackAlphabet.add(Grammar.LAMBDA);
         automaton.setStackAlphabet(stackAlphabet);
 
         //adiciona função de transição
         //adiciona transição inicial
         Set<TransitionFunctionPA> transitions = new HashSet<TransitionFunctionPA>();
-        transitions.add(new TransitionFunctionPA("q0", g.getInitialSymbol(), "q1", g.LAMBDA, g.LAMBDA));
+        transitions.add(new TransitionFunctionPA("q0", g.getInitialSymbol(), "q1", Grammar.LAMBDA, Grammar.LAMBDA));
 
         //adiciona transições
         for (String variable : g.getVariables()) {
             for (Rule element : g.getRules()) {
                 if (variable.equals(element.getLeftSide())) {
-                    transitions.add(new TransitionFunctionPA("q1", g.LAMBDA, "q1", element.getRightSide(), element.getLeftSide()));
+                    transitions.add(new TransitionFunctionPA("q1", Grammar.LAMBDA, "q1", element.getRightSide(), element.getLeftSide()));
                 }
             }
         }
 
         //adiciona transições que esvaziam a pilha
         for (String terminal : g.getTerminals()) {
-            transitions.add(new TransitionFunctionPA("q1", terminal, "q1", g.LAMBDA, terminal));
+            transitions.add(new TransitionFunctionPA("q1", terminal, "q1", Grammar.LAMBDA, terminal));
         }
 
         //adiciona transição final
-        transitions.add(new TransitionFunctionPA("q1", g.LAMBDA, "q2", g.LAMBDA, g.LAMBDA));
+        transitions.add(new TransitionFunctionPA("q1", Grammar.LAMBDA, "q2", Grammar.LAMBDA, Grammar.LAMBDA));
 
         automaton.setTransictionFunction(transitions);
         return automaton;
@@ -556,7 +558,7 @@ public class GrammarParser {
             //realiza passo 1 do algoritmo: empilha símbolo inicial
             automaton.push(gcAux.getInitialSymbol());
             //System.out.println(automaton.getStack());
-            attempt.add(new TransitionFunctionPA("q0", gc.getInitialSymbol(), "q1", gc.LAMBDA, gc.LAMBDA));
+            attempt.add(new TransitionFunctionPA("q0", gc.getInitialSymbol(), "q1", Grammar.LAMBDA, Grammar.LAMBDA));
 
             loop:
             do {
@@ -653,7 +655,7 @@ public class GrammarParser {
 				//realiza passo 1 do algoritmo: empilha símbolo inicial
 				automaton.push(g.getInitialSymbol());
 				System.out.println(automaton.getStack());
-				attempt.add(new TransitionFunctionPA("q0", gc.getInitialSymbol(), "q1", gc.LAMBDA, gc.LAMBDA));
+				attempt.add(new TransitionFunctionPA("q0", gc.getInitialSymbol(), "q1", Grammar.LAMBDA, Grammar.LAMBDA));
 
 				do {
 					System.out.println("Stack: " + automaton.getStack());
@@ -755,41 +757,81 @@ public class GrammarParser {
         return aux;
     }
 
-    /**
-     * Realiza permutação de variáveis que são anuláveis
-     * @param rightSide
-     * @param nullableVariables
-     * @param i
-     * @param totalSentence
-     * @return
-     */
-    public static String permutation(String rightSide, Set<String> nullableVariables, int i, String totalSentence) {
-        String newSentence = new String();
-        String aux = new String();
-        if (nullableVariables.contains(Character.toString(rightSide.charAt(i))) && (rightSide.length() != 1)) {
-            for (int j = 0; j < rightSide.length(); j++) {
-                if (j != i)
-                    aux += Character.toString(rightSide.charAt(j));
-            }
-            newSentence = aux + " | ";
+    private static Set<Set<Integer>> combinationsP(List<Integer> groupSize) {
+        Set<Set<Integer>> combinations = new HashSet<>();
+        for(int i = 1; i <= groupSize.size(); i++) {
+            combinations.addAll(combinationsIntern(groupSize, i));
+        }
+        return combinations;
+    }
+
+    private static Set<Set<Integer>> combinationsIntern(List<Integer> groupSize, int k) {
+
+        Set<Set<Integer>> allCombos = new HashSet<Set<Integer>> ();
+        // base cases for recursion
+        if (k == 0) {
+            // There is only one combination of size 0, the empty team.
+            allCombos.add(new HashSet<Integer>());
+            return allCombos;
+        }
+        if (k > groupSize.size()) {
+            // There can be no teams with size larger than the group size,
+            // so return allCombos without putting any teams in it.
+            return allCombos;
         }
 
-        for (int j = 0; j < aux.length(); j++) {
-            String temporarySentence = aux;
-            int k = j;
-            while (k != temporarySentence.length()) {
-                if (nullableVariables.contains(Character.toString(temporarySentence.charAt(k)))) {
-                    temporarySentence = updateTemporarySentence(temporarySentence, k);
-                    if (existingProduction(totalSentence + " | " + newSentence, temporarySentence))
-                        newSentence += temporarySentence + " | ";
-                    k = 0;
-                } else {
-                    k++;
-                }
+        // Create a copy of the group with one item removed.
+        List<Integer> groupWithoutX = new ArrayList<Integer> (groupSize);
+        Integer x = groupWithoutX.remove(groupWithoutX.size()-1);
+
+        Set<Set<Integer>> combosWithoutX = combinationsIntern(groupWithoutX, k);
+        Set<Set<Integer>> combosWithX = combinationsIntern(groupWithoutX, k-1);
+        for (Set<Integer> combo : combosWithX) {
+            combo.add(x);
+        }
+        allCombos.addAll(combosWithoutX);
+        allCombos.addAll(combosWithX);
+        return allCombos;
+    }
+
+    public static String combination(String rightSide, Set<String> nullableVariables) {
+        List<Integer> indiceCombinations = new ArrayList<>();
+        for(int j = 0; j < rightSide.length(); j++) {
+            if(nullableVariables.contains(Character.toString(rightSide.charAt(j)))) {
+                indiceCombinations.add(j);
             }
         }
-        return newSentence;
+        //System.out.println(indiceCombinations);
+        System.out.println(rightSide);
+        Set<Set<Integer>> combinations = combinationsP(indiceCombinations);
+        for(Set<Integer> combination : combinations) {
+           System.out.println(combination);
+        }
+        StringBuilder newProduction = new StringBuilder(rightSide + " | ");
+        char[] productionArray = rightSide.toCharArray();
+        boolean  emptyProduction = true;
+        for(int i = 0; i < productionArray.length; i++) {
+            if(!indiceCombinations.contains(i)) {
+                newProduction.append(productionArray[i]);
+               emptyProduction = false;
+            }
+        }
+        if(!emptyProduction) {
+            newProduction.append(" | ");
+        }
+        for(Set<Integer> combination : combinations) {
+            for(int i = 0; i < productionArray.length; i++) {
+                if(!indiceCombinations.contains(i) || combination.contains(i)) {
+                    newProduction.append(productionArray[i]);
+                }
+            }
+            newProduction.append(" | ");
+        }
+        return newProduction.toString();
     }
+
+
+
 
     /**
      *
@@ -815,37 +857,7 @@ public class GrammarParser {
         return true;
     }
 
-    /**
-     *
-     * @param newSentence
-     * @param temporarySentence
-     * @return
-     */
-    private static boolean existingProduction(String newSentence, String temporarySentence) {
-        String[] productions = newSentence.split(" | ");
-        for (int i = 0; i < productions.length; i++) {
-            productions[i] = productions[i].trim();
-            if (productions[i].equals(temporarySentence))
-                return false;
-        }
-        return true;
-    }
 
-    /**
-     *
-     * @param temporarySentence
-     * @param k
-     * @return
-     */
-    private static String updateTemporarySentence(String temporarySentence,
-                                                  int k) {
-        String newSentence = new String();
-        for (int i = 0; i < temporarySentence.length(); i++) {
-            if (i != k)
-                newSentence += Character.toString(temporarySentence.charAt(i));
-        }
-        return newSentence;
-    }
 
 
     /**
@@ -1198,7 +1210,7 @@ public class GrammarParser {
         boolean grammarTest = true;
         for (Rule element : g.getRules()) {
             //verifica se é essencialmente não contrátil
-            if (element.getRightSide().equals(g.LAMBDA) && !g.getInitialSymbol().equals(element.getLeftSide())) {
+            if (element.getRightSide().equals(Grammar.LAMBDA) && !g.getInitialSymbol().equals(element.getLeftSide())) {
                 grammarTest = false;
                 academicSupport.setSolutionDescription("A gramática inserida possui produções vazias.");
             }

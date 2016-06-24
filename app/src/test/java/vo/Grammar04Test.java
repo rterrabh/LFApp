@@ -2,7 +2,12 @@ package vo;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import junit.framework.*;
 
@@ -53,16 +58,16 @@ public class Grammar04Test extends TestCase {
 
 	@Test
 	public void testGrammarEssentiallyNonContracting() {
-		
+
 		Grammar newG = g.getGrammarEssentiallyNoncontracting(this.g, new AcademicSupport());
-		
+
 		String[] expectedVariables = new String[] {"S", "A", "B", "C"};
 		String[] expectedTerminals = new String[] {"a", "b"};
 		String expectedInitialSymbol = "S";
 		String[] expectedRules = new String[] {"S -> aS | ABC | a | AB | AC | BC | A | B | C | .", "A -> BB | B", "B -> CC | a | C", "C -> AA | b | A"};
 		
 		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);
-		
+
 		assertEquals(expectedGrammar.getInitialSymbol(), newG.getInitialSymbol());
 		
 		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getTerminals(), newG.getTerminals()));
