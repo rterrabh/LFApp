@@ -1,5 +1,8 @@
 package vo;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -478,12 +481,16 @@ public class Grammar implements Cloneable {
 	public Grammar FNC(final Grammar g, final AcademicSupport academic) {
 
 		Grammar gc = (Grammar) g.clone();
-
+		gc = getGrammarWithInitialSymbolNotRecursive(gc, new AcademicSupport());
+		gc = getGrammarEssentiallyNoncontracting(gc, new AcademicSupport());
+		gc = getGrammarWithoutChainRules(gc, new AcademicSupport());
+		gc = getGrammarWithoutNoTerm(gc, new AcademicSupport());
+		gc = getGrammarWithoutNoReach(gc, new AcademicSupport());
 		if (!GrammarParser.isFNC(gc)) {
 			academic.setSituation(true);
-			Set<Rule> newSetOfRules = new HashSet<Rule>();
-			Set<Rule> auxSetOfRules = new HashSet<Rule>();
-			Set<String> newSetOfVariables = new HashSet<String>();
+			Set<Rule> newSetOfRules = new HashSet<>();
+			Set<Rule> auxSetOfRules = new HashSet<>();
+			Set<String> newSetOfVariables = new HashSet<>();
 			int contInsertions = 1;
 			for (Rule element : gc.getRules()) {
 				String newProduction = new String();
@@ -567,9 +574,59 @@ public class Grammar implements Cloneable {
 
 			// update the rules
 			newSetOfRules.addAll(auxSetOfRules);
+			newSetOfRules = gc.removeEqualProductions(newSetOfRules);
 			gc.setRules(newSetOfRules);
 		}
 		return gc;
+	}
+
+	public Set<Rule> removeEqualProductions (Set<Rule> setOfRules) {
+		List<String> ruleEquals = new ArrayList<>();
+		for(Rule rule : setOfRules) {
+			if(rule.getLeftSide().charAt(0)=='T' &&
+					rule.getLeftSide().length() > 1) {
+				String numberRule1 = rule.getLeftSide().substring(1);
+				for(Rule ruleAux : setOfRules) {
+					if(ruleAux.getLeftSide().charAt(0)=='T' &&
+							ruleAux.getLeftSide().length() > 1 &&
+							rule.getRightSide().equals(ruleAux.getRightSide()) &&
+							!rule.equals(ruleAux)) {
+						boolean equal = true;
+						String numberRule2 = ruleAux.getLeftSide().substring(1);
+						if(Integer.parseInt(numberRule1) > Integer.parseInt(numberRule2)) {
+							String aux = numberRule1;
+							numberRule1 = numberRule2;
+							numberRule2 = aux;
+						}
+						for(int i = 0; i < ruleEquals.size(); i+=2) {
+							if(ruleEquals.get(i+1).equals(numberRule2) &&
+									ruleEquals.get(i).equals(numberRule1)) {
+								equal = false;
+								break;
+							}
+						}
+						if(equal) {
+							ruleEquals.add(numberRule1);
+							ruleEquals.add(numberRule2);
+						}
+					}
+				}
+			}
+		}
+		for(Iterator<Rule> it = setOfRules.iterator(); it.hasNext(); ) {
+			Rule rule = it.next();
+			for(int i = 0; i < ruleEquals.size(); i+=2) {
+				if(rule.getRightSide().contains("T"+ruleEquals.get(i+1))) {
+					rule.setRightSide(rule.getRightSide().replace("T"+ruleEquals.get(i+1), "T"+ruleEquals.get(i)));
+				}
+				if(rule.getLeftSide().equals("T"+ruleEquals.get(i+1))) {
+					variables.remove("T"+ruleEquals.get(i+1));
+					it.remove();
+					break;
+				}
+			}
+		}
+		return setOfRules;
 	}
 
 	/**

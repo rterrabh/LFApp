@@ -141,24 +141,24 @@ public class Grammar04Test extends TestCase {
 	public void testFNC() {
 		Grammar newG = g.FNC(this.g, new AcademicSupport());
 		
-		String[] expectedVariables = new String[] {"S'", "S", "A", "B", "C", "T1", "T2", "T3"};
+		String[] expectedVariables = new String[] {"S'", "S", "A", "B", "C", "T1", "T3"};
 		String[] expectedTerminals = new String[] {"a", "b"};
 		String expectedInitialSymbol = "S'";
-		String[] expectedRules = new String[] {"S' -> BB | BC | T1S | AT2 | AC | AB | AA | . | CC | b | a",
-				"S -> BC | BB | AC | b | a | T1S | AA | CC | AT3 | AB",
+		String[] expectedRules = new String[] {"S' -> . | AA | AB | AT1 | AC | BB | BC | CC | a | T3S | b",
+				"S -> AA | AB | AT1 | AC | BB | BC | CC | a | T3S | b",
 				"A -> a | b | AA | CC | BB",
 				"B -> AA | BB | CC | a | b",
 				"C -> CC | b | a | BB | AA",
-				"T3 -> BC", "T1 -> a", "T2 -> BC"};		
+				"T1 -> BC", "T3 -> a" };
 		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);
-		
+
 		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getRules(), newG.getRules()));
 		
 		assertEquals(newG.getInitialSymbol(), expectedGrammar.getInitialSymbol());
 		
 		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getTerminals(), newG.getTerminals()));
 		
-		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getVariables(), newG.getVariables()));	
+		assertEquals(expectedGrammar.getVariables(), newG.getVariables());
 	} 
 	
 	@Test

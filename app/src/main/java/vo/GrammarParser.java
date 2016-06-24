@@ -801,12 +801,7 @@ public class GrammarParser {
                 indiceCombinations.add(j);
             }
         }
-        //System.out.println(indiceCombinations);
-        System.out.println(rightSide);
         Set<Set<Integer>> combinations = combinationsP(indiceCombinations);
-        for(Set<Integer> combination : combinations) {
-           System.out.println(combination);
-        }
         StringBuilder newProduction = new StringBuilder(rightSide + " | ");
         char[] productionArray = rightSide.toCharArray();
         boolean  emptyProduction = true;
@@ -1104,7 +1099,9 @@ public class GrammarParser {
         Iterator<Rule> it = gc.getRules().iterator();
         while (it.hasNext() && test) {
             Rule element = (Rule) it.next();
-            if (!element.getRightSide().equals(".") && !Character.isLowerCase(element.getRightSide().charAt(0)) && counterOfRightSide(element.getRightSide()) != 2) {
+            if (!element.getRightSide().equals(".") &&
+                    !Character.isLowerCase(element.getRightSide().charAt(0)) &&
+                    counterOfRightSide(element.getRightSide()) != 2) {
                 test = false;
             } else if (counterOfRightSide(element.getRightSide()) == 2) {
                 for (int i = 0; i <  element.getRightSide().length() && test; i++) {

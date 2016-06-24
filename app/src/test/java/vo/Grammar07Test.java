@@ -140,11 +140,11 @@ public class Grammar07Test extends TestCase {
 		String[] expectedRules = new String[] {"A' -> AB | BA | a", "A -> AB | BA | a", "B -> b | c"};
 		
 		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);
-		System.out.println("________________________________");
-		for (Rule element : newG.getRules()) {
-			System.out.println(element.getLeftSide() + "->" + element.getRightSide());
-		}
-		System.out.println("_______________________________");
+//		System.out.println("________________________________");
+//		for (Rule element : newG.getRules()) {
+//			System.out.println(element.getLeftSide() + "->" + element.getRightSide());
+//		}
+//		System.out.println("_______________________________");
 		
 		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getRules(), newG.getRules()));
 		
