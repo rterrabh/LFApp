@@ -2,12 +2,10 @@ package vo;
 
 import static org.junit.Assert.*;
 
-import org.apache.commons.collections4.CollectionUtils;
+import org.junit.*;
 import org.junit.Test;
 
-import junit.framework.*;
-
-public class Grammar08Test extends TestCase{
+public class Grammar08Test {
 
 	private Grammar g;
 	
@@ -15,12 +13,13 @@ public class Grammar08Test extends TestCase{
 	  A -> Aa | Aab | bb | b	 
 	 */
 	
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() {
 		String[] variables = new String[]{"A"};
 		String[] terminals = new String[]{"a", "b"};
 		String initialSymbol = "A";
-		String[] rules = new String[]{"A -> Aa | Aab | bb | b"};
+		String[] rules = new String[]{
+				"A -> Aa | Aab | bb | b" };
 		
 		this.g = new Grammar(variables, terminals, initialSymbol, rules);	
 	}
@@ -33,17 +32,19 @@ public class Grammar08Test extends TestCase{
 		String[] expectedVariables = new String[]{"A","Z1"};
 		String[] expectedTerminals = new String[]{"a", "b"};
 		String expectedInitialSymbol = "A";
-		String[] expectedRules = new String[]{"A -> bb | b | bbZ1 | bZ1", "Z1 -> aZ1 | abZ1 | a | ab"};
+		String[] expectedRules = new String[]{
+				"A -> bb | b | bbZ1 | bZ1",
+				"Z1 -> aZ1 | abZ1 | a | ab" };
 		
 		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);		
 		
 		assertEquals(expectedGrammar.getInitialSymbol(), newG.getInitialSymbol());
 		
-		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getTerminals(), newG.getTerminals()));
+		assertEquals(expectedGrammar.getTerminals(), newG.getTerminals());
 		
-		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getRules(), newG.getRules()));
+		assertEquals(expectedGrammar.getRules(), newG.getRules());
 		
-		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getVariables(), newG.getVariables()));
+		assertEquals(expectedGrammar.getVariables(), newG.getVariables());
 	}	
 
 }

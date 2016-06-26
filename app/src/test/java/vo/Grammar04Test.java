@@ -2,19 +2,12 @@ package vo;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
-import junit.framework.*;
-
-import org.apache.commons.collections4.CollectionUtils;
+import org.junit.*;
 import org.junit.Test;
 
-public class Grammar04Test extends TestCase {
+public class Grammar04Test {
 	
 	private Grammar g;
 	
@@ -25,12 +18,16 @@ public class Grammar04Test extends TestCase {
 	 C -> AA | b
 	 */
 	
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() {
 		String[] variables = new String[]{"S", "A", "B", "C"};
 		String[] terminals = new String[]{"a", "b"};
 		String initialSymbol = "S";
-		String[] rules = new String[]{"S -> aS | ABC", "A -> BB | .", "B -> CC | a", "C -> AA | b"};
+		String[] rules = new String[]{
+				"S -> aS | ABC",
+				"A -> BB | .",
+				"B -> CC | a",
+				"C -> AA | b" };
 		
 		this.g = new Grammar(variables, terminals, initialSymbol, rules);
 	}
@@ -43,17 +40,22 @@ public class Grammar04Test extends TestCase {
 		String[] expectedVariables = new String[]{"S'", "S", "A", "B", "C"};
 		String[] expectedTerminals = new String[]{"a", "b"};
 		String expectedInitialSymbol = "S'";
-		String[] expectedRules = new String[]{"S' -> S", "S -> aS | ABC", "A -> BB | .", "B -> CC | a", "C -> AA | b"};
+		String[] expectedRules = new String[]{
+				"S' -> S",
+				"S -> aS | ABC",
+				"A -> BB | .",
+				"B -> CC | a",
+				"C -> AA | b" };
 		
 		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);
 		
 		assertEquals(expectedGrammar.getInitialSymbol(), newG.getInitialSymbol());
 		
-		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getTerminals(), newG.getTerminals()));
+		assertEquals(expectedGrammar.getTerminals(), newG.getTerminals());
 		
-		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getRules(), newG.getRules()));
+		assertEquals(expectedGrammar.getRules(), newG.getRules());
 		
-		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getVariables(), newG.getVariables()));
+		assertEquals(expectedGrammar.getVariables(), newG.getVariables());
 	}
 
 	@Test
@@ -64,17 +66,21 @@ public class Grammar04Test extends TestCase {
 		String[] expectedVariables = new String[] {"S", "A", "B", "C"};
 		String[] expectedTerminals = new String[] {"a", "b"};
 		String expectedInitialSymbol = "S";
-		String[] expectedRules = new String[] {"S -> aS | ABC | a | AB | AC | BC | A | B | C | .", "A -> BB | B", "B -> CC | a | C", "C -> AA | b | A"};
+		String[] expectedRules = new String[] {
+				"S -> aS | ABC | a | AB | AC | BC | A | B | C | .",
+				"A -> BB | B",
+				"B -> CC | a | C",
+				"C -> AA | b | A" };
 		
 		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);
 
 		assertEquals(expectedGrammar.getInitialSymbol(), newG.getInitialSymbol());
 		
-		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getTerminals(), newG.getTerminals()));
+		assertEquals(expectedGrammar.getTerminals(), newG.getTerminals());
 	
-		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getRules(), newG.getRules()));
+		assertEquals(expectedGrammar.getRules(), newG.getRules());
 		
-		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getVariables(), newG.getVariables()));		
+		assertEquals(expectedGrammar.getVariables(), newG.getVariables());
 	}
 	
 	@Test
@@ -84,17 +90,21 @@ public class Grammar04Test extends TestCase {
 		String[] expectedVariables = new String[] {"S", "A", "B", "C"};
 		String[] expectedTerminals = new String[] {"a", "b"};
 		String expectedInitialSymbol = "S";
-		String[] expectedRules = new String[] {"S -> aS | ABC", "A -> BB | .", "B -> CC | a", "C -> AA | b"};
+		String[] expectedRules = new String[] {
+				"S -> aS | ABC",
+				"A -> BB | .",
+				"B -> CC | a",
+				"C -> AA | b" };
 		
 		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);
 		
-		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getRules(), newG.getRules()));
+		assertEquals(expectedGrammar.getRules(), newG.getRules());
 		
 		assertEquals(newG.getInitialSymbol(), expectedGrammar.getInitialSymbol());
 		
-		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getTerminals(), newG.getTerminals()));
+		assertEquals(expectedGrammar.getTerminals(), newG.getTerminals());
 		
-		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getVariables(), newG.getVariables()));		
+		assertEquals(expectedGrammar.getVariables(), newG.getVariables());
 	}
 	
 	@Test
@@ -104,17 +114,21 @@ public class Grammar04Test extends TestCase {
 		String[] expectedVariables = new String[] {"S", "A", "B", "C"};
 		String[] expectedTerminals = new String[] {"a", "b"};
 		String expectedInitialSymbol = "S";
-		String[] expectedRules = new String[] {"S -> aS | ABC", "A -> BB | .", "B -> CC | a", "C -> AA | b"};
+		String[] expectedRules = new String[] {
+				"S -> aS | ABC",
+				"A -> BB | .",
+				"B -> CC | a",
+				"C -> AA | b" };
 		
 		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);
 		
-		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getRules(), newG.getRules()));
+		assertEquals(expectedGrammar.getRules(), newG.getRules());
 		
 		assertEquals(newG.getInitialSymbol(), expectedGrammar.getInitialSymbol());
 		
-		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getTerminals(), newG.getTerminals()));
+		assertEquals(expectedGrammar.getTerminals(), newG.getTerminals());
 		
-		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getVariables(), newG.getVariables()));			
+		assertEquals(expectedGrammar.getVariables(), newG.getVariables());
 	}
 	
 	@Test
@@ -124,17 +138,21 @@ public class Grammar04Test extends TestCase {
 		String[] expectedVariables = new String[] {"S", "A", "B", "C"};
 		String[] expectedTerminals = new String[] {"a", "b"};
 		String expectedInitialSymbol = "S";
-		String[] expectedRules = new String[] {"S -> aS | ABC", "A -> BB | .", "B -> CC | a", "C -> AA | b"};
+		String[] expectedRules = new String[] {
+				"S -> aS | ABC",
+				"A -> BB | .",
+				"B -> CC | a",
+				"C -> AA | b" };
 		
 		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);
 		
-		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getRules(), newG.getRules()));
+		assertEquals(expectedGrammar.getRules(), newG.getRules());
 		
 		assertEquals(newG.getInitialSymbol(), expectedGrammar.getInitialSymbol());
 		
-		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getTerminals(), newG.getTerminals()));
+		assertEquals(expectedGrammar.getTerminals(), newG.getTerminals());
 		
-		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getVariables(), newG.getVariables()));
+		assertEquals(expectedGrammar.getVariables(), newG.getVariables());
 	}
 	
 	@Test
@@ -144,19 +162,21 @@ public class Grammar04Test extends TestCase {
 		String[] expectedVariables = new String[] {"S'", "S", "A", "B", "C", "T1", "T3"};
 		String[] expectedTerminals = new String[] {"a", "b"};
 		String expectedInitialSymbol = "S'";
-		String[] expectedRules = new String[] {"S' -> . | AA | AB | AT1 | AC | BB | BC | CC | a | T3S | b",
+		String[] expectedRules = new String[] {
+				"S' -> . | AA | AB | AT1 | AC | BB | BC | CC | a | T3S | b",
 				"S -> AA | AB | AT1 | AC | BB | BC | CC | a | T3S | b",
 				"A -> a | b | AA | CC | BB",
 				"B -> AA | BB | CC | a | b",
 				"C -> CC | b | a | BB | AA",
-				"T1 -> BC", "T3 -> a" };
+				"T1 -> BC",
+				"T3 -> a" };
 		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);
 
-		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getRules(), newG.getRules()));
+		assertEquals(expectedGrammar.getRules(), newG.getRules());
 		
 		assertEquals(newG.getInitialSymbol(), expectedGrammar.getInitialSymbol());
 		
-		assertEquals(true, CollectionUtils.isEqualCollection(expectedGrammar.getTerminals(), newG.getTerminals()));
+		assertEquals(expectedGrammar.getTerminals(), newG.getTerminals());
 		
 		assertEquals(expectedGrammar.getVariables(), newG.getVariables());
 	} 
@@ -169,7 +189,7 @@ public class Grammar04Test extends TestCase {
 			int counter = 0;
 			if (!element.getLeftSide().equals(newG.getInitialSymbol()) && element.getRightSide().equals("")) {
 				fng = false;
-				counter = 1;
+				//counter = 1;
 			} else {
 				for (int i = 0; i < element.getRightSide().length() && fng; i++) {
 					if (Character.isLowerCase(element.getRightSide().charAt(i))) {
@@ -187,7 +207,7 @@ public class Grammar04Test extends TestCase {
 	
 	@Test
 	public void testCYK() {
-		Set<String>[][] matrix =g.CYK(g, "bbabaa");
+		Set<String>[][] matrix = Grammar.CYK(g, "bbabaa");
 		
 		assertNotNull(matrix);
 		assertNotNull(matrix[0][0]);

@@ -1,22 +1,26 @@
 package vo;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
 
+import org.junit.Before;
 import org.junit.Test;
 
 
-public class CloneTest extends TestCase {
+public class CloneTest {
 
 	private Grammar g;
-	private Grammar get;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() {
 		String variables[] = new String[] { "S", "S1", "A", "B", "V" };
 		String terminals[] = new String[] { "a", "b" };
 		String initialSymbol = "S";
-		String rules[] = new String[] { "S -> AB | BS1 | BV", "S1 -> AB",
-				"A -> BA | a", "B -> aa | VS1 | S1V | S1S1 | b", "V -> a" };
+		String rules[] = new String[] {
+				"S -> AB | BS1 | BV",
+				"S1 -> AB",
+				"A -> BA | a",
+				"B -> aa | VS1 | S1V | S1S1 | b",
+				"V -> a" };
 		this.g = new Grammar(variables, terminals, initialSymbol, rules);
 	}
 
@@ -54,10 +58,6 @@ public class CloneTest extends TestCase {
 
 		assertFalse(this.g.getRules().contains(rx));
 		assertTrue(gc.getRules().contains(rx));
-		
-		
-		
 	}
-	
 
 }
