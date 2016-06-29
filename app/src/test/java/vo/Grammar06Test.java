@@ -176,5 +176,6 @@ public class Grammar06Test {
 		}
 		
 		assertEquals(true, fng);
+		assertTrue(newG.isFNG());
 	}
 }

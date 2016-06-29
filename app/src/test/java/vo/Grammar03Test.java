@@ -209,6 +209,7 @@ public class Grammar03Test {
 		}
 		
 		assertEquals(true, fng);
+		assertTrue(newG.isFNG());
 	}
 	
 	@Test

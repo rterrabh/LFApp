@@ -1,7 +1,9 @@
 package vo;
 
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -481,12 +483,12 @@ public class Grammar implements Cloneable {
 	public Grammar FNC(final Grammar g, final AcademicSupport academic) {
 
 		Grammar gc = (Grammar) g.clone();
-		gc = getGrammarWithInitialSymbolNotRecursive(gc, new AcademicSupport());
-		gc = getGrammarEssentiallyNoncontracting(gc, new AcademicSupport());
-		gc = getGrammarWithoutChainRules(gc, new AcademicSupport());
-		gc = getGrammarWithoutNoTerm(gc, new AcademicSupport());
-		gc = getGrammarWithoutNoReach(gc, new AcademicSupport());
 		if (!GrammarParser.isFNC(gc)) {
+			gc = getGrammarWithInitialSymbolNotRecursive(gc, new AcademicSupport());
+			gc = getGrammarEssentiallyNoncontracting(gc, new AcademicSupport());
+			gc = getGrammarWithoutChainRules(gc, new AcademicSupport());
+			gc = getGrammarWithoutNoTerm(gc, new AcademicSupport());
+			gc = getGrammarWithoutNoReach(gc, new AcademicSupport());
 			academic.setSituation(true);
 			Set<Rule> newSetOfRules = new HashSet<>();
 			Set<Rule> auxSetOfRules = new HashSet<>();
@@ -815,7 +817,7 @@ public class Grammar implements Cloneable {
 	 * @param : gramática livre de contexto
 	 * @return : gramática livre de contexto na Forma Normal de Greibach
 	 */
-	public Grammar FNG(final Grammar g, final AcademicSupport academic) {
+	public Grammar FNG2(final Grammar g, final AcademicSupport academic) {
 		Grammar gc = (Grammar) g.clone();
 
 		Set<Rule> newSetOfRules = new HashSet<Rule>();
@@ -854,11 +856,157 @@ public class Grammar implements Cloneable {
 		return gc;
 	}
 
+	public boolean isVariableForRemovingLeftRecursion(String variable) {
+		if (variable.length() < 2) {
+			return false;
+		}
+		if (variable.charAt(0) != 'R') {
+			return false;
+		}
+		for (int i = 1; i < variable.length(); i++) {
+			if (!Character.isDigit(variable.charAt(i))) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public Set<Rule> getRules(String variable) {
+		Set<Rule> rulesOfVariable = new HashSet<>();
+		for (Rule rule : rules) {
+			if (rule.getLeftSide().equals(variable)) {
+				rulesOfVariable.add(rule);
+			}
+		}
+		return rulesOfVariable;
+	}
+
+	public boolean isFNG() {
+		for(Rule rule : rules) {
+			if(!rule.isFNG(rule.getLeftSide().equals(initialSymbol))) {
+				System.out.println(rule);
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public Grammar FNG(final Grammar g, final AcademicSupport academic) {
+		Grammar gc = (Grammar) g.clone();
+		gc = FNC(gc, new AcademicSupport());
+
+		int order = 1;
+		int numberOfVariablesForRemovingLeftRecursing = 1;
+		Set<Rule> rulesWithLeftRecursion = new HashSet<>();
+		Set<Rule> rulesWithoutLeftRecursion = new HashSet<>();
+		Set<Rule> newSetOfRules;
+		Set<Rule> removalRules = new HashSet<>();
+		Deque<String> variableOrder = new LinkedList<>();
+		variableOrder.offer(gc.initialSymbol);
+
+		for (String variable : gc.getVariables()) {
+			if (variable.equals(gc.getInitialSymbol()) ||
+					isVariableForRemovingLeftRecursion(variable)) {
+				continue;
+			}
+			for (Rule element : gc.getRules(variable)) {
+				if (element.existsLeftRecursion()) {
+					rulesWithLeftRecursion.add(element);
+				} else {
+					rulesWithoutLeftRecursion.add(element);
+				}
+			}
+			//BEGIN - remoção da recursão à esquerda direta
+			if (!rulesWithLeftRecursion.isEmpty()) {
+				newSetOfRules = new HashSet<>();
+				String leftSide = "R" + String.valueOf(numberOfVariablesForRemovingLeftRecursing);
+				variableOrder.offer(leftSide);
+				for (Rule element : rulesWithLeftRecursion) {
+					newSetOfRules.add(new Rule(leftSide, element.getRightSide().substring(1)));
+					newSetOfRules.add(new Rule(leftSide,
+							element.getRightSide().substring(1) + leftSide));
+				}
+				for (Rule element : rulesWithoutLeftRecursion) {
+					newSetOfRules.add(new Rule(element.getLeftSide(),
+							element.getRightSide() + leftSide));
+				}
+				newSetOfRules.addAll(gc.rules);
+				newSetOfRules.removeAll(rulesWithLeftRecursion);
+				gc.rules = newSetOfRules;
+				numberOfVariablesForRemovingLeftRecursing++;
+			}
+			rulesWithLeftRecursion.clear();
+			rulesWithoutLeftRecursion.clear();
+			//END - remoção da recursão à esquerda direta
+			//BEGIN - Propagação - remoção da recursão à esquerda indireta
+			int orderAux = order;
+			for (String variableAux : gc.getVariables()) {
+				if (variableAux.equals(gc.getInitialSymbol()) ||
+					isVariableForRemovingLeftRecursion(variableAux)) {
+					continue;
+				}
+				if (orderAux > 0) {
+					orderAux--;
+					continue;
+				}
+				newSetOfRules = new HashSet<>();
+				for (Rule element : gc.getRules(variableAux)) {
+					if (element.getFirstVariableOfRightSide() != null &&
+							element.getFirstVariableOfRightSide().equals(variable)) {
+						removalRules.add(element);
+						for (Rule elementAux : gc.getRules(variable)) {
+							newSetOfRules.add(new Rule(element.getLeftSide(),
+									elementAux.getRightSide() +
+											element.getRightSide().substring(variable.length())));
+						}
+					}
+				}
+				newSetOfRules.addAll(gc.rules);
+				newSetOfRules.removeAll(removalRules);
+				gc.rules = newSetOfRules;
+				removalRules.clear();
+			}
+			//END - Propagação - remoção da recursão à esquerda indireta
+			order++;
+			variableOrder.push(variable);
+		}
+		for(int i = 1; i < numberOfVariablesForRemovingLeftRecursing; i++) {
+			gc.insertVariable("R"+String.valueOf(i));
+		}
+		//BEGIN - Propagação volta - remoção da recursão à esquerda indireta
+		String variable;
+		while(variableOrder.peek() != null) {
+			variable = variableOrder.pop();
+			newSetOfRules = new HashSet<>();
+			for (String variableAux : gc.getVariables()) {
+				for (Rule element : gc.getRules(variable)) {
+					if (element.getFirstVariableOfRightSide() != null &&
+							element.getFirstVariableOfRightSide().equals(variableAux)) {
+						removalRules.add(element);
+						for (Rule elementAux : gc.getRules(variableAux)) {
+							newSetOfRules.add(new Rule(element.getLeftSide(),
+									elementAux.getRightSide() +
+											element.getRightSide().substring(variableAux.length())));
+						}
+					}
+				}
+			}
+			newSetOfRules.addAll(gc.rules);
+			newSetOfRules.removeAll(removalRules);
+			gc.rules = newSetOfRules;
+			removalRules.clear();
+		}
+		//END - Propagação volta - remoção da recursão à esquerda indireta
+
+		return gc;
+	}
+
 
 
 	// ALGORITMO DE RECONHECIMENTO CYK
 	public static Set<String>[][] CYK(Grammar g, String word) {
 		// inicializando a tabela
+		g = g.FNC(g, new AcademicSupport());
 		Set<String>[][] X = new TreeSet[word.length() + 1][word.length()];
 		for (int i = 0; i < word.length() + 1; i++) {
 			for (int j = 0; j < word.length(); j++) {

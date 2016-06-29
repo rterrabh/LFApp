@@ -98,5 +98,79 @@ public class Rule {
 	}
 
 
+	public boolean isFNC(String initialSymbol) {
+		if(leftSide.equals(initialSymbol)) {
+			if(rightSide.equals(Grammar.LAMBDA)) {
+				return true;
+			}
+		}
+		if(rightSide.contains(initialSymbol)) {
+			return false;
+		}
+		if(rightSide.length() == 1) {
+			return Character.isLowerCase(rightSide.charAt(0));
+		}
+
+		int indice = 0;
+		if(!Character.isUpperCase(rightSide.charAt(indice++))) {
+				return false;
+		}
+		while(Character.isDigit(rightSide.charAt(indice++)));
+		indice--;
+		if(!Character.isUpperCase(rightSide.charAt(indice++))) {
+			return false;
+		}
+		if(indice == rightSide.length()) {
+			return true;
+		}
+		while(indice != rightSide.length() &&
+				Character.isDigit(rightSide.charAt(indice++)));
+		if(indice == rightSide.length()) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean isFNG(boolean initialSymbol) {
+		if(initialSymbol) {
+			if(rightSide.equals(Grammar.LAMBDA)) {
+				return true;
+			}
+		}
+		if(rightSide.length() == 1) {
+			return Character.isLowerCase(rightSide.charAt(0));
+		}
+		if(Character.isLowerCase(rightSide.charAt(0))) {
+			for(int i = 1; i < rightSide.length(); i++) {
+				if(!(Character.isDigit(rightSide.charAt(i)) ||
+						Character.isUpperCase(rightSide.charAt(i)))) {
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+
+	public boolean existsLeftRecursion() {
+		if(rightSide.startsWith(leftSide)) {
+			return !Character.isDigit(rightSide.charAt(leftSide.length()));
+		}
+		return false;
+	}
+
+	public String getFirstVariableOfRightSide() {
+		if(!Character.isUpperCase(rightSide.charAt(0))) {
+			return null;
+		}
+		int indice = 0;
+		while(indice+1 != rightSide.length() &&
+				Character.isDigit(rightSide.charAt(indice+1))) {
+			indice++;
+		}
+		return rightSide.substring(0, indice+1);
+	}
+
+
 	
 }

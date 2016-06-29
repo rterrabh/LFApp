@@ -1088,13 +1088,20 @@ public class GrammarParser {
         return insert;
     }
 
-
+    public static boolean isFNC(final Grammar gc) {
+        for(Rule rule : gc.getRules()) {
+            if(!rule.isFNC(gc.getInitialSymbol())) {
+                return false;
+            }
+        }
+        return true;
+    }
     /**
      *
      * @param gc : GLC
      * @return : verdadeiro se estiver em FNC e falso caso contrário.
      */
-    public static boolean isFNC(final Grammar gc) {
+    public static boolean isFNC2(final Grammar gc) {
         boolean test = true;
         Iterator<Rule> it = gc.getRules().iterator();
         while (it.hasNext() && test) {
@@ -1678,7 +1685,7 @@ public class GrammarParser {
     }
 
     private static Set<String> checksEquality(Grammar g, String word, String letter) {
-        Set<String> found = new TreeSet<String>();
+        Set<String> found = new TreeSet<>();
         for (Rule element : g.getRules()) {
             if (element.getRightSide().equals(letter)) {
                 found.add(element.getLeftSide());

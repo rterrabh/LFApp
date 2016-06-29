@@ -143,7 +143,6 @@ public class Grammar01Test {
 			int counter = 0;
 			if (!element.getLeftSide().equals(newG.getInitialSymbol()) && element.getRightSide().equals("")) {
 				fng = false;
-				//counter = 1;
 			} else {
 				for (int i = 0; i < element.getRightSide().length() && fng; i++) {
 					if (Character.isLowerCase(element.getRightSide().charAt(i))) {
@@ -157,6 +156,7 @@ public class Grammar01Test {
 		}
 
 		assertEquals(true, fng);
+		assertTrue(newG.isFNG());
 	}
 
 

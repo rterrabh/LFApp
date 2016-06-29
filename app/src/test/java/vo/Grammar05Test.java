@@ -184,6 +184,7 @@ public class Grammar05Test {
 		}
 		
 		assertEquals(true, fng);
+		assertTrue(newG.isFNG());
 	}
 	
 	

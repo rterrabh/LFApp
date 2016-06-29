@@ -203,10 +203,12 @@ public class Grammar04Test {
 		}
 		
 		assertEquals(true, fng);
+		assertTrue(newG.isFNG());
 	}
 	
 	@Test
 	public void testCYK() {
+		g = g.FNC(g, new AcademicSupport());
 		Set<String>[][] matrix = Grammar.CYK(g, "bbabaa");
 		
 		assertNotNull(matrix);
@@ -214,10 +216,9 @@ public class Grammar04Test {
 		assertNotEquals("", matrix[0][0]);
 		
 		Set<String> topVariables = matrix[0][0];
-		
-		assertEquals(0, topVariables.size());
 
-		assertTrue(topVariables.isEmpty());
+
+		assertTrue(topVariables.contains(g.getInitialSymbol()));
 	}
 
 }
