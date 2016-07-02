@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">LFApp_01</string>
 
-    <string name="hello_world"></string>
+    <string name="hello_world"/>
     <string name="action_settings">Settings</string>
     <string name="type">Tipo</string>
     <string name="leftSide">u</string>
@@ -19,4 +19,16 @@
     <string name="gi">Gramática Irrestrita</string>
     <string name="gi_u">u ∈ (V ∪ Σ)+</string>
     <string name="gi_v">v ∈ (V ∪ Σ)*</string>
+    <string name="logo_ufla">Logo UFLA</string>
+    <string name="team">Carlos Pereira\ncarloshpereira27 (at) gmail.com\n\nJuventino Neto\njneto (at) computacao.ufla.br\n\nRicardo Terra\nterra (at) dcc.ufla.br</string>
+    <string-array name="team">
+        <item>Carlos Pereira\n</item>
+        <item>carloshpereira27 (at) gmail.com\n</item>
+        <item>Juventino Neto\n</item>
+        <item>jneto (at) computacao.ufla.br\n</item>
+        <item>Ricardo Terra\n</item>
+        <item>terra (at) dcc.ufla.br</item>
+    </string-array>
+    <string name="lfapp_icon">LFApp Icon</string>
+    <string name="close">Close</string>
 </resources>

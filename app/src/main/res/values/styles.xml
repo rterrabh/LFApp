@@ -9,4 +9,16 @@
         <item name="android:textStyle">italic</item>
     </style>
 
+    <style name="equipe_nomes">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/Black</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="equipe_emails">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/Black</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
 </resources>

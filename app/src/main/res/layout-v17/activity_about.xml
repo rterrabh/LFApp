@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".activities.AboutActivity"
+    android:background="#F0F8FF"
+    android:textAlignment="center"
+    android:gravity="center_horizontal">
+
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageButtonClose"
+        android:src="@drawable/ic_close_black_24dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="false"
+        android:contentDescription="@string/close"
+        android:adjustViewBounds="true"
+        android:onClick="close"
+        android:layout_alignParentEnd="false" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageViewLFAppIcon"
+        android:src="@drawable/lfappicon"
+        android:scaleType="fitXY"
+        android:contentDescription="@string/lfapp_icon"
+        android:maxHeight="192dp"
+        android:maxWidth="192dp"
+        android:adjustViewBounds="true"
+        android:longClickable="false"
+        android:layout_alignTop="@+id/imageButtonClose"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/team"
+        android:id="@+id/textViewTeam"
+        android:textColor="@color/Black"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentTop="false"
+        android:layout_alignParentLeft="true"
+        android:focusable="false"
+        android:textIsSelectable="false"
+        android:layout_above="@+id/imageViewLogoUfla"
+        android:layout_below="@+id/imageViewLFAppIcon"
+        android:layout_alignWithParentIfMissing="false"
+        android:layout_alignParentBottom="false"
+        android:gravity="center"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageViewLogoUfla"
+        android:src="@drawable/logo_ufla"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:contentDescription="@string/logo_ufla"
+        android:layout_alignWithParentIfMissing="false"
+        android:maxHeight="192dp"
+        android:maxWidth="192dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignLeft="@+id/imageViewLFAppIcon"
+        android:layout_alignStart="@+id/imageViewLFAppIcon" />
+
+
+</RelativeLayout>

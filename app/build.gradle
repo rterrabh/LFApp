@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.3"
 
     defaultConfig {
-        applicationId "com.lfapp.lfapp_01"
+        applicationId "com.ufla.lfapp"
         minSdkVersion 15
         targetSdkVersion 23
         versionCode 3
@@ -16,6 +16,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            debuggable true
+        }
     }
 }
 
@@ -24,4 +27,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     //compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.0'
     compile 'com.android.support:appcompat-v7:23.4.0'
+    compile 'com.google.android.gms:play-services-appindexing:8.1.0'
 }
