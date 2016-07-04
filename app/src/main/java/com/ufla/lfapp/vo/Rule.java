@@ -7,10 +7,13 @@ public class Rule {
 	private String rightSide;
 	
 	//builder
-	public Rule() {}
+	public Rule() {
+		this("", "");
+	}
 	
 	
 	public Rule(String left, String right) {
+		super();
 		this.leftSide = left;
 		this.rightSide = right;
 	}
@@ -20,8 +23,7 @@ public class Rule {
 	//accessors
 
 	public Rule(Rule r) {
-		this.leftSide = r.getLeftSide();
-		this.rightSide = r.getRightSide();
+		this(r.getLeftSide(), r.getRightSide());
 	}
 
 	public String getLeftSide() {
@@ -113,8 +115,9 @@ public class Rule {
 		if(!Character.isUpperCase(rightSide.charAt(indice++))) {
 				return false;
 		}
-		while(Character.isDigit(rightSide.charAt(indice++)));
-		indice--;
+		while(Character.isDigit(rightSide.charAt(indice))) {
+			indice++;
+		}
 		if(!Character.isUpperCase(rightSide.charAt(indice++))) {
 			return false;
 		}
@@ -122,11 +125,10 @@ public class Rule {
 			return true;
 		}
 		while(indice != rightSide.length() &&
-				Character.isDigit(rightSide.charAt(indice++)));
-		if(indice == rightSide.length()) {
-			return true;
+				Character.isDigit(rightSide.charAt(indice))) {
+			indice++;
 		}
-		return false;
+		return indice == rightSide.length();
 	}
 
 	public boolean isFNG(boolean initialSymbol) {
@@ -151,10 +153,8 @@ public class Rule {
 	}
 
 	public boolean existsLeftRecursion() {
-		if(rightSide.startsWith(leftSide)) {
-			return !Character.isDigit(rightSide.charAt(leftSide.length()));
-		}
-		return false;
+		return rightSide.startsWith(leftSide) &&
+				!Character.isDigit(rightSide.charAt(leftSide.length()));
 	}
 
 	public String getFirstVariableOfRightSide() {

@@ -24,7 +24,6 @@ public class CloneTest {
 		this.g = new Grammar(variables, terminals, initialSymbol, rules);
 	}
 
-
 	@Test
 	public void testClone() throws CloneNotSupportedException {
 		Grammar gc = (Grammar) this.g.clone();

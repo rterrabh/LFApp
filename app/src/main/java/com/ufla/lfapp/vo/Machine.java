@@ -12,14 +12,13 @@ public abstract class Machine {
 	
 	
 	public Machine() {
-		super();
-		this.states = new HashSet<String>();
-		this.alphabet = new HashSet<String>();
-		this.initialState = new String();
-		this.finalStates = new HashSet<String>();
+		this(new HashSet<String>(), new HashSet<String>(),
+				"", new HashSet<String>());
 	}
-	
-	public Machine(Set<String> states, Set<String> alphabet, String initialState, Set<String> finalStates) {
+
+	//Construtor base
+	public Machine(Set<String> states, Set<String> alphabet,
+				   String initialState, Set<String> finalStates) {
 		super();
 		this.states = states;
 		this.alphabet = alphabet;

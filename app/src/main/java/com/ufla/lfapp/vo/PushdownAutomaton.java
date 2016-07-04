@@ -11,22 +11,23 @@ public class PushdownAutomaton extends Machine {
 
 
 	public PushdownAutomaton() {
-		super();
-		this.stackAlphabet = new HashSet<String>();
-		this.transitionFunction = new HashSet<TransitionFunctionPA>();
+		this(new HashSet<String>(), new HashSet<String>(), "", new HashSet<String>(),
+				new HashSet<String>(), new HashSet<TransitionFunctionPA>());
 	}
 
-
-	public PushdownAutomaton(Set<String> states, Set<String> alphabet, String initialState, Set<String> finalStates, Set<String> stackAlphabet, Set<TransitionFunctionPA> transitionFunction) {
+	//Construtor base
+	public PushdownAutomaton(Set<String> states, Set<String> alphabet, String initialState,
+							 Set<String> finalStates, Set<String> stackAlphabet,
+							 Set<TransitionFunctionPA> transitionFunction) {
 		super(states, alphabet, initialState, finalStates);
 		this.stackAlphabet = stackAlphabet;
 		this.transitionFunction = transitionFunction;
 	}
 
 	public PushdownAutomaton(PushdownAutomaton automaton) {
-		super(automaton.getStates(), automaton.getAlphabet(), automaton.getInitialState(), automaton.getFinalStates());
-		this.stackAlphabet = automaton.getStackAlphabet();
-		this.transitionFunction = automaton.getTransictionFunction();
+		this(automaton.getStates(), automaton.getAlphabet(),
+				automaton.getInitialState(), automaton.getFinalStates(),
+				automaton.getStackAlphabet(), automaton.getTransictionFunction());
 	}
 
 	public Set<String> getStackAlphabet() {

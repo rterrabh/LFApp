@@ -13,7 +13,7 @@ public class Grammar04Test {
 	
 	/* Grammar:
 	 S -> aS | ABC
-	 A -> BB | .
+	 A -> BB | λ
 	 B -> CC | a
 	 C -> AA | b
 	 */
@@ -163,7 +163,7 @@ public class Grammar04Test {
 		String[] expectedTerminals = new String[] {"a", "b"};
 		String expectedInitialSymbol = "S'";
 		String[] expectedRules = new String[] {
-				"S' -> . | AA | AB | AT1 | AC | BB | BC | CC | a | T3S | b",
+				"S' -> λ | AA | AB | AT1 | AC | BB | BC | CC | a | T3S | b",
 				"S -> AA | AB | AT1 | AC | BB | BC | CC | a | T3S | b",
 				"A -> a | b | AA | CC | BB",
 				"B -> AA | BB | CC | a | b",

@@ -3,6 +3,7 @@ package com.ufla.lfapp.vo;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.HashSet;
@@ -19,28 +20,23 @@ public class AcademicSupport {
     private String solutionDescription;
     private Set<Rule> insertedRules;
     private Set<Rule> irregularRules;
-    private ArrayList<Set<String>> firstSet;
-    private ArrayList<Set<String>> secondSet;
-    private ArrayList<Set<String>> thirdSet;
+    private List<Set<String>> firstSet;
+    private List<Set<String>> secondSet;
+    private List<Set<String>> thirdSet;
     private Grammar grammar;
 
 
     public AcademicSupport() {
-        this.comments = new String();
-        this.situation = false;
-        this.foundProblems = new HashMap<>();
-        this.result = new String();
-        this.solutionDescription = new String();
-        this.insertedRules = new HashSet<>();
-        this.irregularRules = new HashSet<>();
-        this.firstSet = new ArrayList<>();
-        this.secondSet = new ArrayList<>();
-        this.thirdSet = new ArrayList<>();
-        this.grammar = new Grammar();
+        this("", false, new HashMap<Integer, String>(), "", "", new HashSet<Rule>(),
+                new HashSet<Rule>(), new ArrayList<Set<String>>(), new ArrayList<Set<String>>(),
+                new ArrayList<Set<String>>(), new Grammar());
     }
 
-    public AcademicSupport(String comments, boolean situation, HashMap foundProblems, Grammar g, String solutionDescription, Set<Rule> insertedRules, Set<Rule> irregularRules,
-                            ArrayList<Set<String>> firtSet, ArrayList<Set<String>> secondSet, ArrayList<Set<String>> thirdSet, Grammar grammar) {
+    public AcademicSupport(String comments, boolean situation, Map<Integer, String> foundProblems,
+                           Grammar g, String solutionDescription, Set<Rule> insertedRules,
+                           Set<Rule> irregularRules, List<Set<String>> firtSet,
+                           List<Set<String>> secondSet, List<Set<String>> thirdSet,
+                           Grammar grammar) {
         this.comments = comments;
         this.situation = situation;
         this.foundProblems = foundProblems;
@@ -52,6 +48,27 @@ public class AcademicSupport {
         this.secondSet = secondSet;
         this.thirdSet = thirdSet;
         this.grammar = grammar;
+    }
+
+    //Construtor base
+    public AcademicSupport(String comments, boolean situation, Map<Integer, String> foundProblems,
+                           String result, String solutionDescription, Set<Rule> insertedRules,
+                           Set<Rule> irregularRules, List<Set<String>> firtSet,
+                           List<Set<String>> secondSet, List<Set<String>> thirdSet,
+                           Grammar grammar) {
+        super();
+        this.comments = comments;
+        this.situation = situation;
+        this.foundProblems = foundProblems;
+        this.result = result;
+        this.solutionDescription = solutionDescription;
+        this.insertedRules = insertedRules;
+        this.irregularRules = irregularRules;
+        this.firstSet = firtSet;
+        this.secondSet = secondSet;
+        this.thirdSet = thirdSet;
+        this.grammar = grammar;
+
     }
 
     public String getComments() {
@@ -115,33 +132,29 @@ public class AcademicSupport {
         ArrayList<String> listOfVariables = new ArrayList<>(g.getVariables());
         Collections.sort(listOfVariables);
         StringBuilder txtGrammar = new StringBuilder(g.getInitialSymbol() + " ->");
-        for (Rule element : g.getRules()) {
-            if (element.getLeftSide().equals(g.getInitialSymbol())) {
-                txtGrammar.append(" " + putSentenceOnSubstring(element.getRightSide()) + " |");
-            }
+        for (Rule element : g.getRules(g.getInitialSymbol())) {
+            txtGrammar.append(" ").append(putSentenceOnSubstring(element.getRightSide()))
+                    .append(" |");
         }
         txtGrammar.deleteCharAt(txtGrammar.length() - 1);
         txtGrammar.append("<br>");
-        for (int i = 0; i < listOfVariables.size(); i++) {
-            for (String variable : g.getVariables()) {
-                if (!variable.equals(g.getInitialSymbol()) && listOfVariables.get(i).equals(variable)) {
-                    if (variable.length() > 1) {
-                        txtGrammar.append(variable.substring(0, 1));
-                        txtGrammar.append("<sub>" + variable.substring(1) + "</sub>");
-                    } else {
-                        txtGrammar.append(variable);
-                    }
-                    txtGrammar.append(" ->");
-                    for (Rule element : g.getRules()) {
-                        if (variable.equals(element.getLeftSide())) {
-                            txtGrammar.append(" " + putSentenceOnSubstring(element.getRightSide()));
-                            txtGrammar.append(" |");
-                        }
-                    }
-                    txtGrammar.deleteCharAt(txtGrammar.length() - 1);
-                    txtGrammar.append("<br>");
-                }
+        for (String variable : listOfVariables) {
+            if (variable.equals(g.getInitialSymbol())) {
+                continue;
             }
+            if (variable.length() > 1) {
+                txtGrammar.append(variable.charAt(0));
+                txtGrammar.append("<sub>").append(variable.substring(1)).append("</sub>");
+            } else {
+                txtGrammar.append(variable);
+            }
+            txtGrammar.append(" ->");
+            for (Rule element : g.getRules(variable)) {
+                    txtGrammar.append(" ").append(putSentenceOnSubstring(element.getRightSide()));
+                    txtGrammar.append(" |");
+            }
+            txtGrammar.deleteCharAt(txtGrammar.length() - 1);
+            txtGrammar.append("<br>");
         }
         return txtGrammar.toString();
     }
@@ -151,12 +164,12 @@ public class AcademicSupport {
         boolean isDigit = false;
         for (int i = 0; i < element.length(); i++) {
             if (Character.isDigit(element.charAt(i)) && !isDigit) {
-                newSentence.append("<sub>" + element.charAt(i));
+                newSentence.append("<sub>").append(element.charAt(i));
                 isDigit = true;
             } else if (Character.isDigit(element.charAt(i)) && isDigit) {
                 newSentence.append(element.charAt(i));
             } else if (!Character.isDigit(element.charAt(i)) && isDigit) {
-                newSentence.append("</sub>" + element.charAt(i));
+                newSentence.append("</sub>").append(element.charAt(i));
                 isDigit = false;
             } else {
                 newSentence.append(element.charAt(i));
@@ -184,28 +197,28 @@ public class AcademicSupport {
         this.irregularRules = irregularRules;
     }
 
-    public ArrayList<Set<String>> getFirstSet() {
+    public List<Set<String>> getFirstSet() {
         return firstSet;
     }
 
-    public void setFirstSet(ArrayList<Set<String>> firstSet) {
+    public void setFirstSet(List<Set<String>> firstSet) {
         this.firstSet = firstSet;
     }
 
-    public ArrayList<Set<String>> getSecondSet() {
+    public List<Set<String>> getSecondSet() {
         return secondSet;
     }
 
-    public void setSecondSet(ArrayList<Set<String>> secondSet) {
+    public void setSecondSet(List<Set<String>> secondSet) {
         this.secondSet = secondSet;
     }
 
 
-    public ArrayList<Set<String>> getThirdSet() {
+    public List<Set<String>> getThirdSet() {
         return thirdSet;
     }
 
-    public void setThirdSet(ArrayList<Set<String>> thirdSet) {
+    public void setThirdSet(List<Set<String>> thirdSet) {
         this.thirdSet = thirdSet;
     }
 
@@ -249,19 +262,16 @@ public class AcademicSupport {
             aux.addAll(currentSet);
             thirdSet.add(aux);
         }
-        String teste = thirdSet.toString();
     }
 
-    private boolean verifySet(ArrayList<Set<String>> setOfVariables, Set<String> currentSet) {
-        boolean aux = false;
-        if (setOfVariables.size() != 0) {
-            for (int i = 0; i < setOfVariables.size() && !false; i++) {
+    private boolean verifySet(List<Set<String>> setOfVariables, Set<String> currentSet) {
+        /*if (setOfVariables.size() != 0) {
+            for (int i = 0; i < setOfVariables.size(); i++) {
                 Set<String> auxSet = setOfVariables.get(setOfVariables.size() - 1);
                 if (auxSet.equals(currentSet)) {
-                    aux = true;
                 }
             }
-        }
+        }*/
         return false;
     }
 }

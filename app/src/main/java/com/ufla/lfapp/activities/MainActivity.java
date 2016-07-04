@@ -8,9 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 
 import com.ufla.lfapp.R;
 import com.ufla.lfapp.vo.GrammarParser;
@@ -18,13 +16,8 @@ import com.ufla.lfapp.vo.GrammarParser;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button button_OK, button_Lambda, button_Pipe, button_Arrow;
-    private ImageButton buttonAbout;
     private EditText inputGrammar, inputWord;
-    private String txtGrammar, word;
-    private AlertDialog alert;
-
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,116 +29,86 @@ public class MainActivity extends AppCompatActivity {
         //configura EditText InputWord
         this.inputWord = (EditText) findViewById(R.id.inputWord);
 
-
         Intent intent = getIntent();
         if (intent != null) {
-            Bundle data = new Bundle();
-            data = intent.getExtras();
+            Bundle data = intent.getExtras();
             if (data != null) {
-                String returnGrammar = data.get("grammar").toString();
-                this.inputGrammar.setText(returnGrammar);
+                this.inputGrammar.setText(data.get("grammar").toString());
             }
         }
 
+    }
 
-        //configura botão ->
-        this.button_Arrow = (Button) findViewById(R.id.button_Arrow);
-        button_Arrow.setOnClickListener(new View.OnClickListener() {
-            @Override
-        public void onClick(View v) {
-                String contentEditingArea = inputGrammar.getText().toString();
-                String arrow = " -> ";
-                inputGrammar.setText(contentEditingArea + arrow);
-                inputGrammar.setSelection(inputGrammar.getText().length());
-            }
-        });
+    public void insertLambda(View view) {
+        int selection = inputGrammar.getSelectionStart();
+        inputGrammar.setText(inputGrammar.getText()
+                .insert(selection, " λ"));
+        inputGrammar.setSelection(selection+2);
+    }
 
-        //configura botão |
-        this.button_Pipe = (Button) findViewById(R.id.button_Pipe);
-        this.button_Pipe.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String contentEditingArea = inputGrammar.getText().toString();
-                String arrow = " | ";
-                inputGrammar.setText(contentEditingArea + arrow);
-                inputGrammar.setSelection(inputGrammar.getText().length());
-            }
-        });
+    public void insertArrow(View view) {
+        int selection = inputGrammar.getSelectionStart();
+        inputGrammar.setText(inputGrammar.getText()
+                .insert(selection, " -> "));
+        inputGrammar.setSelection(selection+4);
+    }
 
-        //configura botão .
-        this.button_Lambda = (Button) findViewById(R.id.button_Lambda);
-        this.button_Lambda.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String contentEditingArea = inputGrammar.getText().toString();
-                String arrow = " λ";
-                inputGrammar.setText(contentEditingArea + arrow);
-                inputGrammar.setSelection(inputGrammar.getText().length());
-            }
-        });
+    public void insertPipe(View view) {
+        int selection = inputGrammar.getSelectionStart();
+        inputGrammar.setText(inputGrammar.getText()
+                .insert(selection, " | "));
+        inputGrammar.setSelection(selection+3);
+    }
 
-        //configura botão info
-        this.buttonAbout = (ImageButton) findViewById(R.id.button_About);
-        buttonAbout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AboutActivity.class);
-                MainActivity.this.startActivity(intent);
-                MainActivity.this.finish();
-            }
-        });
-
-        //configura  botão OK
-        this.button_OK = (Button) findViewById(R.id.button_OK);
-        button_OK.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                txtGrammar = inputGrammar.getText().toString();
-                word = inputWord.getText().toString();
-                Intent TrocaTela = new Intent(MainActivity.this, MainActivity2.class);
-                if (!txtGrammar.isEmpty()) {
-                    StringBuilder reason = new StringBuilder();
-                    if (GrammarParser.verifyInputGrammar(txtGrammar)) {
-                        if (GrammarParser.inputValidate(txtGrammar, reason)) {
-                            Bundle params = new Bundle();
-                            params.putString("grammar", txtGrammar);
-                            params.putString("word", word);
-                            TrocaTela.putExtras(params);
-                            MainActivity.this.startActivity(TrocaTela);
-                            MainActivity.this.finish();
-                        } else {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                            builder.setTitle("Aviso");
-                            builder.setMessage(reason);
-                            builder.setNegativeButton("OK",
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            //dialog.cancel();
-                                        }
-                                    });
-                            alert = builder.create();
-                            alert.show();
-                        }
-                    } else {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                        builder.setTitle("Aviso");
-                        builder.setMessage("Gramática inválida.");
-                        builder.setNegativeButton("OK",
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        //dialog.cancel();
-                                    }
-                                });
-                        alert = builder.create();
-                        alert.show();
-                    }
-
+    public void confirmGrammar(View view) {
+        String txtGrammar = inputGrammar.getText().toString();
+        String word = inputWord.getText().toString();
+        if (!txtGrammar.isEmpty()) {
+            StringBuilder reason = new StringBuilder();
+            AlertDialog alert;
+            if (GrammarParser.verifyInputGrammar(txtGrammar)) {
+                if (GrammarParser.inputValidate(txtGrammar, reason)) {
+                    Bundle params = new Bundle();
+                    params.putString("grammar", txtGrammar);
+                    params.putString("word", word);
+                    Intent intent = new Intent(this, OutActivity.class);
+                    intent.putExtras(params);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle("Aviso");
+                    builder.setMessage(reason);
+                    builder.setNegativeButton("OK",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+                    alert = builder.create();
+                    alert.show();
                 }
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Aviso");
+                builder.setMessage("Gramática inválida.");
+                builder.setNegativeButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                alert = builder.create();
+                alert.show();
             }
-        });
+        }
+    }
 
+    public void startAboutActivity(View view) {
+        Intent intent = new Intent(this, AboutActivity.class);
+        startActivity(intent);
     }
 
     @Override

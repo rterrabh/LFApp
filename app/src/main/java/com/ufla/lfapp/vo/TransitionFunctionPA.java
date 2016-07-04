@@ -7,19 +7,20 @@ public class TransitionFunctionPA extends TransitionFunction {
 	
 	
 	public TransitionFunctionPA() {
-		super();
+		this("", "", "", "", "");
 	}
 	
-	public TransitionFunctionPA(String currentState, String symbol,	String futureState, String stacking, String pops) {
+	public TransitionFunctionPA(String currentState, String symbol,	String futureState,
+								String stacking, String pops) {
 		super(currentState, symbol, futureState);
 		this.stacking = stacking;
 		this.pops = pops;
 	}
 	
 	public TransitionFunctionPA(TransitionFunctionPA transitionFunctionPA) {
-		super(transitionFunctionPA);
-		this.stacking = transitionFunctionPA.getStacking();
-		this.pops = transitionFunctionPA.getPops();
+		this(transitionFunctionPA.getCurrentState(), transitionFunctionPA.getSymbol(),
+				transitionFunctionPA.getFutureState(), transitionFunctionPA.getStacking(),
+				transitionFunctionPA.getPops());
 	}	
 
 	public String getStacking() {

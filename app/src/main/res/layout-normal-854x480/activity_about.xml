@@ -8,10 +8,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".activities.AboutActivity"
-    android:background="#F0F8FF"
-    android:textAlignment="center"
-    android:gravity="center_horizontal">
-
+    android:gravity="top|left">
 
     <ImageButton
         android:layout_width="wrap_content"
@@ -20,24 +17,21 @@
         android:src="@drawable/ic_close_black_24dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="false"
+        android:layout_alignParentStart="true"
         android:contentDescription="@string/close"
         android:adjustViewBounds="true"
-        android:onClick="close"
-        android:layout_alignParentEnd="false" />
+        android:onClick="close" />
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
         android:id="@+id/imageViewLFAppIcon"
         android:src="@drawable/lfappicon"
+        android:adjustViewBounds="false"
         android:scaleType="fitXY"
         android:contentDescription="@string/lfapp_icon"
-        android:maxHeight="192dp"
-        android:maxWidth="192dp"
-        android:adjustViewBounds="true"
-        android:longClickable="false"
-        android:layout_alignTop="@+id/imageButtonClose"
+        android:foregroundGravity="center"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
     <TextView
@@ -47,33 +41,30 @@
         android:text="@string/team"
         android:id="@+id/textViewTeam"
         android:textColor="@color/Black"
+        android:layout_alignParentEnd="false"
         android:layout_alignParentStart="false"
         android:layout_alignParentTop="false"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
         android:focusable="false"
         android:textIsSelectable="false"
         android:layout_above="@+id/imageViewLogoUfla"
+        android:gravity="fill_vertical|center_horizontal"
+        android:longClickable="false"
         android:layout_below="@+id/imageViewLFAppIcon"
-        android:layout_alignWithParentIfMissing="false"
-        android:layout_alignParentBottom="false"
-        android:gravity="center"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_marginBottom="10dp" />
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="140dp"
+        android:layout_height="57dp"
         android:id="@+id/imageViewLogoUfla"
         android:src="@drawable/logo_ufla"
-        android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
+        android:adjustViewBounds="false"
+        android:scaleType="fitXY"
         android:contentDescription="@string/logo_ufla"
-        android:layout_alignWithParentIfMissing="false"
-        android:maxHeight="192dp"
-        android:maxWidth="192dp"
+        android:longClickable="false"
         android:layout_alignParentBottom="true"
-        android:layout_alignLeft="@+id/imageViewLFAppIcon"
-        android:layout_alignStart="@+id/imageViewLFAppIcon" />
+        android:layout_centerHorizontal="true" />
 
 
 </RelativeLayout>

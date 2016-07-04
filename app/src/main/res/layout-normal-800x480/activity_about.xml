@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,8 +9,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".activities.AboutActivity"
     android:gravity="top|left">
-
-    <!--<item android:id="@+id/action_settings"/>-->
 
     <ImageButton
         android:layout_width="wrap_content"
@@ -26,8 +23,8 @@
         android:onClick="close" />
 
     <ImageView
-        android:layout_width="192dp"
-        android:layout_height="192dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:id="@+id/imageViewLFAppIcon"
         android:src="@drawable/lfappicon"
         android:adjustViewBounds="false"
@@ -54,12 +51,11 @@
         android:layout_above="@+id/imageViewLogoUfla"
         android:gravity="fill_vertical|center_horizontal"
         android:longClickable="false"
-        android:layout_below="@+id/imageViewLFAppIcon"
         android:layout_marginBottom="10dp" />
 
     <ImageView
-        android:layout_width="192dp"
-        android:layout_height="72dp"
+        android:layout_width="150dp"
+        android:layout_height="61dp"
         android:id="@+id/imageViewLogoUfla"
         android:src="@drawable/logo_ufla"
         android:adjustViewBounds="false"
@@ -68,5 +64,6 @@
         android:longClickable="false"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
+
 
 </RelativeLayout>

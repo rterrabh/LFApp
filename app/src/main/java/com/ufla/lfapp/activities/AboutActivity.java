@@ -4,10 +4,10 @@ import android.content.Intent;
 import android.support.v4.view.GestureDetectorCompat;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.StyleSpan;
+import android.text.Html;
 import android.view.GestureDetector;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -23,7 +23,7 @@ public class AboutActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
-        //setTextViewTeam();
+        setTextViewTeamByHtml();
         mDetector = new GestureDetectorCompat(this, new MyGestureListener());
 
     }
@@ -34,13 +34,14 @@ public class AboutActivity extends AppCompatActivity {
         if(back) {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
+            finish();
         }
         return super.onTouchEvent(event);
     }
 
     /**
      * Retorna para a activity principal
-     * @param : view a view da 
+     * @param view view do botão close
      */
     public void close(View view) {
         Intent intent = new Intent(this, MainActivity.class);
@@ -48,36 +49,37 @@ public class AboutActivity extends AppCompatActivity {
         finish();
     }
 
-    /**
-     * Define a formatação do texto com os nomes dos resonsáveis pelo aplicativo.
-     */
-    private void setTextViewTeam() {
-        TextView textViewTeam = (TextView) findViewById(R.id.textViewTeam);
-        if(textViewTeam != null) {
-            String[] lines = getResources().getStringArray(R.array.team);
-            StringBuilder sbTeam = new StringBuilder();
-            for (int i = 0; i < lines.length; i++) {
-                sbTeam.append(lines[i]);
-                if (i % 2 == 1 && i < lines.length-1) {
-                    sbTeam.append("\n");
-                }
-            }
-            SpannableString styledText = new SpannableString(sbTeam);
-            int indice = 0;
-            for (int i = 0; i < lines.length; i++) {
-                if (i % 2 == 0) {
-                    styledText.setSpan(new StyleSpan(R.style.equipe_nomes), indice,
-                            indice + lines[i].length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-                } else {
-                    styledText.setSpan(new StyleSpan(R.style.equipe_emails), indice,
-                            indice + lines[i].length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-                    indice++;
-                }
-                indice += lines[i].length();
-            }
-            textViewTeam.setText(styledText, TextView.BufferType.SPANNABLE);
-        }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Define a formatação do texto com os nomes dos responsáveis pelo aplicativo.
+     */
+    private void setTextViewTeamByHtml() {
+        TextView textViewTeam = (TextView) findViewById(R.id.textViewTeam);
+        assert textViewTeam != null;
+        textViewTeam.setText(Html.fromHtml(getResources().getString(R.string.team_html)));
+    }
+
 
     /**
      * Classe que identifica movimento na tela.

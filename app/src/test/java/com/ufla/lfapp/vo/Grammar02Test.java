@@ -22,7 +22,7 @@ public class Grammar02Test {
 	@Before
 	public void setUp() {
 		String[] variables = new String[] {"S", "A", "B", "C"};
-		String[] terminals = new String[] {"a", "b", "c", "λ"};
+		String[] terminals = new String[] {"a", "b", "c"};
 		String initialSymbol = "S";
 		String[] rules = new String[] {
 				"S -> aS | AB | AC",
@@ -40,7 +40,7 @@ public class Grammar02Test {
 		Grammar newG = g.getGrammarWithInitialSymbolNotRecursive(this.g, new AcademicSupport());
 		
 		String[] expectedVariables = new String[] {"S'", "S", "A", "B", "C"};
-		String[] expectedTerminals = new String[] {"a", "b", "c", "λ"};
+		String[] expectedTerminals = new String[] {"a", "b", "c"};
 		String expectedInitialSymbol = "S'";
 		String[] expectedRules = new String[] {
 				"S' -> S",
@@ -66,7 +66,7 @@ public class Grammar02Test {
 		Grammar newG = g.getGrammarEssentiallyNoncontracting(this.g, new AcademicSupport());
 		
 		String[] expectedVariables = new String[] {"S", "A", "B", "C"};
-		String[] expectedTerminals = new String[] {"a", "b", "c", "λ"};
+		String[] expectedTerminals = new String[] {"a", "b", "c"};
 		String expectedInitialSymbol = "S";
 		String[] expectedRules = new String[] {
 				"S -> aS | AB | AC | a | B | A | C | λ",
@@ -90,7 +90,7 @@ public class Grammar02Test {
 		Grammar newG = g.getGrammarWithoutChainRules(this.g, new AcademicSupport());
 		
 		String[] expectedVariables = new String[] {"S", "A", "B", "C"};
-		String[] expectedTerminals = new String[] {"a", "b", "c", "λ"};
+		String[] expectedTerminals = new String[] {"a", "b", "c"};
 		String expectedInitialSymbol = "S";
 		String[] expectedRules = new String[] {
 				"S -> aS | AB | AC",
@@ -114,7 +114,7 @@ public class Grammar02Test {
 		Grammar newG = g.getGrammarWithoutNoTerm(this.g, new AcademicSupport());
 		
 		String[] expectedVariables = new String[] {"S", "A", "B", "C"};
-		String[] expectedTerminals = new String[] {"a", "b", "c", "λ"};
+		String[] expectedTerminals = new String[] {"a", "b", "c"};
 		String expectedInitialSymbol = "S";
 		String[] expectedRules = new String[] {
 				"S -> aS | AB | AC",
@@ -138,7 +138,7 @@ public class Grammar02Test {
 		Grammar newG = g.getGrammarWithoutNoReach(this.g, new AcademicSupport());
 		
 		String[] expectedVariables = new String[] {"S", "A", "B", "C"};
-		String[] expectedTerminals = new String[] {"a", "b", "c", "λ"};
+		String[] expectedTerminals = new String[] {"a", "b", "c"};
 		String expectedInitialSymbol = "S";
 		String[] expectedRules = new String[] {
 				"S -> aS | AB | AC",
@@ -162,7 +162,7 @@ public class Grammar02Test {
 		Grammar newG = g.FNC(this.g, new AcademicSupport());
 		
 		String[] expectedVariables = new String[] {"S'", "S", "A", "B", "C", "T1", "T2", "T3"};
-		String[] expectedTerminals = new String[] {"a", "b", "c", "λ"};
+		String[] expectedTerminals = new String[] {"a", "b", "c"};
 		String expectedInitialSymbol = "S'";
 		String[] expectedRules = new String[] {
 				"S'-> T3B | T1S | T1A | c | T2C | AC | AB | . | b | a",
@@ -210,16 +210,16 @@ public class Grammar02Test {
 	
 	@Test
 	public void testCYK() {
-		g = g.FNC(g, new AcademicSupport());
-		Set<String>[][] matrix = Grammar.CYK(g, "bbb");
-		
+		Grammar newG = g.FNC(g, new AcademicSupport());
+		Set<String>[][] matrix = Grammar.CYK(newG, "bbb");
+
 		assertNotNull(matrix);
 		assertNotNull(matrix[0][0]);
 		assertNotEquals("", matrix[0][0]);
 		
 		Set<String> topVariables = matrix[0][0];
 
-		assertTrue(topVariables.contains(g.getInitialSymbol()));
+		assertTrue(topVariables.contains(newG. getInitialSymbol()));
 	}
 
 }

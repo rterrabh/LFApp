@@ -1,4 +1,5 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -9,8 +10,7 @@
     tools:context=".activities.MainActivity"
     android:id="@+id/mainLayout"
     android:background="#F0F8FF"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -21,32 +21,27 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Gramática: "
-            android:id="@+id/titleGrammar"
-            android:layout_below="@+id/textView"/>
+            android:text="@string/gramatica"
+            android:id="@+id/titleGrammar" />
 
         <EditText
             android:layout_width="fill_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:id="@+id/InputGrammar"
             android:layout_weight="1"
-            android:layout_alignParentBottom="true"
-            />
+            android:inputType="" />
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Palavra (para CYK e derivação): "
-            android:id="@+id/titleWord"
-            android:layout_below="@+id/inputGrammar" />
+            android:text="@string/palavra_para_cyk_e_deriva_o"
+            android:id="@+id/titleWord" />
 
         <EditText
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/inputWord"
-            android:layout_below="@+id/titleWord"/>
-
-
+            android:inputType="" />
 
     </LinearLayout>
 
@@ -62,50 +57,53 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="λ"
+            android:text="@string/lambda"
             android:layout_weight="1"
             android:id="@+id/button_Lambda"
             android:textAllCaps="false"
-            android:background="@color/DarkGray"/>
+            android:background="@color/DarkGray"
+            android:onClick="insertLambda"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="->"
+            android:text="@string/arrow"
             android:layout_weight="1"
             android:id="@+id/button_Arrow"
             android:background="@color/DarkGray"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="10dp"
+            android:onClick="insertArrow"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="|"
+            android:text="@string/pipe"
             android:layout_weight="1"
             android:id="@+id/button_Pipe"
             android:background="@color/DarkGray"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="10dp"
+            android:onClick="insertPipe"/>
 
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="OK"
+            android:text="@string/ok"
             android:id="@+id/button_OK"
-            android:layout_below="@+id/inputWord"
             android:background="@color/DarkGray"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="10dp"
+            android:onClick="confirmGrammar"/>
 
         <ImageButton
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:id="@+id/button_About"
             android:src="@drawable/ic_info_outline_black_24dp"
-            android:layout_below="@+id/inputWord"
             android:background="@color/DarkGray"
             android:layout_marginTop="10dp"
-            android:layout_weight="6" />
-
+            android:layout_weight="6"
+            android:onClick="startAboutActivity"
+            android:contentDescription="@string/about_button" />
 
     </LinearLayout>
 

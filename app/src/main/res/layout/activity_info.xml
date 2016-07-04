@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent" android:layout_height="match_parent">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent">
 
     <ScrollView
         android:layout_width="fill_parent"
@@ -14,19 +16,19 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="LFApp:"
+                android:text="@string/lfapp"
                 android:textStyle="bold"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20px"
-                android:text="O LFApp é um aplicativo móvel para auxiliar o ensino e aprendizagem de LFA. "/>
+                android:text="@string/o_lfapp_um_aplicativo_m_vel_para_auxiliar_o_ensino_e_aprendizagem_de_lfa"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Gramática:"
+                android:text="@string/gram_tica"
                 android:layout_marginTop="20px"
                 android:textStyle="bold"/>
 
@@ -34,29 +36,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20px"
-                android:text="O usuário deve inserir uma gramática com as seguintes configurações:
-                - Deve iniciar com uma letra maiúscula
-                - O primeiro símbolo será o símbolo inicial
-                - Letras maiúsculas são consideradas variáveis
-                - Letras minúsculas são consideradas terminais"/>
+                android:text="@string/o_usu_rio_deve_inserir_uma_gram_tica_com_as_seguintes_configura_es_deve_iniciar_com_uma_letra_mai_scula_o_primeiro_s_mbolo_ser_o_s_mbolo_inicial_letras_mai_sculas_s_o_consideradas_vari_veis_letras_min_sculas_s_o_consideradas_terminais"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="400px"
                 android:textStyle="italic"
-                android:text="Desenvolvido por Juventino Neto sob orientação de Ricardo Terra. "/>
+                android:text="@string/desenvolvido_por_juventino_neto_sob_orienta_o_de_ricardo_terra"/>
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Voltar"
+                android:text="@string/voltar"
                 android:id="@+id/button_voltar"
                 android:layout_gravity="center" />
-
 
         </LinearLayout>
 
     </ScrollView>
-
 
 </RelativeLayout>

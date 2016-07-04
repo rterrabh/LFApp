@@ -2,6 +2,7 @@ package com.ufla.lfapp.vo;
 
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
 import java.util.Set;
 
 import org.junit.*;
@@ -15,7 +16,7 @@ public class Grammar11Test {
     S -> U | V | S
     U -> XaU | XaX | UaX
     V -> XbV | XbX | VbX
-    X -> aXbX | bXaX | . | A
+    X -> aXbX | bXaX | λ | A
     A -> aA | B
     B -> bB | A
     C -> CD | a
@@ -31,7 +32,7 @@ public class Grammar11Test {
                 "S -> U | V | S",
                 "U -> XaU | XaX | UaX",
                 "V -> XbV | XbX | VbX",
-                "X -> aXbX | bXaX | . | A",
+                "X -> aXbX | bXaX | λ | A",
                 "A -> aA | B",
                 "B -> bB | A",
                 "C -> CD | a",
@@ -53,7 +54,7 @@ public class Grammar11Test {
                 "S -> U | V | S",
                 "U -> XaU | XaX | UaX",
                 "V -> XbV | XbX | VbX",
-                "X -> aXbX | bXaX | . | A",
+                "X -> aXbX | bXaX | λ | A",
                 "A -> aA | B",
                 "B -> bB | A",
                 "C -> CD | a",
@@ -110,7 +111,7 @@ public class Grammar11Test {
                 "S -> XaU | XaX | UaX | XbV | XbX | VbX",
                 "U -> XaU | XaX | UaX",
                 "V -> XbV | XbX | VbX",
-                "X -> aXbX | bXaX | . | aA | bB",
+                "X -> aXbX | bXaX | λ | aA | bB",
                 "A -> aA | bB",
                 "B -> bB | aA",
                 "C -> CD | a",
@@ -138,7 +139,7 @@ public class Grammar11Test {
                 "S -> U | V | S",
                 "U -> XaU | XaX | UaX",
                 "V -> XbV | XbX | VbX",
-                "X -> aXbX | bXaX | . ",
+                "X -> aXbX | bXaX | λ ",
                 "C -> CD | a",
                 "D -> DC | b" };
 
@@ -164,7 +165,7 @@ public class Grammar11Test {
                 "S -> U | V | S",
                 "U -> XaU | XaX | UaX",
                 "V -> XbV | XbX | VbX",
-                "X -> aXbX | bXaX | . | A",
+                "X -> aXbX | bXaX | λ | A",
                 "A -> aA | B",
                 "B -> bB | A",};
 
@@ -245,16 +246,18 @@ public class Grammar11Test {
         String[] terminals = new String[]{"a", "b"};
         String initialSymbol = "S";
         String[] rules = new String[]{
-                "S -> AB | .",
+                "S -> AB | λ",
                 "A -> AB | CB | a",
                 "B -> AB | b",
                 "C -> AC | c" };
 
         this.g = new Grammar(variables, terminals, initialSymbol, rules);
+        this.g = g.FNC(g, new AcademicSupport());
+        //Grammar gc = g.removingLeftRecursion(g, new AcademicSupport(), new HashMap<String, String>());
         Grammar newG = g.FNG(g, new AcademicSupport());
 
         boolean fng = true;
-        for (com.ufla.lfapp.vo.Rule element : newG.getRules()) {
+        for (Rule element : newG.getRules()) {
             int counter = 0;
             if (!element.getLeftSide().equals(newG.getInitialSymbol()) && element.getRightSide().equals("")) {
                 fng = false;
@@ -326,7 +329,6 @@ public class Grammar11Test {
         assertNotNull(matrix);
         assertNotNull(matrix[0][0]);
         assertNotEquals("", matrix[0][0]);
-
 
         Set<String> topVariables = matrix[0][0];
 

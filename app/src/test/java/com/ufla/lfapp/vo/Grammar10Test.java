@@ -13,7 +13,7 @@ private Grammar g;
 	  S -> aS | bB
 	  B -> aEE | CDE 
 	  C -> aBa | D 
-	  D -> aEa | .
+	  D -> aEa | λ
 	  E -> aDD | DC
 	 */
 	
@@ -26,7 +26,7 @@ private Grammar g;
 				"S -> aS | bB",
 				"B -> aEE | CDE",
 				"C -> aBa | D ",
-				"D -> aEa | .",
+				"D -> aEa | λ",
 				"E -> aDD | DC"  };
 		
 		this.g = new Grammar(variables, terminals, initialSymbol, rules);	
@@ -45,7 +45,7 @@ private Grammar g;
 				"S -> aS | bB",
 				"B -> aEE | CDE",
 				"C -> aBa | D ",
-				"D -> aEa | .",
+				"D -> aEa | λ",
 				"E -> aDD | DC" };
 		
 		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);
@@ -95,8 +95,8 @@ private Grammar g;
 		String[] expectedRules = new String[]{
 				"S -> aS | bB",
 				"B -> aEE | CDE",
-				"C -> aBa | aEa | . ",
-				"D -> aEa | .",
+				"C -> aBa | aEa | λ ",
+				"D -> aEa | λ",
 				"E -> aDD | DC" };
 		
 		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);
@@ -121,7 +121,7 @@ private Grammar g;
 				"S -> aS | bB",
 				"B -> aEE | CDE",
 				"C -> aBa | D ",
-				"D -> aEa | .",
+				"D -> aEa | λ",
 				"E -> aDD | DC" };
 		
 		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);
@@ -146,7 +146,7 @@ private Grammar g;
 				"S -> aS | bB",
 				"B -> aEE | CDE",
 				"C -> aBa | D ",
-				"D -> aEa | .",
+				"D -> aEa | λ",
 				"E -> aDD | DC" };
 		
 		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);

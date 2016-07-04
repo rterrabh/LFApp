@@ -8,10 +8,7 @@ public class TransitionFunction {
 	
 	
 	public TransitionFunction() {
-		super();
-		this.currentState = new String();
-		this.symbol = new String();
-		this.futureState = new String();
+		this("", "", "");
 	}
 	
 	public TransitionFunction(String currentState, String symbol, String futureState) {
@@ -22,10 +19,8 @@ public class TransitionFunction {
 	}
 	
 	public TransitionFunction(TransitionFunction transitionFunction) {
-		super();
-		this.currentState = transitionFunction.getCurrentState();
-		this.symbol = transitionFunction.getSymbol();
-		this.futureState = transitionFunction.getFutureState();
+		this(transitionFunction.getCurrentState(), transitionFunction.getSymbol(),
+				transitionFunction.getFutureState());
 	}
 
 	public String getCurrentState() {

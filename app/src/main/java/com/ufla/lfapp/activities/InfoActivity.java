@@ -1,9 +1,12 @@
 package com.ufla.lfapp.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import com.ufla.lfapp.R;
 
@@ -12,22 +15,21 @@ import com.ufla.lfapp.R;
  */
 public class InfoActivity extends AppCompatActivity {
 
-    //private Button infoButton;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
 
-       // this.infoButton = (Button) findViewById(R.id.button_About);
-//        this.infoButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent trocaTela = new Intent(InfoActivity.this, MainActivity.class);
-//                InfoActivity.this.startActivity(trocaTela);
-//                InfoActivity.this.finish();
-//            }
-//        });
+        Button infoButton = (Button) findViewById(R.id.button_voltar);
+        assert infoButton != null;
+        infoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent trocaTela = new Intent(InfoActivity.this, MainActivity.class);
+                InfoActivity.this.startActivity(trocaTela);
+                InfoActivity.this.finish();
+            }
+        });
     }
 
     @Override

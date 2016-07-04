@@ -10,7 +10,7 @@ public class Grammar06Test {
 	private Grammar g;
 
 	/*
-	S -> AB | .
+	S -> AB | λ
 	A -> AB | CB | a
 	B -> AB | b
 	C -> AC | c 	 
@@ -22,7 +22,7 @@ public class Grammar06Test {
 		String[] terminals = new String[]{"a","c", "b"};
 		String initialSymbol = "S";
 		String[] rules = new String[]{
-				"S -> AB | .",
+				"S -> AB | λ",
 				"A -> AB | CB | a",
 				"B -> AB | b",
 				"C -> AC | c" };
@@ -40,7 +40,7 @@ public class Grammar06Test {
 		String[] expectedTerminals = new String[]{"a", "c", "b"};
 		String expectedInitialSymbol = "S";
 		String[] expectedRules = new String[]{
-				"S -> AB | .",
+				"S -> AB | λ",
 				"A -> AB | CB | a",
 				"B -> AB | b",
 				"C -> AC | c" };
@@ -65,7 +65,7 @@ public class Grammar06Test {
 		String[] expectedTerminals = new String[] {"a", "c", "b"};
 		String expectedInitialSymbol = "S";
 		String[] expectedRules = new String[] {
-				"S -> AB | .",
+				"S -> AB | λ",
 				"A -> AB | CB | a",
 				"B -> AB | b",
 				"C -> AC | c" };
@@ -89,7 +89,7 @@ public class Grammar06Test {
 		String[] expectedTerminals = new String[] {"a", "c", "b"};
 		String expectedInitialSymbol = "S";
 		String[] expectedRules = new String[] {
-				"S -> AB | .",
+				"S -> AB | λ",
 				"A -> AB | CB | a",
 				"B -> AB | b",
 				"C -> AC | c" };
@@ -113,7 +113,7 @@ public class Grammar06Test {
 		String[] expectedTerminals = new String[] {"a", "c", "b"};
 		String expectedInitialSymbol = "S";
 		String[] expectedRules = new String[] {
-				"S -> AB | .",
+				"S -> AB | λ",
 				"A -> AB | CB | a",
 				"B -> AB | b",
 				"C -> AC | c" };
@@ -138,7 +138,7 @@ public class Grammar06Test {
 		String[] expectedTerminals = new String[] {"a", "c", "b"};
 		String expectedInitialSymbol = "S";
 		String[] expectedRules = new String[] {
-				"S -> AB | .",
+				"S -> AB | λ",
 				"A -> AB | CB | a",
 				"B -> AB | b",
 				"C -> AC | c" };

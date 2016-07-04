@@ -20,15 +20,35 @@
     <string name="gi_u">u ∈ (V ∪ Σ)+</string>
     <string name="gi_v">v ∈ (V ∪ Σ)*</string>
     <string name="logo_ufla">Logo UFLA</string>
-    <string name="team">Carlos Pereira\ncarloshpereira27 (at) gmail.com\n\nJuventino Neto\njneto (at) computacao.ufla.br\n\nRicardo Terra\nterra (at) dcc.ufla.br</string>
-    <string-array name="team">
-        <item>Carlos Pereira\n</item>
-        <item>carloshpereira27 (at) gmail.com\n</item>
-        <item>Juventino Neto\n</item>
-        <item>jneto (at) computacao.ufla.br\n</item>
-        <item>Ricardo Terra\n</item>
-        <item>terra (at) dcc.ufla.br</item>
-    </string-array>
+    <string name="team">
+        Carlos Pereira\n
+        carloshpereira27 (at) gmail.com\n\n
+        Juventino Neto\n
+        jneto (at) computacao.ufla.br\n\n
+        Ricardo Terra\n
+        terra (at) dcc.ufla.br
+    </string>
+    <string name="team_html">
+        &lt;font size="18"&gt;&lt;b&gt;Carlos Pereira&lt;/b&gt;&lt;/font&gt;&lt;br /&gt;
+        &lt;font size="15"&gt;carloshpereira27 (at) gmail.com&lt;/font&gt;&lt;br /&gt;&lt;br /&gt;
+        &lt;b&gt;&lt;font size="18"&gt;Juventino Neto&lt;/font&gt;&lt;/b&gt;&lt;br /&gt;
+        &lt;font size="15"&gt;jneto (at) computacao.ufla.br&lt;/font&gt;&lt;br /&gt;&lt;br /&gt;
+        &lt;b&gt;&lt;font size="18"&gt;Ricardo Terra&lt;/font&gt;&lt;/b&gt;&lt;br /&gt;
+        &lt;font size="15"&gt;terra (at) dcc.ufla.br&lt;/font&gt;
+    </string>
     <string name="lfapp_icon">LFApp Icon</string>
     <string name="close">Close</string>
+    <string name="gramatica">Gramática:</string>
+    <string name="palavra_para_cyk_e_deriva_o">Palavra (para CYK e derivação):</string>
+    <string name="lambda">λ</string>
+    <string name="arrow"><![CDATA[->]]></string>
+    <string name="pipe">|</string>
+    <string name="ok">OK</string>
+    <string name="about_button">About button.</string>
+    <string name="lfapp">LFApp:</string>
+    <string name="o_lfapp_um_aplicativo_m_vel_para_auxiliar_o_ensino_e_aprendizagem_de_lfa">O LFApp é um aplicativo móvel para auxiliar o ensino e aprendizagem de LFA.</string>
+    <string name="gram_tica">Gramática:</string>
+    <string name="o_usu_rio_deve_inserir_uma_gram_tica_com_as_seguintes_configura_es_deve_iniciar_com_uma_letra_mai_scula_o_primeiro_s_mbolo_ser_o_s_mbolo_inicial_letras_mai_sculas_s_o_consideradas_vari_veis_letras_min_sculas_s_o_consideradas_terminais">O usuário deve inserir uma gramática com as seguintes configurações: - Deve iniciar com uma letra maiúscula - O primeiro símbolo será o símbolo inicial - Letras maiúsculas são consideradas variáveis - Letras minúsculas são consideradas terminais</string>
+    <string name="voltar">Voltar</string>
+    <string name="desenvolvido_por_juventino_neto_sob_orienta_o_de_ricardo_terra">Desenvolvido por Juventino Neto sob orientação de Ricardo Terra.</string>
 </resources>

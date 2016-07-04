@@ -6,8 +6,7 @@
         android:allowBackup="true"
         android:icon="@drawable/lfappicon"
         android:label="LFApp"
-        android:theme="@style/AppTheme"
-        android:debuggable="true">
+        android:theme="@style/AppTheme" >
 
         <activity
             android:name=".activities.MainActivity"
@@ -19,7 +18,7 @@
         </activity>
 
         <activity
-            android:name=".activities.MainActivity2"
+            android:name=".activities.OutActivity"
             android:label="LFApp">
 
         </activity>

@@ -23,12 +23,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
 
-public class MainActivity2 extends AppCompatActivity {
+public class OutActivity extends AppCompatActivity {
 
     private TableLayout tableGrammarType;
     private TextView titleGrammarType, titleLeftDerivation, titleRightDerivation, titleRemoveInitialSymbolRecursive;
@@ -60,21 +61,19 @@ public class MainActivity2 extends AppCompatActivity {
         acordionMenu();
 
         String grammar = new String();
-        String word = new String();
+        String word;
 
         //pegando Intent para retirar o que foi enviado da tela anterior
         Intent intent = getIntent();
         if (intent != null) {
-            Bundle dados = new Bundle();
-            dados = intent.getExtras();
+            Bundle dados = intent.getExtras();
             if (dados != null) {
                 grammar = dados.getString("grammar");
                 word = dados.getString("word");
                 Grammar g = new Grammar(grammar);
 
                 if (grammar != null) {
-                    TextView inputGrammar = new TextView(this);
-                    inputGrammar = (TextView) findViewById(R.id.GramaticaVerde);
+                    TextView inputGrammar = (TextView) findViewById(R.id.GramaticaVerde);
                     AcademicSupport academic = new AcademicSupport();
                     academic.setResult(g);
                     inputGrammar.setText(Html.fromHtml(academic.getResult()));
@@ -82,7 +81,7 @@ public class MainActivity2 extends AppCompatActivity {
                 }
 
                 grammarType(g);
-                if (!word.equals("")) {
+                if (word!= null && !word.equals("")) {
                    //moreLeftDerivation(g);
                    cyk(g, word);
                 }
@@ -105,7 +104,7 @@ public class MainActivity2 extends AppCompatActivity {
         this.fixesGrammar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent changeScreen = new Intent(MainActivity2.this, MainActivity.class);
+                Intent changeScreen = new Intent(OutActivity.this, MainActivity.class);
                 changeScreen.putExtras(params);
                 startActivity(changeScreen);
                 finish();
@@ -116,7 +115,7 @@ public class MainActivity2 extends AppCompatActivity {
         this.button_Voltar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent changeScreen = new Intent(MainActivity2.this, MainActivity.class);
+                Intent changeScreen = new Intent(OutActivity.this, MainActivity.class);
                 startActivity(changeScreen);
                 finish();
             }
@@ -509,7 +508,9 @@ public class MainActivity2 extends AppCompatActivity {
 
         this.tableGrammarType = new TableLayout(this);
         this.tableGrammarType = (TableLayout) findViewById(R.id.tableGrammarType);
-        this.tableGrammarType.setStretchAllColumns(true);
+        if (this.tableGrammarType != null) {
+            this.tableGrammarType.setStretchAllColumns(true);
+        }
 
         //LINHA 1
         TableRow row0 = new TableRow(this);
@@ -568,19 +569,23 @@ public class MainActivity2 extends AppCompatActivity {
         this.tableGrammarType.addView(row3);
 
         AcademicSupport academic = new AcademicSupport();
-        academic.setComments("A classificação de uma gramática é feita pelo tipo de suas regras (u → v). " +
-                "A tabela abaixo mostra o formato de regras características de cada nível: \n");
+        academic.setComments("A classificação de uma gramática é feita pelo " +
+                "tipo de suas regras (u → v). A tabela abaixo mostra o " +
+                "formato de regras características de cada nível: \n");
 
         StringBuilder comments = new StringBuilder();
-        academic.setSolutionDescription(comments.toString() + GrammarParser.classifiesGrammar(g, comments));
+        academic.setSolutionDescription(GrammarParser.classifiesGrammar(g, comments));
 
-        TextView explanation = new TextView(this);
-        explanation = (TextView) findViewById(R.id.explanationGrammarType);
-        explanation.setText(academic.getComments());
+        TextView explanation = (TextView) findViewById(R.id.explanationGrammarType);
+        if(explanation != null) {
+            explanation.setText(academic.getComments());
+        }
 
-        TextView commentsOfSolution = new TextView(this);
-        commentsOfSolution = (TextView) findViewById(R.id.comments);
-        commentsOfSolution.setText(Html.fromHtml("<b><font color=red>Resultado:</b><br>" + comments + "<br>" + academic.getSolutionDescription()));
+        TextView commentsOfSolution = (TextView) findViewById(R.id.comments);
+        if(commentsOfSolution != null) {
+            commentsOfSolution.setText(Html.fromHtml("<b><font color=red>Resultado:</b><br>"
+                    + comments + "<br>" + academic.getSolutionDescription()));
+        }
     }
 
     /**
@@ -704,8 +709,7 @@ public class MainActivity2 extends AppCompatActivity {
         gc = g.getGrammarWithInitialSymbolNotRecursive(g, academicSupport);
         String txtGrammar = printRules(gc);
 
-        TableLayout table = new TableLayout(this);
-        table = (TableLayout) findViewById(R.id.TableRecursiveInitialSymbol);
+        TableLayout table = (TableLayout) findViewById(R.id.TableRecursiveInitialSymbol);
         table.setShrinkAllColumns(true);
         setContentInTable(table, academicSupport, gc, g);
 
@@ -720,7 +724,8 @@ public class MainActivity2 extends AppCompatActivity {
             step1_2.setText(Html.fromHtml(academicInfo.toString()));
         } else {
             String align = "justify";
-            step1_2.setText(Html.fromHtml("A gramática inserida não possui regras do tipo " + g.getInitialSymbol() + " ⇒<sup>*</sup>αSβ. Logo, nenhuma alteração foi realizada."));
+            step1_2.setText(Html.fromHtml("A gramática inserida não possui regras do tipo "
+                    + g.getInitialSymbol() + " ⇒<sup>*</sup>αSβ. Logo, nenhuma alteração foi realizada."));
         }
     }
 
@@ -736,7 +741,8 @@ public class MainActivity2 extends AppCompatActivity {
 
         //Configura comentários sobre o processo
         String align = "justify";
-        academicInfoComments.append(Html.fromHtml("<p align=" + align + ">O algoritmo para remoção de regras λ consiste em 3 passos:"));
+        academicInfoComments.append(Html.fromHtml("<p align=" + align +
+                ">O algoritmo para remoção de regras λ consiste em 3 passos:"));
         academicSupport.setComments(academicInfoComments.toString());
 
         //Realiza processo
@@ -744,63 +750,52 @@ public class MainActivity2 extends AppCompatActivity {
         academicSupport.setResult(gc);
 
         //configura a gramática de resultado
-        TextView grammarResult = new TextView(this);
-        grammarResult = (TextView) findViewById(R.id.ResultGrammarEmptyProductions);
+        TextView grammarResult = (TextView) findViewById(R.id.ResultGrammarEmptyProductions);
         grammarResult.setText(Html.fromHtml(academicSupport.getResult()));
 
         if (academicSupport.getSituation()) {
             //Configura os comentários sobre a solução
-            TextView result = new TextView(this);
-            result = (TextView) findViewById(R.id.AnswerOfEmptyProductions);
+            TextView result = (TextView) findViewById(R.id.AnswerOfEmptyProductions);
             result.setText(academicSupport.getComments());
 
             //Configuração do passo 1 (Tabela dos conjuntos)
-            TextView explanation1 = new TextView(this);
-            explanation1 = (TextView) findViewById(R.id.ExplanationEmptyRules1);
+            TextView explanation1 = (TextView) findViewById(R.id.ExplanationEmptyRules1);
             explanation1.setText(Html.fromHtml("(1) Determinar o conjunto das variáveis anuláveis.</p>"));
-            TextView pseudo = new TextView(this);
-            pseudo = (TextView) findViewById(R.id.PseudoNullableAlgorith);
+            TextView pseudo =(TextView) findViewById(R.id.PseudoNullableAlgorith);
             pseudo.setText(Html.fromHtml(getNullableAlgorith()));
-            TableLayout tableOfSets = new TableLayout(this);
-            tableOfSets = (TableLayout) findViewById(R.id.TableOfSets);
+            TableLayout tableOfSets = (TableLayout) findViewById(R.id.TableOfSets);
             tableOfSets.setShrinkAllColumns(true);
             tableOfSets.setBackgroundColor(getResources().getColor(R.color.Gainsboro));
             printTableOfSets(tableOfSets, academicSupport, "NULL", "PREV");
 
             //Configuração do passo 2 (Gramática com as regras criadas no processo)
             if (academicSupport.getInsertedRules().size() != 0) {
-                TextView explanation2 = new TextView(this);
-                explanation2 = (TextView) findViewById(R.id.ExplanationEmptyRules2);
+                TextView explanation2 = (TextView) findViewById(R.id.ExplanationEmptyRules2);
                 explanation2.setText("(2) Adicionar regras em que as ocorrências de variáveis nulas são omitidas. Por exemplo, assuma a regra A -> BABa e B" +
                         " é uma variável anulável. Logo, são inseridas as seguintes regras: A -> ABa, A -> BAa e A -> Aa.");
-                TableLayout grammarWithNewRules = new TableLayout(this);
-                grammarWithNewRules = (TableLayout) findViewById(R.id.AddingRulesTable);
+                TableLayout grammarWithNewRules = (TableLayout) findViewById(R.id.AddingRulesTable);
                 Grammar blueGrammar = new Grammar(joinGrammars(gc, g));
                 printGrammarWithNewRules(blueGrammar, grammarWithNewRules, academicSupport);
             } else {
-                TextView explanation2 = new TextView(this);
-                explanation2 = (TextView) findViewById(R.id.ExplanationEmptyRules2);
+                TextView explanation2 = (TextView) findViewById(R.id.ExplanationEmptyRules2);
                 explanation2.setText("(2) Não há regras a serem inseridas.");
             }
 
             //Configuração do passo 3 (Gramática com as regras irregulares removida)
             if (academicSupport.getIrregularRules().size() != 0) {
-                TextView explanation3 = new TextView(this);
-                explanation3 = (TextView) findViewById(R.id.ExplanationEmptyRules3);
-                explanation3.setText("(3) Remover as regras λ.");
-                TableLayout grammarWithoutOldRules = new TableLayout(this);
-                grammarWithoutOldRules = (TableLayout) findViewById(R.id.RemovingRulesTable);
+                TextView explanation3 = (TextView) findViewById(R.id.ExplanationEmptyRules3);
+                explanation3.setText("(3) Remover as regras λ.\n" +
+                        "OBS: se símbolo inicial produz λ, não remover esta regra.");
+                TableLayout grammarWithoutOldRules = (TableLayout) findViewById(R.id.RemovingRulesTable);
                 Grammar redGrammar = new Grammar(joinGrammars(gc, g));
                 printGrammarWithoutOldRules(redGrammar, grammarWithoutOldRules, academicSupport);
             } else {
-                TextView explanation3 = new TextView(this);
-                explanation3 = (TextView) findViewById(R.id.ExplanationEmptyRules3);
-                explanation3.setText("(3) Não há regras a serem removidas.</p>");
+                TextView explanation3 = (TextView) findViewById(R.id.ExplanationEmptyRules3);
+                explanation3.setText("(3) Não há regras a serem removidas.");
             }
 
         } else {
-            TextView result = new TextView(this);
-            result = (TextView) findViewById(R.id.AnswerOfEmptyProductions);
+            TextView result = (TextView) findViewById(R.id.AnswerOfEmptyProductions);
             result.setText("A gramática inserida não possui produções vazias.");
         }
     }
@@ -819,61 +814,48 @@ public class MainActivity2 extends AppCompatActivity {
         academic.setResult(gc);
 
         //Configura a gramática de resultado
-        TextView grammarResult = new TextView(this);
-        grammarResult = (TextView) findViewById(R.id.ResultGrammarWithoutChainRules);
+        TextView grammarResult = (TextView) findViewById(R.id.ResultGrammarWithoutChainRules);
         grammarResult.setText(Html.fromHtml(academic.getResult()));
 
         //Configura os comentários do processo
         academic.setComments(comments.toString());
-        TextView commentsOfProcces = new TextView(this);
-        commentsOfProcces = (TextView) findViewById(R.id.CommentsChainRules);
+        TextView commentsOfProcces =  (TextView) findViewById(R.id.CommentsChainRules);
         commentsOfProcces.setText(academic.getComments());
 
         //Configura o primeiro passo do processo
-        TextView creatingSetOfChains = new TextView(this);
-        creatingSetOfChains = (TextView) findViewById(R.id.RemovingChainRulesStep1);
+        TextView creatingSetOfChains =  (TextView) findViewById(R.id.RemovingChainRulesStep1);
         creatingSetOfChains.setText("(1) O primeiro passo do algoritmo é montar as cadeias de cada variável.");
-        TextView pseudo = new TextView(this);
-        pseudo = (TextView) findViewById(R.id.PseudoChainAlgorithm);
+        TextView pseudo =  (TextView) findViewById(R.id.PseudoChainAlgorithm);
         pseudo.setText(Html.fromHtml(getChainAlgorithm()));
-        TableLayout tableOfChains = new TableLayout(this);
-        tableOfChains = (TableLayout) findViewById(R.id.TableOfChains);
+        TableLayout tableOfChains = (TableLayout) findViewById(R.id.TableOfChains);
         tableOfChains.setShrinkAllColumns(true);
         printTableOfChains(tableOfChains, academic, "Variável", "Cadeia");
 
         //configura o segundo passo do processo
         if (academic.getInsertedRules().size() != 0) {
-            TextView creatingGrammarWithoutChains = new TextView(this);
-            creatingGrammarWithoutChains = (TextView) findViewById(R.id.RemovingChainRulesStep2);
+            TextView creatingGrammarWithoutChains =  (TextView) findViewById(R.id.RemovingChainRulesStep2);
             creatingGrammarWithoutChains.setText("(2) Destacar as cadeias encontradas.");
-            TableLayout tableWithoutChains = new TableLayout(this);
-            tableWithoutChains = (TableLayout) findViewById(R.id.GrammarWithChains);
+            TableLayout tableWithoutChains = (TableLayout) findViewById(R.id.GrammarWithChains);
             printGrammarWithoutOldRules(g, tableWithoutChains, academic);
         } else if (academic.getIrregularRules().size() != 0) {
-            TextView creatingGrammarWithoutChains = new TextView(this);
-            creatingGrammarWithoutChains = (TextView) findViewById(R.id.RemovingChainRulesStep2);
+            TextView creatingGrammarWithoutChains = (TextView) findViewById(R.id.RemovingChainRulesStep2);
             creatingGrammarWithoutChains.setText("(2) Na gramática inserida, existem auto cadeias. Esse tipo de regra também deve ser removida.");
         } else {
-            TextView creatingGrammarWithoutChains = new TextView(this);
-            creatingGrammarWithoutChains = (TextView) findViewById(R.id.RemovingChainRulesStep2);
+            TextView creatingGrammarWithoutChains = (TextView) findViewById(R.id.RemovingChainRulesStep2);
             creatingGrammarWithoutChains.setText("(2) Não há cadeias na gramática inserida.");
         }
 
         //Configura o terceiro passo do processo
         if (academic.getInsertedRules().size() != 0) {
-            TextView creatingGrammarWithoutChains = new TextView(this);
-            creatingGrammarWithoutChains = (TextView) findViewById(R.id.RemovingChainRulesStep3);
+            TextView creatingGrammarWithoutChains = (TextView) findViewById(R.id.RemovingChainRulesStep3);
             creatingGrammarWithoutChains.setText("(3) Subistituir as cadeias encontradas.");
-            TableLayout tableWithoutChains = new TableLayout(this);
-            tableWithoutChains = (TableLayout) findViewById(R.id.GrammarWithoutChains);
+            TableLayout tableWithoutChains = (TableLayout) findViewById(R.id.GrammarWithoutChains);
             printGrammarWithNewRules(gc, tableWithoutChains, academic);
         } else if (academic.getIrregularRules().size() != 0) {
-            TextView creatingGrammarWithoutChains = new TextView(this);
-            creatingGrammarWithoutChains = (TextView) findViewById(R.id.RemovingChainRulesStep3);
+            TextView creatingGrammarWithoutChains = (TextView) findViewById(R.id.RemovingChainRulesStep3);
             creatingGrammarWithoutChains.setText("(3) Na gramática inserida, existem auto cadeias. Esse tipo de regra também deve ser removida.");
         } else {
-            TextView creatingGrammarWithoutChains = new TextView(this);
-            creatingGrammarWithoutChains = (TextView) findViewById(R.id.RemovingChainRulesStep3);
+            TextView creatingGrammarWithoutChains = (TextView) findViewById(R.id.RemovingChainRulesStep3);
             creatingGrammarWithoutChains.setText("(3) Não há cadeias na gramática inserida.");
         }
 
@@ -891,51 +873,43 @@ public class MainActivity2 extends AppCompatActivity {
         comments.append("\t\tRemove as regras que não geram terminais. Consiste de dois passos: ");
 
         //Configura a gramática de resultado
-        TextView resultGrammar = new TextView(this);
-        resultGrammar = (TextView) findViewById(R.id.ResultNoTerm);
+        TextView resultGrammar = (TextView) findViewById(R.id.ResultNoTerm);
         resultGrammar.setText(Html.fromHtml(academicSupport.getResult()));
 
         if (academicSupport.getSituation()) {
             //Configura os comentários
             academicSupport.setComments(comments.toString());
-            TextView result = new TextView(this);
-            result = (TextView) findViewById(R.id.CommentsNoTerms);
+            TextView result = (TextView) findViewById(R.id.CommentsNoTerms);
             result.setText(Html.fromHtml(academicSupport.getComments()));
 
             //Configura o primeiro passo (Montar conjuntos)
-            TextView creatingSetOfChains = new TextView(this);
-            creatingSetOfChains = (TextView) findViewById(R.id.NoTermStep1);
+            TextView creatingSetOfChains = (TextView) findViewById(R.id.NoTermStep1);
             creatingSetOfChains.setText("(1) Determinar quais variáveis geram terminais direta e indiretamente.");
-            TextView pseudo = new TextView(this);
-            pseudo = (TextView) findViewById(R.id.PseudoTermAlgorithm);
+            TextView pseudo = (TextView) findViewById(R.id.PseudoTermAlgorithm);
             pseudo.setText(Html.fromHtml(getTermAlgorithm()));
-            TableLayout tableOfSets = new TableLayout(this);
-            tableOfSets = (TableLayout) findViewById(R.id.TableOfSetsNoTerm);
+            TableLayout tableOfSets = (TableLayout) findViewById(R.id.TableOfSetsNoTerm);
             tableOfSets.setShrinkAllColumns(true);
             tableOfSets.setBackgroundColor(getResources().getColor(R.color.Gainsboro));
             printTableOfSets(tableOfSets, academicSupport, "TERM", "PREV");
 
             //Configura o segundo passo (Regras que foram removidas)
-            TextView eliminatingNoTermRules = new TextView(this);
-            creatingSetOfChains = (TextView) findViewById(R.id.NoTermStep2);
-            ArrayList<String> array = convertSetToArray(academicSupport.getFirstSet().get(academicSupport.getFirstSet().size() - 1), gc);
+            TextView eliminatingNoTermRules = (TextView) findViewById(R.id.NoTermStep2);
+            List<String> array = convertSetToArray(academicSupport.getFirstSet().get(academicSupport.getFirstSet().size() - 1), gc);
             String variables = array.toString();
             variables = variables.replace("[", "{");
             variables = variables.replace("]", "}");
             String othersVariables = selectOthersVariables(g, academicSupport.getFirstSet().get(academicSupport.getFirstSet().size() - 1));
-            creatingSetOfChains.setText("(2) Remover as variáveis que não estão em " + variables +", \n i.e., "+ othersVariables +".");
-            TableLayout grammarWithoutOldRules = new TableLayout(this);
-            grammarWithoutOldRules = (TableLayout) findViewById(R.id.GrammarWithNoTerm);
+            eliminatingNoTermRules.setText("(2) Remover as variáveis que não estão em " + variables +", \n i.e., "+ othersVariables +".");
+            TableLayout grammarWithoutOldRules = (TableLayout) findViewById(R.id.GrammarWithNoTerm);
             printOldGrammarOfTermAndReach(g, grammarWithoutOldRules, academicSupport);
         } else {
-            TextView result = new TextView(this);
-            result = (TextView) findViewById(R.id.CommentsNoTerms);
-            result.setText("A gramática inserida não possui símbolos não terminais.");
+            TextView result = (TextView) findViewById(R.id.CommentsNoTerms);
+            result.setText("Todas variáveis da gramática geram terminais.");
         }
     }
 
     private String selectOthersVariables(Grammar g, Set<String> set) {
-        ArrayList<String> array = new ArrayList<String>();
+        List<String> array = new ArrayList<>();
         for (String variable : g.getVariables()) {
             if (!set.contains(variable))
             array.add(variable);
@@ -948,8 +922,8 @@ public class MainActivity2 extends AppCompatActivity {
     }
 
     //converte um set em arraylist ordenando-o com o simbolo inicial da gramatica na primeira posicao
-    private ArrayList<String> convertSetToArray(Set<String> set, Grammar grammar) {
-        ArrayList<String> array = new ArrayList<String>();
+    private List<String> convertSetToArray(Set<String> set, Grammar grammar) {
+        List<String> array = new ArrayList<>();
         for (String variable : set) {
             if (!variable.equals(grammar.getInitialSymbol())) {
                 array.add(variable);
@@ -973,52 +947,44 @@ public class MainActivity2 extends AppCompatActivity {
         comments.append("\t\tRemover as variáveis não alcançáveis no processo de derivação de uma palavra.\n");
 
         //Mostra o resultado do processo
-        TextView tableOfResult = new TextView(this);
-        tableOfResult = (TextView) findViewById(R.id.ResultNoReach);
+        TextView tableOfResult = (TextView) findViewById(R.id.ResultNoReach);
         tableOfResult.setText(Html.fromHtml(academic.getResult()));
 
         if (academic.getSituation()) {
             //Configura comentários
             academic.setComments(comments.toString());
-            TextView commentsOfNoReach = new TextView(this);
-            commentsOfNoReach = (TextView) findViewById(R.id.CommentsNoReach);
+            TextView commentsOfNoReach = (TextView) findViewById(R.id.CommentsNoReach);
             commentsOfNoReach.setText(academic.getComments());
 
             //Primeiro passo do processo (Construção dos Conjuntos)
-            TextView step1 = new TextView(this);
-            step1 = (TextView) findViewById(R.id.NoReachStep1);
-            step1.setText("(1) Determinar quais variáveis são alcançáveis a partir do símbolo inicial " + gc.getInitialSymbol() + ".");
-            TextView pseudo = new TextView(this);
-            pseudo = (TextView) findViewById(R.id.PseudoReachAlgorithm);
+            TextView step1 = (TextView) findViewById(R.id.NoReachStep1);
+            step1.setText("(1) Determinar quais variáveis são alcançáveis a partir do símbolo " +
+                    "inicial " + gc.getInitialSymbol() + ".");
+            TextView pseudo = (TextView) findViewById(R.id.PseudoReachAlgorithm);
             pseudo.setText(Html.fromHtml(getReachAlgorithm()));
-            TableLayout tableOfSets = new TableLayout(this);
-            tableOfSets = (TableLayout) findViewById(R.id.tableOfSetsNoReach);
+            TableLayout tableOfSets = (TableLayout) findViewById(R.id.tableOfSetsNoReach);
             tableOfSets.setShrinkAllColumns(true);
             tableOfSets.setBackgroundColor(getResources().getColor(R.color.Gainsboro));
             printTableOfReachSets(tableOfSets, academic, "REACH", "PREV", "NEW");
 
             //Segundo passo do processo (Eliminar os símbolos não terminais)
             if (academic.getIrregularRules().size() != 0) {
-                TextView step2 = new TextView(this);
-                step2 = (TextView) findViewById(R.id.NoReachStep2);
-                ArrayList<String> array = convertSetToArray(academic.getFirstSet().get(academic.getFirstSet().size() - 1), gc);
+                TextView step2 = (TextView) findViewById(R.id.NoReachStep2);
+                List<String> array = convertSetToArray(academic.getFirstSet().get(academic.getFirstSet().size() - 1), gc);
                 String variables = array.toString();
                 variables = variables.replace("[", "{");
                 variables = variables.replace("]", "}");
                 String othersVariables = selectOthersVariables(g, academic.getFirstSet().get(academic.getFirstSet().size() - 1));
                 step2.setText("(2) Remover as variáveis que não estão em " + variables + ", i.e., " + othersVariables +".");
-                TableLayout tableResult = new TableLayout(this);
-                tableResult = (TableLayout) findViewById(R.id.tableOfIrregularRulesReach);
+                TableLayout tableResult = (TableLayout) findViewById(R.id.tableOfIrregularRulesReach);
                 printOldGrammarOfTermAndReach(g, tableResult, academic);
             } else {
-                TextView step2 = new TextView(this);
-                step2 = (TextView) findViewById(R.id.NoReachStep2);
+                TextView step2 = (TextView) findViewById(R.id.NoReachStep2);
                 step2.setText("(2) Todos os símbolos são alcançáveis.");
             }
 
         } else {
-            TextView commentsOfNoReach = new TextView(this);
-            commentsOfNoReach = (TextView) findViewById(R.id.CommentsNoReach);
+            TextView commentsOfNoReach = (TextView) findViewById(R.id.CommentsNoReach);
             commentsOfNoReach.setText("\t\tNão há símbolos alcançáveis na gramática inserida.");
         }
 
@@ -1031,21 +997,22 @@ public class MainActivity2 extends AppCompatActivity {
         //Realiza processo para a primeira transformação (Remoção de recursão no símbolo inicial)
         gc = g.getGrammarWithInitialSymbolNotRecursive(gc, academic);
         academic.setResult(gc);
-        TextView result = new TextView(this);
-        result = (TextView) findViewById(R.id.GramaticaSemRecursividadeNoSimboloInicialFNC);
+        TextView result = (TextView) findViewById(R.id.GramaticaSemRecursividadeNoSimboloInicialFNC);
+        assert result != null;
         result.setText(Html.fromHtml(academic.getResult()));
 
-        TextView explanationStep1 = new TextView(this);
-        explanationStep1 = (TextView) findViewById(R.id.ExplicacaoFNC1);
+        TextView explanationStep1 = (TextView) findViewById(R.id.ExplicacaoFNC1);
         if (academic.getSituation()) {
             StringBuilder academicInfo = new StringBuilder(academic.getComments());
             for (int i = 1; i < academic.getFoundProblems().size(); i++) {
                 academicInfo.append(academic.getFoundProblems().get(i));
             }
             academicInfo.append(academic.getSolutionDescription());
-            explanationStep1.setText(academicInfo);
+            explanationStep1.setText(Html.fromHtml(academicInfo.toString()));
         } else {
-            explanationStep1.setText("A gramática inserida não possui regras do tipo " + g.getInitialSymbol() + " ⇒*αSβ. Logo, nenhuma alteração foi realizada.");
+            explanationStep1.setText("A gramática inserida não possui regras " +
+                    "do tipo " + g.getInitialSymbol() + " ⇒*αSβ. Logo, " +
+                    "nenhuma alteração foi realizada.");
         }
 
         academic = new AcademicSupport();
@@ -1063,58 +1030,50 @@ public class MainActivity2 extends AppCompatActivity {
         academic.setResult(gc);
 
         //configura a gramática de resultado
-        result = new TextView(this);
         result = (TextView) findViewById(R.id.GramaticaSemProducoesVaziasFNC);
         result.setText(Html.fromHtml(academic.getResult()));
 
         if (academic.getSituation()) {
             //Configuração do passo 1 (Tabela dos conjuntos)
-            TextView explanation1 = new TextView(this);
-            explanation1 = (TextView) findViewById(R.id.ComentariosFNC2);
-            explanation1.setText("(1) Determinar o conjunto das variáveis anuláveis.");
-            TextView pseudo1 = new TextView(this);
-            pseudo1 = (TextView) findViewById(R.id.PseudoNullableAlgorithFNC);
+            TextView explanation1 = (TextView) findViewById(R.id.ComentariosFNC2);
+            if (explanation1 != null) {
+                explanation1.setText("(1) Determinar o conjunto das variáveis anuláveis.");
+            }
+            TextView pseudo1 = (TextView) findViewById(R.id.PseudoNullableAlgorithFNC);
             pseudo1.setText(Html.fromHtml(getNullableAlgorith()));
-            TableLayout tableOfSets = new TableLayout(this);
-            tableOfSets = (TableLayout) findViewById(R.id.TabelaConjuntosFNC2);
+            TableLayout tableOfSets = (TableLayout) findViewById(R.id.TabelaConjuntosFNC2);
             tableOfSets.setShrinkAllColumns(true);
             tableOfSets.setBackgroundColor(getResources().getColor(R.color.Gainsboro));
             printTableOfSets(tableOfSets, academic, "NULL", "PREV");
 
             //Configuração do passo 2 (Gramática com as regras criadas no processo)
             if (academic.getInsertedRules().size() != 0) {
-                TextView explanation2 = new TextView(this);
-                explanation2 = (TextView) findViewById(R.id.ExplicacaoGramaticaSemProducoesVaziasFNC);
+                TextView explanation2 = (TextView) findViewById(R.id.ExplicacaoGramaticaSemProducoesVaziasFNC);
                 explanation2.setText("(2) Adicionar regras em que as ocorrências de variáveis nulas são omitidas. Por exemplo, assuma a regra" +
                         " A -> BABa e B é uma variável anulável. Logo, são inseridas as seguintes regras A -> ABa, A -> BAa e A -> Aa.");
-                TableLayout grammarWithNewRules = new TableLayout(this);
-                grammarWithNewRules = (TableLayout) findViewById(R.id.GramaticaAzul2FNC);
+                TableLayout grammarWithNewRules = (TableLayout) findViewById(R.id.GramaticaAzul2FNC);
                 Grammar blueGrammar = new Grammar(joinGrammars(gc, g));
                 printGrammarWithNewRules(blueGrammar, grammarWithNewRules, academic);
             } else {
-                TextView explanation2 = new TextView(this);
-                explanation2 = (TextView) findViewById(R.id.ExplicacaoGramaticaSemProducoesVaziasFNC);
+                TextView explanation2 = (TextView) findViewById(R.id.ExplicacaoGramaticaSemProducoesVaziasFNC);
                 explanation2.setText("(2) Não há regras a serem inseridas.");
             }
 
             //Configuração do passo 3 (Gramática com as regras irregulares removida)
             if (academic.getIrregularRules().size() != 0) {
-                TextView explanation3 = new TextView(this);
-                explanation3 = (TextView) findViewById(R.id.ExplicacaoGramaticaComNovasProducoesFNC);
-                explanation3.setText("(3) Remover as regras λ.");
-                TableLayout grammarWithoutOldRules = new TableLayout(this);
-                grammarWithoutOldRules = (TableLayout) findViewById(R.id.GramaticaVermelha2FNC);
+                TextView explanation3 = (TextView) findViewById(R.id.ExplicacaoGramaticaComNovasProducoesFNC);
+                explanation3.setText("(3) Remover as regras λ.\n" +
+                        "OBS: se símbolo inicial produz λ, não remover esta regra.");
+                TableLayout grammarWithoutOldRules = (TableLayout) findViewById(R.id.GramaticaVermelha2FNC);
                 Grammar redGrammar = new Grammar(joinGrammars(gc, g));
                 printGrammarWithoutOldRules(redGrammar, grammarWithoutOldRules, academic);
             } else {
-                TextView explanation3 = new TextView(this);
-                explanation3 = (TextView) findViewById(R.id.ExplicacaoGramaticaComNovasProducoesFNC);
+                TextView explanation3 = (TextView) findViewById(R.id.ExplicacaoGramaticaComNovasProducoesFNC);
                 explanation3.setText("(3) Não há regras a serem removidas.");
             }
 
         } else {
-            TextView comment = new TextView(this);
-            comment = (TextView) findViewById(R.id.Explicacao1ProducoesVaziasFNC);
+            TextView comment = (TextView) findViewById(R.id.Explicacao1ProducoesVaziasFNC);
             comment.setText("A gramática inserida não possui produções vazias.");
         }
 
@@ -1131,43 +1090,34 @@ public class MainActivity2 extends AppCompatActivity {
         academic.setResult(gc);
 
         //Configura a gramática de resultado
-        result = new TextView(this);
         result = (TextView) findViewById(R.id.GramaticaSemRegrasDaCadeiaFNC);
         result.setText(Html.fromHtml(academic.getResult()));
 
         //Configura os comentários do processo
         academic.setComments(comments.toString());
-        TextView commentsOfProcces = new TextView(this);
-        commentsOfProcces = (TextView) findViewById(R.id.ComentarioFNC3);
+        TextView commentsOfProcces = (TextView) findViewById(R.id.ComentarioFNC3);
         commentsOfProcces.setText(academic.getComments());
 
         //Configura o primeiro passo do processo
-        TextView creatingSetOfChains = new TextView(this);
-        creatingSetOfChains = (TextView) findViewById(R.id.Passo2RegrasDaCadeiaFNC);
+        TextView creatingSetOfChains = (TextView) findViewById(R.id.Passo2RegrasDaCadeiaFNC);
         creatingSetOfChains.setText("(1) O primeiro passo do algoritmo é obter as cadeias de cada variável.");
-        TextView pseudo2 = new TextView(this);
-        pseudo2 = (TextView) findViewById(R.id.PseudoChainAlgorithmFNC);
+        TextView pseudo2 = (TextView) findViewById(R.id.PseudoChainAlgorithmFNC);
         pseudo2.setText(Html.fromHtml(getChainAlgorithm()));
-        TableLayout tableOfChains = new TableLayout(this);
-        tableOfChains = (TableLayout) findViewById(R.id.Passo2RegrasDaCadeiaFNC_Resultado);
+        TableLayout tableOfChains = (TableLayout) findViewById(R.id.Passo2RegrasDaCadeiaFNC_Resultado);
         tableOfChains.setShrinkAllColumns(true);
         printTableOfChains(tableOfChains, academic, "Variável", "Cadeia");
 
         //Configura o segundo passo do processo
         if (academic.getInsertedRules().size() != 0) {
-            TextView creatingGrammarWithoutChains = new TextView(this);
-            creatingGrammarWithoutChains = (TextView) findViewById(R.id.Passo3RegrasDaCadeiaFNC);
+            TextView creatingGrammarWithoutChains = (TextView) findViewById(R.id.Passo3RegrasDaCadeiaFNC);
             creatingGrammarWithoutChains.setText("(2) Substituir as cadeias encontradas.");
-            TableLayout tableWithoutChains = new TableLayout(this);
-            tableWithoutChains = (TableLayout) findViewById(R.id.Passo3RegrasDaCadeiaFNC_Resultado);
+            TableLayout tableWithoutChains = (TableLayout) findViewById(R.id.Passo3RegrasDaCadeiaFNC_Resultado);
             printGrammarWithNewRules(gc, tableWithoutChains, academic);
         } else if (academic.getIrregularRules().size() != 0) {
-            TextView creatingGrammarWithoutChains = new TextView(this);
-            creatingGrammarWithoutChains = (TextView) findViewById(R.id.Passo3RegrasDaCadeiaFNC);
+            TextView creatingGrammarWithoutChains = (TextView) findViewById(R.id.Passo3RegrasDaCadeiaFNC);
             creatingGrammarWithoutChains.setText("(2) Na gramática inserida, existem auto cadeias. Esse tipo de regra também deve ser removida.");
         } else {
-            TextView creatingGrammarWithoutChains = new TextView(this);
-            creatingGrammarWithoutChains = (TextView) findViewById(R.id.Passo3RegrasDaCadeiaFNC);
+            TextView creatingGrammarWithoutChains = (TextView) findViewById(R.id.Passo3RegrasDaCadeiaFNC);
             creatingGrammarWithoutChains.setText("(2) Não há cadeias na gramática inserida.");
         }
 
@@ -1185,45 +1135,38 @@ public class MainActivity2 extends AppCompatActivity {
         comments.append("\t\tRemove as regras que não geram terminais. Consiste de dois passos:");
 
         //Configura a gramática de resultado
-        TextView resultGrammar = new TextView(this);
-        resultGrammar = (TextView) findViewById(R.id.GramaticaSemSimbolosNaoTerminaisFNC);
+        TextView resultGrammar = (TextView) findViewById(R.id.GramaticaSemSimbolosNaoTerminaisFNC);
         resultGrammar.setText(Html.fromHtml(academic.getResult()));
 
         if (academic.getSituation()) {
             //Configura os comentários
             academic.setComments(comments.toString());
-            result = new TextView(this);
             result = (TextView) findViewById(R.id.ComentariosNaoTerminaisFNC);
             result.setText(academic.getComments());
 
             //Configura o primeiro passo (Montar conjuntos)
-             creatingSetOfChains = new TextView(this);
             creatingSetOfChains = (TextView) findViewById(R.id.Passo2NaoTerminaisFNC);
             creatingSetOfChains.setText("(1) Determinar quais variáveis geram terminais.");
-            TextView pseudo3 = new TextView(this);
-            pseudo3 = (TextView) findViewById(R.id.PseudoTermAlgorithmFNC);
+            TextView pseudo3 = (TextView) findViewById(R.id.PseudoTermAlgorithmFNC);
             pseudo3.setText(Html.fromHtml(getTermAlgorithm()));
-            TableLayout tableOfSets = new TableLayout(this);
-            tableOfSets = (TableLayout) findViewById(R.id.Passo2NaoTerminaisFNC_Resultado);
+            TableLayout tableOfSets = (TableLayout) findViewById(R.id.Passo2NaoTerminaisFNC_Resultado);
             tableOfSets.setShrinkAllColumns(true);
             tableOfSets.setBackgroundColor(getResources().getColor(R.color.Gainsboro));
             printTableOfSets(tableOfSets, academic, "TERM", "PREV");
 
             //Configura o segundo passo (Regras que foram removidas)
-            TextView eliminatingNoTermRules = new TextView(this);
-            eliminatingNoTermRules = (TextView) findViewById(R.id.Passo3NaoTerminaisFNC);
-            ArrayList<String> array = convertSetToArray(academic.getFirstSet().get(academic.getFirstSet().size() - 1), gc);
+            TextView eliminatingNoTermRules = (TextView) findViewById(R.id.Passo3NaoTerminaisFNC);
+            List<String> array = convertSetToArray(academic.getFirstSet().get(academic.getFirstSet().size() - 1), gc);
             String variables = array.toString();
             variables = variables.replace("[", "{");
             variables = variables.replace("]", "}");
-            String othersVariables = selectOthersVariables(g, academic.getFirstSet().get(academic.getFirstSet().size() - 1));
-            creatingSetOfChains.setText("(2) Remover as variáveis que não estão em " + variables +", i.e., " + othersVariables + ".");
-            TableLayout grammarWithoutOldRules = new TableLayout(this);
-            grammarWithoutOldRules = (TableLayout) findViewById(R.id.Passo3NaoTerminaisFNC_Resultado);
+            String othersVariables = selectOthersVariables(gAux, academic.getFirstSet().get(academic.getFirstSet().size() - 1));
+            eliminatingNoTermRules.setText("(2) Remover as variáveis que não estão em " + variables +", i.e., " + othersVariables + ".");
+            TableLayout grammarWithoutOldRules = (TableLayout) findViewById(R.id.Passo3NaoTerminaisFNC_Resultado);
+            printOldGrammarOfTermAndReach(gAux, grammarWithoutOldRules, academic);
         } else {
-            result = new TextView(this);
             result = (TextView) findViewById(R.id.ComentariosNaoTerminaisFNC);
-            result.setText("A gramática inserida não possui símbolos não terminais.");
+            result.setText("Todas variáveis da gramática geram terminais.");
         }
 
 
@@ -1241,53 +1184,43 @@ public class MainActivity2 extends AppCompatActivity {
 
 
         //Mostra o resultado do processo
-        TextView tableOfResult = new TextView(this);
-        tableOfResult = (TextView) findViewById(R.id.GramaticaSemSimbolosNaoAlcancaveisFNC);
+        TextView tableOfResult = (TextView) findViewById(R.id.GramaticaSemSimbolosNaoAlcancaveisFNC);
         tableOfResult.setText(Html.fromHtml(academic.getResult()));
 
         if (academic.getSituation()) {
             //Configura comentários
             academic.setComments(comments.toString());
-            TextView commentsOfNoReach = new TextView(this);
-            commentsOfNoReach = (TextView) findViewById(R.id.ComentariosFNC5);
+            TextView commentsOfNoReach = (TextView) findViewById(R.id.ComentariosFNC5);
             commentsOfNoReach.setText(academic.getComments());
 
             //Primeiro passo do processo (Construção dos Conjuntos)
-            TextView step1 = new TextView(this);
-            step1 = (TextView) findViewById(R.id.Passo2RemocaoDeRegrasNaoAlcancaveisFNC);
+            TextView step1 = (TextView) findViewById(R.id.Passo2RemocaoDeRegrasNaoAlcancaveisFNC);
             step1.setText("(1) Determinar quais símbolos são alcançáveis a partir do símbolo inicial " + gc.getInitialSymbol() +".");
-            TextView pseudo4 = new TextView(this);
-            pseudo4 = (TextView) findViewById(R.id.PseudoReachAlgorithmFNC);
+            TextView pseudo4 = (TextView) findViewById(R.id.PseudoReachAlgorithmFNC);
             pseudo4.setText(Html.fromHtml(getReachAlgorithm()));
-            TableLayout tableOfSets = new TableLayout(this);
-            tableOfSets = (TableLayout) findViewById(R.id.Passo2RemocaoDeSimbolosNaoAlcancaveisFNC_Resultado);
+            TableLayout tableOfSets = (TableLayout) findViewById(R.id.Passo2RemocaoDeSimbolosNaoAlcancaveisFNC_Resultado);
             tableOfSets.setShrinkAllColumns(true);
             tableOfSets.setBackgroundColor(getResources().getColor(R.color.Gainsboro));
             printTableOfReachSets(tableOfSets, academic, "REACH", "PREV", "NEW");
 
             //Segundo passo do processo (Eliminar os símbolos não alcançáveis)
             if (academic.getIrregularRules().size() != 0) {
-                TextView step2 = new TextView(this);
-                step2 = (TextView) findViewById(R.id.Passo3RemocaoDeSimbolosNaoAlcancaveisFNC);
-                ArrayList<String> array = convertSetToArray(academic.getFirstSet().get(academic.getFirstSet().size() - 1), gc);
+                TextView step2 = (TextView) findViewById(R.id.Passo3RemocaoDeSimbolosNaoAlcancaveisFNC);
+                List<String> array = convertSetToArray(academic.getFirstSet().get(academic.getFirstSet().size() - 1), gc);
                 String variables = array.toString();
                 variables = variables.replace("[", "{");
                 variables = variables.replace("]", "}");
-                String othersVariables = selectOthersVariables(g, academic.getFirstSet().get(academic.getFirstSet().size() - 1));
-                creatingSetOfChains.setText("(2) Remover as variáveis que não estão em " + variables +", i.e., " + othersVariables +".");
-                step2.setText("(2) Remover as variáveis que não são alcançáveis.");
-                TableLayout tableResult = new TableLayout(this);
-                tableResult = (TableLayout) findViewById(R.id.Passo3RemocaoDeSimbolosNaoAlcancaveisFNC_Resultado);
+                String othersVariables = selectOthersVariables(gAux, academic.getFirstSet().get(academic.getFirstSet().size() - 1));
+                step2.setText("(2) Remover as variáveis que não são alcançáveis." + variables +", i.e., " + othersVariables +".");
+                TableLayout tableResult = (TableLayout) findViewById(R.id.Passo3RemocaoDeSimbolosNaoAlcancaveisFNC_Resultado);
                 printOldGrammarOfTermAndReach(gAux, tableResult, academic);
             } else {
-                TextView step2 = new TextView(this);
-                step2 = (TextView) findViewById(R.id.Passo3RemocaoDeSimbolosNaoAlcancaveisFNC);
+                TextView step2 = (TextView) findViewById(R.id.Passo3RemocaoDeSimbolosNaoAlcancaveisFNC);
                 step2.setText("(2) Todas as variáveis são alcançáveis.");
             }
 
         } else {
-            TextView commentsOfNoReach = new TextView(this);
-            commentsOfNoReach = (TextView) findViewById(R.id.Passo3RemocaoDeSimbolosNaoAlcancaveisFNC);
+            TextView commentsOfNoReach = (TextView) findViewById(R.id.Passo3RemocaoDeSimbolosNaoAlcancaveisFNC);
             commentsOfNoReach.setText("\t\tNão há variáveis não alcançáveis na gramática inserida.");
         }
 
@@ -1306,35 +1239,28 @@ public class MainActivity2 extends AppCompatActivity {
                         "\t\t- S → λ");
 
         //Coloca resultado de FNC na tela
-        TextView chomskyResult = new TextView(this);
-        chomskyResult = (TextView) findViewById(R.id.FNCResultado);
+        TextView chomskyResult = (TextView) findViewById(R.id.FNCResultado);
         chomskyResult.setText(Html.fromHtml(academic.getResult()));
 
         if (academic.getSituation()) {
             //Coloca comentários do processo na tela
             academic.setComments(comments.toString());
-            TextView commentsOfFNC = new TextView(this);
-            commentsOfFNC = (TextView) findViewById(R.id.ComentariosFNC6);
+            TextView commentsOfFNC = (TextView) findViewById(R.id.ComentariosFNC6);
             commentsOfFNC.setText(academic.getComments());
 
             //Realiza segundo passo do processo (Mostra gramática com destaques e sem estar em FNC)
-            TextView step1FNC = new TextView(this);
-            step1FNC = (TextView) findViewById(R.id.Passo2FNC);
+            TextView step1FNC = (TextView) findViewById(R.id.Passo2FNC);
             step1FNC.setText("(1) Identificar as regras que não estão na Forma Normal de Chomsky.");
-            TableLayout redGrammar = new TableLayout(this);
-            redGrammar = (TableLayout) findViewById(R.id.Passo2FNC_Resultado);
+            TableLayout redGrammar = (TableLayout) findViewById(R.id.Passo2FNC_Resultado);
             printGrammarWithoutOldRules(gAux, redGrammar, academic);
 
             //Realiza o terceiro passo do processo (Mostra gramática com destaques em FNC)
-            TextView step2FNC = new TextView(this);
-            step2FNC = (TextView) findViewById(R.id.Passo3FNC);
+            TextView step2FNC = (TextView) findViewById(R.id.Passo3FNC);
             step2FNC.setText("(2) Transformar tais regras em um dos formatos válidos.");
-            TableLayout blueGrammar  = new TableLayout(this);
-            blueGrammar = (TableLayout) findViewById(R.id.Passo3FNC_Resultado);
+            TableLayout blueGrammar  = (TableLayout) findViewById(R.id.Passo3FNC_Resultado);
             printGrammarWithNewRules(gc, blueGrammar, academic);
         } else {
-            TextView commentsOfFNC = new TextView(this);
-            commentsOfFNC = (TextView) findViewById(R.id.ComentariosFNC6);
+            TextView commentsOfFNC = (TextView) findViewById(R.id.ComentariosFNC6);
             commentsOfFNC.setText("A gramática inserida já está na Forma Normal de Chomsky.");
         }
     }
@@ -1345,46 +1271,41 @@ public class MainActivity2 extends AppCompatActivity {
 
         //Realiza comentários sobre o processo
         StringBuilder comments = new StringBuilder();
-        comments.append("\t\tRecursividade direta à esquerda pode produzir “loops infinitos” em analisadores sintáticos descendentes (top-down).");
+        comments.append("\t\tRecursividade direta à esquerda pode produzir “loops infinitos” " +
+                "em analisadores sintáticos descendentes (top-down).");
 
         //Realiza processo
         gc = gc.removingTheImmediateLeftRecursion(gc, academicSupport);
         academicSupport.setResult(gc);
 
         //Insere o resultado do processo
-        TextView resultOfProcess = new TextView(this);
-        resultOfProcess = (TextView) findViewById(R.id.ResultGrammarWithoutLeftDirectRecursion);
+        TextView resultOfProcess = (TextView)
+                findViewById(R.id.ResultGrammarWithoutLeftDirectRecursion);
         resultOfProcess.setText(Html.fromHtml(academicSupport.getResult()));
 
         if (academicSupport.getSituation()) {
             //Insere comentários
             academicSupport.setComments(comments.toString());
-            TextView commentsOfProcess = new TextView(this);
-            commentsOfProcess = (TextView) findViewById(R.id.CommentsDirectLeftRecursion);
+            TextView commentsOfProcess = (TextView) findViewById(R.id.CommentsDirectLeftRecursion);
             commentsOfProcess.setText(academicSupport.getComments());
 
             //Primeiro passo do processo
-            TextView step1 = new TextView(this);
-            step1 = (TextView) findViewById(R.id.Step1DirectLeftRecursion);
+            TextView step1 = (TextView) findViewById(R.id.Step1DirectLeftRecursion);
             step1.setText("(1) O primeiro passo é identificar a recursão.");
-            TextView pseudo = new TextView(this);
-            pseudo = (TextView) findViewById(R.id.PseudoDirectLeftRecursionAlgorithm);
+            TextView pseudo = (TextView) findViewById(R.id.PseudoDirectLeftRecursionAlgorithm);
             pseudo.setText(Html.fromHtml(getLeftRecursionAlgorithm()));
-            TableLayout tableOfRecursion = new TableLayout(this);
-            tableOfRecursion = (TableLayout) findViewById(R.id.tableWithDirectLeftRecursion);
+            TableLayout tableOfRecursion = (TableLayout)
+                    findViewById(R.id.tableWithDirectLeftRecursion);
             //printGrammarWithoutOldRules(g, tableOfRecursion, academicSupport);
             printGrammarWithRecursiveRules(g, tableOfRecursion, academicSupport);
 
             //Segundo passo do processo
-            TextView step2 = new TextView(this);
-            step2 = (TextView) findViewById(R.id.Step2DirectLeftRecursion);
+            TextView step2 = (TextView) findViewById(R.id.Step2DirectLeftRecursion);
             step2.setText("(2) O segundo passo é resolver a recursão.");
-            TableLayout tableOfResult = new TableLayout(this);
-            tableOfResult = (TableLayout) findViewById(R.id.tableWithoutDirectLeftRecursion);
+            TableLayout tableOfResult = (TableLayout) findViewById(R.id.tableWithoutDirectLeftRecursion);
             printGrammarWithNewRules(gc, tableOfResult, academicSupport);
         } else {
-            TextView commentsOfProcess = new TextView(this);
-            commentsOfProcess = (TextView) findViewById(R.id.CommentsDirectLeftRecursion);
+            TextView commentsOfProcess = (TextView) findViewById(R.id.CommentsDirectLeftRecursion);
             commentsOfProcess.setText("A gramática inserida não possui recursão direta à esquerda.");
         }
 
@@ -1398,47 +1319,39 @@ public class MainActivity2 extends AppCompatActivity {
         Map<String, String> sortedVariables = new HashMap<>();
         gc = gc.removingLeftRecursion(gc, academicSupport, sortedVariables);
         academicSupport.setResult(gc);
-        TextView resultGrammar = new TextView(this);
-        resultGrammar = (TextView) findViewById(R.id.RemovalLeftRecursion);
+        TextView resultGrammar = (TextView) findViewById(R.id.RemovalLeftRecursion);
         resultGrammar.setText(Html.fromHtml(academicSupport.getResult()));
 
        if (academicSupport.getSituation()) {
            //Realiza comentários sobre o processo
-           TextView text = new TextView(this);
-           text = (TextView) findViewById(R.id.commentsOfRemovalLeftRecursion);
-           text.setText("A remoção de recursão à esquerda consiste em ordenar as variáveis da gramática e organizar as regras da forma que a variável do lado" +
+           TextView text = (TextView) findViewById(R.id.commentsOfRemovalLeftRecursion);
+           text.setText("A remoção de recursão à esquerda consiste em ordenar as variáveis da " +
+                   "gramática e organizar as regras da forma que a variável do lado" +
                    " esquerdo sempre possua valor menor do que a variável do lado direito.");
            academicSupport.setComments(text.toString());
 
            //Realiza o primeiro passo do processo (Ordenação das variáveis)
-           TextView step1 = new TextView(this);
-           step1 = (TextView) findViewById(R.id.step1RemovalLeftRecursion);
+           TextView step1 = (TextView) findViewById(R.id.step1RemovalLeftRecursion);
            step1.setText("(1) Ordenar as variáveis da gramática.");
-           TableLayout tableOfSortedVariables = new TableLayout(this);
-           tableOfSortedVariables = (TableLayout) findViewById(R.id.tableOfSortedVariables);
+           TableLayout tableOfSortedVariables = (TableLayout) findViewById(R.id.tableOfSortedVariables);
            tableOfSortedVariables.setShrinkAllColumns(true);
            printMap(tableOfSortedVariables, gc, sortedVariables, "Variável", "Valor");
 
            //Realiza segundo passo do processo (Destaca recursões encontradas)
-           TextView step2 = new TextView(this);
-           step1 = (TextView) findViewById(R.id.step2RemovalLeftRecursion);
-           step1.setText("(2) Localizar as recursões.");
-           TableLayout tableOfIrregularRules = new TableLayout(this);
-           tableOfIrregularRules = (TableLayout) findViewById(R.id.tableOfLeftRecursion);
-           printGrammarWithoutOldRules(academicSupport.getGrammar(), tableOfIrregularRules, academicSupport);
+           TextView step2 = (TextView) findViewById(R.id.step2RemovalLeftRecursion);
+           step2.setText("(2) Localizar as recursões.");
+           TableLayout tableOfIrregularRules = (TableLayout) findViewById(R.id.tableOfLeftRecursion);
+           printGrammarWithoutOldRules(g, tableOfIrregularRules, academicSupport);
 
            //Realiza terceiro passo do processo (Destaca as mudanças finais)
-           TextView step3 = new TextView(this);
-           step3 = (TextView) findViewById(R.id.step3RemovalLeftRecursion);
+           TextView step3 = (TextView) findViewById(R.id.step3RemovalLeftRecursion);
            step3.setText("(3) Alterar as regras");
-           TableLayout tableOfNewRules = new TableLayout(this);
-           tableOfNewRules = (TableLayout) findViewById(R.id.tableWithoutLeftRecursion);
+           TableLayout tableOfNewRules = (TableLayout) findViewById(R.id.tableWithoutLeftRecursion);
            printGrammarWithNewRules(gc, tableOfNewRules, academicSupport);
 
 
        } else {
-           TextView text = new TextView(this);
-           text = (TextView) findViewById(R.id.commentsOfRemovalLeftRecursion);
+           TextView text = (TextView) findViewById(R.id.commentsOfRemovalLeftRecursion);
            if (academicSupport.getSolutionDescription().isEmpty()) {
                text.setText("A gramática inserida não possui recursão à esquerda.");
            } else {
@@ -1453,72 +1366,63 @@ public class MainActivity2 extends AppCompatActivity {
 
         //Realiza todos os processos anteriores a Greibach
         AcademicSupport academic = new AcademicSupport();
-        gc = gc.getGrammarWithInitialSymbolNotRecursive(gc, academic);
+//        gc = gc.getGrammarWithInitialSymbolNotRecursive(gc, academic);
+//
+//        academic = new AcademicSupport();
+//        gc = gc.getGrammarEssentiallyNoncontracting(gc, academic);
+//
+//        academic = new AcademicSupport();
+//        gc = gc.getGrammarWithoutChainRules(gc, academic);
+//
+//        academic = new AcademicSupport();
+//        gc = gc.getGrammarWithoutNoTerm(gc, academic);
+//
+//        academic = new AcademicSupport();
+//        gc = gc.getGrammarWithoutNoReach(gc, academic);
 
-        academic = new AcademicSupport();
-        gc = gc.getGrammarEssentiallyNoncontracting(gc, academic);
-
-        academic = new AcademicSupport();
-        gc = gc.getGrammarWithoutChainRules(gc, academic);
-
-        academic = new AcademicSupport();
-        gc = gc.getGrammarWithoutNoTerm(gc, academic);
-
-        academic = new AcademicSupport();
-        gc = gc.getGrammarWithoutNoReach(gc, academic);
-
-        academic = new AcademicSupport();
+        //academic = new AcademicSupport();
         gc = gc.FNC(gc, academic);
 
-        academic = new AcademicSupport();
-        gc = gc.removingTheImmediateLeftRecursion(gc, academic);
+//        academic = new AcademicSupport();
+//        gc = gc.removingTheImmediateLeftRecursion(gc, academic);
 
         //Realiza processo de remoção de recursão à esquerda
         academic = new AcademicSupport();
         Map<String, String> sortedVariables = new HashMap<>();
-        gc = gc.removingLeftRecursion(gc, academic, sortedVariables);
-
-        academic.setResult(gc);
-        TextView resultGrammar = new TextView(this);
-        resultGrammar = (TextView) findViewById(R.id.ResultadoFNG1_1);
+        Grammar newG = gc.removingLeftRecursion(gc, academic, sortedVariables);
+        academic.setResult(newG);
+        TextView resultGrammar = (TextView) findViewById(R.id.ResultadoFNG1_1);
         resultGrammar.setText(Html.fromHtml(academic.getResult()));
 
         if (academic.getSituation()) {
             //Realiza comentários sobre o processo
-            TextView text = new TextView(this);
-            text = (TextView) findViewById(R.id.FNGComentarios1);
-            text.setText("A remoção de recursão à esquerda consiste em ordenar as variáveis da gramática e organizar as regras da forma que a variável do lado" +
+            TextView text = (TextView) findViewById(R.id.FNGComentarios1);
+            text.setText("A remoção de recursão à esquerda consiste em ordenar as variáveis da " +
+                    "gramática e organizar as regras da forma que a variável do lado" +
                     " esquerdo sempre possua valor menor do que a variável do lado direito.");
             academic.setComments(text.toString());
 
             //Realiza o primeiro passo do processo (Ordenação das variáveis)
-            TextView step1 = new TextView(this);
-            step1 = (TextView) findViewById(R.id.FNGPasso1_1);
+            TextView step1 = (TextView) findViewById(R.id.FNGPasso1_1);
             step1.setText("(1) Ordenar as variáveis da gramática.");
-            TableLayout tableOfSortedVariables = new TableLayout(this);
-            tableOfSortedVariables = (TableLayout) findViewById(R.id.FNGStep1_1_Resultado);
+            TableLayout tableOfSortedVariables =  (TableLayout) findViewById(R.id.FNGStep1_1_Resultado);
             tableOfSortedVariables.setShrinkAllColumns(true);
-            printMap(tableOfSortedVariables, gc, sortedVariables, "Variável", "Valor");
+            printMap(tableOfSortedVariables, newG, sortedVariables, "Variável", "Valor");
 
             //Realiza segundo passo do processo (Destaca recursões encontradas)
-            TextView step2 = new TextView(this);
-            step1 = (TextView) findViewById(R.id.FNGPasso1_2);
-            step1.setText("(2) Localizar as recursões.");
-            TableLayout tableOfIrregularRules = new TableLayout(this);
-            tableOfIrregularRules = (TableLayout) findViewById(R.id.FNGPasso1_2_Resultado);
-            printGrammarWithoutOldRules(academic.getGrammar(), tableOfIrregularRules, academic);
+            TextView step2 = (TextView) findViewById(R.id.FNGPasso1_2);
+            step2.setText("(2) Localizar as recursões.");
+            TableLayout tableOfIrregularRules = (TableLayout) findViewById(R.id.FNGPasso1_2_Resultado);
+            printGrammarWithoutOldRules(gc, tableOfIrregularRules, academic);
 
             //Realiza terceiro passo do processo (Destaca as mudanças finais)
-            TextView step3 = new TextView(this);
-            step3 = (TextView) findViewById(R.id.FNGPasso1_3);
+            TextView step3 = (TextView) findViewById(R.id.FNGPasso1_3);
             step3.setText("(3) Alterar as regras");
-            TableLayout tableOfNewRules = new TableLayout(this);
-            tableOfNewRules = (TableLayout) findViewById(R.id.FNGPasso1_3_Resultado);
-            printGrammarWithNewRules(gc, tableOfNewRules, academic);
+            TableLayout tableOfNewRules = (TableLayout) findViewById(R.id.FNGPasso1_3_Resultado);
+            printGrammarWithNewRules(newG, tableOfNewRules, academic);
 
         } else {
-            TextView text = new TextView(this);
-            text = (TextView) findViewById(R.id.FNGComentarios1);
+            TextView text = (TextView) findViewById(R.id.FNGComentarios1);
             if (academic.getSolutionDescription().isEmpty()) {
                 text.setText("A gramática inserida não possui recursão à esquerda.");
             } else {
@@ -1527,45 +1431,41 @@ public class MainActivity2 extends AppCompatActivity {
         }
 
         //Coloca a gramatica na Forma Normal de Greibach
-        Grammar gAux = (Grammar) gc.clone();
+        Grammar gAux = (Grammar) newG.clone();
         academic = new AcademicSupport();
-        gc = gc.FNG(gc, academic);
+        gc = g.FNG(g, academic);
         academic.setResult(gc);
 
         //Coloca resultado na tela
-        TextView resultFNG = new TextView(this);
-        resultFNG = (TextView) findViewById(R.id.ResultadoFNG2_1);
+        TextView resultFNG = (TextView) findViewById(R.id.ResultadoFNG2_1);
         resultFNG.setText(Html.fromHtml(academic.getResult()));
 
         if (academic.getSituation()) {
             //Insere os comentários na tela
-            TextView commentsOfFNG = new TextView(this);
-            commentsOfFNG = (TextView) findViewById(R.id.FNGComentarios2);
-            commentsOfFNG.append("Uma GLC G = (V , Σ, P, S) está na FN de Greibach se suas regras têm uma das seguintes formas:\n");
-            commentsOfFNG.append(Html.fromHtml("- A -> aA<sub><small>1</small></sub>A<sub><small>2</small></sub>A<sub><small>3</small></sub>...A<sub><small>n</small></sub>"));
-            commentsOfFNG.append(Html.fromHtml("\t\t onde a ∈ Σ e A<sub><small>1</small></sub>... A<sub><small>n</small></sub> ∈ V − {S}<br>"));
+            TextView commentsOfFNG = (TextView) findViewById(R.id.FNGComentarios2);
+            commentsOfFNG.append("Uma GLC G = (V , Σ, P, S) está na FN de Greibach se suas regras " +
+                    "têm uma das seguintes formas:\n");
+            commentsOfFNG.append(Html.fromHtml("- A -> aA<sub><small>1</small></sub>A<sub><small>" +
+                    "2</small></sub>A<sub><small>3</small></sub>...A<sub><small>n</small></sub>"));
+            commentsOfFNG.append(Html.fromHtml("\t\t onde a ∈ Σ e A<sub><small>1</small></sub>" +
+                    "...  A<sub><small>n</small></sub> ∈ V − {S}<br>"));
             commentsOfFNG.append("- A -> a\t\t onde a ∈ Σ\n");
             commentsOfFNG.append("- A -> λ");
 
             //Realiza o primeiro passo do processo (Destacar regras irregulares)
-            TextView step1FNG = new TextView(this);
-            step1FNG = (TextView) findViewById(R.id.FNGPasso2_1);
+            TextView step1FNG = (TextView) findViewById(R.id.FNGPasso2_1);
             step1FNG.setText("(1) Localizar as regras que não estão na Forma Normal de Greibach.");
-            TableLayout redGrammar = new TableLayout(this);
-            redGrammar = (TableLayout) findViewById(R.id.FNGStep2_1_Resultado);
+            TableLayout redGrammar = (TableLayout) findViewById(R.id.FNGStep2_1_Resultado);
             printGrammarWithoutOldRules(gAux, redGrammar, academic);
 
             //Realiza o segundo passo do processo (Destacar as novas regras inseridas no processo)
-            TextView step2FNG = new TextView(this);
-            step2FNG = (TextView) findViewById(R.id.FNGPasso2_2);
+            TextView step2FNG = (TextView) findViewById(R.id.FNGPasso2_2);
             step2FNG.setText("(2) Transformar tais regras em um dos formatos válidos.");
-            TableLayout blueGrammar = new TableLayout(this);
-            blueGrammar = (TableLayout) findViewById(R.id.FNGPasso2_2_Resultado);
+            TableLayout blueGrammar = (TableLayout) findViewById(R.id.FNGPasso2_2_Resultado);
             printGrammarWithNewRules(gc, blueGrammar, academic);
 
         } else {
-            TextView commentsOfFNG = new TextView(this);
-            commentsOfFNG = (TextView) findViewById(R.id.FNGComentarios2);
+            TextView commentsOfFNG = (TextView) findViewById(R.id.FNGComentarios2);
             commentsOfFNG.setText("A gramática inserida já está na Forma Normal de Greibach.");
         }
     }
@@ -1576,8 +1476,7 @@ public class MainActivity2 extends AppCompatActivity {
         AcademicSupport academic = new AcademicSupport();
         StringBuilder comments = new StringBuilder();
 
-        TableLayout cykTableResult = new TableLayout(this);
-        cykTableResult = (TableLayout) findViewById(R.id.CYKTabelaResultado);
+        TableLayout cykTableResult =  (TableLayout) findViewById(R.id.CYKTabelaResultado);
         cykTableResult.setShrinkAllColumns(true);
         if (!GrammarParser.isFNC(gc)) {
             comments.append("\t\tA gramática inserida não está na Forma Normal de Chomsky. Logo, uma transformação foi necessária.\n");
@@ -1589,7 +1488,6 @@ public class MainActivity2 extends AppCompatActivity {
             gc = gc.getGrammarWithoutNoTerm(gc, academic);
             gc = gc.getGrammarWithoutNoReach(gc, academic);
             gc = gc.FNC(gc, academic);
-            academic = new AcademicSupport();
         }
 
         //Realiza o processo CYK
@@ -1600,8 +1498,7 @@ public class MainActivity2 extends AppCompatActivity {
         printCYKTable(cykTableResult, word.length(), cykOut, word.length(), word.length(), 20);
 
         //Inicia a explicação do funcionamento do algoritmo de CYK
-        TableLayout explanationTable = new TableLayout(this);
-        explanationTable = (TableLayout) findViewById(R.id.CYKTabelaExplicacao);
+        TableLayout explanationTable = (TableLayout) findViewById(R.id.CYKTabelaExplicacao);
 
         //explicando linha 1 CYK
         TableLayout auxTable = new TableLayout(this);
@@ -1609,7 +1506,9 @@ public class MainActivity2 extends AppCompatActivity {
         TextView explanationTextView = new TextView(this);
         TableRow explanationTableRow = new TableRow(this);
 
-        explanationTextView.setText("(1) O primeiro passo do algoritmo é adicionar à tabela as \nvariáveis que produzem os respectivos terminais \n diretamente.");
+        explanationTextView.setText("(1) O primeiro passo do algoritmo é" +
+                " adicionar à tabela as \nvariáveis que produzem os " +
+                "respectivos terminais \n diretamente.");
         explanationTableRow.addView(explanationTextView);
         explanationTable.addView(explanationTableRow);
 
@@ -1621,8 +1520,10 @@ public class MainActivity2 extends AppCompatActivity {
             explanationTextView = new TextView(this);
             explanationTableRow = new TableRow(this);
             aux = new StringBuilder();
-            explanationTextView.append("Há alguma regra que gere " + firstCell[0] + " diretamente? ");
-            explanationTextView.append((checkRules(gc, firstCell[0], aux)) ? ("Sim.") : ("Não."));
+            explanationTextView.append("Há alguma regra que gere " +
+                    firstCell[0] + " diretamente? ");
+            explanationTextView.append((checkRules(gc, firstCell[0],
+                    aux)) ? ("Sim.") : ("Não."));
             explanationTextView.append("\n" + aux.toString());
             explanationTableRow.addView(explanationTextView);
             explanationTable.addView(explanationTableRow);
@@ -1948,11 +1849,8 @@ public class MainActivity2 extends AppCompatActivity {
      */
     public String joinGrammars(final Grammar grammar1, final Grammar grammar2) {
         StringBuilder newG = new StringBuilder();
-        for (Rule element : grammar1.getRules()) {
-            if (element.getLeftSide().equals(grammar1.getInitialSymbol())) {
-                newG.append(element);
-                newG.append("\n");
-            }
+        for (Rule element : grammar1.getRules(grammar1.getInitialSymbol())) {
+            newG.append(element).append("\n");
         }
         for (Rule element : grammar2.getRules()) {
             if (element.getLeftSide().equals(grammar1.getInitialSymbol()) && !grammar1.getRules().contains(element)) {
@@ -1988,6 +1886,7 @@ public class MainActivity2 extends AppCompatActivity {
         algol.append("&nbsp;&nbsp;&nbsp;&nbsp;<b>para cada</b> A ∈ V <b>faça</b><br>");
         algol.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>se</b> A → w e w ∈ PREV<sup>∗</sup> <b>faça</b><br>");
         algol.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NULL = NULL ∪ {A}<br>");
+        algol.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NULL = NULL ∪ {A}<br>");
         algol.append("<b>até</b> NULL == PREV");
         return algol.toString();
     }
@@ -2016,6 +1915,8 @@ public class MainActivity2 extends AppCompatActivity {
      */
     public String getTermAlgorithm() {
         StringBuilder algol = new StringBuilder();
+        StringBuilder a = new StringBuilder();
+        a.append("TERM = {A | existe uma regra A → w ∈ P, com w ∈ Σ<sup>∗</sup> }<br>");
         algol.append("TERM = {A | existe uma regra A → w ∈ P, com w ∈ Σ<sup>∗</sup> }<br>");
         algol.append("<b>repita</b><br>");
         algol.append("&nbsp;&nbsp;PREV = TERM<br>");
@@ -2148,7 +2049,8 @@ public class MainActivity2 extends AppCompatActivity {
      * @param table
      * @param academic
      */
-    private void printGrammarWithoutOldRules(final Grammar grammar, TableLayout table, final AcademicSupport academic) {
+    private void printGrammarWithoutOldRules(final Grammar grammar, TableLayout table,
+                                             final AcademicSupport academic) {
         TableRow row0 = new TableRow(this);
         TextView left = new TextView(this);
         TextView arrow0 = new TextView(this);
@@ -2220,7 +2122,8 @@ public class MainActivity2 extends AppCompatActivity {
      * Método que imprime a tabela dos conjuntos utilizados durante a execução do algoritmo
      * @param academic : informaçãos coletadas durante a execução do algoritmo
      */
-    private void printTableOfSets(TableLayout table, final AcademicSupport academic, String nameOfFirstSet, String nameOfSecondSet) {
+    private void printTableOfSets(TableLayout table, final AcademicSupport academic,
+                                  String nameOfFirstSet, String nameOfSecondSet) {
         int i = 0;
         TableRow header = new TableRow(this);
         TextView htv0 = new TextView(this);
@@ -2332,7 +2235,8 @@ public class MainActivity2 extends AppCompatActivity {
         for (int i = 0; i < orderVariables.size(); i++) {
             for (String variable : grammar.getVariables()) {
                 contViews = 0;
-                if (!variable.equals(grammar.getInitialSymbol()) && orderVariables.get(i).equals(variable)) {
+                if (!variable.equals(grammar.getInitialSymbol()) &&
+                        orderVariables.get(i).equals(variable)) {
                     TableRow row1 = new TableRow(this);
                     TextView tv0 = new TextView(this);
                     tv0.setText(variable);
@@ -2341,7 +2245,9 @@ public class MainActivity2 extends AppCompatActivity {
                     boolean irregularVariable = false;
                     for (Rule element : grammar.getRules()) {
                         if (element.getLeftSide().equals(variable)) {
-                            if (academic.getIrregularRules().contains(element) && !academic.getFirstSet().get(academic.getFirstSet().size() - 1).contains(variable)) {
+                            if (academic.getIrregularRules().contains(element) &&
+                                    !academic.getFirstSet().get(academic.getFirstSet().size() - 1)
+                                            .contains(variable)) {
                                 irregularVariable = true;
                             }
                         }
@@ -2420,7 +2326,8 @@ public class MainActivity2 extends AppCompatActivity {
      * @param table
      * @param academic
      */
-    private void printGrammarWithNewRules(final Grammar grammar, TableLayout table, final AcademicSupport academic) {
+    private void printGrammarWithNewRules(final Grammar grammar, TableLayout table,
+                                          final AcademicSupport academic) {
         TableRow row0 = new TableRow(this);
         TextView left = new TextView(this);
         TextView arrow0 = new TextView(this);
@@ -2430,8 +2337,6 @@ public class MainActivity2 extends AppCompatActivity {
         row0.addView(arrow0);
         ArrayList<String> orderVariables = new ArrayList<>(grammar.getVariables());
         Collections.sort(orderVariables);
-        String test = orderVariables.toString();
-        String x = grammar.getInitialSymbol();
         int contViews = 2;
         for (Rule element : grammar.getRules()) {
             if (element.getLeftSide().equals(grammar.getInitialSymbol())) {
@@ -2766,7 +2671,9 @@ public class MainActivity2 extends AppCompatActivity {
      * Método que imprime a tabela dos conjuntos utilizados durante a execução do algoritmo REACH
      * @param academic : informaçãos coletadas durante a execução do algoritmo
      */
-    private void printTableOfReachSets(TableLayout table, final AcademicSupport academic, String nameOfFirstSet, String nameOfSecondSet, String nameOfThirdSet) {
+    private void printTableOfReachSets(TableLayout table, final AcademicSupport academic,
+                                       String nameOfFirstSet, String nameOfSecondSet,
+                                       String nameOfThirdSet) {
         int i = 0;
         TableRow header = new TableRow(this);
         TextView htv0 = new TextView(this);
@@ -2855,7 +2762,8 @@ public class MainActivity2 extends AppCompatActivity {
      * @param firstValue
      * @param secondValue
      */
-    private void printMap(TableLayout table, final Grammar g, final Map<String, String> map, String firstValue, String secondValue) {
+    private void printMap(TableLayout table, final Grammar g, final Map<String, String> map,
+                          String firstValue, String secondValue) {
         //Configura cabeçalho
         TableRow header = new TableRow(this);
         header.setBackgroundColor(getResources().getColor(R.color.DarkGray));
