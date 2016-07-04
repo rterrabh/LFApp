@@ -1073,6 +1073,17 @@ public class Grammar implements Cloneable {
 		return rulesOfVariable;
 	}
 
+
+	public Set<Rule> getRulesThatProduces(String rightSide) {
+		Set<Rule> rulesOfVariable = new HashSet<>();
+		for (Rule rule : rules) {
+			if (rule.getRightSide().contains(rightSide)) {
+				rulesOfVariable.add(rule);
+			}
+		}
+		return rulesOfVariable;
+	}
+
 	public boolean isFNG() {
 		for(Rule rule : rules) {
 			if(!rule.isFNG(rule.getLeftSide().equals(initialSymbol))) {

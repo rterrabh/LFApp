@@ -117,6 +117,9 @@ public class Rule {
 		}
 		while(Character.isDigit(rightSide.charAt(indice))) {
 			indice++;
+			if(indice == rightSide.length()) {
+				return false;
+			}
 		}
 		if(!Character.isUpperCase(rightSide.charAt(indice++))) {
 			return false;
@@ -153,8 +156,14 @@ public class Rule {
 	}
 
 	public boolean existsLeftRecursion() {
-		return rightSide.startsWith(leftSide) &&
-				!Character.isDigit(rightSide.charAt(leftSide.length()));
+		if(rightSide.length() > leftSide.length()) {
+			return rightSide.startsWith(leftSide) &&
+					!Character.isDigit(rightSide.charAt(leftSide.length()));
+		}
+		if(rightSide.length() == leftSide.length()) {
+			return rightSide.startsWith(leftSide);
+		}
+		return false;
 	}
 
 	public String getFirstVariableOfRightSide() {

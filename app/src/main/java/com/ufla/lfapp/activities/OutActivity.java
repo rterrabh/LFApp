@@ -85,6 +85,26 @@ public class OutActivity extends AppCompatActivity {
                    //moreLeftDerivation(g);
                    cyk(g, word);
                 }
+
+                //Opção 1 - algoritmos encadeados
+                /*removingInitialRecursiveSymbol(g);
+                Grammar newG = g.getGrammarWithInitialSymbolNotRecursive(g, new AcademicSupport());
+                removingEmptyProductions(newG);
+                newG = newG.getGrammarEssentiallyNoncontracting(newG, new AcademicSupport());
+                removingChainRules(newG);
+                newG = newG.getGrammarWithoutChainRules(newG, new AcademicSupport());
+                removingNotTerminalsSymbols(newG);
+                newG = newG.getGrammarWithoutNoTerm(newG, new AcademicSupport());
+                removingNotReachableSymbols(newG);
+                //newG = newG.getGrammarWithoutNoReach(newG, new AcademicSupport());
+                fnc(g);
+                newG = g.FNC(g, new AcademicSupport());
+                removingTheImmediateLeftRecursion(newG);
+                removingLeftRecursion(newG);
+                fng(newG);*/
+                //Grammar gc = (Grammar) g.clone();
+
+                //Opção 2 - algoritmos isolados
                 removingInitialRecursiveSymbol(g);
                 removingEmptyProductions(g);
                 removingChainRules(g);
@@ -94,7 +114,7 @@ public class OutActivity extends AppCompatActivity {
                 removingTheImmediateLeftRecursion(g);
                 removingLeftRecursion(g);
                 fng(g);
-                Grammar gc = (Grammar) g.clone();
+                //Grammar gc = (Grammar) g.clone();
             }
         }
 
