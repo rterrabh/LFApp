@@ -27,15 +27,19 @@ public class AcademicSupport {
 
 
     public AcademicSupport() {
-        this("", false, new HashMap<Integer, String>(), "", "", new HashSet<Rule>(),
-                new HashSet<Rule>(), new ArrayList<Set<String>>(), new ArrayList<Set<String>>(),
+        this("", false, new HashMap<Integer, String>(), "", "",
+                new HashSet<Rule>(), new HashSet<Rule>(),
+                new ArrayList<Set<String>>(), new ArrayList<Set<String>>(),
                 new ArrayList<Set<String>>(), new Grammar());
     }
 
-    public AcademicSupport(String comments, boolean situation, Map<Integer, String> foundProblems,
-                           Grammar g, String solutionDescription, Set<Rule> insertedRules,
+    public AcademicSupport(String comments, boolean situation,
+                           Map<Integer, String> foundProblems,
+                           Grammar g, String solutionDescription,
+                           Set<Rule> insertedRules,
                            Set<Rule> irregularRules, List<Set<String>> firtSet,
-                           List<Set<String>> secondSet, List<Set<String>> thirdSet,
+                           List<Set<String>> secondSet,
+                           List<Set<String>> thirdSet,
                            Grammar grammar) {
         this.comments = comments;
         this.situation = situation;
@@ -51,10 +55,13 @@ public class AcademicSupport {
     }
 
     //Construtor base
-    public AcademicSupport(String comments, boolean situation, Map<Integer, String> foundProblems,
-                           String result, String solutionDescription, Set<Rule> insertedRules,
+    public AcademicSupport(String comments, boolean situation,
+                           Map<Integer, String> foundProblems,
+                           String result, String solutionDescription,
+                           Set<Rule> insertedRules,
                            Set<Rule> irregularRules, List<Set<String>> firtSet,
-                           List<Set<String>> secondSet, List<Set<String>> thirdSet,
+                           List<Set<String>> secondSet,
+                           List<Set<String>> thirdSet,
                            Grammar grammar) {
         super();
         this.comments = comments;
@@ -131,10 +138,11 @@ public class AcademicSupport {
     public String formatResultGrammar(final Grammar g) {
         ArrayList<String> listOfVariables = new ArrayList<>(g.getVariables());
         Collections.sort(listOfVariables);
-        StringBuilder txtGrammar = new StringBuilder(g.getInitialSymbol() + " ->");
+        StringBuilder txtGrammar = new StringBuilder(g.getInitialSymbol()
+                + " ->");
         for (Rule element : g.getRules(g.getInitialSymbol())) {
-            txtGrammar.append(" ").append(putSentenceOnSubstring(element.getRightSide()))
-                    .append(" |");
+            txtGrammar.append(" ").append(putSentenceOnSubstring(element
+                    .getRightSide())).append(" |");
         }
         txtGrammar.deleteCharAt(txtGrammar.length() - 1);
         txtGrammar.append("<br>");
@@ -144,13 +152,15 @@ public class AcademicSupport {
             }
             if (variable.length() > 1) {
                 txtGrammar.append(variable.charAt(0));
-                txtGrammar.append("<sub>").append(variable.substring(1)).append("</sub>");
+                txtGrammar.append("<sub>").append(variable.substring(1))
+                        .append("</sub>");
             } else {
                 txtGrammar.append(variable);
             }
             txtGrammar.append(" ->");
             for (Rule element : g.getRules(variable)) {
-                    txtGrammar.append(" ").append(putSentenceOnSubstring(element.getRightSide()));
+                    txtGrammar.append(" ").append(putSentenceOnSubstring
+                            (element.getRightSide()));
                     txtGrammar.append(" |");
             }
             txtGrammar.deleteCharAt(txtGrammar.length() - 1);
@@ -223,7 +233,8 @@ public class AcademicSupport {
     }
 
     public void insertOnFirstSet(Set<String>  currentSet, String decision) {
-        if (decision.equals("Lambda") || decision.equals("TERM") || decision.equals("REACH")) {
+        if (decision.equals("Lambda") || decision.equals("TERM")
+                || decision.equals("REACH")) {
             if (!verifySet(firstSet, currentSet)) {
                 Set<String> aux = new HashSet<>();
                 aux.addAll(currentSet);
@@ -237,7 +248,8 @@ public class AcademicSupport {
     }
 
     public void insertOnSecondSet(Set<String> currentSet, String decision) {
-        if (decision.equals("Lambda") || decision.equals("TERM") || decision.equals("REACH")) {
+        if (decision.equals("Lambda") || decision.equals("TERM")
+                || decision.equals("REACH")) {
             if (!verifySet(secondSet, currentSet)) {
                 Set<String> aux = new HashSet<>();
                 aux.addAll(currentSet);
@@ -251,7 +263,8 @@ public class AcademicSupport {
     }
 
     public void insertOnThirdSet(Set<String> currentSet, String decision) {
-        if (decision.equals("Lambda") || decision.equals("TERM") || decision.equals("REACH")) {
+        if (decision.equals("Lambda") || decision.equals("TERM")
+                || decision.equals("REACH")) {
             if (!verifySet(thirdSet, currentSet)) {
                 Set<String> aux = new HashSet<>();
                 aux.addAll(currentSet);
@@ -264,10 +277,12 @@ public class AcademicSupport {
         }
     }
 
-    private boolean verifySet(List<Set<String>> setOfVariables, Set<String> currentSet) {
+    private boolean verifySet(List<Set<String>> setOfVariables,
+                              Set<String> currentSet) {
         /*if (setOfVariables.size() != 0) {
             for (int i = 0; i < setOfVariables.size(); i++) {
-                Set<String> auxSet = setOfVariables.get(setOfVariables.size() - 1);
+                Set<String> auxSet = setOfVariables
+                .get(setOfVariables.size() - 1);
                 if (auxSet.equals(currentSet)) {
                 }
             }

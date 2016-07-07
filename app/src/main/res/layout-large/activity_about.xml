@@ -26,7 +26,7 @@
         android:layout_width="260dp"
         android:layout_height="260dp"
         android:id="@+id/imageViewLFAppIcon"
-        android:src="@drawable/lfappicon"
+        android:src="@drawable/lfapp_icon"
         android:adjustViewBounds="false"
         android:scaleType="fitXY"
         android:contentDescription="@string/lfapp_icon"

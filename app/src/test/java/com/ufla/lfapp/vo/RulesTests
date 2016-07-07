@@ -1,0 +1,10 @@
+Rule01: S -> aSBC
+Rule02: S -> λ
+Rule03: S -> S
+Rule04: S -> abba
+Rule05: S -> AB
+Rule06: S -> aAB
+Rule07: S -> ABaB
+Rule08:
+Rule09:
+Rule10:

@@ -1085,12 +1085,137 @@ public class Grammar implements Cloneable {
 	}
 
 	public boolean isFNG() {
-		for(Rule rule : rules) {
-			if(!rule.isFNG(rule.getLeftSide().equals(initialSymbol))) {
+		for(Rule rule : this.rules) {
+			if(!rule.isFng(this.initialSymbol)) {
 				return false;
 			}
 		}
 		return true;
+	}
+
+	public List<String> getIndirectLeftRecursionOfVariable(String variable,
+														List<String>
+																variablesWithLeftRecursion) {
+		List<String> indirectLeftRecursion = new ArrayList<>();
+		for(String var : variablesWithLeftRecursion) {
+			if(variable.equals(var)) {
+				continue;
+			}
+			for(Rule rule : getRules(var)) {
+				if(rule.getFirstVariableOfRightSide().equals(variable)) {
+					indirectLeftRecursion.add(var);
+				}
+			}
+		}
+		return indirectLeftRecursion;
+	}
+
+	public Map<String, List<String>> getVariablesMapToIndirectLeftRecursion
+			(List<String> variables, List<String> variablesWithLeftRecursion) {
+		Map<String, List<String>> variablesMapToIndirectLeftRecursion = new
+				HashMap<>();
+		for(String varible : variables) {
+			variablesMapToIndirectLeftRecursion.put(varible,
+					getIndirectLeftRecursionOfVariable(varible,
+							variablesWithLeftRecursion));
+		}
+		return variablesMapToIndirectLeftRecursion;
+	}
+
+	public List<String> getVariablesWithDirectLeftRecursion() {
+		List<String> variablesWithLeftRecursion = new ArrayList<>();
+		boolean existRecursion;
+		for(String variable : this.variables) {
+			existRecursion = false;
+			for(Rule rule : getRules(variable)) {
+				if(rule.existsLeftRecursion()) {
+					existRecursion = true;
+					break;
+				}
+			}
+			if(existRecursion) {
+				variablesWithLeftRecursion.add(variable);
+			}
+		}
+		return variablesWithLeftRecursion;
+	}
+
+	public List<String> getVariablesWithoutDirectLeftRecursion() {
+		List<String> variablesWithoutLeftRecursion = new ArrayList<>();
+		boolean existRecursion;
+		for(String variable : this.variables) {
+			existRecursion = false;
+			for (Rule rule : getRules(variable)) {
+				if (rule.existsLeftRecursion()) {
+					existRecursion = true;
+					break;
+				}
+			}
+			if (!existRecursion) {
+				variablesWithoutLeftRecursion.add(variable);
+			}
+		}
+		return variablesWithoutLeftRecursion;
+	}
+
+	public void sortVariables(List<String> variables) {
+		Collections.sort(variables);
+		if(variables.contains(this.initialSymbol)) {
+			variables.remove(this.initialSymbol);
+			variables.add(0, this.initialSymbol);
+		}
+	}
+
+	public List<String> getBestOrderVariablesForRemovingLeftRecursion
+			(final AcademicSupportFNG academicSupportFng) {
+		List<String> orderVariables = new ArrayList<>();
+		List<String> orderVariablesAux = new ArrayList<>
+				(getVariablesWithoutDirectLeftRecursion());
+		sortVariables(orderVariablesAux);
+		orderVariables.addAll(orderVariablesAux);
+		//orderVariablesAux.Get
+		List<String> variablesWithLeftRecursion = new ArrayList<>();
+		boolean existRecursion;
+		boolean existRecursionInitialSimbol = false;
+		for(Rule rule : getRules(getInitialSymbol())) {
+			if(rule.existsLeftRecursion()) {
+				existRecursionInitialSimbol = true;
+				break;
+			}
+		}
+		if(existRecursionInitialSimbol) {
+			variablesWithLeftRecursion.add(this.initialSymbol);
+		} else {
+			orderVariables.add(getInitialSymbol());
+		}
+		for(String variable : this.variables) {
+			if(variable.equals(this.initialSymbol)) {
+				continue;
+			}
+			existRecursion = false;
+			for(Rule rule : getRules(variable)) {
+				if(rule.existsLeftRecursion()) {
+					existRecursion = true;
+					break;
+				}
+			}
+			if(existRecursion) {
+				variablesWithLeftRecursion.add(variable);
+			} else {
+				orderVariables.add(variable);
+			}
+		}
+		academicSupportFng.addListVariables(orderVariables);
+		//List<String> orderVariablesAux = new ArrayList<>();
+		Map<String, List<String>> indirectLeftRecursion = new HashMap<>();
+		for(String variable : variablesWithLeftRecursion) {
+			//indirectLeftRecursion.put(variable,
+					//indirectLeftRecursionOfVariable(variable,
+							//variablesWithLeftRecursion));
+		}
+
+
+		return null;
 	}
 
 
@@ -1265,6 +1390,23 @@ public class Grammar implements Cloneable {
 			}
 		}
 		return X;
+	}
+
+	public Map<String, Set<String>> getRulesMapVToU() {
+		Map<String, Set<String>> rulesMapUToV = new TreeMap<>();
+		Set<String> rightSide;
+		for(Rule rule : rules) {
+			if(rulesMapUToV.containsKey(rule.getLeftSide())) {
+				rightSide = rulesMapUToV.get(rule.getLeftSide());
+				rightSide.add(rule.getRightSide());
+				rulesMapUToV.put(rule.getLeftSide(), rightSide);
+			} else {
+				rightSide = new TreeSet<>();
+				rightSide.add(rule.getRightSide());
+				rulesMapUToV.put(rule.getLeftSide(), rightSide);
+			}
+		}
+		return rulesMapUToV;
 	}
 
 	public Map<String, Set<String>> getRulesMapUToV() {

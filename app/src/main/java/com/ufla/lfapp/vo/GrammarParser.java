@@ -509,7 +509,7 @@ public class GrammarParser {
 
 
         //coloca gramática na Forma Normal de Chomsky, caso ainda não esteja
-        if (!GrammarParser.isFNC(gcAux)) {
+        if (!GrammarParser.isFnc(gcAux)) {
             gcAux = gcAux.FNC(gcAux);
         }
         //primeiro, é necessário verificar se a palavra pertence à linguagem
@@ -1069,7 +1069,7 @@ public class GrammarParser {
 
     public static boolean isFNC(final Grammar gc) {
         for(Rule rule : gc.getRules()) {
-            if(!rule.isFNC(gc.getInitialSymbol())) {
+            if(!rule.isFnc(gc.getInitialSymbol())) {
                 return false;
             }
         }

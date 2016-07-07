@@ -1,17 +1,23 @@
 package com.ufla.lfapp.vo;
 
-public class Rule {
+import java.util.HashSet;
+import java.util.Set;
+
+public class Rule implements Cloneable {
 	
 	//attributes 
 	private String leftSide;
 	private String rightSide;
 	
-	//builder
+	//builders
 	public Rule() {
 		this("", "");
 	}
-	
-	
+
+	public Rule(Rule r) {
+		this(r.getLeftSide(), r.getRightSide());
+	}
+
 	public Rule(String left, String right) {
 		super();
 		this.leftSide = left;
@@ -19,12 +25,7 @@ public class Rule {
 	}
 
 	//methods
-	
 	//accessors
-
-	public Rule(Rule r) {
-		this(r.getLeftSide(), r.getRightSide());
-	}
 
 	public String getLeftSide() {
 		return leftSide;
@@ -83,7 +84,7 @@ public class Rule {
 	}
 	
 	@Override
-	protected Object clone()   {
+	protected Object clone() {
 		Rule rc = new Rule();
 		
 		rc.setLeftSide(this.leftSide);
@@ -97,12 +98,16 @@ public class Rule {
 		return this.leftSide + " -> " + this.rightSide;
 	}
 
-
-	public boolean isFNC(String initialSymbol) {
-		if(leftSide.equals(initialSymbol)) {
-			if(rightSide.equals(Grammar.LAMBDA)) {
-				return true;
-			}
+	/**
+	 * Verifica se a regra está na forma normal de Chomsky (FNC).
+	 * @param initialSymbol símbolo inicial da gramática na qual a regra está
+	 *                         contida.
+	 * @return true se a regra está na forma normal de Chomsky, e caso
+	 * contrário false.
+	 */
+	public boolean isFnc(String initialSymbol) {
+		if(rightSide.equals(Grammar.LAMBDA)) {
+			return leftSide.equals(initialSymbol);
 		}
 		if(rightSide.contains(initialSymbol)) {
 			return false;
@@ -111,42 +116,50 @@ public class Rule {
 			return Character.isLowerCase(rightSide.charAt(0));
 		}
 
-		int indice = 0;
-		if(!Character.isUpperCase(rightSide.charAt(indice++))) {
+		int index = 0;
+		if(!Character.isUpperCase(rightSide.charAt(index++))) {
 				return false;
 		}
-		while(Character.isDigit(rightSide.charAt(indice))) {
-			indice++;
-			if(indice == rightSide.length()) {
+		while(Character.isDigit(rightSide.charAt(index))) {
+			index++;
+			if(index == rightSide.length()) {
 				return false;
 			}
 		}
-		if(!Character.isUpperCase(rightSide.charAt(indice++))) {
+		if(!Character.isUpperCase(rightSide.charAt(index++))) {
 			return false;
 		}
-		if(indice == rightSide.length()) {
+		if(index == rightSide.length()) {
 			return true;
 		}
-		while(indice != rightSide.length() &&
-				Character.isDigit(rightSide.charAt(indice))) {
-			indice++;
+		while(index != rightSide.length() &&
+				Character.isDigit(rightSide.charAt(index))) {
+			index++;
 		}
-		return indice == rightSide.length();
+		return index == rightSide.length();
 	}
 
-	public boolean isFNG(boolean initialSymbol) {
-		if(initialSymbol) {
-			if(rightSide.equals(Grammar.LAMBDA)) {
-				return true;
-			}
+	/**
+	 * Verifica se a regra está na forma normal de Greibach (FNG).
+	 * @param initialSymbol símbolo inicial da gramática na qual a regra está
+	 *                         contida.
+	 * @return true se a regra está na forma normal de Greibach, e caso
+	 * contrário false.
+	 */
+	public boolean isFng(String initialSymbol) {
+		if(rightSide.equals(Grammar.LAMBDA)) {
+			return leftSide.equals(initialSymbol);
+		}
+		if(rightSide.contains(initialSymbol)) {
+			return false;
 		}
 		if(rightSide.length() == 1) {
 			return Character.isLowerCase(rightSide.charAt(0));
 		}
 		if(Character.isLowerCase(rightSide.charAt(0))) {
 			for(int i = 1; i < rightSide.length(); i++) {
-				if(!(Character.isDigit(rightSide.charAt(i)) ||
-						Character.isUpperCase(rightSide.charAt(i)))) {
+				if( ! (Character.isDigit(rightSide.charAt(i)) ||
+						Character.isUpperCase(rightSide.charAt(i))) ) {
 					return false;
 				}
 			}
@@ -155,29 +168,117 @@ public class Rule {
 		return false;
 	}
 
+	/**
+	 * Verifica se há recursão direta à esquerda.
+	 * @return true se há recursão direta à esquerda, e caso
+	 * contrário false.
+	 */
 	public boolean existsLeftRecursion() {
-		if(rightSide.length() > leftSide.length()) {
+		if (rightSide.length() > leftSide.length()) {
 			return rightSide.startsWith(leftSide) &&
 					!Character.isDigit(rightSide.charAt(leftSide.length()));
 		}
-		if(rightSide.length() == leftSide.length()) {
-			return rightSide.startsWith(leftSide);
-		}
-		return false;
+		return rightSide.length() == leftSide.length() &&
+				rightSide.equals(leftSide);
 	}
 
+	/**
+	 * Busca a primeira variável no lado direito da regra.
+	 * @return retorna a primeira variável no lado direito da regra, se a
+	 * regra começa com um terminal retorna null.
+	 */
 	public String getFirstVariableOfRightSide() {
 		if(!Character.isUpperCase(rightSide.charAt(0))) {
 			return null;
 		}
-		int indice = 0;
-		while(indice+1 != rightSide.length() &&
-				Character.isDigit(rightSide.charAt(indice+1))) {
-			indice++;
+		int index = 0;
+		while(index+1 != rightSide.length() &&
+				Character.isDigit(rightSide.charAt(index+1))) {
+			index++;
 		}
-		return rightSide.substring(0, indice+1);
+		return rightSide.substring(0, index+1);
 	}
 
 
-	
+	/**
+	 * Busca o conjunto de símbolos presentes (terminais e não-terminais) no
+	 * lado direito
+	 * da regra.
+	 * @return retorna o conjunto de símbolos presentes no lado direito da
+	 * regra.
+	 */
+	public Set<String> getSymbolsOfRightSide() {
+		Set<String> symbolsOfRightSide = new HashSet<>();
+		if(rightSide.equals(Grammar.LAMBDA)) {
+			symbolsOfRightSide.add(rightSide);
+			return  symbolsOfRightSide;
+		}
+		for(int i = 0; i < rightSide.length(); i++) {
+			if(Character.isLowerCase(rightSide.charAt(i))) {
+				symbolsOfRightSide.add(Character.toString(rightSide.charAt(i)));
+			} else if(Character.isUpperCase(rightSide.charAt(i))) {
+				int sizeOfSymbol = 1;
+				while(i+sizeOfSymbol < rightSide.length() &&
+						Character.isDigit(rightSide.charAt(i+sizeOfSymbol))) {
+					sizeOfSymbol++;
+				}
+				symbolsOfRightSide.add(rightSide.substring(i,i+sizeOfSymbol));
+				i += sizeOfSymbol-1;
+			}
+		}
+		return  symbolsOfRightSide;
+	}
+
+	/**
+	 * Verifica se há recursão.
+	 * @return true se há recursão, e caso
+	 * contrário false.
+	 */
+	public boolean existsRecursion() {
+		return rightSide.contains(leftSide);
+	}
+
+	/**
+	 * Verifica se produz lambda.
+	 * @return true se produz lambda, e caso
+	 * contrário false.
+	 */
+	public boolean producesLambda() {
+		return rightSide.equals(Grammar.LAMBDA);
+	}
+
+	/**
+	 * Verifica se produz terminal diretamente.
+	 * @return true se produz terminal diretamente, e caso
+	 * contrário false.
+	 */
+	public boolean producesTerminalDirectly() {
+		if(rightSide.equals(Grammar.LAMBDA)) {
+			return false;
+		}
+		for(int i = 0; i < rightSide.length(); i++) {
+			if(!Character.isLowerCase(rightSide.charAt(i))) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * Verifica se é uma regra de cadeia.
+	 * @return true é uma regra de cadeia, e caso
+	 * contrário false.
+	 */
+	public boolean isChainRule() {
+		if(!Character.isUpperCase(rightSide.charAt(0))) {
+			return false;
+		}
+		int index = 1;
+		while(index != rightSide.length() &&
+				Character.isDigit(rightSide.charAt(index))) {
+			index++;
+		}
+		return index == rightSide.length();
+	}
+
 }
