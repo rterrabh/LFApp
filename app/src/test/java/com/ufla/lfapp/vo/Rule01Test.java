@@ -53,7 +53,7 @@ public class Rule01Test {
 
     @Test
     public void testIsFng2() {
-        assertFalse(rule.isFnc("A"));
+        assertTrue(rule.isFng("A"));
     }
 
     @Test

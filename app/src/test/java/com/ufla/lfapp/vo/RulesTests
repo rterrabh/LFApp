@@ -5,6 +5,6 @@ Rule04: S -> abba
 Rule05: S -> AB
 Rule06: S -> aAB
 Rule07: S -> ABaB
-Rule08:
-Rule09:
-Rule10:
+Rule08: T12 -> Z12T31R120
+Rule09: Z120 -> Z1200T300Z1205
+Rule10: Z1 -> aZ123T123

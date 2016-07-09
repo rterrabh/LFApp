@@ -1,9 +1,11 @@
 package com.ufla.lfapp.vo;
 
+import android.support.annotation.NonNull;
+
 import java.util.HashSet;
 import java.util.Set;
 
-public class Rule implements Cloneable {
+public class Rule implements Cloneable, Comparable<Rule> {
 	
 	//attributes 
 	private String leftSide;
@@ -99,6 +101,48 @@ public class Rule implements Cloneable {
 	}
 
 	/**
+	 * Compara duas regras, onde primeiramente compara o seu lado esquerdo e
+	 * se forem iguais compara seu lado direito.
+	 * @param another regra especificada à ser comparada.
+	 * @return inteiro positivo se a regra é maior que a especificada, 0 se
+	 * as regras são iguais e inteiro negativo se a regra é menor que a regra
+	 * especificada .
+	 */
+	@Override
+	public int compareTo(@NonNull Rule another) {
+		if(!leftSide.equals(another.leftSide)) {
+			return leftSide.compareTo(another.leftSide);
+		}
+		return rightSide.compareTo(another.rightSide);
+	}
+
+	/**
+	 * Verifica se o lado direito da regra contém um determinado símbolo.
+	 * @param symbol símbolo a ser verificado se está contido no lado direito
+	 *                  da regra.
+	 * @return true se o lado direito da regra contém o símbolo, e caso
+	 * contrário false.
+	 */
+	public boolean rightSideContainsSymbol(String symbol) {
+		if(rightSide.contains(symbol)) {
+			int index = rightSide.indexOf(symbol);
+			while(index != -1) {
+				if(rightSide.length() == index+symbol.length()) {
+					return true;
+				}
+				if(rightSide.length() > index+symbol.length() &&
+						!Character.isDigit(rightSide.charAt(index+symbol
+								.length()))) {
+					return true;
+				}
+				index += symbol.length();
+				index = rightSide.indexOf(symbol, index);
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Verifica se a regra está na forma normal de Chomsky (FNC).
 	 * @param initialSymbol símbolo inicial da gramática na qual a regra está
 	 *                         contida.
@@ -109,7 +153,7 @@ public class Rule implements Cloneable {
 		if(rightSide.equals(Grammar.LAMBDA)) {
 			return leftSide.equals(initialSymbol);
 		}
-		if(rightSide.contains(initialSymbol)) {
+		if(rightSideContainsSymbol(initialSymbol)) {
 			return false;
 		}
 		if(rightSide.length() == 1) {
@@ -150,7 +194,7 @@ public class Rule implements Cloneable {
 		if(rightSide.equals(Grammar.LAMBDA)) {
 			return leftSide.equals(initialSymbol);
 		}
-		if(rightSide.contains(initialSymbol)) {
+		if(rightSideContainsSymbol(initialSymbol)) {
 			return false;
 		}
 		if(rightSide.length() == 1) {
@@ -235,7 +279,7 @@ public class Rule implements Cloneable {
 	 * contrário false.
 	 */
 	public boolean existsRecursion() {
-		return rightSide.contains(leftSide);
+		return rightSideContainsSymbol(leftSide);
 	}
 
 	/**

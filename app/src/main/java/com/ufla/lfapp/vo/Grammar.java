@@ -106,44 +106,40 @@ public class Grammar implements Cloneable {
 		this.rules = set;
 	}
 
+
 	public void insertVariable(String newVariable) {
 		this.variables.add(newVariable);
 	}
 
-//	public void removeVariable(String variable) {
-//		this.variables.remove(variable);
-//	}
-//
-//	public void insertTerminal(String newTerminal) {
-//		this.terminals.add(newTerminal);
-//	}
-//
+	public void removeVariable(String variable) {
+		this.variables.remove(variable);
+	}
+
+	public void insertTerminal(String newTerminal) {
+		this.terminals.add(newTerminal);
+	}
+
 	public void removeTerminal(String terminal) {
 		terminals.remove(terminal);
 	}
-//
-//	public void insertRule(String leftSide, String rightSide) {
-//		Rule r = new Rule();
-//		r.setLeftSide(leftSide);
-//		r.setRightSide(rightSide);
-//		System.activity_out.println(r.getLeftSide() + " " + r.getRightSide());
-//		this.rules.add(new Rule(r));
-//		for (Rule element : rules) {
-//			System.activity_out.println(element.getLeftSide() + "->"
-//					+ element.getRightSide());
-//		}
-//	}
+
+	public void insertRule(String leftSide, String rightSide) {
+		Rule r = new Rule();
+		r.setLeftSide(leftSide);
+		r.setRightSide(rightSide);
+		this.rules.add(new Rule(r));
+	}
 
 	public void insertRule (Rule r) {
 		rules.add(r);
 	}
 
-//	public void removeRule(String leftSide, String rightSide) {
-//		Rule r = new Rule();
-//		r.setLeftSide(leftSide);
-//		r.setRightSide(rightSide);
-//		this.rules.remove(r);
-//	}
+	public void removeRule(String leftSide, String rightSide) {
+		Rule r = new Rule();
+		r.setLeftSide(leftSide);
+		r.setRightSide(rightSide);
+		this.rules.remove(r);
+	}
 
 	@Override
 	public Object clone() {
@@ -170,8 +166,10 @@ public class Grammar implements Cloneable {
 	public Grammar getGrammarWithInitialSymbolNotRecursive(final Grammar g, final AcademicSupport academicSupport) {
 		Grammar gc = (Grammar) g.clone();
 		String align = "justify";
-		String comments = "<p align="+ align + ">O símbolo inicial deve se limitar a iniciar derivações, não podendo ser uma variável recursiva. " +
-				" Logo, não deve ser possível ter derivações do tipo " + gc.getInitialSymbol() + " ⇒<sup>∗</sup> αSβ.<br><br>";
+		String comments = "<p align="+ align + ">O símbolo inicial deve se " +
+				"limitar a iniciar derivações, não podendo ser uma variável " +
+				"recursiva. Logo, não deve ser possível ter derivações do " +
+				"tipo " + gc.getInitialSymbol() + " ⇒<sup>∗</sup> αSβ.<br><br>";
 		Map<Integer, String> problems = new HashMap<>();
 		String initialSymbol = gc.getInitialSymbol();
 		boolean insert = false;
@@ -462,6 +460,7 @@ public class Grammar implements Cloneable {
 		return aux;
 	}
 
+
 	/**
 	 * 
 	 * @param g gramática livre de contexto
@@ -563,13 +562,13 @@ public class Grammar implements Cloneable {
 
 			// update the rules
 			newSetOfRules.addAll(auxSetOfRules);
-			newSetOfRules = gc.removeEqualProductions(newSetOfRules);
+			newSetOfRules = gc.removeRulesWithEqualProductions(newSetOfRules);
 			gc.setRules(newSetOfRules);
 		}
 		return gc;
 	}
 
-	public Set<Rule> removeEqualProductions (Set<Rule> setOfRules) {
+	public Set<Rule> removeRulesWithEqualProductions(Set<Rule> setOfRules) {
 		List<String> ruleEquals = new ArrayList<>();
 		for(Rule rule : setOfRules) {
 			if(rule.getLeftSide().charAt(0)=='T' &&
@@ -618,10 +617,23 @@ public class Grammar implements Cloneable {
 		return setOfRules;
 	}
 
+	/**
+	 * Verifica se existe recursão direta à esquerda.
+	 * @return true se existe recursão direta à esquerda, caso contrário, false.
+	 */
 	public boolean haveImmediateLeftRecursion() {
-		return numberOfVariablesWithImmediateLeftRecursion() != 0;
+		for (Rule element : getRules()) {
+			if (element.existsLeftRecursion()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
+	/**
+	 * Conta a quantidade de variáveis que possuem recursão direta à esquerda.
+	 * @return quantidade de variáveis que possuem recursão direta à esquerda
+	 */
 	public int numberOfVariablesWithImmediateLeftRecursion() {
 		int numberOfVariables = 0;
 		for (Rule element : getRules()) {
@@ -632,6 +644,12 @@ public class Grammar implements Cloneable {
 		return numberOfVariables;
 	}
 
+	/**
+	 * Remove a recursão direta à esquerda da gramática.
+	 * @param g gramática
+	 * @param academic informações de suporte acadêmico
+	 * @return gramática sem recursão direta à esquerda
+	 */
 	public Grammar removingTheImmediateLeftRecursion(final Grammar g,
 													 final AcademicSupport academic) {
 
@@ -696,7 +714,7 @@ public class Grammar implements Cloneable {
 	/**
 	 * 
 	 * @param g gramática livre de contexto
-	 * @return : gramática livre de contexto sem recursão direta
+	 * @return gramática livre de contexto sem recursão direta
 	 */
 	public Grammar removingTheImmediateLeftRecursion2(final Grammar g,
 													 final AcademicSupport academicSupport) {
@@ -1411,16 +1429,16 @@ public class Grammar implements Cloneable {
 
 	public Map<String, Set<String>> getRulesMapUToV() {
 		Map<String, Set<String>> rulesMapUToV = new TreeMap<>();
-		Set<String> rightSide;
+		Set<String> leftSide;
 		for(Rule rule : rules) {
-			if(rulesMapUToV.containsKey(rule.getLeftSide())) {
-				rightSide = rulesMapUToV.get(rule.getLeftSide());
-				rightSide.add(rule.getRightSide());
-				rulesMapUToV.put(rule.getLeftSide(), rightSide);
+			if(rulesMapUToV.containsKey(rule.getRightSide())) {
+				leftSide = rulesMapUToV.get(rule.getRightSide());
+				leftSide.add(rule.getLeftSide());
+				rulesMapUToV.put(rule.getRightSide(), leftSide);
 			} else {
-				rightSide = new TreeSet<>();
-				rightSide.add(rule.getRightSide());
-				rulesMapUToV.put(rule.getLeftSide(), rightSide);
+				leftSide = new TreeSet<>();
+				leftSide.add(rule.getLeftSide());
+				rulesMapUToV.put(rule.getRightSide(), leftSide);
 			}
 		}
 		return rulesMapUToV;

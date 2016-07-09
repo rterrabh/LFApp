@@ -1,35 +1,30 @@
 package com.ufla.lfapp.vo;
 
-import static org.junit.Assert.*;
-
-import org.junit.*;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
-public class Rule02Test {
+
+public class Rule07Test {
 
     Rule rule;
-    // S -> λ
+    // S -> ABaB
 
     @Before
     public void setUp() {
-        rule = new Rule("S", "λ");
-        test(1);
-    }
-
-    public void test(int b) {
-        b = b * 2 -2;
-        rule.setLeftSide(String.valueOf(b));
-
+        rule = new Rule("S", "ABaB");
     }
 
     @Test
     public void testClone1() {
-        test(1);
         Rule rc = (Rule) rule.clone();
         assertEquals(rc, rule);
         rc.setRightSide("abr");
@@ -46,7 +41,7 @@ public class Rule02Test {
 
     @Test
     public void testIsFnc1() {
-        assertTrue(rule.isFnc("S"));
+        assertFalse(rule.isFnc("S"));
     }
 
     @Test
@@ -56,7 +51,7 @@ public class Rule02Test {
 
     @Test
     public void testIsFng1() {
-        assertTrue(rule.isFng("S"));
+        assertFalse(rule.isFng("S"));
     }
 
     @Test
@@ -71,12 +66,12 @@ public class Rule02Test {
 
     @Test
     public void testGetFirstVariableOfRightSide() {
-        assertEquals(null, rule.getFirstVariableOfRightSide());
+        assertEquals("A", rule.getFirstVariableOfRightSide());
     }
 
     @Test
     public void testGetSymbolsOfRightSide() {
-        String[] expectedSymbolsStr = { "λ" };
+        String[] expectedSymbolsStr = { "a", "A", "B" };
         Set<String> expectedSymbols = new HashSet<>(Arrays.asList
                 (expectedSymbolsStr));
         assertEquals(expectedSymbols, rule.getSymbolsOfRightSide());
@@ -89,7 +84,7 @@ public class Rule02Test {
 
     @Test
     public void testProducesLambda() {
-        assertTrue(rule.producesLambda());
+        assertFalse(rule.producesLambda());
     }
 
     @Test
