@@ -33,10 +33,49 @@ public class MainActivity extends AppCompatActivity {
         if (intent != null) {
             Bundle data = intent.getExtras();
             if (data != null) {
-                this.inputGrammar.setText(data.get("grammar").toString());
+                Object grammar = data.get("grammar");
+                if(grammar != null) {
+                    this.inputGrammar.setText(grammar.toString());
+                }
             }
         }
+        System.out.println("onCreate-MainActivity");
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        System.out.println("onStop-MainActivity");
+    }
+
+    @Override
+    protected void onDestroy() {
+        System.out.println("onDestroy-MainActivity");
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        System.out.println("onPause-MainActivity");
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        System.out.println("onResume-MainActivity");
+        super.onResume();
+    }
+
+    @Override
+    protected void onStart() {
+        System.out.println("onStart-MainActivity");
+        super.onStart();
+    }
+
+    @Override
+    protected void onRestart() {
+        System.out.println("onRestart-MainActivity");
+        super.onRestart();
     }
 
     public void insertLambda(View view) {

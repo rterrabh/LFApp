@@ -30,6 +30,43 @@ public class InfoActivity extends AppCompatActivity {
                 InfoActivity.this.finish();
             }
         });
+        System.out.println("onCreate-InfoActivity");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        System.out.println("onStop-InfoActivity");
+    }
+
+    @Override
+    protected void onDestroy() {
+        System.out.println("onDestroy-InfoActivity");
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        System.out.println("onPause-InfoActivity");
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        System.out.println("onResume-InfoActivity");
+        super.onResume();
+    }
+
+    @Override
+    protected void onStart() {
+        System.out.println("onStart-InfoActivity");
+        super.onStart();
+    }
+
+    @Override
+    protected void onRestart() {
+        System.out.println("onRestart-InfoActivity");
+        super.onRestart();
     }
 
     @Override

@@ -4,17 +4,23 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
+import android.text.Spanned;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.ufla.lfapp.R;
 import com.ufla.lfapp.vo.AcademicSupport;
+import com.ufla.lfapp.vo.AcademicSupportForRemoveLeftRecursion;
 import com.ufla.lfapp.vo.Grammar;
 import com.ufla.lfapp.vo.GrammarParser;
 import com.ufla.lfapp.vo.Rule;
@@ -56,7 +62,11 @@ public class OutActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_out);
+        initializesActivity();
+        System.out.println("onCreate-OutActivity");
+    }
 
+    private void initializesActivity() {
         //chama método que gerencia menu
         acordionMenu();
 
@@ -82,29 +92,10 @@ public class OutActivity extends AppCompatActivity {
 
                 grammarType(g);
                 if (word!= null && !word.equals("")) {
-                   //moreLeftDerivation(g);
-                   cyk(g, word);
+                    //moreLeftDerivation(g);
+                    cyk(g, word);
                 }
 
-                //Opção 1 - algoritmos encadeados
-                /*removingInitialRecursiveSymbol(g);
-                Grammar newG = g.getGrammarWithInitialSymbolNotRecursive(g, new AcademicSupport());
-                removingEmptyProductions(newG);
-                newG = newG.getGrammarEssentiallyNoncontracting(newG, new AcademicSupport());
-                removingChainRules(newG);
-                newG = newG.getGrammarWithoutChainRules(newG, new AcademicSupport());
-                removingNotTerminalsSymbols(newG);
-                newG = newG.getGrammarWithoutNoTerm(newG, new AcademicSupport());
-                removingNotReachableSymbols(newG);
-                //newG = newG.getGrammarWithoutNoReach(newG, new AcademicSupport());
-                fnc(g);
-                newG = g.FNC(g, new AcademicSupport());
-                removingTheImmediateLeftRecursion(newG);
-                removingLeftRecursion(newG);
-                fng(newG);*/
-                //Grammar gc = (Grammar) g.clone();
-
-                //Opção 2 - algoritmos isolados
                 removingInitialRecursiveSymbol(g);
                 removingEmptyProductions(g);
                 removingChainRules(g);
@@ -114,7 +105,6 @@ public class OutActivity extends AppCompatActivity {
                 removingTheImmediateLeftRecursion(g);
                 removingLeftRecursion(g);
                 fng(g);
-                //Grammar gc = (Grammar) g.clone();
             }
         }
 
@@ -140,6 +130,42 @@ public class OutActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        System.out.println("onStop-OutActivity");
+    }
+
+    @Override
+    protected void onDestroy() {
+        System.out.println("onDestroy-OutActivity");
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        System.out.println("onPause-OutActivity");
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        System.out.println("onResume-OutActivity");
+        super.onResume();
+    }
+
+    @Override
+    protected void onStart() {
+        System.out.println("onStart-OutActivity");
+        super.onStart();
+    }
+
+    @Override
+    protected void onRestart() {
+        System.out.println("onRestart-OutActivity");
+        super.onRestart();
     }
 
     /**
@@ -1320,6 +1346,23 @@ public class OutActivity extends AppCompatActivity {
             printGrammarWithRecursiveRules(g, tableOfRecursion, academicSupport);
 
             //Segundo passo do processo
+            String algoritmo = "para i = 1 até n faça\n    se " +
+                    "A<sub><small>i</sub></small> possui recursão direta à " +
+                    "esquerda então\n        elimine a recursão em " +
+                    "A<sub><small>i</sub></small>\n    para j = i+1 até n " +
+                    "faça\n        para cada produção em " +
+                    "A<sub><small>j</sub></small> faça\n            se " +
+                    "A<sub><small>j</sub></small> -> " +
+                    "<sub><small>i</sub></small>Y então\n                " +
+                    "substitua A<sub><small>j</sub></small> -> " +
+                                        "<sub><small>i</sub></small>Y por " +
+                    "A<sub><small>j</sub></small> -> "  +
+                    "                    T<sub><small>1</sub></small>Y | " +
+                    "T<sub><small>2</sub></small>Y | ... | " +
+                    "T<sub><small>k</sub></small>Y, onde " +
+                    "A<sub><small>i</sub></small> -> T<sub><small>1</sub> | " +
+                    "T<sub><small>2</sub> | ... | T<sub><small>k</sub> são " +
+                    "todas as produções atuais de A<sub><small>i</sub></small>";
             TextView step2 = (TextView) findViewById(R.id.Step2DirectLeftRecursion);
             step2.setText("(2) O segundo passo é resolver a recursão.");
             TableLayout tableOfResult = (TableLayout) findViewById(R.id.tableWithoutDirectLeftRecursion);
@@ -1331,13 +1374,38 @@ public class OutActivity extends AppCompatActivity {
 
     }
 
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            // pre-condition
+            return;
+        }
+
+        int totalHeight = listView.getPaddingTop() + listView.getPaddingBottom();
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            if (listItem instanceof ViewGroup) {
+                listItem.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            }
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+    }
+
     public void removingLeftRecursion(final Grammar g) {
         Grammar gc = (Grammar) g.clone();
 
         //Realiza processo
         AcademicSupport academicSupport = new AcademicSupport();
+        AcademicSupportForRemoveLeftRecursion academicSupportLR = new
+                AcademicSupportForRemoveLeftRecursion();
         Map<String, String> sortedVariables = new HashMap<>();
-        gc = gc.removingLeftRecursion(gc, academicSupport, sortedVariables);
+        gc = gc.removingLeftRecursion(gc, academicSupport, sortedVariables,
+                academicSupportLR);
         academicSupport.setResult(gc);
         TextView resultGrammar = (TextView) findViewById(R.id.RemovalLeftRecursion);
         resultGrammar.setText(Html.fromHtml(academicSupport.getResult()));
@@ -1359,15 +1427,65 @@ public class OutActivity extends AppCompatActivity {
 
            //Realiza segundo passo do processo (Destaca recursões encontradas)
            TextView step2 = (TextView) findViewById(R.id.step2RemovalLeftRecursion);
-           step2.setText("(2) Localizar as recursões.");
-           TableLayout tableOfIrregularRules = (TableLayout) findViewById(R.id.tableOfLeftRecursion);
-           printGrammarWithoutOldRules(g, tableOfIrregularRules, academicSupport);
+           //step2.setText("(2) Localizar as recursões.");
+           step2.setText(Html.fromHtml(getResources().getString
+                           (R.string.removing_left_recursive_algol_p1)));
 
+           /*TableLayout tableOfIrregularRules = (TableLayout) findViewById(R
+                   .id.tableOfLeftRecursion);
+           printGrammarWithoutOldRules(g, tableOfIrregularRules,
+                   academicSupport);*/
+           ArrayAdapter<Spanned> listAdapter = new ArrayAdapter<>(this,
+                   R.layout.row_text_view);
+           for(String transformation : academicSupportLR
+                   .getGrammarTransformationsStage1()) {
+               listAdapter.add(Html.fromHtml(transformation));
+           }
+           ListView removalLeftRecursion = (ListView) findViewById(R.id
+                   .step2RemovalLeftRecursionAcademicSupport);
+           removalLeftRecursion.setAdapter(listAdapter);
+           setListViewHeightBasedOnChildren(removalLeftRecursion);
+
+           TextView step3 = (TextView) findViewById(R.id
+                   .step3RemovalLeftRecursion);
+           step3.setText(Html.fromHtml(getResources().getString
+                   (R.string.removing_left_recursive_algol_p2)));
+           listAdapter = new ArrayAdapter<>(this,
+                   R.layout.row_text_view);
+           for(String transformation : academicSupportLR
+                   .getGrammarTransformationsStage2()) {
+               listAdapter.add(Html.fromHtml(transformation));
+           }
+           removalLeftRecursion = (ListView) findViewById(R.id
+                   .step3RemovalLeftRecursionAcademicSupport);
+           removalLeftRecursion.setAdapter(listAdapter);
+           setListViewHeightBasedOnChildren(removalLeftRecursion);
+
+           TextView step4 = (TextView) findViewById(R.id
+                   .step4RemovalLeftRecursion);
+           step4.setText(Html.fromHtml(getResources().getString
+                   (R.string.removing_left_recursive_algol_p3)));
+           listAdapter = new ArrayAdapter<>(this,
+                   R.layout.row_text_view);
+           for(String transformation : academicSupportLR
+                   .getGrammarTransformationsStage3()) {
+               listAdapter.add(Html.fromHtml(transformation));
+           }
+           removalLeftRecursion = (ListView) findViewById(R.id
+                   .step4RemovalLeftRecursionAcademicSupport);
+           removalLeftRecursion.setAdapter(listAdapter);
+           setListViewHeightBasedOnChildren(removalLeftRecursion);
+           System.out.println(academicSupportLR
+                   .getGrammarTransformationsStage1().size()+";"+academicSupportLR
+                   .getGrammarTransformationsStage2().size()+";" +
+                   ""+academicSupportLR
+                   .getGrammarTransformationsStage3().size()+"\n");
            //Realiza terceiro passo do processo (Destaca as mudanças finais)
-           TextView step3 = (TextView) findViewById(R.id.step3RemovalLeftRecursion);
+           /*TextView step3 = (TextView) findViewById(R.id
+                   .step3RemovalLeftRecursion);
            step3.setText("(3) Alterar as regras");
            TableLayout tableOfNewRules = (TableLayout) findViewById(R.id.tableWithoutLeftRecursion);
-           printGrammarWithNewRules(gc, tableOfNewRules, academicSupport);
+           printGrammarWithNewRules(gc, tableOfNewRules, academicSupport);*/
 
 
        } else {
@@ -1409,7 +1527,8 @@ public class OutActivity extends AppCompatActivity {
         //Realiza processo de remoção de recursão à esquerda
         academic = new AcademicSupport();
         Map<String, String> sortedVariables = new HashMap<>();
-        Grammar newG = gc.removingLeftRecursion(gc, academic, sortedVariables);
+        Grammar newG = gc.removingLeftRecursion(gc, academic,
+                sortedVariables, new AcademicSupportForRemoveLeftRecursion());
         academic.setResult(newG);
         TextView resultGrammar = (TextView) findViewById(R.id.ResultadoFNG1_1);
         resultGrammar.setText(Html.fromHtml(academic.getResult()));

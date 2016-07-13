@@ -36,7 +36,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20px"
-                android:text="@string/o_usu_rio_deve_inserir_uma_gram_tica_com_as_seguintes_configura_es_deve_iniciar_com_uma_letra_mai_scula_o_primeiro_s_mbolo_ser_o_s_mbolo_inicial_letras_mai_sculas_s_o_consideradas_vari_veis_letras_min_sculas_s_o_consideradas_terminais"/>
+                android:text="@string/o_usu_rio_deve_inserir_uma_gram_tica_com_as_seguintes_configura"/>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

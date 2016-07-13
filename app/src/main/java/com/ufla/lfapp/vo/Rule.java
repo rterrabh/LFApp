@@ -325,4 +325,27 @@ public class Rule implements Cloneable, Comparable<Rule> {
 		return index == rightSide.length();
 	}
 
+
+	public String getRightSideToHtml() {
+		StringBuilder rightSideHtml = new StringBuilder();
+		boolean isDigit = false;
+		for (int i = 0; i < rightSide.length(); i++) {
+			if (Character.isDigit(rightSide.charAt(i)) && !isDigit) {
+				rightSideHtml.append("<sub>").append(rightSide.charAt(i));
+				isDigit = true;
+			} else if (Character.isDigit(rightSide.charAt(i)) && isDigit) {
+				rightSideHtml.append(rightSide.charAt(i));
+			} else if (!Character.isDigit(rightSide.charAt(i)) && isDigit) {
+				rightSideHtml.append("</sub>").append(rightSide.charAt(i));
+				isDigit = false;
+			} else {
+				rightSideHtml.append(rightSide.charAt(i));
+			}
+		}
+		if (isDigit) {
+			rightSideHtml.append("</sub>");
+		}
+		return rightSideHtml.toString();
+	}
+
 }

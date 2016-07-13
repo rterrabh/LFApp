@@ -45,10 +45,66 @@
     <string name="pipe">|</string>
     <string name="ok">OK</string>
     <string name="about_button">About button.</string>
+    <string name="removing_left_recursive_algol_p1">
+        (2) Remover as recursões em ordem:&lt;br/&gt;
+        &lt;b&gt;ALGORITMO&lt;/b&gt;&lt;br/&gt;
+        &lt;b&gt;para&lt;/b&gt; i = 1 até n &lt;b&gt;faça&lt;/b&gt;&lt;br/&gt;
+        \u00A0\u00A0\u00A0 &lt;b&gt;se&lt;/b&gt; A&lt;sub&gt;&lt;small&gt;i&lt;/sub&gt;&lt;/small&gt; possui recursão direta à esquerda &lt;b&gt;então&lt;/b&gt;&lt;br/&gt;
+        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 elimine a recursão em A&lt;sub&gt;&lt;small&gt;i&lt;/sub&gt;&lt;/small&gt;&lt;br/&gt;
+        \u00A0\u00A0\u00A0 &lt;b&gt;fim&lt;/b&gt;&lt;br/&gt;
+        \u00A0\u00A0\u00A0 &lt;b&gt;para&lt;/b&gt; j = i+1 até n &lt;b&gt;faça&lt;/b&gt;&lt;br/&gt;
+        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 &lt;b&gt;para&lt;/b&gt; cada produção em A&lt;sub&gt;&lt;small&gt;j&lt;/sub&gt;&lt;/small&gt; &lt;b&gt;faça&lt;/b&gt;&lt;br/&gt;
+        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 &lt;b&gt;se&lt;/b&gt; A&lt;sub&gt;&lt;small&gt;j&lt;/sub&gt;&lt;/small&gt; -&gt; A&lt;sub&gt;&lt;small&gt;i&lt;/sub&gt;&lt;/small&gt;&#947; &lt;b&gt;então&lt;/b&gt;&lt;br/&gt;
+        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 substitua A&lt;sub&gt;&lt;small&gt;j&lt;/sub&gt;&lt;/small&gt; -&gt; A&lt;sub&gt;&lt;small&gt;i&lt;/sub&gt;&lt;/small&gt;&#947;&lt;br/&gt;
+        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 por A&lt;sub&gt;&lt;small&gt;j&lt;/sub&gt;&lt;/small&gt; -&gt; &#948;&lt;sub&gt;&lt;small&gt;1&lt;/sub&gt;&lt;/small&gt;&#947; | &#948;&lt;sub&gt;&lt;small&gt;2&lt;/sub&gt;&lt;/small&gt;&#947; | ... | &#948;&lt;sub&gt;&lt;small&gt;k&lt;/sub&gt;&lt;/small&gt;&#947;&lt;br/&gt;
+        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 onde A&lt;sub&gt;&lt;small&gt;i&lt;/sub&gt;&lt;/small&gt; -&gt; &#948;&lt;sub&gt;&lt;small&gt;1&lt;/sub&gt;&lt;/small&gt; | &#948;&lt;sub&gt;&lt;small&gt;2&lt;/sub&gt;&lt;/small&gt; | ... | &#948;&lt;sub&gt;&lt;small&gt;k&lt;/sub&gt;&lt;/small&gt;&lt;br/&gt;
+        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 são todas as produções atuais de A&lt;sub&gt;&lt;small&gt;i&lt;/sub&gt;&lt;/small&gt;&lt;br/&gt;
+        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 &lt;b&gt;fim&lt;/b&gt;&lt;br/&gt;
+        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 &lt;b&gt;fim&lt;/b&gt;&lt;br/&gt;
+        \u00A0\u00A0\u00A0 &lt;b&gt;fim&lt;/b&gt;&lt;br/&gt;
+        &lt;b&gt;fim&lt;/b&gt;&lt;br/&gt;
+    </string>
+    <string name="removing_left_recursive_algol_p2">
+        (3) Voltar, na ordem inversa, removendo regras do tipo
+        A&lt;sub&gt;&lt;small&gt;j&lt;/sub&gt;&lt;/small&gt; -&gt; A&lt;sub&gt;&lt;small&gt;i&lt;/sub&gt;&lt;/small&gt;&#947;:&lt;br/&gt;
+        &lt;b&gt;ALGORITMO&lt;/b&gt;&lt;br/&gt;
+        &lt;b&gt;para&lt;/b&gt; i = n até 1 &lt;b&gt;faça&lt;/b&gt;&lt;br/&gt;
+        \u00A0\u00A0\u00A0 &lt;b&gt;para&lt;/b&gt; j = i-1 até 1 &lt;b&gt;faça&lt;/b&gt;&lt;br/&gt;
+        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 &lt;b&gt;para&lt;/b&gt; cada produção em A&lt;sub&gt;&lt;small&gt;j&lt;/sub&gt;&lt;/small&gt; &lt;b&gt;faça&lt;/b&gt;&lt;br/&gt;
+        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 &lt;b&gt;se&lt;/b&gt; A&lt;sub&gt;&lt;small&gt;j&lt;/sub&gt;&lt;/small&gt; -&gt; A&lt;sub&gt;&lt;small&gt;i&lt;/sub&gt;&lt;/small&gt;&#947; &lt;b&gt;então&lt;/b&gt;&lt;br/&gt;
+        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 substitua A&lt;sub&gt;&lt;small&gt;j&lt;/sub&gt;&lt;/small&gt; -&gt; A&lt;sub&gt;&lt;small&gt;i&lt;/sub&gt;&lt;/small&gt;&#947;&lt;br/&gt;
+        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 por A&lt;sub&gt;&lt;small&gt;j&lt;/sub&gt;&lt;/small&gt; -&gt; &#948;&lt;sub&gt;&lt;small&gt;1&lt;/sub&gt;&lt;/small&gt;&#947; | &#948;&lt;sub&gt;&lt;small&gt;2&lt;/sub&gt;&lt;/small&gt;&#947; | ... | &#948;&lt;sub&gt;&lt;small&gt;k&lt;/sub&gt;&lt;/small&gt;&#947;&lt;br/&gt;
+        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 onde A&lt;sub&gt;&lt;small&gt;i&lt;/sub&gt;&lt;/small&gt; -&gt; &#948;&lt;sub&gt;&lt;small&gt;1&lt;/sub&gt;&lt;/small&gt; | &#948;&lt;sub&gt;&lt;small&gt;2&lt;/sub&gt;&lt;/small&gt; | ... | &#948;&lt;sub&gt;&lt;small&gt;k&lt;/sub&gt;&lt;/small&gt;&lt;br/&gt;
+        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 são todas as produções atuais de A&lt;sub&gt;&lt;small&gt;i&lt;/sub&gt;&lt;/small&gt;&lt;br/&gt;
+        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 &lt;b&gt;fim&lt;/b&gt;&lt;br/&gt;
+        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 &lt;b&gt;fim&lt;/b&gt;&lt;br/&gt;
+        \u00A0\u00A0\u00A0 &lt;b&gt;fim&lt;/b&gt;&lt;br/&gt;
+        &lt;b&gt;fim&lt;/b&gt;&lt;br/&gt;
+    </string>
+    <string name="removing_left_recursive_algol_p3">
+        (4) Removendo regras do tipo Z&lt;sub&gt;&lt;small&gt;i&lt;/sub&gt;&lt;/small&gt; -&gt; V&#947; nas variáveis criadas, em
+        ordem:&lt;br/&gt;
+        &lt;b&gt;ALGORITMO&lt;/b&gt;&lt;br/&gt;
+        &lt;b&gt;para&lt;/b&gt; i = 1 até n &lt;b&gt;faça&lt;/b&gt;&lt;br/&gt;
+        \u00A0\u00A0\u00A0 &lt;b&gt;para&lt;/b&gt; cada produção em Z&lt;sub&gt;&lt;small&gt;i&lt;/sub&gt;&lt;/small&gt; &lt;b&gt;faça&lt;/b&gt;&lt;br/&gt;
+        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 &lt;b&gt;se&lt;/b&gt; Z&lt;sub&gt;&lt;small&gt;i&lt;/sub&gt;&lt;/small&gt; -&gt; V&#947; &lt;b&gt;então&lt;/b&gt;&lt;br/&gt;
+        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 substitua Z&lt;sub&gt;&lt;small&gt;i&lt;/sub&gt;&lt;/small&gt; -&gt; V&#947;&lt;br/&gt;
+        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 por Z&lt;sub&gt;&lt;small&gt;i&lt;/sub&gt;&lt;/small&gt; -&gt; &#948;&lt;sub&gt;&lt;small&gt;1&lt;/sub&gt;&lt;/small&gt;&#947; | &#948;&lt;sub&gt;&lt;small&gt;2&lt;/sub&gt;&lt;/small&gt;&#947; | ... | &#948;&lt;sub&gt;&lt;small&gt;k&lt;/sub&gt;&lt;/small&gt;&#947;&lt;br/&gt;
+        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 onde V -&gt; &#948;&lt;sub&gt;&lt;small&gt;1&lt;/sub&gt;&lt;/small&gt; | &#948;&lt;sub&gt;&lt;small&gt;2&lt;/sub&gt;&lt;/small&gt; | ... | &#948;&lt;sub&gt;&lt;small&gt;k&lt;/sub&gt;&lt;/small&gt;&lt;br/&gt;
+        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 &lt;b&gt;fim&lt;/b&gt;&lt;br/&gt;
+        \u00A0\u00A0\u00A0 &lt;b&gt;fim&lt;/b&gt;&lt;br/&gt;
+        &lt;b&gt;fim&lt;/b&gt;&lt;br/&gt;
+    </string>
     <string name="lfapp">LFApp:</string>
-    <string name="o_lfapp_um_aplicativo_m_vel_para_auxiliar_o_ensino_e_aprendizagem_de_lfa">O LFApp é um aplicativo móvel para auxiliar o ensino e aprendizagem de LFA.</string>
+    <string name="o_lfapp_um_aplicativo_m_vel_para_auxiliar_o_ensino_e_aprendizagem_de_lfa">
+        O LFApp é um aplicativo móvel para auxiliar o ensino e aprendizagem de LFA.
+    </string>
     <string name="gram_tica">Gramática:</string>
-    <string name="o_usu_rio_deve_inserir_uma_gram_tica_com_as_seguintes_configura_es_deve_iniciar_com_uma_letra_mai_scula_o_primeiro_s_mbolo_ser_o_s_mbolo_inicial_letras_mai_sculas_s_o_consideradas_vari_veis_letras_min_sculas_s_o_consideradas_terminais">O usuário deve inserir uma gramática com as seguintes configurações: - Deve iniciar com uma letra maiúscula - O primeiro símbolo será o símbolo inicial - Letras maiúsculas são consideradas variáveis - Letras minúsculas são consideradas terminais</string>
+    <string name="o_usu_rio_deve_inserir_uma_gram_tica_com_as_seguintes_configura">
+        O usuário deve inserir uma gramática com as seguintes configurações: - Deve iniciar com uma letra maiúscula - O primeiro símbolo será o símbolo inicial - Letras maiúsculas são consideradas variáveis - Letras minúsculas são consideradas terminais
+    </string>
     <string name="voltar">Voltar</string>
-    <string name="desenvolvido_por_juventino_neto_sob_orienta_o_de_ricardo_terra">Desenvolvido por Juventino Neto sob orientação de Ricardo Terra.</string>
+    <string name="desenvolvido_por_juventino_neto_sob_orienta_o_de_ricardo_terra">
+        Desenvolvido por Juventino Neto sob orientação de Ricardo Terra.
+    </string>
 </resources>

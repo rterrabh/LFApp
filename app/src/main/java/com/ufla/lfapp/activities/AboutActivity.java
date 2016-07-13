@@ -1,6 +1,7 @@
 package com.ufla.lfapp.activities;
 
 import android.content.Intent;
+import android.os.PersistableBundle;
 import android.support.v4.view.GestureDetectorCompat;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -19,13 +20,50 @@ public class AboutActivity extends AppCompatActivity {
     private GestureDetectorCompat mDetector;
     private boolean back = false;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
         setTextViewTeamByHtml();
         mDetector = new GestureDetectorCompat(this, new MyGestureListener());
+        System.out.println("onCreate-AboutActivity");
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        System.out.println("onStop-AboutActivity");
+    }
+
+    @Override
+    protected void onDestroy() {
+        System.out.println("onDestroy-AboutActivity");
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        System.out.println("onPause-AboutActivity");
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        System.out.println("onResume-AboutActivity");
+        super.onResume();
+    }
+
+    @Override
+    protected void onStart() {
+        System.out.println("onStart-AboutActivity");
+        super.onStart();
+    }
+
+    @Override
+    protected void onRestart() {
+        System.out.println("onRestart-AboutActivity");
+        super.onRestart();
     }
 
     @Override
