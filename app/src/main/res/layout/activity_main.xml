@@ -1,8 +1,8 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
@@ -14,34 +14,44 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:id="@+id/l1"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:id="@+id/inputs"
+        android:orientation="vertical"
+        android:layout_toLeftOf="@+id/buttons"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp">
 
         <TextView
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxWidth="200dp"
+            android:text="@string/palavra_para_cyk_e_deriva_o"
+            android:id="@+id/titleWord" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:id="@+id/inputWord"
+            android:inputType="text" />
+
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/gramatica"
             android:id="@+id/titleGrammar" />
 
         <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:id="@+id/InputGrammar"
-            android:layout_weight="1"
-            android:inputType="" />
-
-        <TextView
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/palavra_para_cyk_e_deriva_o"
-            android:id="@+id/titleWord" />
-
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/inputWord"
-            android:inputType="" />
+            android:id="@+id/inputGrammar"
+            android:inputType="textMultiLine"
+            android:layout_weight="1"/>
 
     </LinearLayout>
 
@@ -49,18 +59,20 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/l2"
+        android:id="@+id/buttons"
         android:orientation="vertical"
-        android:layout_toRightOf="@+id/l1"
-        android:layout_marginLeft="30dp">
+        android:layout_marginRight="5dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="5dp"
+        android:layout_alignParentTop="true"
+        >
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/lambda"
             android:layout_weight="1"
-            android:id="@+id/button_Lambda"
-            android:textAllCaps="false"
+            android:id="@+id/buttonLambda"
             android:background="@color/DarkGray"
             android:onClick="insertLambda"/>
 
@@ -69,7 +81,7 @@
             android:layout_height="wrap_content"
             android:text="@string/arrow"
             android:layout_weight="1"
-            android:id="@+id/button_Arrow"
+            android:id="@+id/buttonArrow"
             android:background="@color/DarkGray"
             android:layout_marginTop="10dp"
             android:onClick="insertArrow"/>
@@ -79,7 +91,7 @@
             android:layout_height="wrap_content"
             android:text="@string/pipe"
             android:layout_weight="1"
-            android:id="@+id/button_Pipe"
+            android:id="@+id/buttonPipe"
             android:background="@color/DarkGray"
             android:layout_marginTop="10dp"
             android:onClick="insertPipe"/>
@@ -89,19 +101,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/ok"
-            android:id="@+id/button_OK"
-            android:background="@color/DarkGray"
+            android:layout_weight="1"
+            android:id="@+id/buttonOK"
+            android:background="@android:color/holo_green_dark"
             android:layout_marginTop="10dp"
             android:onClick="confirmGrammar"/>
 
         <ImageButton
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:id="@+id/button_About"
+            android:layout_height="48dp"
+            android:id="@+id/buttonAbout"
             android:src="@drawable/ic_info_outline_black_24dp"
-            android:background="@color/DarkGray"
+            android:background="@color/LightGrey"
             android:layout_marginTop="10dp"
-            android:layout_weight="6"
+            android:layout_weight="1"
             android:onClick="startAboutActivity"
             android:contentDescription="@string/about_button" />
 

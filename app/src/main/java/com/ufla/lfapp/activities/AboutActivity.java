@@ -1,7 +1,5 @@
 package com.ufla.lfapp.activities;
 
-import android.content.Intent;
-import android.os.PersistableBundle;
 import android.support.v4.view.GestureDetectorCompat;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +22,7 @@ public class AboutActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         setContentView(R.layout.activity_about);
         setTextViewTeamByHtml();
         mDetector = new GestureDetectorCompat(this, new MyGestureListener());
@@ -70,9 +69,7 @@ public class AboutActivity extends AppCompatActivity {
     public boolean onTouchEvent(MotionEvent event){
         this.mDetector.onTouchEvent(event);
         if(back) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            finish();
+            onBackPressed();
         }
         return super.onTouchEvent(event);
     }
@@ -82,9 +79,7 @@ public class AboutActivity extends AppCompatActivity {
      * @param view view do botão close
      */
     public void close(View view) {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();
+        onBackPressed();
     }
 
     @Override
@@ -95,18 +90,24 @@ public class AboutActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        System.out.println("onSaveInstanceState-MainActivity");
+
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.actionBack: return true;
+            case android.R.id.home: onBackPressed(); return true;
+            default: return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     /**

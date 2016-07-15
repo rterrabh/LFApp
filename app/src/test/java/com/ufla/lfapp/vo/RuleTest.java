@@ -1,11 +1,24 @@
 package com.ufla.lfapp.vo;
 
+import android.app.Activity;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+
+import com.ufla.lfapp.R;
+import com.ufla.lfapp.activities.MainActivity;
+
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
 public class RuleTest {
 

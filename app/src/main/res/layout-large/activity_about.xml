@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,7 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".activities.AboutActivity"
-    android:gravity="top|left">
+    android:background="@color/BunkerGrey" >
 
     <ImageButton
         android:layout_width="wrap_content"
@@ -27,12 +28,11 @@
         android:layout_height="260dp"
         android:id="@+id/imageViewLFAppIcon"
         android:src="@drawable/lfapp_icon"
-        android:adjustViewBounds="false"
         android:scaleType="fitXY"
         android:contentDescription="@string/lfapp_icon"
         android:foregroundGravity="center"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -40,17 +40,11 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/team"
         android:id="@+id/textViewTeam"
-        android:textColor="@color/Black"
-        android:layout_alignParentEnd="false"
-        android:layout_alignParentStart="false"
-        android:layout_alignParentTop="false"
+        android:textColor="@color/White"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:focusable="false"
-        android:textIsSelectable="false"
         android:layout_above="@+id/imageViewLogoUfla"
         android:gravity="fill_vertical|center_horizontal"
-        android:longClickable="false"
         android:layout_below="@+id/imageViewLFAppIcon" />
 
     <ImageView
@@ -58,10 +52,8 @@
         android:layout_height="106dp"
         android:id="@+id/imageViewLogoUfla"
         android:src="@drawable/logo_ufla"
-        android:adjustViewBounds="false"
         android:scaleType="fitXY"
         android:contentDescription="@string/logo_ufla"
-        android:longClickable="false"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 

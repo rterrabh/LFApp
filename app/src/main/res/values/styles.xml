@@ -4,21 +4,24 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
     </style>
-    
+
     <style name="Featured">
         <item name="android:textStyle">italic</item>
     </style>
 
-    <style name="equipe_nomes">
-        <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/Black</item>
-        <item name="android:textStyle">bold</item>
+    <style name="FullscreenTheme" parent="AppTheme">
+        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle
+        </item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
+        <item name="metaButtonBarButtonStyle">
+            ?android:attr/buttonBarButtonStyle
+        </item>
     </style>
 
-    <style name="equipe_emails">
-        <item name="android:textSize">15sp</item>
-        <item name="android:textColor">@color/Black</item>
-        <item name="android:textStyle">normal</item>
+    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
     </style>
 
 </resources>

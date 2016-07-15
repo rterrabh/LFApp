@@ -9,9 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".activities.AboutActivity"
-    android:gravity="top|left">
-
-    <!--<item android:id="@+id/action_settings"/>-->
+    android:background="@color/BunkerGrey" >
 
     <ImageButton
         android:layout_width="wrap_content"
@@ -22,7 +20,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:contentDescription="@string/close"
-        android:adjustViewBounds="true"
         android:onClick="close" />
 
     <ImageView
@@ -30,7 +27,6 @@
         android:layout_height="192dp"
         android:id="@+id/imageViewLFAppIcon"
         android:src="@drawable/lfapp_icon"
-        android:adjustViewBounds="false"
         android:scaleType="fitXY"
         android:contentDescription="@string/lfapp_icon"
         android:foregroundGravity="center"
@@ -43,17 +39,11 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/team"
         android:id="@+id/textViewTeam"
-        android:textColor="@color/Black"
-        android:layout_alignParentEnd="false"
-        android:layout_alignParentStart="false"
-        android:layout_alignParentTop="false"
+        android:textColor="@color/White"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:focusable="false"
-        android:textIsSelectable="false"
         android:layout_above="@+id/imageViewLogoUfla"
         android:gravity="fill_vertical|center_horizontal"
-        android:longClickable="false"
         android:layout_below="@+id/imageViewLFAppIcon"
         android:layout_marginBottom="10dp" />
 
@@ -62,10 +52,8 @@
         android:layout_height="72dp"
         android:id="@+id/imageViewLogoUfla"
         android:src="@drawable/logo_ufla"
-        android:adjustViewBounds="false"
         android:scaleType="fitXY"
         android:contentDescription="@string/logo_ufla"
-        android:longClickable="false"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 

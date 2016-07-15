@@ -18,18 +18,10 @@ public class Rule02Test {
     @Before
     public void setUp() {
         rule = new Rule("S", "λ");
-        test(1);
-    }
-
-    public void test(int b) {
-        b = b * 2 -2;
-        rule.setLeftSide(String.valueOf(b));
-
     }
 
     @Test
     public void testClone1() {
-        test(1);
         Rule rc = (Rule) rule.clone();
         assertEquals(rc, rule);
         rc.setRightSide("abr");

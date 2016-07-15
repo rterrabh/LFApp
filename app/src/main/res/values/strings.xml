@@ -39,7 +39,7 @@
     <string name="lfapp_icon">LFApp Icon</string>
     <string name="close">Close</string>
     <string name="gramatica">Gramática:</string>
-    <string name="palavra_para_cyk_e_deriva_o">Palavra (para CYK e derivação):</string>
+    <string name="palavra_para_cyk_e_deriva_o">Palavra (caso se queira verificar aceitações e derivações):</string>
     <string name="lambda">λ</string>
     <string name="arrow"><![CDATA[->]]></string>
     <string name="pipe">|</string>
@@ -107,4 +107,8 @@
     <string name="desenvolvido_por_juventino_neto_sob_orienta_o_de_ricardo_terra">
         Desenvolvido por Juventino Neto sob orientação de Ricardo Terra.
     </string>
+
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>
