@@ -17,6 +17,7 @@ import com.ufla.lfapp.vo.GrammarParser;
 public class MainActivity extends AppCompatActivity {
 
     private EditText inputGrammar, inputWord;
+//    private LFAppKeyboard mCustomKeyboard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,47 +25,27 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         this.inputGrammar = (EditText) findViewById(R.id.inputGrammar);
         this.inputWord = (EditText) findViewById(R.id.inputWord);
+//        mCustomKeyboard= new LFAppKeyboard(this, R.id.lfappKeyboardView, R.xml.lfapp_keyboard);
+//        mCustomKeyboard.registerEditText(R.id.inputGrammar);
+//        mCustomKeyboard.registerEditText(R.id.inputWord);
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
         inputGrammar.setText(preferences.getString("inputGrammar", ""));
         inputWord.setText(preferences.getString("inputWord", ""));
-
-        Intent intent = getIntent();
-        if (intent != null) {
-            Bundle data = intent.getExtras();
-            if (data != null) {
-                Object grammar = data.get("grammar");
-                if(grammar != null) {
-                    this.inputGrammar.setText(grammar.toString());
-                }
-            }
-        }
-        System.out.println("onCreate-MainActivity");
-    }
-
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        System.out.println("onRestoreInstanceState-MainActivity");
-        super.onRestoreInstanceState(savedInstanceState);
-        this.inputGrammar.setText(savedInstanceState.getString
-                ("inputGrammar"));
-        this.inputWord.setText(savedInstanceState.getString
-                ("inputWord"));
     }
 
     @Override
     protected void onStop() {
-        super.onStop();
         SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
         editor.putString("inputGrammar", inputGrammar.getText
                 ().toString());
         editor.putString("inputWord", inputWord.getText
                 ().toString());
         editor.apply();
-        System.out.println("onStop-MainActivity");
+        super.onStop();
     }
 
     @Override
     protected void onDestroy() {
-        System.out.println("onDestroy-MainActivity");
         SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
         editor.putString("inputGrammar", inputGrammar.getText
                 ().toString());
@@ -75,46 +56,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause() {
-        System.out.println("onPause-MainActivity");
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        System.out.println("onResume-MainActivity");
-        super.onResume();
-    }
-
-    @Override
-    protected void onStart() {
-        System.out.println("onStart-MainActivity");
-        super.onStart();
-    }
-
-    @Override
-    protected void onRestart() {
-        System.out.println("onRestart-MainActivity");
-        super.onRestart();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle savedInstanceState) {
-        System.out.println("onSaveInstanceState-MainActivity");
-        savedInstanceState.putString("inputGrammar",
-                String.valueOf(inputGrammar));
-        savedInstanceState.putString("inputWord",
-                String.valueOf(inputWord));
-
-        // Always call the superclass so it can save the view hierarchy state
-        super.onSaveInstanceState(savedInstanceState);
-    }
-
-    @Override
     public void onBackPressed() {
-        System.out.println("onBackPressed-MainActivity");
+//        if(mCustomKeyboard.isLFAppKeyboardVisible()) {
+//            mCustomKeyboard.hideLFAppKeyboard();
+//        } else {
+//            super.onBackPressed();
+//        }
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        dialog.cancel();
+                        finish();
+                        break;
 
-        super.onBackPressed();
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        dialog.cancel();
+                        break;
+                }
+            }
+        };
+        //Solicita confirmação de saída do lfapp
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Sair");
+        builder.setMessage("Sair do LFApp?");
+        builder.setPositiveButton("Sim", dialogClickListener);
+        builder.setNegativeButton("Não", dialogClickListener);
+        builder.show();
     }
 
     public void insertLambda(View view) {
@@ -143,33 +112,21 @@ public class MainActivity extends AppCompatActivity {
         String word = inputWord.getText().toString();
         if (!txtGrammar.isEmpty()) {
             StringBuilder reason = new StringBuilder();
-            AlertDialog alert;
-            if (GrammarParser.verifyInputGrammar(txtGrammar)) {
-                if (GrammarParser.inputValidate(txtGrammar, reason)) {
-                    Bundle params = new Bundle();
-                    params.putString("grammar", txtGrammar);
-                    params.putString("word", word);
-                    Intent intent = new Intent(this, OutActivity.class);
-                    intent.putExtras(params);
-                    startActivity(intent);
-                } else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle("Aviso");
-                    builder.setMessage(reason);
-                    builder.setNegativeButton("OK",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                }
-                            });
-                    alert = builder.create();
-                    alert.show();
-                }
+            if (GrammarParser.verifyInputGrammar(txtGrammar) &&
+                    GrammarParser.inputValidate(txtGrammar, reason)) {
+                Bundle params = new Bundle();
+                params.putString("grammar", txtGrammar);
+                params.putString("word", word);
+                Intent intent = new Intent(this, OutActivity.class);
+                intent.putExtras(params);
+                startActivity(intent);
             } else {
+                if(reason.length() == 0) {
+                    reason.append("Gramática inválida.");
+                }
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("Aviso");
-                builder.setMessage("Gramática inválida.");
+                builder.setMessage(reason);
                 builder.setNegativeButton("OK",
                         new DialogInterface.OnClickListener() {
                             @Override
@@ -177,8 +134,7 @@ public class MainActivity extends AppCompatActivity {
                                 dialog.cancel();
                             }
                         });
-                alert = builder.create();
-                alert.show();
+                builder.show();
             }
         }
     }

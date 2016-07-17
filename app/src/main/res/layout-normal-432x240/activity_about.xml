@@ -9,19 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".activities.AboutActivity"
-    android:background="@color/Black">
-
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageButtonClose"
-        android:src="@drawable/ic_close_black_24dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:contentDescription="@string/close"
-        android:adjustViewBounds="true"
-        android:onClick="close" />
+    android:background="@color/BunkerGrey">
 
     <ImageView
         android:layout_width="140dp"

@@ -2,6 +2,7 @@ package com.ufla.lfapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.Spanned;
@@ -47,7 +48,6 @@ public class OutActivity extends AppCompatActivity {
     private LinearLayout layoutGrammarType, layoutDerivationMoreLeft, layoutDerivationMoreRight, layoutInitialSymbolRecursive, layoutEmptyProductions;
     private LinearLayout layoutChainRules, layoutNoTermSymbols, layoutNoReachSymbols, layoutFnc, layoutLeftDirectRecursion;
     private LinearLayout layoutLeftRecursion, layoutFng, layoutCyk;
-    private Button button_Voltar;
     private TextView step1_1, step1_2, step2_1, step2_2, step2_3, step3_1, step3_2, step3_3, step4_1, step4_2, step4_3, step5_1, step5_2, step5_3, step7_1;
     private TextView step7_2, step7_3, step8_1, step8_2, step8_3;
     private TextView fncStep1, fncStep2, fncStep3, fncStep4, fncStep5, fncStep6;
@@ -56,14 +56,15 @@ public class OutActivity extends AppCompatActivity {
     private LinearLayout fngLayout1, fngLayout2;
     private TextView fngStep1, fngStep2;
     private boolean controlFNG1, controlFNG2;
-    private TextView fixesGrammar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_out);
+        ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
+        actionBar.setDisplayHomeAsUpEnabled(true);
         initializesActivity();
-        System.out.println("onCreate-OutActivity");
     }
 
     private void initializesActivity() {
@@ -110,62 +111,6 @@ public class OutActivity extends AppCompatActivity {
 
         final Bundle params = new Bundle();
         params.putString("grammar", grammar);
-        this.fixesGrammar = (TextView) findViewById(R.id.GramaticaVerde);
-        this.fixesGrammar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent changeScreen = new Intent(OutActivity.this, MainActivity.class);
-                changeScreen.putExtras(params);
-                startActivity(changeScreen);
-                finish();
-            }
-        });
-
-        this.button_Voltar = (Button) findViewById(R.id.button_Voltar);
-        this.button_Voltar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent changeScreen = new Intent(OutActivity.this, MainActivity.class);
-                startActivity(changeScreen);
-                finish();
-            }
-        });
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        System.out.println("onStop-OutActivity");
-    }
-
-    @Override
-    protected void onDestroy() {
-        System.out.println("onDestroy-OutActivity");
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onPause() {
-        System.out.println("onPause-OutActivity");
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        System.out.println("onResume-OutActivity");
-        super.onResume();
-    }
-
-    @Override
-    protected void onStart() {
-        System.out.println("onStart-OutActivity");
-        super.onStart();
-    }
-
-    @Override
-    protected void onRestart() {
-        System.out.println("onRestart-OutActivity");
-        super.onRestart();
     }
 
     /**
@@ -543,6 +488,28 @@ public class OutActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                //NavUtils.navigateUpFromSameTask(this);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 
@@ -1475,11 +1442,6 @@ public class OutActivity extends AppCompatActivity {
                    .step4RemovalLeftRecursionAcademicSupport);
            removalLeftRecursion.setAdapter(listAdapter);
            setListViewHeightBasedOnChildren(removalLeftRecursion);
-           System.out.println(academicSupportLR
-                   .getGrammarTransformationsStage1().size()+";"+academicSupportLR
-                   .getGrammarTransformationsStage2().size()+";" +
-                   ""+academicSupportLR
-                   .getGrammarTransformationsStage3().size()+"\n");
            //Realiza terceiro passo do processo (Destaca as mudanças finais)
            /*TextView step3 = (TextView) findViewById(R.id
                    .step3RemovalLeftRecursion);
@@ -1894,28 +1856,6 @@ public class OutActivity extends AppCompatActivity {
             sentence.append(".");
         }
         return flag;
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.actionBack) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     private String printRules(final Grammar g) {

@@ -1725,29 +1725,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:id="@+id/CYKTabelaExplicacao">
+                        android:id="@+id/CYKTabelaExplicacao" >
                     </TableLayout>
 
                 </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
-
-                <Button
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Voltar"
-                    android:id="@+id/button_Voltar"
-                    android:layout_centerVertical="true"
-                    android:layout_centerHorizontal="true" />
 
             </LinearLayout>
 
         </LinearLayout>
 
-
-
     </ScrollView>
+
 </LinearLayout>

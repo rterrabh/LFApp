@@ -248,8 +248,9 @@ public class GrammarParser {
                 variable.append(txtGrammar.charAt(i));
                 int j = i + 1;
                 while (j < txtGrammar.length() && Character.isDigit(txtGrammar.charAt(j))) {
-                    variable.append(txtGrammar.charAt(j));
+                    variable.append(txtGrammar.charAt(j++));
                 }
+                i = j;
                 if (!setOfVariables.contains(variable.toString())) {
                     test= false;
                     reason.append("Não foram atribuídas produções à variável '")

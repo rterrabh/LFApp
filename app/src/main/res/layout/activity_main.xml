@@ -10,7 +10,7 @@
     tools:context=".activities.MainActivity"
     android:id="@+id/mainLayout"
     android:background="#F0F8FF"
-    android:orientation="vertical">
+    android:orientation="vertical" >
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/inputGrammar"
             android:inputType="textMultiLine"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
     </LinearLayout>
 
@@ -63,18 +63,17 @@
         android:orientation="vertical"
         android:layout_marginRight="5dp"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="5dp"
-        android:layout_alignParentTop="true"
-        >
+        android:layout_centerVertical="true" >
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/lambda"
+            android:textAllCaps="false"
             android:layout_weight="1"
             android:id="@+id/buttonLambda"
             android:background="@color/DarkGray"
-            android:onClick="insertLambda"/>
+            android:onClick="insertLambda" />
 
         <Button
             android:layout_width="wrap_content"
@@ -84,7 +83,7 @@
             android:id="@+id/buttonArrow"
             android:background="@color/DarkGray"
             android:layout_marginTop="10dp"
-            android:onClick="insertArrow"/>
+            android:onClick="insertArrow" />
 
         <Button
             android:layout_width="wrap_content"
@@ -94,7 +93,7 @@
             android:id="@+id/buttonPipe"
             android:background="@color/DarkGray"
             android:layout_marginTop="10dp"
-            android:onClick="insertPipe"/>
+            android:onClick="insertPipe" />
 
 
         <Button
@@ -105,7 +104,7 @@
             android:id="@+id/buttonOK"
             android:background="@android:color/holo_green_dark"
             android:layout_marginTop="10dp"
-            android:onClick="confirmGrammar"/>
+            android:onClick="confirmGrammar" />
 
         <ImageButton
             android:layout_width="match_parent"
@@ -119,5 +118,19 @@
             android:contentDescription="@string/about_button" />
 
     </LinearLayout>
+
+    <android.inputmethodservice.KeyboardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/lfappKeyboardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:visibility="gone"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        />
 
 </RelativeLayout>
