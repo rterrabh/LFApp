@@ -111,4 +111,17 @@
     <string name="title_activity_fullscreen">FullscreenActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="gram_tica_de_entrada">Gramática de entrada:</string>
+    <string name="identifica_o_da_gram_tica">Identificação da Gramática</string>
+    <string name="deriva_o_mais_esquerda">Derivação Mais à Esquerda</string>
+    <string name="remo_o_da_recurs_o_no_s_mbolo_inicial">Remoção da Recursão no Símbolo Inicial</string>
+    <string name="remo_o_de_produ_es_vazias">Remoção de Produções Vazias</string>
+    <string name="remo_o_de_regras_de_cadeia">Remoção de Regras de Cadeia</string>
+    <string name="remo_o_de_vari_veis_que_n_o_geram_terminais">Remoção de Variáveis que Não Geram Terminais</string>
+    <string name="remo_o_de_s_mbolos_n_o_alcan_veis">Remoção de Símbolos Não Alcançáveis</string>
+    <string name="forma_normal_de_chomsky">Forma Normal de Chomsky</string>
+    <string name="remo_o_de_recurs_o_direta_esquerda">Remoção de Recursão Direta à Esquerda</string>
+    <string name="remo_o_de_recurs_o_direta_e_indireta_esquerda">Remoção de Recursão Direta e Indireta à Esquerda</string>
+    <string name="forma_normal_de_greibach">Forma Normal de Greibach</string>
+    <string name="cyk">CYK</string>
 </resources>

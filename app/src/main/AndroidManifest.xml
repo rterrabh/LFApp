@@ -17,6 +17,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".activities.OutActivity"
             android:label="LFApp" >
@@ -24,9 +25,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
         </activity>
+
         <activity
             android:name=".activities.InfoActivity"
             android:label="LFApp" />
+
         <activity
             android:name=".activities.AboutActivity"
             android:screenOrientation="portrait"
@@ -34,6 +37,23 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity" />
+        </activity>
+
+
+        <activity
+            android:name=".activities.MenuActivity"
+            android:label="LFApp" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity" />
+        </activity>
+
+        <activity
+            android:name=".activities.IdGrammarActivity"
+            android:label="LFApp" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MenuActivity" />
         </activity>
 
         <meta-data
