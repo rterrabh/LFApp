@@ -25,28 +25,6 @@ public class MenuActivity extends AppCompatActivity {
     private String grammar;
     private String word;
 
-    private void defineHeightOfScrollViews() {
-        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-        int dpHeight = displayMetrics.heightPixels;
-        ScrollView grammarScrollView = (ScrollView) findViewById(R.id
-                .grammarView);
-        ScrollView buttonsScrollView = (ScrollView) findViewById(R.id
-                .buttonsView);
-        assert buttonsScrollView != null;
-        assert grammarScrollView != null;
-//        int totalHeight = grammarScrollView.getLayoutParams().height
-//                +buttonsScrollView.getLayoutParams().height;
-//        int heightGrammar = min(totalHeight / 3, grammarScrollView.getLayoutParams().height);
-//        grammarScrollView.getLayoutParams().height = heightGrammar;
-//        buttonsScrollView.getLayoutParams().height = totalHeight-heightGrammar;
-//        System.out.println(totalHeight+";"+heightGrammar+";"+(totalHeight-heightGrammar));
-        grammarScrollView.getLayoutParams().height = dpHeight / 3;
-        buttonsScrollView.getLayoutParams().height = dpHeight - dpHeight/3;
-//        buttonsScrollView.setMinimumHeight((int) (dpHeight - dpHeight/3));
-        System.out.println(dpHeight+";"+(grammarScrollView.getLayoutParams()
-                .height+ buttonsScrollView.getLayoutParams().height));
-    }
-
     private void setGrammar() {
         Intent intent = getIntent();
         if (intent != null) {
@@ -61,7 +39,6 @@ public class MenuActivity extends AppCompatActivity {
                     academic.setResult(g);
                     assert inputGrammar != null;
                     inputGrammar.setText(Html.fromHtml(academic.getResult()));
-                    inputGrammar.setTextColor(getResources().getColor(R.color.DarkGray));
                 }
             }
         }
@@ -71,7 +48,6 @@ public class MenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-        defineHeightOfScrollViews();
         setGrammar();
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
@@ -111,7 +87,8 @@ public class MenuActivity extends AppCompatActivity {
     public void startDerivationLeftmostActivity(View view) {
         Bundle params = new Bundle();
         params.putString("grammar", grammar);
-        Intent intent = new Intent(this, MenuActivity.class);
+        params.putString("word", word);
+        Intent intent = new Intent(this, OutActivity.class);
         intent.putExtras(params);
         startActivity(intent);
 
@@ -120,7 +97,8 @@ public class MenuActivity extends AppCompatActivity {
     public void startRRecursionInTheInitialSymbolActivity(View view) {
         Bundle params = new Bundle();
         params.putString("grammar", grammar);
-        Intent intent = new Intent(this, MenuActivity.class);
+        params.putString("word", word);
+        Intent intent = new Intent(this, OutActivity.class);
         intent.putExtras(params);
         startActivity(intent);
     }
@@ -128,7 +106,8 @@ public class MenuActivity extends AppCompatActivity {
     public void startREmptyProductionsActivity(View view) {
         Bundle params = new Bundle();
         params.putString("grammar", grammar);
-        Intent intent = new Intent(this, MenuActivity.class);
+        params.putString("word", word);
+        Intent intent = new Intent(this, OutActivity.class);
         intent.putExtras(params);
         startActivity(intent);
     }
@@ -136,7 +115,8 @@ public class MenuActivity extends AppCompatActivity {
     public void startRChainRulesActivity(View view) {
         Bundle params = new Bundle();
         params.putString("grammar", grammar);
-        Intent intent = new Intent(this, MenuActivity.class);
+        params.putString("word", word);
+        Intent intent = new Intent(this, OutActivity.class);
         intent.putExtras(params);
         startActivity(intent);
     }
@@ -144,7 +124,8 @@ public class MenuActivity extends AppCompatActivity {
     public void startRNTermActivity(View view) {
         Bundle params = new Bundle();
         params.putString("grammar", grammar);
-        Intent intent = new Intent(this, MenuActivity.class);
+        params.putString("word", word);
+        Intent intent = new Intent(this, OutActivity.class);
         intent.putExtras(params);
         startActivity(intent);
     }
@@ -152,7 +133,8 @@ public class MenuActivity extends AppCompatActivity {
     public void startRNReachActivity(View view) {
         Bundle params = new Bundle();
         params.putString("grammar", grammar);
-        Intent intent = new Intent(this, MenuActivity.class);
+        params.putString("word", word);
+        Intent intent = new Intent(this, OutActivity.class);
         intent.putExtras(params);
         startActivity(intent);
     }
@@ -160,7 +142,8 @@ public class MenuActivity extends AppCompatActivity {
     public void startChomskyNormalFormActivity(View view) {
         Bundle params = new Bundle();
         params.putString("grammar", grammar);
-        Intent intent = new Intent(this, MenuActivity.class);
+        params.putString("word", word);
+        Intent intent = new Intent(this, OutActivity.class);
         intent.putExtras(params);
         startActivity(intent);
     }
@@ -168,7 +151,8 @@ public class MenuActivity extends AppCompatActivity {
     public void startRRecursionDirectLeftActivity(View view) {
         Bundle params = new Bundle();
         params.putString("grammar", grammar);
-        Intent intent = new Intent(this, MenuActivity.class);
+        params.putString("word", word);
+        Intent intent = new Intent(this, OutActivity.class);
         intent.putExtras(params);
         startActivity(intent);
     }
@@ -176,7 +160,8 @@ public class MenuActivity extends AppCompatActivity {
     public void startRRecursionDirAndIndLeftActivity(View view) {
         Bundle params = new Bundle();
         params.putString("grammar", grammar);
-        Intent intent = new Intent(this, MenuActivity.class);
+        params.putString("word", word);
+        Intent intent = new Intent(this, OutActivity.class);
         intent.putExtras(params);
         startActivity(intent);
     }
@@ -184,7 +169,8 @@ public class MenuActivity extends AppCompatActivity {
     public void startGreibachNormalFormActivity(View view) {
         Bundle params = new Bundle();
         params.putString("grammar", grammar);
-        Intent intent = new Intent(this, MenuActivity.class);
+        params.putString("word", word);
+        Intent intent = new Intent(this, OutActivity.class);
         intent.putExtras(params);
         startActivity(intent);
     }
@@ -192,7 +178,8 @@ public class MenuActivity extends AppCompatActivity {
     public void startCYKActivity(View view) {
         Bundle params = new Bundle();
         params.putString("grammar", grammar);
-        Intent intent = new Intent(this, MainActivity.class);
+        params.putString("word", word);
+        Intent intent = new Intent(this, OutActivity.class);
         intent.putExtras(params);
         startActivity(intent);
     }

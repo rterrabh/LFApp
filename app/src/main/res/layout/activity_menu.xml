@@ -4,46 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    android:orientation="vertical"
-    android:id="@+id/menuLayout">
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:orientation="vertical">
 
-    <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:id="@+id/grammarView" >
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/gram_tica_de_entrada"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/inputGrammar"/>
-
-        </LinearLayout>
-
-    </ScrollView>
+    <include layout="@layout/header_grammar" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/buttonsView">
+        android:layout_weight="0.67">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:orientation="vertical">
 
             <Button
@@ -52,7 +28,7 @@
                 android:layout_weight="1"
                 android:textAllCaps="false"
                 android:text="@string/identifica_o_da_gram_tica"
-                android:textColor="#000000"
+                android:textColor="@color/Black"
                 android:textSize="20sp"
                 android:id="@+id/buttonIdentificationGrammar"
                 android:background="@color/DarkGray"
@@ -65,7 +41,7 @@
                 android:layout_marginTop="10dp"
                 android:textAllCaps="false"
                 android:text="@string/deriva_o_mais_esquerda"
-                android:textColor="#000000"
+                android:textColor="@color/Black"
                 android:textSize="20sp"
                 android:id="@+id/buttonDerivationLeftmost"
                 android:background="@color/DarkGray"
@@ -78,7 +54,7 @@
                 android:layout_marginTop="10dp"
                 android:textAllCaps="false"
                 android:text="@string/remo_o_da_recurs_o_no_s_mbolo_inicial"
-                android:textColor="#000000"
+                android:textColor="@color/Black"
                 android:textSize="20sp"
                 android:id="@+id/buttonRRecursionInTheInitialSymbol"
                 android:background="@color/DarkGray"
@@ -91,7 +67,7 @@
                 android:layout_marginTop="10dp"
                 android:textAllCaps="false"
                 android:text="@string/remo_o_de_produ_es_vazias"
-                android:textColor="#000000"
+                android:textColor="@color/Black"
                 android:textSize="20sp"
                 android:id="@+id/buttonREmptyProductions"
                 android:background="@color/DarkGray"
@@ -104,7 +80,7 @@
                 android:layout_marginTop="10dp"
                 android:textAllCaps="false"
                 android:text="@string/remo_o_de_regras_de_cadeia"
-                android:textColor="#000000"
+                android:textColor="@color/Black"
                 android:textSize="20sp"
                 android:id="@+id/buttonRChainRules"
                 android:background="@color/DarkGray"
@@ -117,7 +93,7 @@
                 android:layout_marginTop="10dp"
                 android:textAllCaps="false"
                 android:text="@string/remo_o_de_vari_veis_que_n_o_geram_terminais"
-                android:textColor="#000000"
+                android:textColor="@color/Black"
                 android:textSize="20sp"
                 android:id="@+id/buttonRNTerm"
                 android:background="@color/DarkGray"
@@ -131,7 +107,7 @@
                 android:layout_marginTop="10dp"
                 android:textAllCaps="false"
                 android:text="@string/remo_o_de_s_mbolos_n_o_alcan_veis"
-                android:textColor="#000000"
+                android:textColor="@color/Black"
                 android:textSize="20sp"
                 android:id="@+id/buttonRNReach"
                 android:background="@color/DarkGray"
@@ -144,7 +120,7 @@
                 android:layout_marginTop="10dp"
                 android:textAllCaps="false"
                 android:text="@string/forma_normal_de_chomsky"
-                android:textColor="#000000"
+                android:textColor="@color/Black"
                 android:textSize="20sp"
                 android:id="@+id/buttonChomskyNormalForm"
                 android:background="@color/DarkGray"
@@ -157,7 +133,7 @@
                 android:layout_marginTop="10dp"
                 android:textAllCaps="false"
                 android:text="@string/remo_o_de_recurs_o_direta_esquerda"
-                android:textColor="#000000"
+                android:textColor="@color/Black"
                 android:textSize="20sp"
                 android:id="@+id/buttonRRecursionDirectLeft"
                 android:background="@color/DarkGray"
@@ -170,7 +146,7 @@
                 android:layout_marginTop="10dp"
                 android:textAllCaps="false"
                 android:text="@string/remo_o_de_recurs_o_direta_e_indireta_esquerda"
-                android:textColor="#000000"
+                android:textColor="@color/Black"
                 android:textSize="20sp"
                 android:id="@+id/buttonRRecursionDirAndIndLeft"
                 android:background="@color/DarkGray"
@@ -183,7 +159,7 @@
                 android:layout_marginTop="10dp"
                 android:textAllCaps="false"
                 android:text="@string/forma_normal_de_greibach"
-                android:textColor="#000000"
+                android:textColor="@color/Black"
                 android:textSize="20sp"
                 android:id="@+id/buttonGreibachNormalForm"
                 android:background="@color/DarkGray"
@@ -194,27 +170,17 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="20dp"
                 android:textAllCaps="false"
                 android:text="@string/cyk"
-                android:textColor="#000000"
+                android:textColor="@color/Black"
                 android:textSize="20sp"
                 android:id="@+id/buttonCYK"
                 android:background="@color/DarkGray"
                 android:onClick="startCYKActivity" />
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="20dp"
-                android:textAllCaps="false"
-                android:text="@string/cyk"
-                android:background="@color/DarkGray"/>
-
         </LinearLayout>
 
     </ScrollView>
+
 
 </LinearLayout>

@@ -119,18 +119,6 @@
 
     </LinearLayout>
 
-    <android.inputmethodservice.KeyboardView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/lfappKeyboardView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        android:visibility="gone"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        />
+    <include layout="@layout/lfapp_keyboard_view" />
 
 </RelativeLayout>

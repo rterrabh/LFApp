@@ -10,5 +10,4 @@
     android:focusableInTouchMode="true"
     android:visibility="gone"
     android:layout_alignParentLeft="true"
-    android:layout_alignParentRight="true"
-    />
+    android:layout_alignParentRight="true"/>

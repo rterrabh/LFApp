@@ -24,27 +24,6 @@ import com.ufla.lfapp.vo.GrammarParser;
 public class IdGrammarActivity extends AppCompatActivity {
 
 
-    private void defineHeightOfScrollViews() {
-        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-        int dpHeight = displayMetrics.heightPixels;
-        ScrollView grammarScrollView = (ScrollView) findViewById(R.id
-                .grammarView);
-        ScrollView buttonsScrollView = (ScrollView) findViewById(R.id
-                .identifyGrammarView);
-        assert buttonsScrollView != null;
-        assert grammarScrollView != null;
-//        int totalHeight = grammarScrollView.getLayoutParams().height
-//                +buttonsScrollView.getLayoutParams().height;
-//        int heightGrammar = min(totalHeight / 3, grammarScrollView.getLayoutParams().height);
-//        grammarScrollView.getLayoutParams().height = heightGrammar;
-//        buttonsScrollView.getLayoutParams().height = totalHeight-heightGrammar;
-//        System.out.println(totalHeight+";"+heightGrammar+";"+(totalHeight-heightGrammar));
-        grammarScrollView.getLayoutParams().height = dpHeight / 3;
-        buttonsScrollView.getLayoutParams().height = dpHeight - dpHeight/3;
-//        buttonsScrollView.setMinimumHeight((int) (dpHeight - dpHeight/3));
-        System.out.println(dpHeight+";"+(grammarScrollView.getLayoutParams()
-                .height+ buttonsScrollView.getLayoutParams().height));
-    }
 
     private void setGrammar() {
         String grammar;
@@ -60,7 +39,6 @@ public class IdGrammarActivity extends AppCompatActivity {
                     academic.setResult(g);
                     assert inputGrammar != null;
                     inputGrammar.setText(Html.fromHtml(academic.getResult()));
-                    inputGrammar.setTextColor(getResources().getColor(R.color.DarkGray));
                 }
                 grammarType(g);
             }
@@ -71,7 +49,6 @@ public class IdGrammarActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_id_grammar);
-        defineHeightOfScrollViews();
         setGrammar();
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
@@ -111,7 +88,6 @@ public class IdGrammarActivity extends AppCompatActivity {
         if (tableGrammarType != null) {
             tableGrammarType.setStretchAllColumns(true);
         }
-
         //LINHA 1
         TableRow row0 = new TableRow(this);
         TextView tv0_0 = new TextView(this);
@@ -169,17 +145,9 @@ public class IdGrammarActivity extends AppCompatActivity {
         tableGrammarType.addView(row3);
 
         AcademicSupport academic = new AcademicSupport();
-        academic.setComments("A classificação de uma gramática é feita pelo " +
-                "tipo de suas regras (u → v). A tabela abaixo mostra o " +
-                "formato de regras características de cada nível: \n");
 
         StringBuilder comments = new StringBuilder();
         academic.setSolutionDescription(GrammarParser.classifiesGrammar(g, comments));
-
-        TextView explanation = (TextView) findViewById(R.id.explanationGrammarType);
-        if(explanation != null) {
-            explanation.setText(academic.getComments());
-        }
 
         TextView commentsOfSolution = (TextView) findViewById(R.id.comments);
         if(commentsOfSolution != null) {
