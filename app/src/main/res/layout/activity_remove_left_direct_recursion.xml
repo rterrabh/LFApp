@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:background="#FFFFFF"
+    android:orientation="vertical">
+
+    <include layout="@layout/header_grammar"/>
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.67">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/DarkGray"
+                android:text="@string/remo_o_de_recurs_o_direta_esquerda"
+                android:textSize="20sp"
+                android:textColor="@color/Black"/>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/resultado"
+                        android:textColor="#acff000a"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/ResultGrammarWithoutLeftDirectRecursion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/Black"
+                        android:layout_gravity="center"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/algoritmo"
+                        android:textColor="#acff000a"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/CommentsDirectLeftRecursion"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/Black"/>
+
+                    <TextView
+                        android:id="@+id/Step1DirectLeftRecursion"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/Black"/>
+
+                    <TextView
+                        android:id="@+id/PseudoDirectLeftRecursionAlgorithm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"/>
+
+                    <HorizontalScrollView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <TableLayout
+                            android:id="@+id/tableWithDirectLeftRecursion"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                    </HorizontalScrollView>
+
+                    <TextView
+                        android:id="@+id/Step2DirectLeftRecursion"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/Black"/>
+
+                    <HorizontalScrollView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <TableLayout
+                            android:id="@+id/tableWithoutDirectLeftRecursion"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                    </HorizontalScrollView>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

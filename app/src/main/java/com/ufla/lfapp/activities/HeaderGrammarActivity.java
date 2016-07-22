@@ -19,8 +19,14 @@ import com.ufla.lfapp.vo.Grammar;
 public abstract class HeaderGrammarActivity extends AppCompatActivity {
 
 
-    private String grammar;
-    private String word;
+    protected String grammar;
+    protected String word;
+    protected Algorithm algorithm;
+
+
+    protected Grammar getGrammar() {
+        return new Grammar(grammar);
+    }
 
     private void setGrammar() {
         Intent intent = getIntent();
@@ -29,7 +35,8 @@ public abstract class HeaderGrammarActivity extends AppCompatActivity {
             if (dados != null) {
                 grammar = dados.getString("grammar");
                 word = dados.getString("word");
-                Grammar g = new Grammar(grammar);
+                algorithm = Algorithm.getAlgorithm(dados.getInt("algorithm"));
+                Grammar g = getGrammar();
                 if (grammar != null) {
                     TextView inputGrammar = (TextView) findViewById(R.id.inputGrammar);
                     AcademicSupport academic = new AcademicSupport();
@@ -44,7 +51,6 @@ public abstract class HeaderGrammarActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_menu);
         setGrammar();
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
@@ -54,7 +60,18 @@ public abstract class HeaderGrammarActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        switch(algorithm) {
+            case CHOMSKY_NORMAL_FORM:
+            case GREIBACH_NORMAL_FORM:
+                getMenuInflater().inflate(R.menu.menu_next_step, menu);
+                break;
+            case NONE:
+                getMenuInflater().inflate(R.menu.menu_main, menu);
+                break;
+            default:
+                getMenuInflater().inflate(R.menu.menu_main, menu);
+                break;
+        }
         return true;
     }
 

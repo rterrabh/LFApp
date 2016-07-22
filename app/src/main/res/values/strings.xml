@@ -125,4 +125,10 @@
     <string name="forma_normal_de_greibach">Forma Normal de Greibach</string>
     <string name="cyk">CYK</string>
     <string name="explanation_grammar_type">A classificação de uma gramática é feita pelo tipo de suas regras (u → v). A tabela abaixo mostra o formato de regras características de cada nível: \n</string>
+    <string name="derivaca_mais_esqerda">Derivação mais à esquerda</string>
+    <string name="pendente">Pendente.</string>
+    <string name="remocao_de_recursao">Remoção de Recursão no Símbolo Inicial</string>
+    <string name="resultado">Resultado:</string>
+    <string name="algoritmo">Algoritmo:</string>
+    <string name="remocao">Remoção de Produções Vazias</string>
 </resources>

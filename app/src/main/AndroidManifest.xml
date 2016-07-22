@@ -56,6 +56,30 @@
                 android:value=".activities.MenuActivity" />
         </activity>
 
+        <activity
+            android:name=".activities.DerivationMoreLeftActivity"
+            android:label="LFApp" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MenuActivity" />
+        </activity>
+
+        <activity
+            android:name=".activities.RemoveInitialSymbolRecursiveActivity"
+            android:label="LFApp" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MenuActivity" />
+        </activity>
+
+        <activity
+            android:name=".activities.EmptyProductionActivity"
+            android:label="LFApp" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MenuActivity" />
+        </activity>
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

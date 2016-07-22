@@ -7,119 +7,107 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context=".activities.MainActivity"
-    android:id="@+id/mainLayout"
     android:background="#F0F8FF"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".activities.MainActivity">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/inputs"
         android:orientation="vertical"
+        android:layout_toLeftOf="@+id/buttons"
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
         android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="5dp"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/buttons"
-        >
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxWidth="200dp"
-            android:text="@string/palavra_para_cyk_e_deriva_o"
-            android:id="@+id/titleWord" />
+            android:text="@string/palavra_para_cyk_e_deriva_o"/>
 
         <EditText
+            android:id="@+id/inputWord"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0"
-            android:id="@+id/inputWord"
-            android:inputType="text"
-            />
+            android:inputType="text"/>
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/gramatica"
-            android:id="@+id/titleGrammar" />
-
-        <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="@string/gramatica"/>
+
+        <EditText
             android:id="@+id/inputGrammar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:inputType="textMultiLine"
             android:layout_weight="1"/>
 
     </LinearLayout>
 
-
     <LinearLayout
+        android:id="@+id/buttons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/buttons"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true">
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true">
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/lambda"
-            android:layout_weight="1"
-            android:id="@+id/buttonLambda"
             android:background="@color/DarkGray"
+            android:layout_weight="1"
+            android:text="@string/lambda"
+            android:textAllCaps="false"
             android:onClick="insertLambda"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@color/DarkGray"
+            android:layout_weight="1"
             android:text="@string/arrow"
-            android:layout_weight="1"
-            android:id="@+id/buttonArrow"
-            android:background="@color/DarkGray"
-            android:onClick="insertArrow"
-            android:layout_marginLeft="10dp"/>
+            android:layout_marginTop="10dp"
+            android:onClick="insertArrow"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@color/DarkGray"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
             android:text="@string/pipe"
-            android:layout_weight="1"
-            android:id="@+id/buttonPipe"
-            android:background="@color/DarkGray"
-            android:onClick="insertPipe"
-            android:layout_marginLeft="10dp"/>
-
+            android:onClick="insertPipe"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/ok"
             android:layout_weight="1"
-            android:id="@+id/buttonOK"
+            android:layout_marginTop="10dp"
             android:background="@android:color/holo_green_dark"
-            android:onClick="confirmGrammar"
-            android:layout_marginLeft="10dp"/>
+            android:text="@string/ok"
+            android:onClick="confirmGrammar"/>
 
         <ImageButton
-            android:layout_width="88dp"
+            android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:id="@+id/buttonAbout"
-            android:src="@drawable/ic_info_outline_black_24dp"
-            android:background="@color/LightGrey"
             android:layout_weight="1"
-            android:onClick="startAboutActivity"
+            android:layout_marginTop="10dp"
+            android:background="@color/LightGrey"
+            android:src="@drawable/ic_info_outline_black_24dp"
             android:contentDescription="@string/about_button"
-            android:layout_marginLeft="10dp"/>
+            android:onClick="startAboutActivity"/>
 
     </LinearLayout>
 
-</RelativeLayout>
+    <include layout="@layout/lfapp_keyboard_view"/>
 
+</RelativeLayout>

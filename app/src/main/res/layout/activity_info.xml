@@ -1,59 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:text="@string/lfapp"
+            android:textStyle="bold"/>
 
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/lfapp"
-                android:textStyle="bold"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/o_lfapp_um_aplicativo_m_vel_para_auxiliar_o_ensino_e_aprendizagem_de_lfa"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20px"
-                android:text="@string/o_lfapp_um_aplicativo_m_vel_para_auxiliar_o_ensino_e_aprendizagem_de_lfa"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/gram_tica"
+            android:textStyle="bold"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/gram_tica"
-                android:layout_marginTop="20px"
-                android:textStyle="bold"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/o_usu_rio_deve_inserir_uma_gram_tica_com_as_seguintes_configura"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20px"
-                android:text="@string/o_usu_rio_deve_inserir_uma_gram_tica_com_as_seguintes_configura"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="240dp"
+            android:text="@string/desenvolvido_por_juventino_neto_sob_orienta_o_de_ricardo_terra"
+            android:textStyle="italic"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="400px"
-                android:textStyle="italic"
-                android:text="@string/desenvolvido_por_juventino_neto_sob_orienta_o_de_ricardo_terra"/>
+        <Button
+            android:id="@+id/button_voltar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/voltar"/>
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/voltar"
-                android:id="@+id/button_voltar"
-                android:layout_gravity="center" />
+    </LinearLayout>
 
-        </LinearLayout>
-
-    </ScrollView>
-
-</RelativeLayout>
+</ScrollView>

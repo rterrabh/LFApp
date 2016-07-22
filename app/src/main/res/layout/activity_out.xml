@@ -1154,8 +1154,7 @@
                                 <TableLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:id="@+id/Passo2FNC_Resultado">
-                                </TableLayout>
+                                    android:id="@+id/Passo2FNC_Resultado"/>
 
                             </HorizontalScrollView>
 
@@ -1163,7 +1162,7 @@
                                 android:id="@+id/Passo3FNC"
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
-                                android:textColor="#000000" />
+                                android:textColor="#000000"/>
 
                             <HorizontalScrollView
                                 android:layout_width="wrap_content"
@@ -1172,8 +1171,7 @@
                                 <TableLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:id="@+id/Passo3FNC_Resultado">
-                                </TableLayout>
+                                    android:id="@+id/Passo3FNC_Resultado"/>
 
                             </HorizontalScrollView>
 

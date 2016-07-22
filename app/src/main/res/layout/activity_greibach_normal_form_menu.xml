@@ -3,11 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#FFFFFF"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
+    android:background="#FFFFFF"
     android:orientation="vertical">
 
     <include layout="@layout/header_grammar"/>
@@ -21,30 +21,6 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
-            <Button
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginTop="10dp"
-                android:background="@color/DarkGray"
-                android:text="@string/identifica_o_da_gram_tica"
-                android:textColor="@color/Black"
-                android:textSize="20sp"
-                android:textAllCaps="false"
-                android:onClick="startIdentificationGrammarActivity"/>
-
-            <Button
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginTop="10dp"
-                android:background="@color/DarkGray"
-                android:text="@string/deriva_o_mais_esquerda"
-                android:textColor="@color/Black"
-                android:textSize="20sp"
-                android:textAllCaps="false"
-                android:onClick="startDerivationLeftmostActivity"/>
 
             <Button
                 android:layout_width="fill_parent"
@@ -113,59 +89,11 @@
                 android:layout_weight="1"
                 android:layout_marginTop="10dp"
                 android:background="@color/DarkGray"
-                android:text="@string/forma_normal_de_chomsky"
-                android:textColor="@color/Black"
-                android:textSize="20sp"
-                android:textAllCaps="false"
-                android:onClick="startChomskyNormalFormActivity"/>
-
-            <Button
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginTop="10dp"
-                android:background="@color/DarkGray"
-                android:text="@string/remo_o_de_recurs_o_direta_esquerda"
-                android:textColor="@color/Black"
-                android:textSize="20sp"
-                android:textAllCaps="false"
-                android:onClick="startRRecursionDirectLeftActivity"/>
-
-            <Button
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginTop="10dp"
-                android:background="@color/DarkGray"
                 android:text="@string/remo_o_de_recurs_o_direta_e_indireta_esquerda"
                 android:textColor="@color/Black"
                 android:textSize="20sp"
                 android:textAllCaps="false"
                 android:onClick="startRRecursionDirAndIndLeftActivity"/>
-
-            <Button
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginTop="10dp"
-                android:background="@color/DarkGray"
-                android:text="@string/forma_normal_de_greibach"
-                android:textColor="@color/Black"
-                android:textSize="20sp"
-                android:textAllCaps="false"
-                android:onClick="startGreibachNormalFormActivity"/>
-
-            <Button
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginTop="10dp"
-                android:background="@color/DarkGray"
-                android:text="@string/cyk"
-                android:textColor="@color/Black"
-                android:textSize="20sp"
-                android:textAllCaps="false"
-                android:onClick="startCYKActivity"/>
 
         </LinearLayout>
 

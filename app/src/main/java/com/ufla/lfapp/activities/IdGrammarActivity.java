@@ -21,60 +21,14 @@ import com.ufla.lfapp.vo.GrammarParser;
 /**
  * Created by root on 18/07/16.
  */
-public class IdGrammarActivity extends AppCompatActivity {
+public class IdGrammarActivity extends HeaderGrammarActivity {
 
-
-
-    private void setGrammar() {
-        String grammar;
-        Intent intent = getIntent();
-        if (intent != null) {
-            Bundle dados = intent.getExtras();
-            if (dados != null) {
-                grammar = dados.getString("grammar");
-                Grammar g = new Grammar(grammar);
-                if (grammar != null) {
-                    TextView inputGrammar = (TextView) findViewById(R.id.inputGrammar);
-                    AcademicSupport academic = new AcademicSupport();
-                    academic.setResult(g);
-                    assert inputGrammar != null;
-                    inputGrammar.setText(Html.fromHtml(academic.getResult()));
-                }
-                grammarType(g);
-            }
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_id_grammar);
-        setGrammar();
-        ActionBar actionBar = getSupportActionBar();
-        assert actionBar != null;
-        actionBar.setDisplayHomeAsUpEnabled(true);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                //NavUtils.navigateUpFromSameTask(this);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+        super.onCreate(savedInstanceState);
+        grammarType(new Grammar(grammar));
     }
 
     /**

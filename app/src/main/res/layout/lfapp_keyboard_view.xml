@@ -6,8 +6,8 @@
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
     android:layout_centerHorizontal="true"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentRight="true"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:visibility="gone"
-    android:layout_alignParentLeft="true"
-    android:layout_alignParentRight="true"/>
+    android:visibility="gone"/>

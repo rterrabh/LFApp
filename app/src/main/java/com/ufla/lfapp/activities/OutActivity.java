@@ -717,10 +717,8 @@ public class OutActivity extends AppCompatActivity {
      * @param g : gramática
      */
     public void removingInitialRecursiveSymbol(final Grammar g) {
-        Grammar gc = (Grammar) g.clone();
         AcademicSupport academicSupport = new AcademicSupport();
-        gc = g.getGrammarWithInitialSymbolNotRecursive(g, academicSupport);
-        String txtGrammar = printRules(gc);
+        Grammar gc = g.getGrammarWithInitialSymbolNotRecursive(g, academicSupport);
 
         TableLayout table = (TableLayout) findViewById(R.id.TableRecursiveInitialSymbol);
         table.setShrinkAllColumns(true);
@@ -736,7 +734,6 @@ public class OutActivity extends AppCompatActivity {
             academicInfo.append(academicSupport.getSolutionDescription());
             step1_2.setText(Html.fromHtml(academicInfo.toString()));
         } else {
-            String align = "justify";
             step1_2.setText(Html.fromHtml("A gramática inserida não possui regras do tipo "
                     + g.getInitialSymbol() + " ⇒<sup>*</sup>αSβ. Logo, nenhuma alteração foi realizada."));
         }
@@ -748,7 +745,6 @@ public class OutActivity extends AppCompatActivity {
      * @param g : Gramática
      */
     public void removingEmptyProductions(final Grammar g) {
-        Grammar gc = (Grammar) g.clone();
         AcademicSupport academicSupport = new AcademicSupport();
         StringBuilder academicInfoComments = new StringBuilder();
 
@@ -759,7 +755,7 @@ public class OutActivity extends AppCompatActivity {
         academicSupport.setComments(academicInfoComments.toString());
 
         //Realiza processo
-        gc = g.getGrammarEssentiallyNoncontracting(g, academicSupport);
+        Grammar gc = g.getGrammarEssentiallyNoncontracting(g, academicSupport);
         academicSupport.setResult(gc);
 
         //configura a gramática de resultado
@@ -814,7 +810,6 @@ public class OutActivity extends AppCompatActivity {
     }
 
     public void removingChainRules(final Grammar g) {
-        Grammar gc = (Grammar) g.clone();
         AcademicSupport academic = new AcademicSupport();
 
         //Realiza comentários sobre o processo
@@ -823,7 +818,7 @@ public class OutActivity extends AppCompatActivity {
                 "de uma cadeia diretamente pelas regras da variável renomeada.\n");
 
         //Realiza processo
-        gc = g.getGrammarWithoutChainRules(g, academic);
+        Grammar gc = g.getGrammarWithoutChainRules(g, academic);
         academic.setResult(gc);
 
         //Configura a gramática de resultado
@@ -875,10 +870,9 @@ public class OutActivity extends AppCompatActivity {
     }
 
     public void removingNotTerminalsSymbols(final Grammar g) {
-        Grammar gc = (Grammar) g.clone();
         AcademicSupport academicSupport = new AcademicSupport();
         //Realiza processo
-        gc = g.getGrammarWithoutNoTerm(g, academicSupport);
+        Grammar gc = g.getGrammarWithoutNoTerm(g, academicSupport);
         academicSupport.setResult(gc);
 
         //Realiza comentários sobre o processo

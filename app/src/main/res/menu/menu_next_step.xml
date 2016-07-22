@@ -6,9 +6,10 @@
     tools:context=".activities.MainActivity">
 
     <item
-        android:id="@+id/actionBack"
-        android:title="@string/action_settings"
+        android:id="@+id/next"
+        android:title="next"
+        android:icon="@drawable/ic_arrow_forward_white_48dp"
         android:orderInCategory="100"
-        app:showAsAction="never"/>
+        app:showAsAction="always"/>
 
 </menu>
