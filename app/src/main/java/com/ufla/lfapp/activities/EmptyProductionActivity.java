@@ -9,6 +9,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.ufla.lfapp.R;
+import com.ufla.lfapp.activities.utils.UtilActivities;
 import com.ufla.lfapp.vo.AcademicSupport;
 import com.ufla.lfapp.vo.Grammar;
 import com.ufla.lfapp.vo.Rule;
@@ -28,7 +29,7 @@ public class EmptyProductionActivity extends HeaderGrammarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_empty_productions);
         super.onCreate(savedInstanceState);
-        removingEmptyProductions(new Grammar(grammar));
+        removingEmptyProductions(getGrammar());
     }
 
     @Override
@@ -96,229 +97,6 @@ public class EmptyProductionActivity extends HeaderGrammarActivity {
         return newG.toString();
     }
 
-    /**
-     * Método que imprime a gramática com as novas regras inseridas em destaque
-     * @param table
-     * @param academic
-     */
-    private void printGrammarWithNewRules(final Grammar grammar, TableLayout table,
-                                          final AcademicSupport academic) {
-        TableRow row0 = new TableRow(this);
-        TextView left = new TextView(this);
-        TextView arrow0 = new TextView(this);
-        left.setText(grammar.getInitialSymbol());
-        arrow0.setText(" -> ");
-        row0.addView(left);
-        row0.addView(arrow0);
-        ArrayList<String> orderVariables = new ArrayList<>(grammar.getVariables());
-        Collections.sort(orderVariables);
-        int contViews = 2;
-        for (Rule element : grammar.getRules()) {
-            if (element.getLeftSide().equals(grammar.getInitialSymbol())) {
-                TextView right = new TextView(this);
-                TextView pipe = new TextView(this);
-                pipe.setText(" | ");
-                if (academic.getInsertedRules().contains(element)) {
-                    setSubscriptItem(right, element.getRightSide());
-                    right.setTextColor(getResources().getColor(R.color.Blue));
-                } else if (containsDigit(element.getRightSide())) {
-                    setSubscriptItem(right, element.getRightSide());
-                } else {
-                    right.append(element.getRightSide());
-                }
-                row0.addView(right);
-                row0.addView(pipe);
-                contViews += 2;
-            }
-        }
-        row0.removeViewAt(contViews - 1);
-        table.addView(row0);
-
-        for (int i = 0; i < orderVariables.size(); i++) {
-            for (String variable : grammar.getVariables()) {
-                if (!variable.equals(grammar.getInitialSymbol()) && orderVariables.get(i).equals(variable)) {
-                    TableRow row1 = new TableRow(this);
-                    TextView tv0 = new TextView(this);
-                    setSubscriptItem(tv0, variable);
-                    row1.addView(tv0);
-                    TextView arrow1 = new TextView(this);
-                    arrow1.setText("->");
-                    row1.addView(arrow1);
-                    contViews = 2;
-                    for (Rule element : grammar.getRules()) {
-                        if (variable.equals(element.getLeftSide())) {
-                            TextView pipe = new TextView(this);
-                            pipe.setText(" | ");
-                            TextView tv1 = new TextView(this);
-                            if (academic.getInsertedRules().contains(element)) {
-                                setSubscriptItem(tv1, element.getRightSide());
-                                tv1.setTextColor(getResources().getColor(R.color.Blue));
-                            } else if (containsDigit(element.getRightSide())) {
-                                setSubscriptItem(tv1, element.getRightSide());
-                            } else {
-                                tv1.append(element.getRightSide());
-                            }
-                            row1.addView(tv1);
-                            row1.addView(pipe);
-                            contViews += 2;
-                        }
-                    }
-                    row1.removeViewAt(contViews - 1);
-                    table.addView(row1);
-                }
-            }
-        }
-    }
-
-    /**
-     * Método que imprime a gramática com as regras irregulares em destaque
-     * @param table
-     * @param academic
-     */
-    private void printGrammarWithoutOldRules(final Grammar grammar, TableLayout table,
-                                             final AcademicSupport academic) {
-        TableRow row0 = new TableRow(this);
-        TextView left = new TextView(this);
-        TextView arrow0 = new TextView(this);
-        left.setText(grammar.getInitialSymbol());
-        arrow0.setText(" -> ");
-        row0.addView(left);
-        row0.addView(arrow0);
-        ArrayList<String> variables = new ArrayList<>(grammar.getVariables());
-        Collections.sort(variables);
-        int contViews = 2;
-        for (Rule element : grammar.getRules()) {
-            if (element.getLeftSide().equals(grammar.getInitialSymbol())) {
-                TextView right = new TextView(this);
-                TextView pipe = new TextView(this);
-                pipe.setText(" | ");
-                if (academic.getIrregularRules().contains(element)) {
-                    setSubscriptItem(right, element.getRightSide());
-                    right.setTextColor(getResources().getColor(R.color.Red));
-                } else if (containsDigit(element.getRightSide())) {
-                    setSubscriptItem(right, element.getRightSide());
-                }else {
-                    right.setText(element.getRightSide());
-                }
-                row0.addView(right);
-                row0.addView(pipe);
-                contViews += 2;
-            }
-        }
-        row0.removeViewAt(contViews - 1);
-        table.addView(row0);
-
-        for (int i = 0; i < variables.size(); i++) {
-            for (String variable : grammar.getVariables()) {
-                if (!variable.equals(grammar.getInitialSymbol()) && variables.get(i).equals(variable)) {
-                    TableRow row1 = new TableRow(this);
-                    TextView tv0 = new TextView(this);
-                    setSubscriptItem(tv0, variable);
-                    row1.addView(tv0);
-                    TextView arrow1 = new TextView(this);
-                    arrow1.setText("->");
-                    row1.addView(arrow1);
-                    contViews = 2;
-                    for (Rule element : grammar.getRules()) {
-                        if (variable.equals(element.getLeftSide())) {
-                            TextView pipe = new TextView(this);
-                            pipe.setText(" | ");
-                            TextView tv1 = new TextView(this);
-                            if (academic.getIrregularRules().contains(element)) {
-                                setSubscriptItem(tv1, element.getRightSide());
-                                tv1.setTextColor(getResources().getColor(R.color.Red));
-                            } else if(containsDigit(element.getRightSide())) {
-                                setSubscriptItem(tv1, element.getRightSide());
-                            } else {
-                                tv1.setText(element.getRightSide());
-                            }
-                            row1.addView(tv1);
-                            row1.addView(pipe);
-                            contViews += 2;
-                        }
-                    }
-                    row1.removeViewAt(contViews - 1);
-                    table.addView(row1);
-                }
-            }
-        }
-    }
-
-    private boolean containsDigit(String sentence) {
-        boolean test = false;
-        for (int i = 0; i < sentence.length() && !test; i++) {
-            if (Character.isDigit(sentence.charAt(i))) {
-                test = true;
-            }
-        }
-        return test;
-    }
-
-    /**
-     * Método que imprime a tabela dos conjuntos utilizados durante a execução do algoritmo
-     * @param academic : informaçãos coletadas durante a execução do algoritmo
-     */
-    private void printTableOfSets(TableLayout table, final AcademicSupport academic,
-                                  String nameOfFirstSet, String nameOfSecondSet) {
-        int i = 0;
-        TableRow header = new TableRow(this);
-        TextView htv0 = new TextView(this);
-        htv0.setText("");
-        htv0.setPadding(10, 10, 10, 10);
-        htv0.setTextColor(getResources().getColor(R.color.Black));
-        TextView htv1 = new TextView(this);
-        htv1.setText(nameOfFirstSet);
-        htv1.setPadding(10, 10, 10, 10);
-        htv1.setBackgroundColor(getResources().getColor(R.color.DarkGray));
-        htv1.setTextColor(getResources().getColor(R.color.Black));
-        TextView htv2 = new TextView(this);
-        htv2.setText(nameOfSecondSet);
-        htv2.setPadding(10, 10, 10, 10);
-        htv2.setTextColor(getResources().getColor(R.color.Black));
-        header.addView(htv0);
-        header.addView(htv1);
-        header.addView(htv2);
-        table.addView(header);
-
-        Iterator<Set<Rule>> iteratorOfFirstCell = (Iterator) academic.getFirstSet().iterator();
-        Iterator<Set<Rule>> iteratorOfSecondCell = (Iterator) academic.getSecondSet().iterator();
-        while (iteratorOfFirstCell.hasNext() && iteratorOfSecondCell.hasNext()) {
-            Set<Rule> firstSet = iteratorOfFirstCell.next();
-            Set<Rule> secondSet = iteratorOfSecondCell.next();
-
-            String set1 = firstSet.toString();
-            set1 = set1.replace("[", "{");
-            set1 = set1.replace("]", "}");
-
-            String set2 = secondSet.toString();
-            set2 = set2.replace("[", "{");
-            set2 = set2.replace("]", "}");
-
-            TextView tv0 = new TextView(this);
-            tv0.setText("(" + i + ")");
-            tv0.setPadding(10, 10, 10, 10);
-            tv0.setTextColor(getResources().getColor(R.color.Black));
-
-            TextView tv1 = new TextView(this);
-            tv1.setText(set1);
-            tv1.setPadding(10, 10, 10, 10);
-            tv1.setBackgroundColor(getResources().getColor(R.color.DarkGray));
-            tv1.setTextColor(getResources().getColor(R.color.Black));
-
-            TextView tv2 = new TextView(this);
-            tv2.setText(set2);
-            tv2.setPadding(10, 10, 10, 10);
-            tv2.setTextColor(getResources().getColor(R.color.Black));
-
-            TableRow row = new TableRow(this);
-            row.addView(tv0);
-            row.addView(tv1);
-            row.addView(tv2);
-
-            table.addView(row);
-            i++;
-        }
-    }
 
     /**
      * Método que retorna o pseudocódigo do algoritmo nullable
@@ -350,20 +128,6 @@ public class EmptyProductionActivity extends HeaderGrammarActivity {
         return i;
     }
 
-    private void setSubscriptItem(TextView tv, String element) {
-        for (int i = 0; i < element.length();) {
-            if (Character.isDigit(element.charAt(i))) {
-                int index = getNumberOfDigits(i, element);
-                tv.append(Html.fromHtml("<sub><small>" + element.substring(i, index) + "</small></sub>"));
-                i = index;
-            } else {
-                StringBuilder text = new StringBuilder();
-                text.append(element.charAt(i));
-                tv.append(text.toString());
-                i++;
-            }
-        }
-    }
 
     /**
      * Método que realiza a remoção de produções vazias e acrescenta as informações acadêmicas.
@@ -402,7 +166,8 @@ public class EmptyProductionActivity extends HeaderGrammarActivity {
             TableLayout tableOfSets = (TableLayout) findViewById(R.id.TableOfSets);
             tableOfSets.setShrinkAllColumns(true);
             tableOfSets.setBackgroundColor(getResources().getColor(R.color.Gainsboro));
-            printTableOfSets(tableOfSets, academicSupport, "NULL", "PREV");
+            UtilActivities.printTableOfSets(tableOfSets, academicSupport,
+                    "NULL", "PREV", this);
 
             //Configuração do passo 2 (Gramática com as regras criadas no processo)
             if (academicSupport.getInsertedRules().size() != 0) {
@@ -411,7 +176,9 @@ public class EmptyProductionActivity extends HeaderGrammarActivity {
                         " é uma variável anulável. Logo, são inseridas as seguintes regras: A -> ABa, A -> BAa e A -> Aa.");
                 TableLayout grammarWithNewRules = (TableLayout) findViewById(R.id.AddingRulesTable);
                 Grammar blueGrammar = new Grammar(joinGrammars(gc, g));
-                printGrammarWithNewRules(blueGrammar, grammarWithNewRules, academicSupport);
+                UtilActivities.printGrammarWithNewRules(blueGrammar,
+                        grammarWithNewRules,
+                        academicSupport, this);
             } else {
                 TextView explanation2 = (TextView) findViewById(R.id.ExplanationEmptyRules2);
                 explanation2.setText("(2) Não há regras a serem inseridas.");
@@ -424,7 +191,8 @@ public class EmptyProductionActivity extends HeaderGrammarActivity {
                         "OBS: se símbolo inicial produz λ, não remover esta regra.");
                 TableLayout grammarWithoutOldRules = (TableLayout) findViewById(R.id.RemovingRulesTable);
                 Grammar redGrammar = new Grammar(joinGrammars(gc, g));
-                printGrammarWithoutOldRules(redGrammar, grammarWithoutOldRules, academicSupport);
+                UtilActivities.printGrammarWithoutOldRules(redGrammar,
+                        grammarWithoutOldRules, academicSupport, this);
             } else {
                 TextView explanation3 = (TextView) findViewById(R.id.ExplanationEmptyRules3);
                 explanation3.setText("(3) Não há regras a serem removidas.");

@@ -28,7 +28,7 @@
                 android:background="@color/DarkGray"
                 android:text="@string/remo_o_de_s_mbolos_n_o_alcan_veis"
                 android:textSize="20sp"
-                android:textColor="color/Black"/>
+                android:textColor="@@color/Black"/>
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -52,7 +52,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:textColor="color/Black"/>
+                        android:textColor="@color/Black"/>
 
                 </LinearLayout>
 
@@ -72,13 +72,13 @@
                         android:id="@+id/CommentsNoReach"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="color/Black"/>
+                        android:textColor="@color/Black"/>
 
                     <TextView
                         android:id="@+id/NoReachStep1"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="color/Black"/>
+                        android:textColor="@color/Black"/>
 
                     <TextView
                         android:id="@+id/PseudoReachAlgorithm"
@@ -96,7 +96,7 @@
                         android:id="@+id/NoReachStep2"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="color/Black"/>
+                        android:textColor="@color/Black"/>
 
                     <HorizontalScrollView
                         android:layout_width="wrap_content"

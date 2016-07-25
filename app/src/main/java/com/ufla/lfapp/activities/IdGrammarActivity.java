@@ -28,7 +28,7 @@ public class IdGrammarActivity extends HeaderGrammarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_id_grammar);
         super.onCreate(savedInstanceState);
-        grammarType(new Grammar(grammar));
+        grammarType(getGrammar());
     }
 
     /**

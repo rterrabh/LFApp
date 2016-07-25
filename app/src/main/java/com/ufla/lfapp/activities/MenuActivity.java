@@ -23,7 +23,6 @@ public class MenuActivity extends HeaderGrammarActivity {
         Bundle params = new Bundle();
         params.putString("grammar", grammar);
         params.putString("word", word);
-        params.putInt("algorithm", algorithm.getValue());
         params.putInt("algorithm", Algorithm.NONE.getValue());
         Intent intent = new Intent(this, IdGrammarActivity.class);
         intent.putExtras(params);
@@ -34,7 +33,7 @@ public class MenuActivity extends HeaderGrammarActivity {
         Bundle params = new Bundle();
         params.putString("grammar", grammar);
         params.putString("word", word);
-        params.putInt("algorithm", algorithm.getValue());
+        params.putInt("algorithm", Algorithm.NONE.getValue());
         Intent intent = new Intent(this, DerivationMoreLeftActivity.class);
         intent.putExtras(params);
         startActivity(intent);
@@ -45,7 +44,7 @@ public class MenuActivity extends HeaderGrammarActivity {
         Bundle params = new Bundle();
         params.putString("grammar", grammar);
         params.putString("word", word);
-        params.putInt("algorithm", algorithm.CHOMSKY_NORMAL_FORM.getValue());
+        params.putInt("algorithm", Algorithm.NONE.getValue());
         Intent intent = new Intent(this, RemoveInitialSymbolRecursiveActivity.class);
         intent.putExtras(params);
         startActivity(intent);
@@ -55,7 +54,7 @@ public class MenuActivity extends HeaderGrammarActivity {
         Bundle params = new Bundle();
         params.putString("grammar", grammar);
         params.putString("word", word);
-        params.putInt("algorithm", algorithm.getValue());
+        params.putInt("algorithm", Algorithm.NONE.getValue());
         Intent intent = new Intent(this, EmptyProductionActivity.class);
         intent.putExtras(params);
         startActivity(intent);
@@ -65,8 +64,8 @@ public class MenuActivity extends HeaderGrammarActivity {
         Bundle params = new Bundle();
         params.putString("grammar", grammar);
         params.putString("word", word);
-        params.putInt("algorithm", algorithm.getValue());
-        Intent intent = new Intent(this, OutActivity.class);
+        params.putInt("algorithm", Algorithm.NONE.getValue());
+        Intent intent = new Intent(this, ChainRulesActivity.class);
         intent.putExtras(params);
         startActivity(intent);
     }
@@ -75,8 +74,8 @@ public class MenuActivity extends HeaderGrammarActivity {
         Bundle params = new Bundle();
         params.putString("grammar", grammar);
         params.putString("word", word);
-        params.putInt("algorithm", algorithm.getValue());
-        Intent intent = new Intent(this, OutActivity.class);
+        params.putInt("algorithm", Algorithm.NONE.getValue());
+        Intent intent = new Intent(this, NoTermSymbolsActivity.class);
         intent.putExtras(params);
         startActivity(intent);
     }
@@ -85,8 +84,8 @@ public class MenuActivity extends HeaderGrammarActivity {
         Bundle params = new Bundle();
         params.putString("grammar", grammar);
         params.putString("word", word);
-        params.putInt("algorithm", algorithm.getValue());
-        Intent intent = new Intent(this, OutActivity.class);
+        params.putInt("algorithm", Algorithm.NONE.getValue());
+        Intent intent = new Intent(this, NoReachSymbolsActivity.class);
         intent.putExtras(params);
         startActivity(intent);
     }
@@ -95,8 +94,8 @@ public class MenuActivity extends HeaderGrammarActivity {
         Bundle params = new Bundle();
         params.putString("grammar", grammar);
         params.putString("word", word);
-        params.putInt("algorithm", algorithm.getValue());
-        Intent intent = new Intent(this, OutActivity.class);
+        params.putInt("algorithm", Algorithm.NONE.getValue());
+        Intent intent = new Intent(this, ChomskyNormalFormMenuActivity.class);
         intent.putExtras(params);
         startActivity(intent);
     }
@@ -105,8 +104,8 @@ public class MenuActivity extends HeaderGrammarActivity {
         Bundle params = new Bundle();
         params.putString("grammar", grammar);
         params.putString("word", word);
-        params.putInt("algorithm", algorithm.getValue());
-        Intent intent = new Intent(this, OutActivity.class);
+        params.putInt("algorithm", Algorithm.NONE.getValue());
+        Intent intent = new Intent(this, RemoveLeftDirectRecursionActivity.class);
         intent.putExtras(params);
         startActivity(intent);
     }
@@ -115,8 +114,8 @@ public class MenuActivity extends HeaderGrammarActivity {
         Bundle params = new Bundle();
         params.putString("grammar", grammar);
         params.putString("word", word);
-        params.putInt("algorithm", algorithm.getValue());
-        Intent intent = new Intent(this, OutActivity.class);
+        params.putInt("algorithm", Algorithm.NONE.getValue());
+        Intent intent = new Intent(this, RemoveLeftRecursionActivity.class);
         intent.putExtras(params);
         startActivity(intent);
     }
@@ -125,8 +124,8 @@ public class MenuActivity extends HeaderGrammarActivity {
         Bundle params = new Bundle();
         params.putString("grammar", grammar);
         params.putString("word", word);
-        params.putInt("algorithm", algorithm.getValue());
-        Intent intent = new Intent(this, OutActivity.class);
+        params.putInt("algorithm", Algorithm.NONE.getValue());
+        Intent intent = new Intent(this, GreibachNormalFormMenuActivity.class);
         intent.putExtras(params);
         startActivity(intent);
     }
@@ -135,8 +134,8 @@ public class MenuActivity extends HeaderGrammarActivity {
         Bundle params = new Bundle();
         params.putString("grammar", grammar);
         params.putString("word", word);
-        params.putInt("algorithm", algorithm.getValue());
-        Intent intent = new Intent(this, OutActivity.class);
+        params.putInt("algorithm", Algorithm.NONE.getValue());
+        Intent intent = new Intent(this, CYKActivity.class);
         intent.putExtras(params);
         startActivity(intent);
     }

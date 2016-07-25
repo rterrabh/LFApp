@@ -1,88 +1,153 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ufla.lfapp" >
+    package="com.ufla.lfapp">
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/lfapp_icon"
         android:label="LFApp"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
+
         <activity
             android:name=".activities.MainActivity"
             android:screenOrientation="portrait"
-            android:label="LFApp" >
+            android:label="LFApp">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
         <activity
-            android:name=".activities.OutActivity"
-            android:label="LFApp" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity" />
-        </activity>
-
-        <activity
             android:name=".activities.InfoActivity"
-            android:label="LFApp" />
+            android:label="LFApp"/>
 
         <activity
             android:name=".activities.AboutActivity"
             android:screenOrientation="portrait"
-            android:label="LFApp" >
+            android:label="LFApp - Sobre">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity" />
+                android:value=".activities.MainActivity"/>
         </activity>
 
 
         <activity
             android:name=".activities.MenuActivity"
-            android:label="LFApp" >
+            android:label="LFApp - Menu">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity" />
+                android:value=".activities.MainActivity"/>
         </activity>
 
         <activity
             android:name=".activities.IdGrammarActivity"
-            android:label="LFApp" >
+            android:label="LFApp">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MenuActivity" />
+                android:value=".activities.MenuActivity"/>
         </activity>
 
         <activity
             android:name=".activities.DerivationMoreLeftActivity"
-            android:label="LFApp" >
+            android:label="LFApp">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MenuActivity" />
+                android:value=".activities.MenuActivity"/>
         </activity>
 
         <activity
             android:name=".activities.RemoveInitialSymbolRecursiveActivity"
-            android:label="LFApp" >
+            android:label="LFApp">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MenuActivity" />
+                android:value=".activities.MenuActivity"/>
         </activity>
 
         <activity
             android:name=".activities.EmptyProductionActivity"
-            android:label="LFApp" >
+            android:label="LFApp">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MenuActivity" />
+                android:value=".activities.MenuActivity"/>
+        </activity>
+
+        <activity
+            android:name=".activities.ChainRulesActivity"
+            android:label="LFApp">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MenuActivity"/>
+        </activity>
+
+        <activity
+            android:name=".activities.NoTermSymbolsActivity"
+            android:label="LFApp">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MenuActivity"/>
+        </activity>
+
+        <activity
+            android:name=".activities.NoReachSymbolsActivity"
+            android:label="LFApp">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MenuActivity"/>
+        </activity>
+
+        <activity
+            android:name=".activities.ChomskyNormalFormActivity"
+            android:label="LFApp">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MenuActivity"/>
+        </activity>
+
+        <activity
+            android:name=".activities.ChomskyNormalFormMenuActivity"
+            android:label="LFApp - FNC">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MenuActivity"/>
+        </activity>
+
+        <activity
+            android:name=".activities.RemoveLeftDirectRecursionActivity"
+            android:label="LFApp">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MenuActivity"/>
+        </activity>
+
+        <activity
+            android:name=".activities.RemoveLeftRecursionActivity"
+            android:label="LFApp">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MenuActivity"/>
+        </activity>
+
+        <activity
+            android:name=".activities.GreibachNormalFormMenuActivity"
+            android:label="LFApp - FNG">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MenuActivity"/>
+        </activity>
+
+        <activity
+            android:name=".activities.CYKActivity"
+            android:label="LFApp">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MenuActivity"/>
         </activity>
 
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+            android:value="@integer/google_play_services_version"/>
 
     </application>
 

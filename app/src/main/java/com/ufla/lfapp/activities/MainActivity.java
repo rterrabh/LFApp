@@ -117,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
                 Bundle params = new Bundle();
                 params.putString("grammar", txtGrammar);
                 params.putString("word", word);
+                params.putInt("algorithm", Algorithm.NONE.getValue());
                 Intent intent = new Intent(this, MenuActivity.class);
                 intent.putExtras(params);
                 startActivity(intent);

@@ -26,7 +26,7 @@ public class RemoveInitialSymbolRecursiveActivity extends HeaderGrammarActivity 
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_remove_initial_symbol_recursive);
         super.onCreate(savedInstanceState);
-        removingInitialRecursiveSymbol(new Grammar(grammar));
+        removingInitialRecursiveSymbol(getGrammar());
     }
 
     @Override

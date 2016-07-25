@@ -24,6 +24,15 @@ public abstract class HeaderGrammarActivity extends AppCompatActivity {
     protected Algorithm algorithm;
 
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setGrammar();
+        ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
+        actionBar.setDisplayHomeAsUpEnabled(true);
+    }
+
     protected Grammar getGrammar() {
         return new Grammar(grammar);
     }
@@ -46,15 +55,6 @@ public abstract class HeaderGrammarActivity extends AppCompatActivity {
                 }
             }
         }
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setGrammar();
-        ActionBar actionBar = getSupportActionBar();
-        assert actionBar != null;
-        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
