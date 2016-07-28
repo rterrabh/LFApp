@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -24,7 +25,15 @@ public class NoTermSymbolsActivity extends HeaderGrammarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_no_term_symbols);
         super.onCreate(savedInstanceState);
+        setTitle();
         removingNotTerminalsSymbols(getGrammar());
+    }
+
+    private void setTitle() {
+        switch(algorithm) {
+            case CHOMSKY_NORMAL_FORM: setTitle("LFApp - FNC - 4/6"); break;
+            case GREIBACH_NORMAL_FORM: setTitle("LFApp - FNG - 4/7"); break;
+        }
     }
 
     @Override
@@ -42,24 +51,12 @@ public class NoTermSymbolsActivity extends HeaderGrammarActivity {
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        switch (item.getItemId()) {
-            case R.id.next:
-                Bundle params = new Bundle();
-                params.putString("grammar", grammar);
-                params.putString("word", word);
-                params.putInt("algorithm", algorithm.getValue());
-                Intent intent = new Intent(this, NoReachSymbolsActivity.class);
-                intent.putExtras(params);
-                startActivity(intent);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+    public void back(View view) {
+        changeActivity(this, ChainRulesActivity.class);
+    }
+
+    public void next(View view) {
+        changeActivity(this, NoReachSymbolsActivity.class);
     }
 
     public void removingNotTerminalsSymbols(final Grammar g) {

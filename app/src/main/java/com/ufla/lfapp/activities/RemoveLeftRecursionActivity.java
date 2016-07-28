@@ -31,7 +31,14 @@ public class RemoveLeftRecursionActivity extends HeaderGrammarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_remove_left_recursion);
         super.onCreate(savedInstanceState);
+        setTitle();
         removingLeftRecursion(getGrammar());
+    }
+
+    private void setTitle() {
+        switch(algorithm) {
+            case GREIBACH_NORMAL_FORM: setTitle("LFApp - FNG - 6/7"); break;
+        }
     }
 
     @Override
@@ -50,26 +57,12 @@ public class RemoveLeftRecursionActivity extends HeaderGrammarActivity {
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        switch (item.getItemId()) {
-            case R.id.next:
-                Bundle params = new Bundle();
-                params.putString("grammar", grammar);
-                params.putString("word", word);
-                params.putInt("algorithm", Algorithm.NONE.getValue());
-                Intent intent = new Intent(this, GreibachNormalFormMenuActivity
-                        .class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.putExtras(params);
-                startActivity(intent);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+    public void back(View view) {
+        changeActivity(this, NoReachSymbolsActivity.class);
+    }
+
+    public void next(View view) {
+        onBackPressed();
     }
 
     public void removingLeftRecursion(final Grammar g) {

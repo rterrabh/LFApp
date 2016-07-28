@@ -25,7 +25,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/DarkGray"
+                android:background="@color/Gainsboro"
                 android:text="@string/remo_o_de_recurs_o_direta_esquerda"
                 android:textSize="20sp"
                 android:textColor="@color/Black"/>
@@ -113,6 +113,8 @@
                             android:layout_height="wrap_content"/>
 
                     </HorizontalScrollView>
+
+                    <include layout="@layout/back_and_next_buttons"/>
 
                 </LinearLayout>
 

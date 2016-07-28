@@ -1,5 +1,6 @@
 package com.ufla.lfapp.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -7,9 +8,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ufla.lfapp.R;
+import com.ufla.lfapp.activities.utils.Algorithm;
 import com.ufla.lfapp.vo.AcademicSupport;
 import com.ufla.lfapp.vo.Grammar;
 
@@ -31,6 +35,11 @@ public abstract class HeaderGrammarActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.setDisplayHomeAsUpEnabled(true);
+        if(algorithm != Algorithm.NONE) {
+            RelativeLayout backAndNextButtons = (RelativeLayout)
+                    findViewById(R.id.backAndNextButtons);
+            backAndNextButtons.setVisibility(View.VISIBLE);
+        }
     }
 
     protected Grammar getGrammar() {
@@ -60,19 +69,19 @@ public abstract class HeaderGrammarActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        switch(algorithm) {
-            case CHOMSKY_NORMAL_FORM:
-            case GREIBACH_NORMAL_FORM:
-                getMenuInflater().inflate(R.menu.menu_next_step, menu);
-                break;
-            case NONE:
-                getMenuInflater().inflate(R.menu.menu_main, menu);
-                break;
-            default:
-                getMenuInflater().inflate(R.menu.menu_main, menu);
-                break;
-        }
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    protected void changeActivity(Context context, Class<?> cls) {
+        Bundle params = new Bundle();
+        params.putString("grammar", grammar);
+        params.putString("word", word);
+        params.putInt("algorithm", algorithm.getValue());
+        Intent intent = new Intent(context, cls);
+        intent.putExtras(params);
+        startActivity(intent);
+        finish();
     }
 
     @Override

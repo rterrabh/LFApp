@@ -1,4 +1,4 @@
-package com.ufla.lfapp.activities;
+package com.ufla.lfapp.activities.utils;
 
 /**
  * Created by root on 22/07/16.

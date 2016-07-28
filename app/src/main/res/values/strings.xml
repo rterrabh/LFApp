@@ -131,4 +131,8 @@
     <string name="resultado">Resultado:</string>
     <string name="algoritmo">Algoritmo:</string>
     <string name="remocao">Remoção de Produções Vazias</string>
+    <string name="aplicar_propriedades_da_forma_normal_de_chomsky">Aplicar Propriedades da Forma Normal de Chomsky</string>
+    <string name="aplicar_propriedades_da_forma_normal_de_greibach">Aplicar Propriedades da Forma Normal de Greibach</string>
+    <string name="back">Back</string>
+    <string name="next">Next</string>
 </resources>

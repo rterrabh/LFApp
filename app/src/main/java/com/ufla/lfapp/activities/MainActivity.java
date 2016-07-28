@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.ufla.lfapp.R;
+import com.ufla.lfapp.activities.utils.Algorithm;
 import com.ufla.lfapp.vo.GrammarParser;
 
 public class MainActivity extends AppCompatActivity {

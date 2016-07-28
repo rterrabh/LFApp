@@ -25,7 +25,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/DarkGray"
+                android:background="@color/Gainsboro"
                 android:text="@string/remocao_de_recursao"
                 android:textColor="@color/Black"
                 android:textSize="20sp"/>
@@ -68,6 +68,8 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/Black"/>
+
+                <include layout="@layout/back_and_next_buttons"/>
 
             </LinearLayout>
 

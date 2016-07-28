@@ -71,6 +71,7 @@ public class GrammarParser {
         for (String x : rulesStr) {
             auxRule = x.split("->");
             rule.setLeftSide(auxRule[0].trim());
+            //ArrayIndexOutOfBoundsException
             String[] rulesOnRightSide = auxRule[1].split("[|]");
             for (int i = 0; i < rulesOnRightSide.length; i++) {
                 rulesOnRightSide[i] = rulesOnRightSide[i].trim();

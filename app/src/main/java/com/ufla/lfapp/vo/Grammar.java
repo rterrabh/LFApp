@@ -728,96 +728,6 @@ public class Grammar implements Cloneable {
 		return gc;
 	}
 
-	/**
-	 * 
-	 * @param g gramática livre de contexto
-	 * @return gramática livre de contexto sem recursão direta
-	 */
-	public Grammar removingTheImmediateLeftRecursion2(final Grammar g,
-													 final AcademicSupport academicSupport) {
-
-		Grammar gc = (Grammar) g.clone();
-
-		// se gramática não for não contrátil ou essencialmente não contrátil,
-		// método não aceita e retorna
-		// a mesma gramática, caso contrário, a remoção é feita
-
-		// primeira coisa: verificar quais variáveis possuem recursão à esquerda
-		Set<String> haveRecursion = new HashSet<>();
-		for (Rule element : gc.getRules()) {
-				if (element.getLeftSide().equals(Character.toString(element.getRightSide().charAt(0)))) {
-				haveRecursion.add(element.getLeftSide());
-				academicSupport.insertIrregularRule(element);
-			}
-		}
-		if (!haveRecursion.isEmpty()) {
-			academicSupport.setSituation(true);
-		}
-
-		// estabelece relacao entre variável que gera recursão e a variável que
-		// irá resolver essa recursão
-		Map<String, String> variablesMapped = new HashMap<>();
-		int counter = 1;
-		while (gc.getVariables().contains(RECURSIVE_REMOVAL_PREFIX + counter)) {
-			counter++;
-		}
-
-		for (String element : haveRecursion) {
-			if (!variablesMapped.containsKey(element)) {
-				variablesMapped.put(element, RECURSIVE_REMOVAL_PREFIX + counter);
-				counter++;
-			}
-		}
-
-		// já é posśivel saber quem possui recursão e onde ela está, sendo
-		// possível removê-la
-		Set<Rule> newSetOfRules = new HashSet<>();
-		Set<String> newSetOfVariables = new HashSet<>();
-		for (Rule element : gc.getRules()) {
-			if (variablesMapped.containsKey(element.getLeftSide()) && !element.getRightSide().equals(LAMBDA)) {
-				if (element.getLeftSide().equals(Character.toString(element.getRightSide().charAt(0)))) {
-					// recursão encontrada
-					Rule firstProduction = new Rule();
-					firstProduction.setLeftSide(variablesMapped.get(element.getLeftSide()));
-					firstProduction.setRightSide(element.getRightSide().substring(1) +
-							variablesMapped.get(element.getLeftSide()));
-					newSetOfRules.add(firstProduction);
-					newSetOfVariables.add(variablesMapped.get(element.getLeftSide()));
-					Rule secondProduction = new Rule();
-					secondProduction.setLeftSide(firstProduction.getLeftSide());
-					secondProduction.setRightSide(element.getRightSide().substring(1));
-					newSetOfRules.add(secondProduction);
-					academicSupport.insertNewRule(firstProduction);
-					academicSupport.insertNewRule(secondProduction);
-				} else {
-					// sem recursão, mas tratamento é necessário
-					Rule firstProduction = new Rule();
-					firstProduction.setLeftSide(element.getLeftSide());
-					firstProduction.setRightSide(element.getRightSide());
-					newSetOfRules.add(firstProduction);
-					Rule secondProduction = new Rule();
-					secondProduction.setLeftSide(firstProduction.getLeftSide());
-					secondProduction.setRightSide(element.getRightSide() + variablesMapped.get(element.getLeftSide()));
-					newSetOfRules.add(secondProduction);
-					academicSupport.insertNewRule(secondProduction);
-				}
-			} else {
-				// variável não produz recursão à esquerda
-				newSetOfRules.add(element);
-			}
-		}
-
-		// seta as regras alteradas à gramática clonada
-		gc.setRules(newSetOfRules);
-
-		// adiciona variáveis criadas no processo à gramática clonada
-		for (String variable : newSetOfVariables) {
-			gc.insertVariable(variable);
-		}
-
-		return gc;
-	}
-
 	public boolean produces(List<String> variables, String variable) {
 		for(Rule rule : getRules(variable)) {
 			if (rule.isChainRule()) {
@@ -1115,7 +1025,7 @@ public class Grammar implements Cloneable {
 		return gc;
 	}
 
-	
+	//1034
 	/**
 	 * 
 	 * @param g gramática livre de contexto
@@ -1337,7 +1247,7 @@ public class Grammar implements Cloneable {
 
 		return null;
 	}
-
+//1385-1252
 
 	public Grammar FNG(final Grammar g, final AcademicSupport academic) {
 		Grammar gAux = (Grammar) g.clone();

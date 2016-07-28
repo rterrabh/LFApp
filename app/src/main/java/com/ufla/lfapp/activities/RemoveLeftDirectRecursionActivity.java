@@ -27,6 +27,7 @@ public class RemoveLeftDirectRecursionActivity extends HeaderGrammarActivity {
         removingTheImmediateLeftRecursion(getGrammar());
     }
 
+
     public void removingTheImmediateLeftRecursion(final Grammar g) {
         Grammar gc = (Grammar) g.clone();
         AcademicSupport academicSupport = new AcademicSupport();

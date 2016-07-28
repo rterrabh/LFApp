@@ -119,6 +119,8 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/Black"/>
 
+                <include layout="@layout/back_and_next_buttons"/>
+
             </LinearLayout>
 
         </LinearLayout>

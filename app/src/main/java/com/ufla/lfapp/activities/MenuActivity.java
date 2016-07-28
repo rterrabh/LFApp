@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.ufla.lfapp.R;
+import com.ufla.lfapp.activities.utils.Algorithm;
 
 /**
  * Created by root on 18/07/16.

@@ -106,6 +106,8 @@
 
                     </HorizontalScrollView>
 
+                    <include layout="@layout/back_and_next_buttons"/>
+
                 </LinearLayout>
 
             </LinearLayout>

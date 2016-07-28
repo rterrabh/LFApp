@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -27,7 +28,15 @@ public class NoReachSymbolsActivity extends  HeaderGrammarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_no_reach_symbols);
         super.onCreate(savedInstanceState);
+        setTitle();
         removingNotReachableSymbols(getGrammar());
+    }
+
+    private void setTitle() {
+        switch(algorithm) {
+            case CHOMSKY_NORMAL_FORM: setTitle("LFApp - FNC - 5/6"); break;
+            case GREIBACH_NORMAL_FORM: setTitle("LFApp - FNG - 5/7"); break;
+        }
     }
 
     @Override
@@ -46,33 +55,18 @@ public class NoReachSymbolsActivity extends  HeaderGrammarActivity {
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        switch (item.getItemId()) {
-            case R.id.next:
-                Bundle params = new Bundle();
-                params.putString("grammar", grammar);
-                params.putString("word", word);
-                params.putInt("algorithm", algorithm.getValue());
-                Intent intent;
-                switch (algorithm) {
-                    case CHOMSKY_NORMAL_FORM:
-                        intent = new Intent(this, ChomskyNormalFormActivity.class);
-                        break;
-                    case GREIBACH_NORMAL_FORM:
-                        intent = new Intent(this, RemoveLeftRecursionActivity.class);
-                        break;
-                    default: intent = new Intent(this, MenuActivity.class);
-                }
-                intent.putExtras(params);
-                startActivity(intent);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+    public void back(View view) {
+        changeActivity(this, NoTermSymbolsActivity.class);
+    }
+
+    public void next(View view) {
+        switch (algorithm) {
+            case CHOMSKY_NORMAL_FORM: changeActivity(this,
+                    ChomskyNormalFormActivity.class); break;
+            case GREIBACH_NORMAL_FORM: changeActivity(this,
+                    RemoveLeftRecursionActivity.class); break;
         }
+
     }
 
     public void removingNotReachableSymbols(final Grammar g) {

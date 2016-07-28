@@ -25,7 +25,7 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/DarkGray"
+                android:background="@color/Gainsboro"
                 android:text="@string/derivaca_mais_esqerda"
                 android:textColor="@color/Black"
                 android:textSize="20sp"/>
