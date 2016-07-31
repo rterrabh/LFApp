@@ -2,7 +2,6 @@ package com.ufla.lfapp.vo;
 
 import static org.junit.Assert.*;
 
-import java.util.HashMap;
 import java.util.Set;
 
 import org.junit.*;
@@ -220,7 +219,7 @@ public class Grammar11Test {
     public void testFNG() {
         Grammar newG = g.FNG(g, new AcademicSupport());
         boolean fng = true;
-        for (com.ufla.lfapp.vo.Rule element : newG.getRules()) {
+        for (Rule element : newG.getRules()) {
             int counter = 0;
             if (!element.getLeftSide().equals(newG.getInitialSymbol()) && element.getRightSide().equals("")) {
                 fng = false;

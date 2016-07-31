@@ -36,8 +36,12 @@ public class EmptyProductionActivity extends HeaderGrammarActivity {
 
     private void setTitle() {
         switch(algorithm) {
-            case CHOMSKY_NORMAL_FORM: setTitle("LFApp - FNC - 2/6"); break;
-            case GREIBACH_NORMAL_FORM: setTitle("LFApp - FNG - 2/7"); break;
+            case CHOMSKY_NORMAL_FORM:
+                setTitle("LFApp - FNC - 2/6");
+                break;
+            case GREIBACH_NORMAL_FORM:
+                setTitle("LFApp - FNG - 2/8");
+                break;
         }
     }
 

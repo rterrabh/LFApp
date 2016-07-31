@@ -35,8 +35,12 @@ public class ChainRulesActivity extends HeaderGrammarActivity {
 
     private void setTitle() {
         switch(algorithm) {
-            case CHOMSKY_NORMAL_FORM: setTitle("LFApp - FNC - 3/6"); break;
-            case GREIBACH_NORMAL_FORM: setTitle("LFApp - FNG - 3/7"); break;
+            case CHOMSKY_NORMAL_FORM:
+                setTitle("LFApp - FNC - 3/6");
+                break;
+            case GREIBACH_NORMAL_FORM:
+                setTitle("LFApp - FNG - 3/8");
+                break;
         }
     }
 

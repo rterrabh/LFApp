@@ -68,12 +68,32 @@ public class GreibachNormalFormMenuActivity extends HeaderGrammarActivity {
         startActivity(intent);
     }
 
+    public void startChomskyNormalFormActivity(View view) {
+        Bundle params = new Bundle();
+        params.putString("grammar", grammar);
+        params.putString("word", word);
+        params.putInt("algorithm", Algorithm.GREIBACH_NORMAL_FORM.getValue());
+        Intent intent = new Intent(this, ChomskyNormalFormActivity.class);
+        intent.putExtras(params);
+        startActivity(intent);
+    }
+
     public void startRRecursionDirAndIndLeftActivity(View view) {
         Bundle params = new Bundle();
         params.putString("grammar", grammar);
         params.putString("word", word);
         params.putInt("algorithm", Algorithm.GREIBACH_NORMAL_FORM.getValue());
         Intent intent = new Intent(this, RemoveLeftRecursionActivity.class);
+        intent.putExtras(params);
+        startActivity(intent);
+    }
+
+    public void startGreibachNormalFormActivity(View view) {
+        Bundle params = new Bundle();
+        params.putString("grammar", grammar);
+        params.putString("word", word);
+        params.putInt("algorithm", Algorithm.GREIBACH_NORMAL_FORM.getValue());
+        Intent intent = new Intent(this, GreibachNormalFormActivity.class);
         intent.putExtras(params);
         startActivity(intent);
     }

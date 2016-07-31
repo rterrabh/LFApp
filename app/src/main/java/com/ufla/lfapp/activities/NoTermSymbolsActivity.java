@@ -31,8 +31,12 @@ public class NoTermSymbolsActivity extends HeaderGrammarActivity {
 
     private void setTitle() {
         switch(algorithm) {
-            case CHOMSKY_NORMAL_FORM: setTitle("LFApp - FNC - 4/6"); break;
-            case GREIBACH_NORMAL_FORM: setTitle("LFApp - FNG - 4/7"); break;
+            case CHOMSKY_NORMAL_FORM:
+                setTitle("LFApp - FNC - 4/6");
+                break;
+            case GREIBACH_NORMAL_FORM:
+                setTitle("LFApp - FNG - 4/8");
+                break;
         }
     }
 

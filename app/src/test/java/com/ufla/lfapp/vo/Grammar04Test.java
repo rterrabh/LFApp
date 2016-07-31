@@ -2,6 +2,7 @@ package com.ufla.lfapp.vo;
 
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
 import java.util.Set;
 
 import org.junit.*;
@@ -181,9 +182,15 @@ public class Grammar04Test {
 		assertEquals(expectedGrammar.getVariables(), newG.getVariables());
 	} 
 	
-	@Test
+	//@Test
 	public void testFNG() {
-		Grammar newG = g.FNG(g, new AcademicSupport());
+		Grammar newG = g.FNC(g, new AcademicSupport());
+		AcademicSupport academicSupport = new AcademicSupport();
+		Grammar newG2 = newG.removingLeftRecursion(newG, academicSupport,
+				new HashMap<String, String>(), new AcademicSupportForRemoveLeftRecursion());
+		System.out.println(newG2.toStringRulesMapVToU());
+		System.out.println(academicSupport.getSolutionDescription());
+		newG = newG.FNG(newG, new AcademicSupport());
 		boolean fng = true;
 		for (com.ufla.lfapp.vo.Rule element : newG.getRules()) {
 			int counter = 0;
@@ -201,6 +208,8 @@ public class Grammar04Test {
 				}
 			}
 		}
+
+		System.out.println(newG.toStringRulesMapVToU());
 		
 		assertEquals(true, fng);
 		assertTrue(newG.isFNG());

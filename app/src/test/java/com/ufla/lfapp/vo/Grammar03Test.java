@@ -209,8 +209,7 @@ public class Grammar03Test {
 				}
 			}
 		}
-		
-		assertEquals(true, fng);
+		assertTrue(fng);
 		assertTrue(newG.isFNG());
 	}
 	

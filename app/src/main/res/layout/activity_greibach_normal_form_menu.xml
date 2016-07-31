@@ -89,6 +89,18 @@
                 android:layout_weight="1"
                 android:layout_marginTop="10dp"
                 android:background="@color/Gainsboro"
+                android:text="@string/aplicar_propriedades_da_forma_normal_de_chomsky"
+                android:textColor="@color/Black"
+                android:textSize="20sp"
+                android:textAllCaps="false"
+                android:onClick="startChomskyNormalFormActivity"/>
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginTop="10dp"
+                android:background="@color/Gainsboro"
                 android:text="@string/remo_o_de_recurs_o_direta_e_indireta_esquerda"
                 android:textColor="@color/Black"
                 android:textSize="20sp"
@@ -105,7 +117,7 @@
                 android:textColor="@color/Black"
                 android:textSize="20sp"
                 android:textAllCaps="false"
-                android:onClick="startRNReachActivity"/>
+                android:onClick="startGreibachNormalFormActivity"/>
 
         </LinearLayout>
 

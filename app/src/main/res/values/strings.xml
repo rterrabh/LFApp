@@ -65,8 +65,9 @@
         &lt;b&gt;fim&lt;/b&gt;&lt;br/&gt;
     </string>
     <string name="removing_left_recursive_algol_p2">
-        (3) Voltar, na ordem inversa, removendo regras do tipo
-        A&lt;sub&gt;&lt;small&gt;j&lt;/sub&gt;&lt;/small&gt; -&gt; A&lt;sub&gt;&lt;small&gt;i&lt;/sub&gt;&lt;/small&gt;&#947;:&lt;br/&gt;
+        (1) Remover regras do tipo
+        A&lt;sub&gt;&lt;small&gt;j&lt;/sub&gt;&lt;/small&gt; -&gt; A&lt;sub&gt;&lt;small&gt;i&lt;/sub&gt;&lt;/small&gt;&#947;,
+        na ordem inversa da utilizada para remover recursão à esquerda:&lt;br/&gt;
         &lt;b&gt;ALGORITMO&lt;/b&gt;&lt;br/&gt;
         &lt;b&gt;para&lt;/b&gt; i = n até 1 &lt;b&gt;faça&lt;/b&gt;&lt;br/&gt;
         \u00A0\u00A0\u00A0 &lt;b&gt;para&lt;/b&gt; j = i-1 até 1 &lt;b&gt;faça&lt;/b&gt;&lt;br/&gt;
@@ -82,7 +83,7 @@
         &lt;b&gt;fim&lt;/b&gt;&lt;br/&gt;
     </string>
     <string name="removing_left_recursive_algol_p3">
-        (4) Removendo regras do tipo Z&lt;sub&gt;&lt;small&gt;i&lt;/sub&gt;&lt;/small&gt; -&gt; V&#947; nas variáveis criadas, em
+        (2) Remover regras do tipo Z&lt;sub&gt;&lt;small&gt;i&lt;/sub&gt;&lt;/small&gt; -&gt; V&#947; nas variáveis criadas pelo algoritmo de remoção de recursão à esquerda, em
         ordem:&lt;br/&gt;
         &lt;b&gt;ALGORITMO&lt;/b&gt;&lt;br/&gt;
         &lt;b&gt;para&lt;/b&gt; i = 1 até n &lt;b&gt;faça&lt;/b&gt;&lt;br/&gt;

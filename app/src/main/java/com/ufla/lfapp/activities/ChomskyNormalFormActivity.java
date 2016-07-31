@@ -22,13 +22,25 @@ public class ChomskyNormalFormActivity extends HeaderGrammarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_chomsky_normal_form);
         super.onCreate(savedInstanceState);
-        setTitle("LFApp - FNC - 6/6");
+        setTitle();
         fnc(getGrammar());
+    }
+
+    private void setTitle() {
+        switch(algorithm) {
+            case CHOMSKY_NORMAL_FORM:
+                setTitle("LFApp - FNC - 6/6");
+                break;
+            case GREIBACH_NORMAL_FORM:
+                setTitle("LFApp - FNG - 6/8");
+                break;
+        }
     }
 
     @Override
     protected Grammar getGrammar() {
         switch(algorithm) {
+            case GREIBACH_NORMAL_FORM:
             case CHOMSKY_NORMAL_FORM:
                 Grammar g = new Grammar(grammar);
                 g = g.getGrammarWithInitialSymbolNotRecursive(g, new
@@ -47,7 +59,14 @@ public class ChomskyNormalFormActivity extends HeaderGrammarActivity {
     }
 
     public void next(View view) {
-        onBackPressed();
+        switch (algorithm) {
+            case CHOMSKY_NORMAL_FORM:
+                onBackPressed();
+                break;
+            case GREIBACH_NORMAL_FORM:
+                changeActivity(this, RemoveLeftRecursionActivity.class);
+                break;
+        }
     }
 
     public void fnc(final Grammar g) {

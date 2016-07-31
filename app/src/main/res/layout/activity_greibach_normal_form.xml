@@ -26,7 +26,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/Gainsboro"
-                android:text="@string/remo_o_de_recurs_o_direta_e_indireta_esquerda"
+                android:text="@string/aplicar_propriedades_da_forma_normal_de_greibach"
                 android:textSize="20sp"
                 android:textColor="@color/Black"/>
 
@@ -43,14 +43,13 @@
                     android:textStyle="bold"/>
 
                 <TextView
-                    android:id="@+id/RemovalLeftRecursion"
+                    android:id="@+id/GreibachNormalFormResult"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:textColor="@color/Black"/>
 
             </LinearLayout>
-
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -62,34 +61,36 @@
                     android:layout_height="wrap_content"
                     android:text="@string/algoritmo"
                     android:textColor="#acff000a"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/commentsOfRemovalLeftRecursion"
+                    android:id="@+id/FNGComentarios2"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/Black"/>
+                    android:textColor="@color/Black" />
 
                 <TextView
-                    android:id="@+id/step1RemovalLeftRecursion"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/Black"/>
-
-                <TableLayout
-                    android:id="@+id/tableOfSortedVariables"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"/>
-
-                <TextView
-                    android:id="@+id/step2RemovalLeftRecursion"
+                    android:id="@+id/step1GreibachNormalForm"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/Black"/>
 
                 <TableLayout
-                    android:id="@+id/step2RemovalLeftRecursionAcademicSupport"
+                    android:id="@+id/step1GreibachNormalFormAcademicSupport"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:stretchColumns="*"
+                    android:shrinkColumns="*"
+                    android:textColor="@color/Black"/>
+
+                <TextView
+                    android:id="@+id/step2GreibachNormalForm"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/Black"/>
+
+                <TableLayout
+                    android:id="@+id/step2GreibachNormalFormAcademicSupport"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:stretchColumns="*"

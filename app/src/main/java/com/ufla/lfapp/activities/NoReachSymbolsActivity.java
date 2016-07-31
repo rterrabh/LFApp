@@ -34,8 +34,12 @@ public class NoReachSymbolsActivity extends  HeaderGrammarActivity {
 
     private void setTitle() {
         switch(algorithm) {
-            case CHOMSKY_NORMAL_FORM: setTitle("LFApp - FNC - 5/6"); break;
-            case GREIBACH_NORMAL_FORM: setTitle("LFApp - FNG - 5/7"); break;
+            case CHOMSKY_NORMAL_FORM:
+                setTitle("LFApp - FNC - 5/6");
+                break;
+            case GREIBACH_NORMAL_FORM:
+                setTitle("LFApp - FNG - 5/8");
+                break;
         }
     }
 
@@ -60,13 +64,7 @@ public class NoReachSymbolsActivity extends  HeaderGrammarActivity {
     }
 
     public void next(View view) {
-        switch (algorithm) {
-            case CHOMSKY_NORMAL_FORM: changeActivity(this,
-                    ChomskyNormalFormActivity.class); break;
-            case GREIBACH_NORMAL_FORM: changeActivity(this,
-                    RemoveLeftRecursionActivity.class); break;
-        }
-
+        changeActivity(this, ChomskyNormalFormActivity.class);
     }
 
     public void removingNotReachableSymbols(final Grammar g) {
