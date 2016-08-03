@@ -1,4 +1,4 @@
-package com.ufla.lfapp.activities;
+package com.ufla.lfapp.activities.algorithms;
 
 import android.os.Bundle;
 import android.text.Html;
@@ -7,6 +7,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.ufla.lfapp.R;
+import com.ufla.lfapp.activities.HeaderGrammarActivity;
 import com.ufla.lfapp.activities.utils.UtilActivities;
 import com.ufla.lfapp.vo.AcademicSupport;
 import com.ufla.lfapp.vo.Grammar;

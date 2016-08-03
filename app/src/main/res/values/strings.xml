@@ -136,4 +136,7 @@
     <string name="aplicar_propriedades_da_forma_normal_de_greibach">Aplicar Propriedades da Forma Normal de Greibach</string>
     <string name="back">Back</string>
     <string name="next">Next</string>
+    <string name="copiar">Copiar</string>
+    <string name="delete_grammar">Delete grammar.</string>
+    <string name="clean_historical_grammar">Limpar histórico</string>
 </resources>

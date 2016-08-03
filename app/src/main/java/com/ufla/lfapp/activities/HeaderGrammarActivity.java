@@ -48,20 +48,20 @@ public abstract class HeaderGrammarActivity extends AppCompatActivity {
 
     private void setGrammar() {
         Intent intent = getIntent();
-        if (intent != null) {
+        if (intent != null
+                && intent.getExtras() != null
+                && intent.getExtras().getString("grammar") != null) {
             Bundle dados = intent.getExtras();
-            if (dados != null) {
-                grammar = dados.getString("grammar");
-                word = dados.getString("word");
-                algorithm = Algorithm.getAlgorithm(dados.getInt("algorithm"));
-                Grammar g = getGrammar();
-                if (grammar != null) {
-                    TextView inputGrammar = (TextView) findViewById(R.id.inputGrammar);
-                    AcademicSupport academic = new AcademicSupport();
-                    academic.setResult(g);
-                    assert inputGrammar != null;
-                    inputGrammar.setText(Html.fromHtml(academic.getResult()));
-                }
+            grammar = dados.getString("grammar");
+            word = dados.getString("word");
+            algorithm = Algorithm.getAlgorithm(dados.getInt("algorithm"));
+            Grammar g = getGrammar();
+            if (grammar != null) {
+                TextView inputGrammar = (TextView) findViewById(R.id.inputGrammar);
+                AcademicSupport academic = new AcademicSupport();
+                academic.setResult(g);
+                assert inputGrammar != null;
+                inputGrammar.setText(Html.fromHtml(academic.getResult()));
             }
         }
     }

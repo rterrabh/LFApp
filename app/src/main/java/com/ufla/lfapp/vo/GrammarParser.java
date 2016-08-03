@@ -12,6 +12,12 @@ import java.util.TreeSet;
 
 public class GrammarParser {
 
+    private static final String VARIABLE = "[A-Z][0-9]*'?";
+    private static final String TERMINAL = "[a-z]";
+    private static final String LAMBDA = "λ";
+    private static final String RULE_SEPARATOR = "|";
+    private static final String RULE_PRODUCTION = "->";
+
     private GrammarParser() {
 
     }

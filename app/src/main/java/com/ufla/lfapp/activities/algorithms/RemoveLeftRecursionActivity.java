@@ -1,13 +1,9 @@
-package com.ufla.lfapp.activities;
+package com.ufla.lfapp.activities.algorithms;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.Spanned;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TableLayout;
@@ -15,6 +11,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.ufla.lfapp.R;
+import com.ufla.lfapp.activities.HeaderGrammarActivity;
 import com.ufla.lfapp.vo.AcademicSupport;
 import com.ufla.lfapp.vo.AcademicSupportForRemoveLeftRecursion;
 import com.ufla.lfapp.vo.Grammar;

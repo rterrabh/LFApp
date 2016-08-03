@@ -12,7 +12,9 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.ufla.lfapp.R;
+import com.ufla.lfapp.activities.menu.MenuActivity;
 import com.ufla.lfapp.activities.utils.Algorithm;
+import com.ufla.lfapp.persistence.DbAcess;
 import com.ufla.lfapp.vo.GrammarParser;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,15 +34,19 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
         inputGrammar.setText(preferences.getString("inputGrammar", ""));
         inputWord.setText(preferences.getString("inputWord", ""));
+        Intent intent = getIntent();
+        if (intent != null
+                && intent.getExtras() != null
+                && intent.getExtras().getString("grammar") != null) {
+            inputGrammar.setText(intent.getExtras().getString("grammar"));
+        }
     }
 
     @Override
     protected void onStop() {
         SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
-        editor.putString("inputGrammar", inputGrammar.getText
-                ().toString());
-        editor.putString("inputWord", inputWord.getText
-                ().toString());
+        editor.putString("inputGrammar", inputGrammar.getText().toString());
+        editor.putString("inputWord", inputWord.getText().toString());
         editor.apply();
         super.onStop();
     }
@@ -48,10 +54,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
-        editor.putString("inputGrammar", inputGrammar.getText
-                ().toString());
-        editor.putString("inputWord", inputWord.getText
-                ().toString());
+        editor.putString("inputGrammar", inputGrammar.getText().toString());
+        editor.putString("inputWord", inputWord.getText().toString());
         editor.apply();
         super.onDestroy();
     }
@@ -115,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
             StringBuilder reason = new StringBuilder();
             if (GrammarParser.verifyInputGrammar(txtGrammar) &&
                     GrammarParser.inputValidate(txtGrammar, reason)) {
+                new DbAcess(this).putGrammar(txtGrammar);
                 Bundle params = new Bundle();
                 params.putString("grammar", txtGrammar);
                 params.putString("word", word);
@@ -143,6 +148,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void startAboutActivity(View view) {
         Intent intent = new Intent(this, AboutActivity.class);
+        startActivity(intent);
+    }
+
+    public void startHistoricalGrammarsActivity(View view) {
+        Intent intent = new Intent(this, HistoricalGrammarsActivity.class);
         startActivity(intent);
     }
 

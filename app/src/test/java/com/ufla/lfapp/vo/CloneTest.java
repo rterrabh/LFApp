@@ -5,10 +5,30 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 public class CloneTest {
 
 	private Grammar g;
+	//"[["+TERMINAL+"]*"+"["+VARIABLE+"]*]*";
+	private static final String VARIABLE = "[A-Z][0-9]*'?";
+	private static final String TERMINAL = "[a-z]";
+	private static final String RULE_ELEMENT =
+			"["+TERMINAL+VARIABLE+"]*";
+
+	@Test
+	public void test() {
+		String teste = "A";
+		Pattern p = Pattern.compile(RULE_ELEMENT);
+		System.out.println(p.matcher("A").matches());
+		System.out.println(p.matcher("1E").matches());
+		System.out.println(p.matcher("G1").matches());
+		System.out.println(p.matcher("Z55332").matches());
+		System.out.println(p.matcher("Z''''").matches());
+		System.out.println(p.matcher("Z'").matches());
+	}
 
 	@Before
 	public void setUp() {

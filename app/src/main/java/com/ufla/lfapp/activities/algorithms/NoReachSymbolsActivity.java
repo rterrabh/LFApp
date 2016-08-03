@@ -1,15 +1,14 @@
-package com.ufla.lfapp.activities;
+package com.ufla.lfapp.activities.algorithms;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.ufla.lfapp.R;
+import com.ufla.lfapp.activities.HeaderGrammarActivity;
 import com.ufla.lfapp.activities.utils.UtilActivities;
 import com.ufla.lfapp.vo.AcademicSupport;
 import com.ufla.lfapp.vo.Grammar;
@@ -22,7 +21,7 @@ import java.util.Set;
 /**
  * Created by root on 25/07/16.
  */
-public class NoReachSymbolsActivity extends  HeaderGrammarActivity {
+public class NoReachSymbolsActivity extends HeaderGrammarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

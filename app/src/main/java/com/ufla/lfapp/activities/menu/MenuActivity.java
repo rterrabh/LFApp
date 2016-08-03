@@ -1,10 +1,21 @@
-package com.ufla.lfapp.activities;
+package com.ufla.lfapp.activities.menu;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import com.ufla.lfapp.R;
+import com.ufla.lfapp.activities.algorithms.CYKActivity;
+import com.ufla.lfapp.activities.algorithms.ChainRulesActivity;
+import com.ufla.lfapp.activities.algorithms.DerivationMoreLeftActivity;
+import com.ufla.lfapp.activities.algorithms.EmptyProductionActivity;
+import com.ufla.lfapp.activities.HeaderGrammarActivity;
+import com.ufla.lfapp.activities.algorithms.IdGrammarActivity;
+import com.ufla.lfapp.activities.algorithms.NoReachSymbolsActivity;
+import com.ufla.lfapp.activities.algorithms.NoTermSymbolsActivity;
+import com.ufla.lfapp.activities.algorithms.RemoveInitialSymbolRecursiveActivity;
+import com.ufla.lfapp.activities.algorithms.RemoveLeftDirectRecursionActivity;
+import com.ufla.lfapp.activities.algorithms.RemoveLeftRecursionActivity;
 import com.ufla.lfapp.activities.utils.Algorithm;
 
 /**
