@@ -5,16 +5,19 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.ufla.lfapp.R;
 import com.ufla.lfapp.activities.menu.MenuActivity;
 import com.ufla.lfapp.activities.utils.Algorithm;
 import com.ufla.lfapp.persistence.DbAcess;
+import com.ufla.lfapp.vo.Grammar;
 import com.ufla.lfapp.vo.GrammarParser;
 
 public class MainActivity extends AppCompatActivity {
@@ -70,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                switch (which){
+                switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
                         dialog.cancel();
                         finish();
@@ -95,21 +98,21 @@ public class MainActivity extends AppCompatActivity {
         int selection = inputGrammar.getSelectionStart();
         inputGrammar.setText(inputGrammar.getText()
                 .insert(selection, " λ"));
-        inputGrammar.setSelection(selection+2);
+        inputGrammar.setSelection(selection + 2);
     }
 
     public void insertArrow(View view) {
         int selection = inputGrammar.getSelectionStart();
         inputGrammar.setText(inputGrammar.getText()
                 .insert(selection, " -> "));
-        inputGrammar.setSelection(selection+4);
+        inputGrammar.setSelection(selection + 4);
     }
 
     public void insertPipe(View view) {
         int selection = inputGrammar.getSelectionStart();
         inputGrammar.setText(inputGrammar.getText()
                 .insert(selection, " | "));
-        inputGrammar.setSelection(selection+3);
+        inputGrammar.setSelection(selection + 3);
     }
 
     public void confirmGrammar(View view) {
@@ -117,8 +120,9 @@ public class MainActivity extends AppCompatActivity {
         String word = inputWord.getText().toString();
         if (!txtGrammar.isEmpty()) {
             StringBuilder reason = new StringBuilder();
-            if (GrammarParser.verifyInputGrammar(txtGrammar) &&
-                    GrammarParser.inputValidate(txtGrammar, reason)) {
+            if (GrammarParser.verifyInputGrammar(txtGrammar) && (!GrammarParser.contextFreeGrammar
+                    (new Grammar(txtGrammar), new StringBuilder()) ||
+                    GrammarParser.inputValidate(txtGrammar, reason))) {
                 new DbAcess(this).putGrammar(txtGrammar);
                 Bundle params = new Bundle();
                 params.putString("grammar", txtGrammar);
@@ -128,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtras(params);
                 startActivity(intent);
             } else {
-                if(reason.length() == 0) {
+                if (reason.length() == 0) {
                     reason.append("Gramática inválida.");
                 }
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);

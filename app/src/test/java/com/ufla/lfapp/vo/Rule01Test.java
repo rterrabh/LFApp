@@ -68,7 +68,7 @@ public class Rule01Test {
 
     @Test
     public void testGetSymbolsOfRightSide() {
-        String[] expectedSymbolsStr = { "a", "S", "B", "C" };
+        String[] expectedSymbolsStr = {"a", "S", "B", "C"};
         Set<String> expectedSymbols = new HashSet<>(Arrays.asList
                 (expectedSymbolsStr));
         assertEquals(expectedSymbols, rule.getSymbolsOfRightSide());

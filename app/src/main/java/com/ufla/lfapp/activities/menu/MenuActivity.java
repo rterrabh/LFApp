@@ -17,6 +17,9 @@ import com.ufla.lfapp.activities.algorithms.RemoveInitialSymbolRecursiveActivity
 import com.ufla.lfapp.activities.algorithms.RemoveLeftDirectRecursionActivity;
 import com.ufla.lfapp.activities.algorithms.RemoveLeftRecursionActivity;
 import com.ufla.lfapp.activities.utils.Algorithm;
+import com.ufla.lfapp.vo.AcademicSupport;
+import com.ufla.lfapp.vo.AcademicSupportForRemoveLeftRecursion;
+import com.ufla.lfapp.vo.GrammarParser;
 
 /**
  * Created by root on 18/07/16.
@@ -28,6 +31,13 @@ public class MenuActivity extends HeaderGrammarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_menu);
         super.onCreate(savedInstanceState);
+        if (GrammarParser.contextFreeGrammar(getGrammar(), new StringBuilder())) {
+            findViewById(R.id.FNCButton).setVisibility(View.GONE);
+            findViewById(R.id.RemoveRecursionDirectLeftButton).setVisibility(View.GONE);
+            findViewById(R.id.RemoveRecursionLeftButton).setVisibility(View.GONE);
+            findViewById(R.id.FNGButton).setVisibility(View.GONE);
+            findViewById(R.id.CykButton).setVisibility(View.GONE);
+        }
     }
 
 
