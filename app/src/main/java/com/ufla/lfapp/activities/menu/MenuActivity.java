@@ -3,6 +3,7 @@ package com.ufla.lfapp.activities.menu;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import com.ufla.lfapp.R;
 import com.ufla.lfapp.activities.algorithms.CYKActivity;
@@ -31,13 +32,158 @@ public class MenuActivity extends HeaderGrammarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_menu);
         super.onCreate(savedInstanceState);
-        if (GrammarParser.contextFreeGrammar(getGrammar(), new StringBuilder())) {
+        if (!GrammarParser.contextFreeGrammar(getGrammar(), new StringBuilder())) {
             findViewById(R.id.FNCButton).setVisibility(View.GONE);
             findViewById(R.id.RemoveRecursionDirectLeftButton).setVisibility(View.GONE);
             findViewById(R.id.RemoveRecursionLeftButton).setVisibility(View.GONE);
             findViewById(R.id.FNGButton).setVisibility(View.GONE);
             findViewById(R.id.CykButton).setVisibility(View.GONE);
         }
+
+        findViewById(R.id.idGrammarButton).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Bundle params = new Bundle();
+                params.putString("grammar", grammar);
+                params.putString("word", word);
+                params.putInt("algorithm", Algorithm.NONE.getValue());
+                Intent intent = new Intent(MenuActivity.this, IdGrammarActivity.class);
+                intent.putExtras(params);
+                startActivity(intent);
+            }
+        });
+
+        findViewById(R.id.derivationMostLeftButton).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Bundle params = new Bundle();
+                params.putString("grammar", grammar);
+                params.putString("word", word);
+                params.putInt("algorithm", Algorithm.NONE.getValue());
+                Intent intent = new Intent(MenuActivity.this, DerivationMoreLeftActivity.class);
+                intent.putExtras(params);
+                startActivity(intent);
+            }
+        });
+
+        findViewById(R.id.RemoveRecursiveInitialSymbolButton).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Bundle params = new Bundle();
+                params.putString("grammar", grammar);
+                params.putString("word", word);
+                params.putInt("algorithm", Algorithm.NONE.getValue());
+                Intent intent = new Intent(MenuActivity.this, RemoveInitialSymbolRecursiveActivity.class);
+                intent.putExtras(params);
+                startActivity(intent);
+            }
+        });
+
+        findViewById(R.id.RemoveEmptyProductionsButton).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Bundle params = new Bundle();
+                params.putString("grammar", grammar);
+                params.putString("word", word);
+                params.putInt("algorithm", Algorithm.NONE.getValue());
+                Intent intent = new Intent(MenuActivity.this, EmptyProductionActivity.class);
+                intent.putExtras(params);
+                startActivity(intent);
+            }
+        });
+
+        findViewById(R.id.RemoveChainRulesButton).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Bundle params = new Bundle();
+                params.putString("grammar", grammar);
+                params.putString("word", word);
+                params.putInt("algorithm", Algorithm.NONE.getValue());
+                Intent intent = new Intent(MenuActivity.this, ChainRulesActivity.class);
+                intent.putExtras(params);
+                startActivity(intent);
+            }
+        });
+
+
+        findViewById(R.id.TermButton).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Bundle params = new Bundle();
+                params.putString("grammar", grammar);
+                params.putString("word", word);
+                params.putInt("algorithm", Algorithm.NONE.getValue());
+                Intent intent = new Intent(MenuActivity.this, NoTermSymbolsActivity.class);
+                intent.putExtras(params);
+                startActivity(intent);
+            }
+        });
+
+        findViewById(R.id.ReachButton).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Bundle params = new Bundle();
+                params.putString("grammar", grammar);
+                params.putString("word", word);
+                params.putInt("algorithm", Algorithm.NONE.getValue());
+                Intent intent = new Intent(MenuActivity.this, NoReachSymbolsActivity.class);
+                intent.putExtras(params);
+                startActivity(intent);
+            }
+        });
+
+        findViewById(R.id.FNCButton).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Bundle params = new Bundle();
+                params.putString("grammar", grammar);
+                params.putString("word", word);
+                params.putInt("algorithm", Algorithm.NONE.getValue());
+                Intent intent = new Intent(MenuActivity.this, ChomskyNormalFormMenuActivity.class);
+                intent.putExtras(params);
+                startActivity(intent);
+            }
+        });
+
+        findViewById(R.id.RemoveRecursionDirectLeftButton).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Bundle params = new Bundle();
+                params.putString("grammar", grammar);
+                params.putString("word", word);
+                params.putInt("algorithm", Algorithm.NONE.getValue());
+                Intent intent = new Intent(MenuActivity.this, RemoveInitialSymbolRecursiveActivity.class);
+                intent.putExtras(params);
+                startActivity(intent);
+            }
+        });
+
+        findViewById(R.id.RemoveRecursionLeftButton).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Bundle params = new Bundle();
+                params.putString("grammar", grammar);
+                params.putString("word", word);
+                params.putInt("algorithm", Algorithm.NONE.getValue());
+                Intent intent = new Intent(MenuActivity.this, RemoveLeftRecursionActivity.class);
+                intent.putExtras(params);
+                startActivity(intent);
+            }
+        });
+
+        findViewById(R.id.FNGButton).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Bundle params = new Bundle();
+                params.putString("grammar", grammar);
+                params.putString("word", word);
+                params.putInt("algorithm", Algorithm.NONE.getValue());
+                Intent intent = new Intent(MenuActivity.this, GreibachNormalFormMenuActivity.class);
+                intent.putExtras(params);
+                startActivity(intent);
+            }
+        });
+
+        findViewById(R.id.CykButton).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Bundle params = new Bundle();
+                params.putString("grammar", grammar);
+                params.putString("word", word);
+                params.putInt("algorithm", Algorithm.NONE.getValue());
+                Intent intent = new Intent(MenuActivity.this, CYKActivity.class);
+                intent.putExtras(params);
+                startActivity(intent);
+            }
+        });
     }
 
 
@@ -92,15 +238,15 @@ public class MenuActivity extends HeaderGrammarActivity {
         startActivity(intent);
     }
 
-    public void startRNTermActivity(View view) {
-        Bundle params = new Bundle();
-        params.putString("grammar", grammar);
-        params.putString("word", word);
-        params.putInt("algorithm", Algorithm.NONE.getValue());
-        Intent intent = new Intent(this, NoTermSymbolsActivity.class);
-        intent.putExtras(params);
-        startActivity(intent);
-    }
+//    public void startRNTermActivity(View view) {
+//        Bundle params = new Bundle();
+//        params.putString("grammar", grammar);
+//        params.putString("word", word);
+//        params.putInt("algorithm", Algorithm.NONE.getValue());
+//        Intent intent = new Intent(this, NoTermSymbolsActivity.class);
+//        intent.putExtras(params);
+//        startActivity(intent);
+//    }
 
     public void startRNReachActivity(View view) {
         Bundle params = new Bundle();
@@ -132,15 +278,15 @@ public class MenuActivity extends HeaderGrammarActivity {
         startActivity(intent);
     }
 
-    public void startRRecursionDirAndIndLeftActivity(View view) {
-        Bundle params = new Bundle();
-        params.putString("grammar", grammar);
-        params.putString("word", word);
-        params.putInt("algorithm", Algorithm.NONE.getValue());
-        Intent intent = new Intent(this, RemoveLeftRecursionActivity.class);
-        intent.putExtras(params);
-        startActivity(intent);
-    }
+//    public void startRRecursionDirAndIndLeftActivity(View view) {
+//        Bundle params = new Bundle();
+//        params.putString("grammar", grammar);
+//        params.putString("word", word);
+//        params.putInt("algorithm", Algorithm.NONE.getValue());
+//        Intent intent = new Intent(this, RemoveLeftRecursionActivity.class);
+//        intent.putExtras(params);
+//        startActivity(intent);
+//    }
 
     public void startGreibachNormalFormActivity(View view) {
         Bundle params = new Bundle();

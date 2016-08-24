@@ -22,7 +22,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <Button
+
+            <com.ufla.lfapp.activities.utils.AutoResizeTextView
                 android:id="@+id/idGrammarButton"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -32,10 +33,12 @@
                 android:text="@string/identifica_o_da_gram_tica"
                 android:textColor="@color/Black"
                 android:textSize="20sp"
+                android:maxLines="1"
                 android:textAllCaps="false"
-                android:onClick="startIdentificationGrammarActivity" />
+                android:theme="@style/Widget.AppCompat.Button"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Button" />
 
-            <Button
+            <com.ufla.lfapp.activities.utils.AutoResizeTextView
                 android:id="@+id/derivationMostLeftButton"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -45,10 +48,12 @@
                 android:text="@string/deriva_o_mais_esquerda"
                 android:textColor="@color/Black"
                 android:textSize="20sp"
+                android:maxLines="1"
                 android:textAllCaps="false"
-                android:onClick="startDerivationLeftmostActivity" />
+                android:theme="@style/Widget.AppCompat.Button"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Button" />
 
-            <Button
+            <com.ufla.lfapp.activities.utils.AutoResizeTextView
                 android:id="@+id/RemoveRecursiveInitialSymbolButton"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -58,10 +63,12 @@
                 android:text="@string/remo_o_da_recurs_o_no_s_mbolo_inicial"
                 android:textColor="@color/Black"
                 android:textSize="20sp"
+                android:maxLines="1"
                 android:textAllCaps="false"
-                android:onClick="startRRecursionInTheInitialSymbolActivity"/>
+                android:theme="@style/Widget.AppCompat.Button"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Button" />
 
-            <Button
+            <com.ufla.lfapp.activities.utils.AutoResizeTextView
                 android:id="@+id/RemoveEmptyProductionsButton"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -71,10 +78,12 @@
                 android:text="@string/remo_o_de_produ_es_vazias"
                 android:textColor="@color/Black"
                 android:textSize="20sp"
+                android:maxLines="1"
                 android:textAllCaps="false"
-                android:onClick="startREmptyProductionsActivity"/>
+                android:theme="@style/Widget.AppCompat.Button"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Button" />
 
-            <Button
+            <com.ufla.lfapp.activities.utils.AutoResizeTextView
                 android:id="@+id/RemoveChainRulesButton"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -84,10 +93,12 @@
                 android:text="@string/remo_o_de_regras_de_cadeia"
                 android:textColor="@color/Black"
                 android:textSize="20sp"
+                android:maxLines="1"
                 android:textAllCaps="false"
-                android:onClick="startRChainRulesActivity"/>
+                android:theme="@style/Widget.AppCompat.Button"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Button" />
 
-            <Button
+            <com.ufla.lfapp.activities.utils.AutoResizeTextView
                 android:id="@+id/TermButton"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -97,11 +108,12 @@
                 android:text="@string/remo_o_de_vari_veis_que_n_o_geram_terminais"
                 android:textColor="@color/Black"
                 android:textSize="20sp"
+                android:maxLines="1"
                 android:textAllCaps="false"
-                android:onClick="startRNTermActivity"/>
+                android:theme="@style/Widget.AppCompat.Button"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Button" />
 
-
-            <Button
+            <com.ufla.lfapp.activities.utils.AutoResizeTextView
                 android:id="@+id/ReachButton"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -111,10 +123,12 @@
                 android:text="@string/remo_o_de_s_mbolos_n_o_alcan_veis"
                 android:textColor="@color/Black"
                 android:textSize="20sp"
+                android:maxLines="1"
                 android:textAllCaps="false"
-                android:onClick="startRNReachActivity"/>
+                android:theme="@style/Widget.AppCompat.Button"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Button" />
 
-            <Button
+            <com.ufla.lfapp.activities.utils.AutoResizeTextView
                 android:id="@+id/FNCButton"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -124,10 +138,12 @@
                 android:text="@string/forma_normal_de_chomsky"
                 android:textColor="@color/Black"
                 android:textSize="20sp"
+                android:maxLines="1"
                 android:textAllCaps="false"
-                android:onClick="startChomskyNormalFormActivity"/>
+                android:theme="@style/Widget.AppCompat.Button"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Button" />
 
-            <Button
+            <com.ufla.lfapp.activities.utils.AutoResizeTextView
                 android:id="@+id/RemoveRecursionDirectLeftButton"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -137,10 +153,12 @@
                 android:text="@string/remo_o_de_recurs_o_direta_esquerda"
                 android:textColor="@color/Black"
                 android:textSize="20sp"
+                android:maxLines="1"
                 android:textAllCaps="false"
-                android:onClick="startRRecursionDirectLeftActivity"/>
+                android:theme="@style/Widget.AppCompat.Button"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Button" />
 
-            <Button
+            <com.ufla.lfapp.activities.utils.AutoResizeTextView
                 android:id="@+id/RemoveRecursionLeftButton"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -150,10 +168,12 @@
                 android:text="@string/remo_o_de_recurs_o_direta_e_indireta_esquerda"
                 android:textColor="@color/Black"
                 android:textSize="20sp"
+                android:maxLines="1"
                 android:textAllCaps="false"
-                android:onClick="startRRecursionDirAndIndLeftActivity"/>
+                android:theme="@style/Widget.AppCompat.Button"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Button" />
 
-            <Button
+            <com.ufla.lfapp.activities.utils.AutoResizeTextView
                 android:id="@+id/FNGButton"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -163,10 +183,12 @@
                 android:text="@string/forma_normal_de_greibach"
                 android:textColor="@color/Black"
                 android:textSize="20sp"
+                android:maxLines="1"
                 android:textAllCaps="false"
-                android:onClick="startGreibachNormalFormActivity"/>
+                android:theme="@style/Widget.AppCompat.Button"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Button" />
 
-            <Button
+            <com.ufla.lfapp.activities.utils.AutoResizeTextView
                 android:id="@+id/CykButton"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -176,8 +198,10 @@
                 android:text="@string/cyk"
                 android:textColor="@color/Black"
                 android:textSize="20sp"
+                android:maxLines="1"
                 android:textAllCaps="false"
-                android:onClick="startCYKActivity"/>
+                android:theme="@style/Widget.AppCompat.Button"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Button" />
 
         </LinearLayout>
 

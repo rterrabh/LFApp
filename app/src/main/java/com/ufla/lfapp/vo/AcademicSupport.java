@@ -135,8 +135,16 @@ public class AcademicSupport {
         this.insertedRules = insertedRules;
     }
 
+    private Set<String> getRuleLeftSides(final Grammar g) {
+        Set<String> lefSides = new HashSet<>();
+        for (Rule rule : g.getRules()) {
+            lefSides.add(rule.getLeftSide());
+        }
+        return lefSides;
+    }
+
     public String formatResultGrammar(final Grammar g) {
-        ArrayList<String> listOfVariables = new ArrayList<>(g.getVariables());
+        List<String> listOfVariables = new ArrayList<>(getRuleLeftSides(g));
         Collections.sort(listOfVariables);
         StringBuilder txtGrammar = new StringBuilder(g.getInitialSymbol()
                 + " ->");
@@ -151,9 +159,18 @@ public class AcademicSupport {
                 continue;
             }
             if (variable.length() > 1) {
-                txtGrammar.append(variable.charAt(0));
-                txtGrammar.append("<sub>").append(variable.substring(1))
-                        .append("</sub>");
+                for (int i = 0; i < variable.length(); i++) {
+                    if (Character.isDigit(variable.charAt(i))) {
+                        int j = i+1;
+                        while (j != variable.length() && Character.isDigit(variable.charAt(j))) {
+                            j++;
+                        }
+                        i = j-1;
+                        txtGrammar.append("<sub>").append(variable.substring(i, j)).append("</sub>");;
+                    } else {
+                        txtGrammar.append(variable.charAt(i));
+                    }
+                }
             } else {
                 txtGrammar.append(variable);
             }
