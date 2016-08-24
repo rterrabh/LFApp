@@ -23,6 +23,7 @@
             android:orientation="vertical">
 
             <Button
+                android:id="@+id/idGrammarButton"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -32,9 +33,10 @@
                 android:textColor="@color/Black"
                 android:textSize="20sp"
                 android:textAllCaps="false"
-                android:onClick="startIdentificationGrammarActivity"/>
+                android:onClick="startIdentificationGrammarActivity" />
 
             <Button
+                android:id="@+id/derivationMostLeftButton"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -44,9 +46,10 @@
                 android:textColor="@color/Black"
                 android:textSize="20sp"
                 android:textAllCaps="false"
-                android:onClick="startDerivationLeftmostActivity"/>
+                android:onClick="startDerivationLeftmostActivity" />
 
             <Button
+                android:id="@+id/RemoveRecursiveInitialSymbolButton"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -59,6 +62,7 @@
                 android:onClick="startRRecursionInTheInitialSymbolActivity"/>
 
             <Button
+                android:id="@+id/RemoveEmptyProductionsButton"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -71,6 +75,7 @@
                 android:onClick="startREmptyProductionsActivity"/>
 
             <Button
+                android:id="@+id/RemoveChainRulesButton"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -83,6 +88,7 @@
                 android:onClick="startRChainRulesActivity"/>
 
             <Button
+                android:id="@+id/TermButton"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -96,6 +102,7 @@
 
 
             <Button
+                android:id="@+id/ReachButton"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -108,6 +115,7 @@
                 android:onClick="startRNReachActivity"/>
 
             <Button
+                android:id="@+id/FNCButton"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -120,6 +128,7 @@
                 android:onClick="startChomskyNormalFormActivity"/>
 
             <Button
+                android:id="@+id/RemoveRecursionDirectLeftButton"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -132,6 +141,7 @@
                 android:onClick="startRRecursionDirectLeftActivity"/>
 
             <Button
+                android:id="@+id/RemoveRecursionLeftButton"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -144,6 +154,7 @@
                 android:onClick="startRRecursionDirAndIndLeftActivity"/>
 
             <Button
+                android:id="@+id/FNGButton"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -156,6 +167,7 @@
                 android:onClick="startGreibachNormalFormActivity"/>
 
             <Button
+                android:id="@+id/CykButton"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

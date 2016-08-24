@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 public class GrammarParser {
 
     //"[["+TERMINAL_REGEX+"]*"+"["+VARIABLE_REGEX+"]*]*";
+<<<<<<< HEAD
     public static final String LAMBDA = "λ";
     public static final String VARIABLE_REGEX = "([A-Z](([0-9]*)|('?)))";
     public static final String TERMINAL_REGEX = "[a-z]";
@@ -28,6 +29,21 @@ public class GrammarParser {
             RULE_ELEMENT_RIGHT_REGEX + ")*)\\s*";
     public static final String GRAMMAR_REGEX = "(" + RULE_REGEX + "" +
             "(\\p{Blank}*\\n\\p{Blank}*" + RULE_REGEX + ")*)";
+=======
+    public static final String R = "\\u000D\\u000A|[\\u000A\\u000B\\u000C\\u000D\\u0085\\u2028" +
+            "\\u2029]";
+    public static final String LAMBDA = "λ";
+    public static final String VARIABLE_REGEX = "([A-Z](([0-9]*)|('?)))";
+    public static final String TERMINAL_REGEX = "[a-z]";
+    public static final String RULE_ELEMENT_LEFT_REGEX = "(" + TERMINAL_REGEX + "|" +VARIABLE_REGEX + ")+";
+    public static final String RULE_ELEMENT_RIGHT_REGEX = "(" + RULE_ELEMENT_LEFT_REGEX + "|"
+            + LAMBDA + ")";
+    public static final String RULE_REGEX = "\\s*(" + RULE_ELEMENT_LEFT_REGEX + "\\p{Blank}*->" +
+            "\\p{Blank}*" + RULE_ELEMENT_RIGHT_REGEX + "(\\p{Blank}*\\|\\p{Blank}*" +
+            RULE_ELEMENT_RIGHT_REGEX + ")*)\\s*";
+    public static final String GRAMMAR_REGEX = "(" + RULE_REGEX + "" +
+            "(\\p{Blank}*"+R+"\\p{Blank}*" + RULE_REGEX + ")*)";
+>>>>>>> c4c20405093392ad913db2b633c8f988640d5918
     private static final String RULE_SEPARATOR = "|";
     private static final String RULE_PRODUCTION = "->";
 
@@ -206,7 +222,11 @@ public class GrammarParser {
 
 
     public static boolean verifyInputGrammar(String txtGrammar) {
+<<<<<<< HEAD
         return Pattern.matches(GRAMMAR_REGEX, txtGrammar);
+=======
+        return txtGrammar.matches(GRAMMAR_REGEX);
+>>>>>>> c4c20405093392ad913db2b633c8f988640d5918
     }
 
 

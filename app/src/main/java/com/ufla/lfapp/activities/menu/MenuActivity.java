@@ -32,7 +32,15 @@ public class MenuActivity extends HeaderGrammarActivity {
         setContentView(R.layout.activity_menu);
         super.onCreate(savedInstanceState);
         if (GrammarParser.contextFreeGrammar(getGrammar(), new StringBuilder())) {
+<<<<<<< HEAD
             //findViewById(R.id.);
+=======
+            findViewById(R.id.FNCButton).setVisibility(View.GONE);
+            findViewById(R.id.RemoveRecursionDirectLeftButton).setVisibility(View.GONE);
+            findViewById(R.id.RemoveRecursionLeftButton).setVisibility(View.GONE);
+            findViewById(R.id.FNGButton).setVisibility(View.GONE);
+            findViewById(R.id.CykButton).setVisibility(View.GONE);
+>>>>>>> c4c20405093392ad913db2b633c8f988640d5918
         }
     }
 
