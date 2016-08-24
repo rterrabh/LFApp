@@ -118,11 +118,18 @@ public class MainActivity extends AppCompatActivity {
     public void confirmGrammar(View view) {
         String txtGrammar = inputGrammar.getText().toString();
         String word = inputWord.getText().toString();
+        Toast.makeText(this, "oi", Toast.LENGTH_LONG);
         if (!txtGrammar.isEmpty()) {
             StringBuilder reason = new StringBuilder();
+<<<<<<< HEAD
+            Toast.makeText(this, txtGrammar, Toast.LENGTH_LONG);
+            if (GrammarParser.verifyInputGrammar(txtGrammar) &&
+                    GrammarParser.inputValidate(txtGrammar, reason)) {
+=======
             if (GrammarParser.verifyInputGrammar(txtGrammar) && (!GrammarParser.contextFreeGrammar
                     (new Grammar(txtGrammar), new StringBuilder()) ||
                     GrammarParser.inputValidate(txtGrammar, reason))) {
+>>>>>>> c4c20405093392ad913db2b633c8f988640d5918
                 new DbAcess(this).putGrammar(txtGrammar);
                 Bundle params = new Bundle();
                 params.putString("grammar", txtGrammar);
