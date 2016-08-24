@@ -211,18 +211,18 @@ public class RuleTest {
         String[] expectedSymbols;
 
         rule = new Rule("S", "λ");
-        expectedSymbols = new String[] { "λ" };
+        expectedSymbols = new String[]{"λ"};
         assertEquals(new HashSet<>(Arrays.asList(expectedSymbols)),
                 rule.getSymbolsOfRightSide());
 
         rule = new Rule("S", "aAb");
-        expectedSymbols = new String[] { "a", "A", "b" };
+        expectedSymbols = new String[]{"a", "A", "b"};
         assertEquals(new HashSet<>(Arrays.asList(expectedSymbols)),
                 rule.getSymbolsOfRightSide());
 
         rule = new Rule("S", "aA123bB12345CD12");
-        expectedSymbols = new String[] { "a", "A123", "b", "B12345", "C",
-                "D12" };
+        expectedSymbols = new String[]{"a", "A123", "b", "B12345", "C",
+                "D12"};
         assertEquals(new HashSet<>(Arrays.asList(expectedSymbols)),
                 rule.getSymbolsOfRightSide());
     }

@@ -37,7 +37,7 @@ public class GrammarTest {
                 "S -> λ | AB",
                 "A -> AB | CB | a",
                 "B -> b | AB",
-                "C -> c | AC" };
+                "C -> c | AC"};
 
         this.grammar = new Grammar(variables, terminals, initialSymbol, rules);
     }
@@ -152,7 +152,7 @@ public class GrammarTest {
                 "A -> CB | a | CBZ1 | aZ1",
                 "B -> b | AB",
                 "C -> c | AC",
-                "Z1 -> B | BZ1" };
+                "Z1 -> B | BZ1"};
 
 
         Grammar expectedGrammar = new Grammar(variables, terminals, initialSymbol, rules);
@@ -181,7 +181,7 @@ public class GrammarTest {
                 "A -> cB | a | cBZ1 | aZ1",
                 "B -> b | AB",
                 "C -> c | AC",
-                "Z1 -> B | CB | BZ1 | CBZ1" };
+                "Z1 -> B | CB | BZ1 | CBZ1"};
 
 
         Grammar expectedGrammar = new Grammar(variables, terminals, initialSymbol, rules);
@@ -205,15 +205,15 @@ public class GrammarTest {
                         academicSupportLR);
 
         List<Set<Rule>> deleteRulesStage1 = new ArrayList<>();
-        deleteRulesStage1.add(new HashSet<>(Arrays.asList(new Rule[]{new Rule("A","CB")})));
-        deleteRulesStage1.add(new HashSet<>(Arrays.asList(new Rule[]{new Rule("A","AB"),
-            new Rule("A","ACB")})));
+        deleteRulesStage1.add(new HashSet<>(Arrays.asList(new Rule[]{new Rule("A", "CB")})));
+        deleteRulesStage1.add(new HashSet<>(Arrays.asList(new Rule[]{new Rule("A", "AB"),
+                new Rule("A", "ACB")})));
         List<Set<Rule>> newRulesStage1 = new ArrayList<>();
-        newRulesStage1.add(new HashSet<>(Arrays.asList(new Rule[]{new Rule("A","ACB"),
-            new Rule("A","cB")})));
-        newRulesStage1.add(new HashSet<>(Arrays.asList(new Rule[]{new Rule("A","cBZ1"),
-                new Rule("A","aZ1"), new Rule("Z1","B"), new Rule("Z1","CB"),
-                new Rule("Z1","BZ1"), new Rule("Z1","CBZ1")})));
+        newRulesStage1.add(new HashSet<>(Arrays.asList(new Rule[]{new Rule("A", "ACB"),
+                new Rule("A", "cB")})));
+        newRulesStage1.add(new HashSet<>(Arrays.asList(new Rule[]{new Rule("A", "cBZ1"),
+                new Rule("A", "aZ1"), new Rule("Z1", "B"), new Rule("Z1", "CB"),
+                new Rule("Z1", "BZ1"), new Rule("Z1", "CBZ1")})));
         List<Boolean> isImediateLeftRecursive = new ArrayList<>();
         isImediateLeftRecursive.add(false);
         isImediateLeftRecursive.add(true);
@@ -263,7 +263,7 @@ public class GrammarTest {
                 "C -> c | cBC | aC | cBZ1C | aZ1C",
                 "Z1 -> b | cBB | aB | cBZ1B | aZ1B | cB | cBCB | aCB | cBZ1CB | aZ1CB | " +
                         "bZ1 | cBBZ1 | aBZ1 | cBZ1BZ1 | aZ1BZ1 | cBZ1 | cBCBZ1 | aCBZ1 | " +
-                        "cBZ1CBZ1 | aZ1CBZ1" };
+                        "cBZ1CBZ1 | aZ1CBZ1"};
 
         Grammar expectedGrammar = new Grammar(variables, terminals, initialSymbol, rules);
 
@@ -283,28 +283,28 @@ public class GrammarTest {
         grammar.FNG(grammar, new AcademicSupport(), academicSupportFNG);
 
         List<Set<Rule>> deleteRulesStage2 = new ArrayList<>();
-        deleteRulesStage2.add(new HashSet<>(Arrays.asList(new Rule[]{new Rule("C","AC")})));
-        deleteRulesStage2.add(new HashSet<>(Arrays.asList(new Rule[]{new Rule("B","AB")})));
-        deleteRulesStage2.add(new HashSet<>(Arrays.asList(new Rule[]{new Rule("S","AB")})));
+        deleteRulesStage2.add(new HashSet<>(Arrays.asList(new Rule[]{new Rule("C", "AC")})));
+        deleteRulesStage2.add(new HashSet<>(Arrays.asList(new Rule[]{new Rule("B", "AB")})));
+        deleteRulesStage2.add(new HashSet<>(Arrays.asList(new Rule[]{new Rule("S", "AB")})));
         List<Set<Rule>> newRulesStage2 = new ArrayList<>();
-        newRulesStage2.add(new HashSet<>(Arrays.asList(new Rule[]{new Rule("C","cBC"),
-                new Rule("C","aC"), new Rule("C","cBZ1C"), new Rule("C","aZ1C")})));
-        newRulesStage2.add(new HashSet<>(Arrays.asList(new Rule[]{new Rule("B","cBB"),
-                new Rule("B","aB"), new Rule("B","cBZ1B"), new Rule("B","aZ1B")})));
-        newRulesStage2.add(new HashSet<>(Arrays.asList(new Rule[]{new Rule("S","cBB"),
-                new Rule("S","aB"), new Rule("S","cBZ1B"), new Rule("S","aZ1B")})));
+        newRulesStage2.add(new HashSet<>(Arrays.asList(new Rule[]{new Rule("C", "cBC"),
+                new Rule("C", "aC"), new Rule("C", "cBZ1C"), new Rule("C", "aZ1C")})));
+        newRulesStage2.add(new HashSet<>(Arrays.asList(new Rule[]{new Rule("B", "cBB"),
+                new Rule("B", "aB"), new Rule("B", "cBZ1B"), new Rule("B", "aZ1B")})));
+        newRulesStage2.add(new HashSet<>(Arrays.asList(new Rule[]{new Rule("S", "cBB"),
+                new Rule("S", "aB"), new Rule("S", "cBZ1B"), new Rule("S", "aZ1B")})));
         List<Set<Rule>> deleteRulesStage3 = new ArrayList<>();
-        deleteRulesStage3.add(new HashSet<>(Arrays.asList(new Rule[]{new Rule("Z1","B"),
-                new Rule("Z1","CB"), new Rule("Z1","BZ1"), new Rule("Z1","CBZ1")})));
+        deleteRulesStage3.add(new HashSet<>(Arrays.asList(new Rule[]{new Rule("Z1", "B"),
+                new Rule("Z1", "CB"), new Rule("Z1", "BZ1"), new Rule("Z1", "CBZ1")})));
         List<Set<Rule>> newRulesStage3 = new ArrayList<>();
-        newRulesStage3.add(new HashSet<>(Arrays.asList(new Rule[]{new Rule("Z1","cBB"),
-                new Rule("Z1","aB"), new Rule("Z1","cBZ1B"), new Rule("Z1","aZ1B"),
-                new Rule("Z1","b"), new Rule("Z1","cB"), new Rule("Z1","cBCB"),
-                new Rule("Z1","aCB"), new Rule("Z1","cBZ1CB"), new Rule("Z1","aZ1CB"),
-                new Rule("Z1","cBBZ1"), new Rule("Z1","aBZ1"), new Rule("Z1","cBZ1BZ1"),
-                new Rule("Z1","aZ1BZ1"), new Rule("Z1","bZ1"), new Rule("Z1","cBZ1"),
-                new Rule("Z1","cBCBZ1"), new Rule("Z1","aCBZ1"), new Rule("Z1","cBZ1CBZ1"),
-                new Rule("Z1","aZ1CBZ1")})));
+        newRulesStage3.add(new HashSet<>(Arrays.asList(new Rule[]{new Rule("Z1", "cBB"),
+                new Rule("Z1", "aB"), new Rule("Z1", "cBZ1B"), new Rule("Z1", "aZ1B"),
+                new Rule("Z1", "b"), new Rule("Z1", "cB"), new Rule("Z1", "cBCB"),
+                new Rule("Z1", "aCB"), new Rule("Z1", "cBZ1CB"), new Rule("Z1", "aZ1CB"),
+                new Rule("Z1", "cBBZ1"), new Rule("Z1", "aBZ1"), new Rule("Z1", "cBZ1BZ1"),
+                new Rule("Z1", "aZ1BZ1"), new Rule("Z1", "bZ1"), new Rule("Z1", "cBZ1"),
+                new Rule("Z1", "cBCBZ1"), new Rule("Z1", "aCBZ1"), new Rule("Z1", "cBZ1CBZ1"),
+                new Rule("Z1", "aZ1CBZ1")})));
 
         assertEquals(deleteRulesStage2, academicSupportFNG.getDeleteRulesStage2());
         assertEquals(deleteRulesStage3, academicSupportFNG.getDeleteRulesStage3());

@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.ufla.lfapp.R;
 import com.ufla.lfapp.activities.menu.MenuActivity;
@@ -70,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                switch (which){
+                switch (which) {
                     case DialogInterface.BUTTON_POSITIVE:
                         dialog.cancel();
                         finish();
@@ -95,28 +96,30 @@ public class MainActivity extends AppCompatActivity {
         int selection = inputGrammar.getSelectionStart();
         inputGrammar.setText(inputGrammar.getText()
                 .insert(selection, " λ"));
-        inputGrammar.setSelection(selection+2);
+        inputGrammar.setSelection(selection + 2);
     }
 
     public void insertArrow(View view) {
         int selection = inputGrammar.getSelectionStart();
         inputGrammar.setText(inputGrammar.getText()
                 .insert(selection, " -> "));
-        inputGrammar.setSelection(selection+4);
+        inputGrammar.setSelection(selection + 4);
     }
 
     public void insertPipe(View view) {
         int selection = inputGrammar.getSelectionStart();
         inputGrammar.setText(inputGrammar.getText()
                 .insert(selection, " | "));
-        inputGrammar.setSelection(selection+3);
+        inputGrammar.setSelection(selection + 3);
     }
 
     public void confirmGrammar(View view) {
         String txtGrammar = inputGrammar.getText().toString();
         String word = inputWord.getText().toString();
+        Toast.makeText(this, "oi", Toast.LENGTH_LONG);
         if (!txtGrammar.isEmpty()) {
             StringBuilder reason = new StringBuilder();
+            Toast.makeText(this, txtGrammar, Toast.LENGTH_LONG);
             if (GrammarParser.verifyInputGrammar(txtGrammar) &&
                     GrammarParser.inputValidate(txtGrammar, reason)) {
                 new DbAcess(this).putGrammar(txtGrammar);
@@ -128,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtras(params);
                 startActivity(intent);
             } else {
-                if(reason.length() == 0) {
+                if (reason.length() == 0) {
                     reason.append("Gramática inválida.");
                 }
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
