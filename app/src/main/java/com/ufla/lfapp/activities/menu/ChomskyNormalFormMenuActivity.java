@@ -21,68 +21,32 @@ public class ChomskyNormalFormMenuActivity extends HeaderGrammarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_chomsky_normal_form_menu);
-        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_menu_chomsky_normal_form);
+        super.onCreate(savedInstanceState);setOnClickListenersButtons();
     }
 
-    public void startRRecursionInTheInitialSymbolActivity(View view) {
-        Bundle params = new Bundle();
-        params.putString("grammar", grammar);
-        params.putString("word", word);
-        params.putInt("algorithm", Algorithm.CHOMSKY_NORMAL_FORM.getValue());
-        Intent intent = new Intent(this, RemoveInitialSymbolRecursiveActivity.class);
-        intent.putExtras(params);
-        startActivity(intent);
+    private void setOnClickListenersButtons() {
+        setOnClickListenerGeneric(R.id.removeRecursiveInitialSymbol,
+                RemoveInitialSymbolRecursiveActivity.class);
+        setOnClickListenerGeneric(R.id.removeEmptyProduction, EmptyProductionActivity.class);
+        setOnClickListenerGeneric(R.id.removeChainRule, ChainRulesActivity.class);
+        setOnClickListenerGeneric(R.id.term, NoTermSymbolsActivity.class);
+        setOnClickListenerGeneric(R.id.reach, NoReachSymbolsActivity.class);
+        setOnClickListenerGeneric(R.id.chomskyNormalForm, ChomskyNormalFormActivity.class);
     }
 
-    public void startREmptyProductionsActivity(View view) {
-        Bundle params = new Bundle();
-        params.putString("grammar", grammar);
-        params.putString("word", word);
-        params.putInt("algorithm", Algorithm.CHOMSKY_NORMAL_FORM.getValue());
-        Intent intent = new Intent(this, EmptyProductionActivity.class);
-        intent.putExtras(params);
-        startActivity(intent);
-    }
-
-    public void startRChainRulesActivity(View view) {
-        Bundle params = new Bundle();
-        params.putString("grammar", grammar);
-        params.putString("word", word);
-        params.putInt("algorithm", Algorithm.CHOMSKY_NORMAL_FORM.getValue());
-        Intent intent = new Intent(this, ChainRulesActivity.class);
-        intent.putExtras(params);
-        startActivity(intent);
-    }
-
-    public void startRNTermActivity(View view) {
-        Bundle params = new Bundle();
-        params.putString("grammar", grammar);
-        params.putString("word", word);
-        params.putInt("algorithm", Algorithm.CHOMSKY_NORMAL_FORM.getValue());
-        Intent intent = new Intent(this, NoTermSymbolsActivity.class);
-        intent.putExtras(params);
-        startActivity(intent);
-    }
-
-    public void startRNReachActivity(View view) {
-        Bundle params = new Bundle();
-        params.putString("grammar", grammar);
-        params.putString("word", word);
-        params.putInt("algorithm", Algorithm.CHOMSKY_NORMAL_FORM.getValue());
-        Intent intent = new Intent(this, NoReachSymbolsActivity.class);
-        intent.putExtras(params);
-        startActivity(intent);
-    }
-
-    public void startChomskyNormalFormActivity(View view) {
-        Bundle params = new Bundle();
-        params.putString("grammar", grammar);
-        params.putString("word", word);
-        params.putInt("algorithm", Algorithm.CHOMSKY_NORMAL_FORM.getValue());
-        Intent intent = new Intent(this, ChomskyNormalFormActivity.class);
-        intent.putExtras(params);
-        startActivity(intent);
+    private void setOnClickListenerGeneric(int idView, final Class clazz) {
+        findViewById(idView).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Bundle params = new Bundle();
+                params.putString("grammar", grammar);
+                params.putString("word", word);
+                params.putInt("algorithm", Algorithm.CHOMSKY_NORMAL_FORM.getValue());
+                Intent intent = new Intent(ChomskyNormalFormMenuActivity.this, clazz);
+                intent.putExtras(params);
+                startActivity(intent);
+            }
+        });
     }
 
 }

@@ -22,13 +22,9 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/Gainsboro"
-                android:text="@string/aplicar_propriedades_da_forma_normal_de_greibach"
-                android:textSize="20sp"
-                android:textColor="@color/Black"/>
+            <com.ufla.lfapp.activities.utils.AutoResizeTextView
+                android:text="@string/propertiesGreibachNormalForm"
+                style="@style/TitleSingleLine" />
 
             <LinearLayout
                 android:layout_width="fill_parent"

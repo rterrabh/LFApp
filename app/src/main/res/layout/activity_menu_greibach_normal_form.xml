@@ -3,11 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#FFFFFF"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
+    android:background="#FFFFFF"
     android:orientation="vertical">
 
     <include layout="@layout/header_grammar"/>
@@ -23,63 +23,43 @@
             android:orientation="vertical">
 
             <com.ufla.lfapp.activities.utils.AutoResizeTextView
-                android:id="@+id/idGrammarButton"
-                android:text="@string/idGrammar"
-                style="@style/ButtonSingleLine" />
-
-            <com.ufla.lfapp.activities.utils.AutoResizeTextView
-                android:id="@+id/derivationMostLeftButton"
-                android:text="@string/derivationMostLeft"
-                style="@style/ButtonSingleLine" />
-
-            <com.ufla.lfapp.activities.utils.AutoResizeTextView
-                android:id="@+id/RemoveRecursiveInitialSymbolButton"
+                android:id="@+id/removeRecursiveInitialSymbol"
                 android:text="@string/removeRecursiveInitialSymbol"
                 style="@style/ButtonSingleLine" />
 
             <com.ufla.lfapp.activities.utils.AutoResizeTextView
-                android:id="@+id/RemoveEmptyProductionsButton"
+                android:id="@+id/removeEmptyProduction"
                 android:text="@string/removeEmptyProduction"
                 style="@style/ButtonSingleLine" />
 
             <com.ufla.lfapp.activities.utils.AutoResizeTextView
-                android:id="@+id/RemoveChainRulesButton"
+                android:id="@+id/removeChainRule"
                 android:text="@string/removeChainRule"
                 style="@style/ButtonSingleLine" />
 
             <com.ufla.lfapp.activities.utils.AutoResizeTextView
-                android:id="@+id/TermButton"
+                android:id="@+id/term"
                 android:text="@string/term"
                 style="@style/ButtonSingleLine" />
 
             <com.ufla.lfapp.activities.utils.AutoResizeTextView
-                android:id="@+id/ReachButton"
+                android:id="@+id/reach"
                 android:text="@string/reach"
                 style="@style/ButtonSingleLine" />
 
             <com.ufla.lfapp.activities.utils.AutoResizeTextView
-                android:id="@+id/FNCButton"
-                android:text="@string/chomskyNormalForm"
+                android:id="@+id/chomskyNormalForm"
+                android:text="@string/properties_chomsky_normal_form"
                 style="@style/ButtonSingleLine" />
 
             <com.ufla.lfapp.activities.utils.AutoResizeTextView
-                android:id="@+id/RemoveRecursionDirectLeftButton"
-                android:text="@string/removeRecursionDirectleft"
-                style="@style/ButtonSingleLine" />
-
-            <com.ufla.lfapp.activities.utils.AutoResizeTextView
-                android:id="@+id/RemoveRecursionLeftButton"
+                android:id="@+id/removeRecursionLeft"
                 android:text="@string/removeRecursionLeft"
                 style="@style/ButtonSingleLine" />
 
             <com.ufla.lfapp.activities.utils.AutoResizeTextView
-                android:id="@+id/FNGButton"
-                android:text="@string/greibachNormalForm"
-                style="@style/ButtonSingleLine" />
-
-            <com.ufla.lfapp.activities.utils.AutoResizeTextView
-                android:id="@+id/CykButton"
-                android:text="@string/cyk"
+                android:id="@+id/greibachNormalForm"
+                android:text="@string/propertiesGreibachNormalForm"
                 style="@style/ButtonSingleLine" />
 
         </LinearLayout>

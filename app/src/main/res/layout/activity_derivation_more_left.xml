@@ -22,13 +22,9 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/Gainsboro"
-                android:text="@string/derivaca_mais_esqerda"
-                android:textColor="@color/Black"
-                android:textSize="20sp"/>
+            <com.ufla.lfapp.activities.utils.AutoResizeTextView
+                android:text="@string/derivationMostLeft"
+                style="@style/TitleSingleLine" />
 
             <TextView
                 android:layout_width="fill_parent"

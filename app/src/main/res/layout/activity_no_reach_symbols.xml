@@ -22,13 +22,9 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/Gainsboro"
-                android:text="@string/remo_o_de_s_mbolos_n_o_alcan_veis"
-                android:textSize="20sp"
-                android:textColor="@color/Black"/>
+            <com.ufla.lfapp.activities.utils.AutoResizeTextView
+                android:text="@string/reach"
+                style="@style/TitleSingleLine" />
 
             <LinearLayout
                 android:layout_width="fill_parent"

@@ -22,13 +22,9 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/Gainsboro"
-                android:text="@string/identifica_o_da_gram_tica"
-                android:textColor="@color/Black"
-                android:textSize="20sp"/>
+            <com.ufla.lfapp.activities.utils.AutoResizeTextView
+                android:text="@string/idGrammar"
+                style="@style/TitleSingleLine" />
 
             <LinearLayout
                 android:layout_width="fill_parent"

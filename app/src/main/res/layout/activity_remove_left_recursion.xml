@@ -22,13 +22,9 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/Gainsboro"
-                android:text="@string/remo_o_de_recurs_o_direta_e_indireta_esquerda"
-                android:textSize="20sp"
-                android:textColor="@color/Black"/>
+            <com.ufla.lfapp.activities.utils.AutoResizeTextView
+                android:text="@string/removeRecursionLeft"
+                style="@style/TitleSingleLine" />
 
             <LinearLayout
                 android:layout_width="fill_parent"

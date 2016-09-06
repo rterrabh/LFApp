@@ -261,19 +261,9 @@ public class GrammarParserTest {
 
     @Test
     public void testPatternGrammar01() {
-<<<<<<< HEAD
         assertTrue(pGrammarRegex.matcher(
                 "S -> AB | BC | BV\n" +
                         "A -> BA | a \n" +
-=======
-        String N = ((Character)((char) 10)).toString();
-        char a = '|';
-        int b = a;
-        System.out.println(b);
-        assertTrue(pGrammarRegex.matcher(
-                "S -> AB | BC | BV\n" +
-                        "A -> BA | a " + N +
->>>>>>> c4c20405093392ad913db2b633c8f988640d5918
                         "B -> aa | VC | CV | CC | b\n" +
                         "C -> AB\n" +
                         "V -> a").
@@ -499,16 +489,6 @@ public class GrammarParserTest {
                         "D -> ab | aa | ab\n" +
                         "E -> a")
                 .matches());
-<<<<<<< HEAD
-=======
-        assertTrue(Pattern.matches(GrammarParser.GRAMMAR_REGEX,
-                "S -> aABC | a | S\n" +
-                "A -> aA | λ\n" +
-                "B -> bcB | bc\n" +
-                "C -> abc\n" +
-                "D -> ab | aa | ab\n" +
-                "E -> a"));
->>>>>>> c4c20405093392ad913db2b633c8f988640d5918
     }
 
     @Test
