@@ -20,7 +20,7 @@ public enum Algorithm {
     }
 
     public static Algorithm getAlgorithm(int value) {
-        switch(value) {
+        switch (value) {
             case 0: return NONE;
             case 1: return CHOMSKY_NORMAL_FORM;
             case 2: return GREIBACH_NORMAL_FORM;

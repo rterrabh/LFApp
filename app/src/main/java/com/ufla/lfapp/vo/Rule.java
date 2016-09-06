@@ -88,10 +88,10 @@ public class Rule implements Cloneable, Comparable<Rule> {
 	@Override
 	protected Object clone() {
 		Rule rc = new Rule();
-		
+
 		rc.setLeftSide(this.leftSide);
 		rc.setRightSide(this.rightSide);
-		
+
 		return rc;
 	}
 	
@@ -110,7 +110,7 @@ public class Rule implements Cloneable, Comparable<Rule> {
 	 */
 	@Override
 	public int compareTo(@NonNull Rule another) {
-		if(!leftSide.equals(another.leftSide)) {
+		if (!leftSide.equals(another.leftSide)) {
 			return leftSide.compareTo(another.leftSide);
 		}
 		return rightSide.compareTo(another.rightSide);
@@ -124,13 +124,13 @@ public class Rule implements Cloneable, Comparable<Rule> {
 	 * contrário false.
 	 */
 	public boolean rightSideContainsSymbol(String symbol) {
-		if(rightSide.contains(symbol)) {
+		if (rightSide.contains(symbol)) {
 			int index = rightSide.indexOf(symbol);
-			while(index != -1) {
-				if(rightSide.length() == index+symbol.length()) {
+			while (index != -1) {
+				if (rightSide.length() == index+symbol.length()) {
 					return true;
 				}
-				if(rightSide.length() > index+symbol.length() &&
+				if (rightSide.length() > index+symbol.length() &&
 						!Character.isDigit(rightSide.charAt(index+symbol
 								.length()))) {
 					return true;
@@ -150,33 +150,33 @@ public class Rule implements Cloneable, Comparable<Rule> {
 	 * contrário false.
 	 */
 	public boolean isFnc(String initialSymbol) {
-		if(rightSide.equals(Grammar.LAMBDA)) {
+		if (rightSide.equals(Grammar.LAMBDA)) {
 			return leftSide.equals(initialSymbol);
 		}
-		if(rightSideContainsSymbol(initialSymbol)) {
+		if (rightSideContainsSymbol(initialSymbol)) {
 			return false;
 		}
-		if(rightSide.length() == 1) {
+		if (rightSide.length() == 1) {
 			return Character.isLowerCase(rightSide.charAt(0));
 		}
 
 		int index = 0;
-		if(!Character.isUpperCase(rightSide.charAt(index++))) {
+		if (!Character.isUpperCase(rightSide.charAt(index++))) {
 				return false;
 		}
-		while(Character.isDigit(rightSide.charAt(index))) {
+		while (Character.isDigit(rightSide.charAt(index))) {
 			index++;
 			if(index == rightSide.length()) {
 				return false;
 			}
 		}
-		if(!Character.isUpperCase(rightSide.charAt(index++))) {
+		if (!Character.isUpperCase(rightSide.charAt(index++))) {
 			return false;
 		}
-		if(index == rightSide.length()) {
+		if (index == rightSide.length()) {
 			return true;
 		}
-		while(index != rightSide.length() &&
+		while (index != rightSide.length() &&
 				Character.isDigit(rightSide.charAt(index))) {
 			index++;
 		}
@@ -191,18 +191,18 @@ public class Rule implements Cloneable, Comparable<Rule> {
 	 * contrário false.
 	 */
 	public boolean isFng(String initialSymbol) {
-		if(rightSide.equals(Grammar.LAMBDA)) {
+		if (rightSide.equals(Grammar.LAMBDA)) {
 			return leftSide.equals(initialSymbol);
 		}
-		if(rightSideContainsSymbol(initialSymbol)) {
+		if (rightSideContainsSymbol(initialSymbol)) {
 			return false;
 		}
-		if(rightSide.length() == 1) {
+		if (rightSide.length() == 1) {
 			return Character.isLowerCase(rightSide.charAt(0));
 		}
-		if(Character.isLowerCase(rightSide.charAt(0))) {
-			for(int i = 1; i < rightSide.length(); i++) {
-				if( ! (Character.isDigit(rightSide.charAt(i)) ||
+		if (Character.isLowerCase(rightSide.charAt(0))) {
+			for (int i = 1; i < rightSide.length(); i++) {
+				if ( ! (Character.isDigit(rightSide.charAt(i)) ||
 						Character.isUpperCase(rightSide.charAt(i))) ) {
 					return false;
 				}
@@ -232,11 +232,11 @@ public class Rule implements Cloneable, Comparable<Rule> {
 	 * regra começa com um terminal retorna null.
 	 */
 	public String getFirstVariableOfRightSide() {
-		if(!Character.isUpperCase(rightSide.charAt(0))) {
+		if (!Character.isUpperCase(rightSide.charAt(0))) {
 			return null;
 		}
 		int index = 0;
-		while(index+1 != rightSide.length() &&
+		while (index+1 != rightSide.length() &&
 				Character.isDigit(rightSide.charAt(index+1))) {
 			index++;
 		}
@@ -253,16 +253,16 @@ public class Rule implements Cloneable, Comparable<Rule> {
 	 */
 	public Set<String> getSymbolsOfRightSide() {
 		Set<String> symbolsOfRightSide = new HashSet<>();
-		if(rightSide.equals(Grammar.LAMBDA)) {
+		if (rightSide.equals(Grammar.LAMBDA)) {
 			symbolsOfRightSide.add(rightSide);
 			return  symbolsOfRightSide;
 		}
-		for(int i = 0; i < rightSide.length(); i++) {
+		for (int i = 0; i < rightSide.length(); i++) {
 			if(Character.isLowerCase(rightSide.charAt(i))) {
 				symbolsOfRightSide.add(Character.toString(rightSide.charAt(i)));
-			} else if(Character.isUpperCase(rightSide.charAt(i))) {
+			} else if (Character.isUpperCase(rightSide.charAt(i))) {
 				int sizeOfSymbol = 1;
-				while(i+sizeOfSymbol < rightSide.length() &&
+				while (i+sizeOfSymbol < rightSide.length() &&
 						Character.isDigit(rightSide.charAt(i+sizeOfSymbol))) {
 					sizeOfSymbol++;
 				}
@@ -297,11 +297,11 @@ public class Rule implements Cloneable, Comparable<Rule> {
 	 * contrário false.
 	 */
 	public boolean producesTerminalDirectly() {
-		if(rightSide.equals(Grammar.LAMBDA)) {
+		if (rightSide.equals(Grammar.LAMBDA)) {
 			return false;
 		}
-		for(int i = 0; i < rightSide.length(); i++) {
-			if(!Character.isLowerCase(rightSide.charAt(i))) {
+		for (int i = 0; i < rightSide.length(); i++) {
+			if (!Character.isLowerCase(rightSide.charAt(i))) {
 				return false;
 			}
 		}
@@ -314,15 +314,32 @@ public class Rule implements Cloneable, Comparable<Rule> {
 	 * contrário false.
 	 */
 	public boolean isChainRule() {
-		if(!Character.isUpperCase(rightSide.charAt(0))) {
+		if (!Character.isUpperCase(rightSide.charAt(0))) {
 			return false;
 		}
 		int index = 1;
-		while(index != rightSide.length() &&
+		while (index != rightSide.length() &&
 				Character.isDigit(rightSide.charAt(index))) {
 			index++;
 		}
 		return index == rightSide.length();
+	}
+
+	public boolean producesOnlyOneTerminal() {
+		return rightSide.length() == 1 && Character.isLowerCase(rightSide.charAt(0));
+	}
+
+	public boolean containsTerminalOnRightSide() {
+		for (int i = 0; i < rightSide.length(); i++) {
+			if (Character.isLowerCase(rightSide.charAt(i))) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public int getLenghtOfRightSide() {
+		return rightSide.length();
 	}
 
 

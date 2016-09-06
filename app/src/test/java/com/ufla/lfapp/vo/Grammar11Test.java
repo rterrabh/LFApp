@@ -24,14 +24,14 @@ public class Grammar11Test {
 
     @Before
     public void setUp() {
-        String[] variables = new String[]{"S", "A", "B", "C", "D", "U", "V", "X"};
+        String[] variables = new String[]{"S", "A", "B", "C", "D", "U", "V", "T"};
         String[] terminals = new String[]{"a", "b"};
         String initialSymbol = "S";
         String[] rules = new String[]{
                 "S -> U | V | S",
-                "U -> XaU | XaX | UaX",
-                "V -> XbV | XbX | VbX",
-                "X -> aXbX | bXaX | λ | A",
+                "U -> TaU | TaT | UaT",
+                "V -> TbV | TbT | VbT",
+                "T -> aTbT | bTaT | λ | A",
                 "A -> aA | B",
                 "B -> bB | A",
                 "C -> CD | a",
@@ -45,15 +45,15 @@ public class Grammar11Test {
 
         Grammar newG = g.getGrammarWithInitialSymbolNotRecursive(this.g, new AcademicSupport());
 
-        String[] expectedVariables = new String[]{"S'", "S", "A", "B", "C", "D", "U", "V", "X"};
+        String[] expectedVariables = new String[]{"S'", "S", "A", "B", "C", "D", "U", "V", "T"};
         String[] expectedTerminals = new String[]{"a", "b"};
         String expectedInitialSymbol = "S'";
         String[] expectedRules = new String[]{
                 "S' -> S",
                 "S -> U | V | S",
-                "U -> XaU | XaX | UaX",
-                "V -> XbV | XbX | VbX",
-                "X -> aXbX | bXaX | λ | A",
+                "U -> TaU | TaT | UaT",
+                "V -> TbV | TbT | VbT",
+                "T -> aTbT | bTaT | λ | A",
                 "A -> aA | B",
                 "B -> bB | A",
                 "C -> CD | a",
@@ -75,14 +75,14 @@ public class Grammar11Test {
 
         Grammar newG = g.getGrammarEssentiallyNoncontracting(this.g, new AcademicSupport());
 
-        String[] expectedVariables = new String[] {"S", "A", "B", "C", "D", "U", "V", "X"};
+        String[] expectedVariables = new String[] {"S", "A", "B", "C", "D", "U", "V", "T"};
         String[] expectedTerminals = new String[] {"a", "b"};
         String expectedInitialSymbol = "S";
         String[] expectedRules = new String[] {
                 "S -> U | V | S",
-                "U -> XaU | XaX | UaX | aU | aX | Xa | a | Ua",
-                "V -> XbV | XbX | VbX | bV | bX | Xb | b | Vb",
-                "X -> aXbX | bXaX | A | abX | aXb | ab | baX | bXa | ba",
+                "U -> TaU | TaT | UaT | aU | aT | Ta | a | Ua",
+                "V -> TbV | TbT | VbT | bV | bT | Tb | b | Vb",
+                "T -> aTbT | bTaT | A | abT | aTb | ab | baT | bTa | ba",
                 "A -> aA | B",
                 "B -> bB | A",
                 "C -> CD | a",
@@ -103,14 +103,14 @@ public class Grammar11Test {
     public void testChainRules() {
         Grammar newG = g.getGrammarWithoutChainRules(this.g, new AcademicSupport());
 
-        String[] expectedVariables = new String[] {"S", "A", "B", "C", "D", "U", "V", "X"};
+        String[] expectedVariables = new String[] {"S", "A", "B", "C", "D", "U", "V", "T"};
         String[] expectedTerminals = new String[] {"a", "b"};
         String expectedInitialSymbol = "S";
         String[] expectedRules = new String[] {
-                "S -> XaU | XaX | UaX | XbV | XbX | VbX",
-                "U -> XaU | XaX | UaX",
-                "V -> XbV | XbX | VbX",
-                "X -> aXbX | bXaX | λ | aA | bB",
+                "S -> TaU | TaT | UaT | TbV | TbT | VbT",
+                "U -> TaU | TaT | UaT",
+                "V -> TbV | TbT | VbT",
+                "T -> aTbT | bTaT | λ | aA | bB",
                 "A -> aA | bB",
                 "B -> bB | aA",
                 "C -> CD | a",
@@ -131,14 +131,14 @@ public class Grammar11Test {
     public void  testNoTerminals() {
         Grammar newG = g.getGrammarWithoutNoTerm(this.g, new AcademicSupport());
 
-        String[] expectedVariables = new String[] {"S", "C", "D", "U", "V", "X"};
+        String[] expectedVariables = new String[] {"S", "C", "D", "U", "V", "T"};
         String[] expectedTerminals = new String[] {"a", "b"};
         String expectedInitialSymbol = "S";
         String[] expectedRules = new String[] {
                 "S -> U | V | S",
-                "U -> XaU | XaX | UaX",
-                "V -> XbV | XbX | VbX",
-                "X -> aXbX | bXaX | λ ",
+                "U -> TaU | TaT | UaT",
+                "V -> TbV | TbT | VbT",
+                "T -> aTbT | bTaT | λ ",
                 "C -> CD | a",
                 "D -> DC | b" };
 
@@ -157,14 +157,14 @@ public class Grammar11Test {
     public void testNoReach() {
         Grammar newG = g.getGrammarWithoutNoReach(this.g, new AcademicSupport());
 
-        String[] expectedVariables = new String[] {"S", "A", "B", "U", "V", "X"};
+        String[] expectedVariables = new String[] {"S", "A", "B", "U", "V", "T"};
         String[] expectedTerminals = new String[] {"a", "b"};
         String expectedInitialSymbol = "S";
         String[] expectedRules = new String[] {
                 "S -> U | V | S",
-                "U -> XaU | XaX | UaX",
-                "V -> XbV | XbX | VbX",
-                "X -> aXbX | bXaX | λ | A",
+                "U -> TaU | TaT | UaT",
+                "V -> TbV | TbT | VbT",
+                "T -> aTbT | bTaT | λ | A",
                 "A -> aA | B",
                 "B -> bB | A",};
 
@@ -183,27 +183,28 @@ public class Grammar11Test {
     public void testFNC() {
         Grammar newG = g.FNC(this.g, new AcademicSupport());
 
-        String[] expectedVariables = new String[] {"S'", "U", "V", "X", "T1", "T2", "T3", "T4",
+        String[] expectedVariables = new String[] {"S'", "U", "V", "T", "T1", "T2", "T3", "T4",
                 "T5", "T7", "T9", "T10", "T11", "T18"};
         String[] expectedTerminals = new String[] {"a", "b"};
         String expectedInitialSymbol = "S'";
         String[] expectedRules = new String[] {
-                "S' -> XT18 | XT10 | UT10 | T2U | T2X | XT2 | a | UT2 | XT7 | XT3 | VT3 | T1V | T1X | XT1 | b | VT1",
-                "U -> XT18 | XT10 | UT10 | T2U | T2X | XT2 | a | UT2",
-                "V -> XT7 | XT3 | VT3 | T1V | T1X | XT1 | b | VT1",
-                "X -> T2T11 | T1T9 | T2T3 | T2T4 | T2T1 | T1T10 | T1T5 | T1T2",
+                "S' -> TT18 | TT10 | UT10 | T2U | T2T | TT2 | a | UT2 | TT7 | TT3 | VT3 | T1V | T1T | TT1 | b | VT1",
+                "U -> TT18 | TT10 | UT10 | T2U | T2T | TT2 | a | UT2",
+                "V -> TT7 | TT3 | VT3 | T1V | T1T | TT1 | b | VT1",
+                "T -> T2T11 | T1T9 | T2T3 | T2T4 | T2T1 | T1T10 | T1T5 | T1T2",
                 "T1 -> b",
                 "T2 -> a",
-                "T3 -> T1X",
-                "T4 -> XT1",
-                "T5 -> XT2",
+                "T3 -> T1T",
+                "T4 -> TT1",
+                "T5 -> TT2",
                 "T7 -> T1V",
-                "T9 -> XT10",
-                "T10 -> T2X",
-                "T11 -> XT3",
+                "T9 -> TT10",
+                "T10 -> T2T",
+                "T11 -> TT3",
                 "T18 -> T2U" };
         Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);
-
+        System.out.println(newG.toStringRulesMapVToU());
+        System.out.println(expectedGrammar.toStringRulesMapVToU());
         assertEquals(expectedGrammar.getRules(), newG.getRules());
 
         assertEquals(expectedGrammar.getRules(), newG.getRules());

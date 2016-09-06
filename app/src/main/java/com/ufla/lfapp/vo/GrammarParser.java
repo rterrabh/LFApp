@@ -1,8 +1,5 @@
 package com.ufla.lfapp.vo;
 
-import android.app.AlertDialog;
-import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -11,7 +8,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
-import java.util.regex.Pattern;
 
 
 public class GrammarParser {
@@ -20,7 +16,8 @@ public class GrammarParser {
     public static final String LAMBDA = "λ";
     public static final String VARIABLE_REGEX = "([A-Z](([0-9]*)|('?)))";
     public static final String TERMINAL_REGEX = "[a-z]";
-    public static final String RULE_ELEMENT_LEFT_REGEX = "(" + TERMINAL_REGEX + "|" +VARIABLE_REGEX + ")+";
+    public static final String RULE_ELEMENT_LEFT_REGEX = "(" + TERMINAL_REGEX + "|" +
+            VARIABLE_REGEX + ")+";
     public static final String RULE_ELEMENT_RIGHT_REGEX = "(" + RULE_ELEMENT_LEFT_REGEX + "|"
             + LAMBDA + ")";
     public static final String RULE_REGEX = "\\s*(" + RULE_ELEMENT_LEFT_REGEX + "\\p{Blank}*->" +
@@ -28,8 +25,6 @@ public class GrammarParser {
             RULE_ELEMENT_RIGHT_REGEX + ")*)\\s*";
     public static final String GRAMMAR_REGEX = "(" + RULE_REGEX + "" +
             "(\\p{Blank}*\\n\\p{Blank}*" + RULE_REGEX + ")*)";
-    private static final String RULE_SEPARATOR = "|";
-    private static final String RULE_PRODUCTION = "->";
 
     private GrammarParser() {
 
@@ -43,17 +38,17 @@ public class GrammarParser {
      */
     public static Set<String> extractVariablesFromFull(String txt) {
         Set<String> variables = new HashSet<>();
-        for (int i = 0; i < txt.length(); i++) {
+        for (int i = 0; i < txt.length(); ) {
             if (Character.isUpperCase(txt.charAt(i))) {
-                String variable = Character.toString(txt.charAt(i));
-                if (i + 1 < txt.length() && (!Character.isLetter(txt.charAt(i + 1)))) {
-                    for (int k = i + 1; (Character.isDigit(txt.charAt(k)) ||
-                            Character.toString(txt.charAt(k)).equals("'")); k++) {
-                        variable += Character.toString(txt.charAt(k));
-                    }
+                int k = i+1;
+                while (k != txt.length() && (Character.isDigit(txt.charAt(k)) ||
+                        txt.charAt(k) == '\'')) {
+                    k++;
                 }
-                variable = variable.trim();
-                variables.add(variable);
+                variables.add(txt.substring(i, k));
+                i = k;
+            } else {
+                i++;
             }
         }
         return variables;
@@ -67,7 +62,6 @@ public class GrammarParser {
      */
     public static Set<String> extractTerminalsFromFull(String txt) {
         Set<String> terminals = new HashSet<>();
-        // search for the terminals
         for (int i = 0; i < txt.length(); i++) {
             if (Character.isLowerCase(txt.charAt(i))) {
                 terminals.add(Character.toString(txt.charAt(i)));
@@ -85,12 +79,8 @@ public class GrammarParser {
     public static Set<Rule> extractRulesFromFull(String txt) {
         Set<Rule> rules = new HashSet<>();
         Rule rule = new Rule();
-
-        // get the rules
-        String[] rulesStr = txt.split("\n");
-
         String[] auxRule;
-        for (String x : rulesStr) {
+        for (String x : txt.split("\n")) {
             auxRule = x.split("->");
             rule.setLeftSide(auxRule[0].trim());
             //ArrayIndexOutOfBoundsException
@@ -113,95 +103,11 @@ public class GrammarParser {
      * @return : símbolo inicial extraído
      */
     public static String extractInitialSymbolFromFull(String txt) {
-        StringBuilder initialSymbol = new StringBuilder();
-        for (int i = 0; txt.charAt(i) != ' ' && txt.charAt(i) != '-'; i++) {
-            initialSymbol.append(txt.charAt(i));
-        }
-        return initialSymbol.toString();
-    }
-
-    /**
-     * Compara símbolo extraído com o símbolo informado
-     *
-     * @param initialSymbol : símbolo extraído da gramática
-     * @param rules         : regras extraídas da gramática
-     * @return
-     */
-    public static boolean compareInitialSymbolWithParameter(String initialSymbol, String rules) {
-        for (int i = 0; i < rules.length(); i++) {
-            if (initialSymbol.equals(Character.toString(rules.charAt(i)))) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Compara variáveis extraídas da gramática com variáveis informadas
-     *
-     * @param variables : variáveis extraídas da gramática
-     * @param rules     : regras extraídas da gramática
-     * @return
-     */
-    public static boolean compareSymbolWithParameter(String variables, String rules) {
         int i = 0;
-        boolean search = false;
-        while (i < variables.length()) {
-            for (int j = 0; j < rules.length() && !search; j++) {
-                if (variables.charAt(i) == rules.charAt(j)) {
-                    search = true;
-                }
-            }
-            if (!search) {
-                return false;
-            }
-            search = false;
+        while (txt.charAt(i) != ' ' && txt.charAt(i) != '-') {
             i++;
         }
-        return true;
-    }
-
-    /**
-     * Formata os terminais informados.
-     *
-     * @param : terminais informados
-     * @return : terminais formatados
-     */
-    public static Set<String> formatTerminals(String terminals) {
-        Set<String> terminalsFormated = new HashSet<>();
-        for (int i = 0; i < terminals.length(); i++) {
-            if (Character.isLowerCase(terminals.charAt(i))) {
-                terminalsFormated.add(Character.toString(terminals.charAt(i)));
-            }
-        }
-        return terminalsFormated;
-    }
-
-    /**
-     * Formata variáveis informadas.
-     *
-     * @param variables : variáveis informadas.
-     * @return : variáveis formatadas.
-     */
-    public static Set<String> formatVariables(String variables) {
-        Set<String> variablesFormated = new HashSet<>();
-
-        for (int i = 0; i < variables.length(); i++) {
-            if (Character.isUpperCase(variables.charAt(i))) {
-                variablesFormated.add(Character.toString(variables.charAt(i)));
-            }
-        }
-        return variablesFormated;
-    }
-
-    /**
-     * Formata símbolo inicial
-     *
-     * @param initialSymbol
-     * @return
-     */
-    public static String formatInitialSymbol(String initialSymbol) {
-        return Character.toString(Character.toUpperCase(initialSymbol.charAt(0)));
+        return txt.substring(0, i);
     }
 
 
@@ -250,17 +156,16 @@ public class GrammarParser {
      * Verifica se a gramática informada é regular
      *
      * @param g : Gramática inserida
-     * @return
+     * @return true or false
      */
     public static boolean regularGrammar(final Grammar g, final StringBuilder academic) {
         int counter = 0;
-        Iterator<Rule> itRules = g.getRules().iterator();
-        while (itRules.hasNext()) {
-            Rule r = itRules.next();
+        for (Rule r : g.getRules()) {
             for (int i = 0; i < r.getRightSide().length(); i++) {
-                if (g.getVariables().contains(Character.toString(r.getRightSide().charAt(i)))) {
-                    counter++;
+                if (!g.getVariables().contains(Character.toString(r.getRightSide().charAt(i)))) {
+                    continue;
                 }
+                counter++;
             }
 
             if (counter == 1) {
@@ -286,12 +191,10 @@ public class GrammarParser {
      * Verifica se a gramática informada é livre de contexto
      *
      * @param g : Gramática inserida
-     * @return
+     * @return true or false
      */
     public static boolean contextFreeGrammar(final Grammar g, StringBuilder academic) {
-        Iterator<Rule> itRules = g.getRules().iterator();
-        while (itRules.hasNext()) {
-            Rule r = itRules.next();
+        for (Rule r : g.getRules()) {
             if (!g.getVariables().contains(r.getLeftSide())) {
                 academic.append("- Na gramática informada, a regra ").append(r).
                         append("não pertence ao conjunto das gramáticas livres de contexto.\n");
@@ -329,7 +232,8 @@ public class GrammarParser {
         for (Rule element : g.getRules()) {
             if ((!containsSentence(g, element.getLeftSide()) || element.getLeftSide().equals(Grammar.LAMBDA)) ||
                     (!containsSentence(g, element.getRightSide()) && !element.getRightSide().equals(Grammar.LAMBDA))) {
-                academic.append("- Na gramática informada, a regra " + element + "não pertence ao conjunto das gramáticas irrestritas.\n");
+                academic.append("- Na gramática informada, a regra ").append(element)
+                        .append("não pertence ao conjunto das gramáticas irrestritas.\n");
                 return false;
             }
 
@@ -385,346 +289,6 @@ public class GrammarParser {
         return "A gramática informada é inexistente.";
     }
 
-
-    /**
-     * Procura variáveis anuláveis nas regras
-     *
-     * @param element
-     * @param nullableVariables
-     * @return
-     */
-    public static String searchVariablesOnRules(String element, Set<String> nullableVariables) {
-        String containsVariables = "";
-        boolean found = true;
-        String[] verifyRules = element.split(" | ");
-        for (String aux : verifyRules) {
-            for (int j = 0; j < aux.length() && found; j++) {
-                if (Character.isLowerCase(aux.charAt(j))) {
-                    found = false;
-                }
-            }
-            for (int i = 0; i < aux.length() && found; i++) {
-                if (nullableVariables.contains(Character.toString(aux.charAt(i)))) {
-                    containsVariables += Character.toString(aux.charAt(i));
-                }
-            }
-            found = true;
-        }
-        return containsVariables;
-    }
-
-    /* INICIA PROCESSO PARA DERIVAÇÃO DE GRAMÁTICAS */
-
-    /**
-     * Converte uma gramática para um automato com pilha
-     * @param g
-     * @return
-     */
-    /*private static PushdownAutomaton turnsGrammarToPushdownDescendingAutomaton(final Grammar g) {
-        //remover recursão à esquerda da gramática
-
-        PushdownAutomaton automaton = new PushdownAutomaton();
-
-        //adiciona conjunto de estados
-        Set<String> states = new HashSet<>();
-        states.add("q0");
-        states.add("q1");
-        states.add("q2");
-        automaton.setStates(states);
-
-        //adiciona estado inicial
-        automaton.setInitialState("q0");
-
-        //adiciona estado finail
-        Set<String> finalState = new HashSet<>();
-        finalState.add("q2");
-        automaton.setFinalStates(finalState);
-
-        //adiciona o alfabeto da máquina
-        automaton.setAlphabet(g.getTerminals());
-
-        //adiciona o alfabeto da pilha
-        Set<String> stackAlphabet = new HashSet<>();
-        stackAlphabet.addAll(g.getVariables());
-        stackAlphabet.addAll(g.getTerminals());
-        stackAlphabet.add(Grammar.LAMBDA);
-        automaton.setStackAlphabet(stackAlphabet);
-
-        //adiciona função de transição
-        //adiciona transição inicial
-        Set<TransitionFunctionPA> transitions = new HashSet<>();
-        transitions.add(new TransitionFunctionPA("q0", g.getInitialSymbol(), "q1", Grammar.LAMBDA, Grammar.LAMBDA));
-
-        //adiciona transições
-        for (String variable : g.getVariables()) {
-            for (Rule element : g.getRules()) {
-                if (variable.equals(element.getLeftSide())) {
-                    transitions.add(new TransitionFunctionPA("q1", Grammar.LAMBDA, "q1", element.getRightSide(), element.getLeftSide()));
-                }
-            }
-        }
-
-        //adiciona transições que esvaziam a pilha
-        for (String terminal : g.getTerminals()) {
-            transitions.add(new TransitionFunctionPA("q1", terminal, "q1", Grammar.LAMBDA, terminal));
-        }
-
-        //adiciona transição final
-        transitions.add(new TransitionFunctionPA("q1", Grammar.LAMBDA, "q2", Grammar.LAMBDA, Grammar.LAMBDA));
-
-        automaton.setTransictionFunction(transitions);
-        return automaton;
-    }*/
-
-//    private static Set<String> variablesStackingTerminals(final PushdownAutomaton automaton, final Grammar g) {
-//        Set<String> variables = new HashSet<>();
-//        for (TransitionFunctionPA transition : automaton.getTransictionFunction()) {
-//            if (g.getTerminals().contains(transition.getStacking())) {
-//                variables.add(transition.getPops());
-//            }
-//        }
-//        return variables;
-//    }
-
-
-    /*public static void moreLeftDerivation(Grammar g, final StringBuilder derivation, final String word, final StringBuilder academic) {
-        Grammar gc = (Grammar) g.clone();
-
-        StringBuilder wordCopy = new StringBuilder(word);
-
-        Grammar gcAux = (Grammar) gc.clone();
-
-
-        //coloca gramática na Forma Normal de Chomsky, caso ainda não esteja
-        if (!GrammarParser.isFnc(gcAux)) {
-            gcAux = gcAux.FNC(gcAux);
-        }
-        //primeiro, é necessário verificar se a palavra pertence à linguagem
-        Set<String>[][] cykOut = Grammar.CYK(gcAux, word);
-        String[][] result = GrammarParser.turnsTreesetOnArray(cykOut, word);
-        if (result[0][0].contains(gcAux.getInitialSymbol())) {
-
-            PushdownAutomaton automaton = turnsGrammarToPushdownDescendingAutomaton(gcAux);
-            int currentIndex = 0;
-            int counter = 0;
-            int counterOfAttempts = 0;
-            boolean flag = false;
-
-            //declara estruturas auxiliares para o processo
-            StringBuilder generatedSentence = new StringBuilder();
-            ArrayList<TransitionFunctionPA> usedTransitions = new ArrayList<TransitionFunctionPA>();
-            ArrayList<ArrayList<String>> stacks = new ArrayList<ArrayList<String>>();
-            TransitionFunctionPA currentTransition = new TransitionFunctionPA();
-            ArrayList<ArrayList<TransitionFunctionPA>> listOfAttempts = new ArrayList<ArrayList<TransitionFunctionPA>>();
-            ArrayList<TransitionFunctionPA> attempt = new ArrayList<TransitionFunctionPA>();
-            Set<String> variablesThatGeneratedTerminals = new HashSet<String>();
-            variablesThatGeneratedTerminals = variablesStackingTerminals(automaton, gc);
-            //TransitionFunctionPA auxTransition = new TransitionFunctionPA();
-
-            //realiza passo 1 do algoritmo: empilha símbolo inicial
-            automaton.push(gcAux.getInitialSymbol());
-            //System.activity_out.println(automaton.getStack());
-            attempt.add(new TransitionFunctionPA("q0", gc.getInitialSymbol(), "q1", Grammar.LAMBDA, Grammar.LAMBDA));
-
-            loop:
-            do {
-//				System.activity_out.println("Stack: " + automaton.getStack());
-//				System.activity_out.println("Top: " + automaton.getTopOfStack());
-                if (gcAux.getVariables().contains(automaton.getTopOfStack())) {
-                    //variável no topo da pilha
-                    //pega o topo da pilha
-                    String variableAtTop = automaton.getTopOfStack();
-
-                    //seleciona uma transição válida
-                    currentTransition = selectTransition(automaton, attempt, listOfAttempts, variableAtTop, counterOfAttempts);
-                    //currentTransition = selectTransition(usedTransitions, automaton);
-
-                    //salva estado atual da pilha
-                    if (saveStack(variableAtTop, automaton) && !stacks.contains(automaton.getStack()) && compareWithLengthOfWord(word, generatedSentence, automaton)) {
-                        stacks.add(new ArrayList<String>(automaton.getStack()));
-                    }
-
-                    //desempilha o topo atual
-                    automaton.pop();
-                    //System.activity_out.println(automaton.getStack());
-
-                    //empilha
-                    automaton.push(currentTransition.getStacking());
-                    //System.activity_out.println(automaton.getStack());
-                    attempt.add(new TransitionFunctionPA(currentTransition));
-                    //attempt.add(new PushdownAutomaton(automaton));
-
-                } else if (gcAux.getTerminals().contains(automaton.getTopOfStack()) || automaton.getTopOfStack().equals(Grammar.LAMBDA)) {
-                    //terminal no topo da pilha
-                    //verifica o próximo terminal da expressão está no topo da pilha
-                    StringBuilder charAtVariable = new StringBuilder();
-                    if (currentIndex > word.length()) {
-                        usedTransitions.addAll(attempt);
-                        counter--;
-                        //automaton.setStack(new ArrayList<String>(stacks.get(getIndexOfStack(stacks, automaton, currentIndex, word, variablesThatGeneratedTerminals))));
-                        automaton.setStack(new ArrayList<String>(stacks.get((currentIndex < word.length()) ? (currentIndex - 1) : (stacks.size() - 1))));
-                        //counterOfStacks--;
-                        currentIndex = updateCurrentIndex(automaton, stacks);
-                        listOfAttempts.add(new ArrayList<TransitionFunctionPA>(attempt));
-                        attempt = new ArrayList<TransitionFunctionPA>(getNewList(attempt, automaton));
-                        counterOfAttempts++;
-                        break loop;
-                    } else {
-                        charAtVariable.append(word.charAt(currentIndex));
-                    }
-                    //charAtVariable.append(word.charAt((currentIndex < word.length()) ? (currentIndex) : (word.length() - 1)));
-                    //charAtVariable.append(word.charAt(generatedSentence.length()));
-                    if (automaton.getTopOfStack().equals(charAtVariable.toString()) && currentIndex < word.length()) {
-                        currentIndex++;
-                        generatedSentence.append(automaton.getTopOfStack());
-                        automaton.pop();
-                        usedTransitions = new ArrayList<TransitionFunctionPA>();
-                        counter++;
-                    } else {
-                        usedTransitions.addAll(attempt);
-                        counter--;
-                        //automaton.setStack(new ArrayList<String>(stacks.get(getIndexOfStack(stacks, automaton, currentIndex, word, variablesThatGeneratedTerminals))));
-                        automaton.setStack(new ArrayList<String>(stacks.get((currentIndex < word.length()) ? (currentIndex - 1) : (stacks.size() - 1))));
-                        //counterOfStacks--;
-                        currentIndex = updateCurrentIndex(automaton, stacks);
-                        listOfAttempts.add(new ArrayList<TransitionFunctionPA>(attempt));
-                        attempt = new ArrayList<TransitionFunctionPA>(getNewList(attempt, automaton));
-                        counterOfAttempts++;
-                    }
-                } else {
-                    counter--;
-                    currentIndex--;
-                    automaton.setStack(stacks.get(counter));
-                }
-            } while (!automaton.getStack().isEmpty());
-        }
-			/*ArrayList<TransitionFunctionPA> resultOfDerivation = new ArrayList<TransitionFunctionPA>(attempt);
-			int i = 0;
-			while (i < 1000 && !flag) {
-				automaton = turnsGrammarToPushdownDescendingAutomaton(g);
-				currentIndex = 0;
-				counter = 0;
-				counterOfAttempts = 0;
-				counterOfStacks = 0;
-
-				//declara estruturas auxiliares para o processo
-				generatedSentence = new StringBuilder();
-				usedTransitions = new ArrayList<TransitionFunctionPA>();
-				stacks = new ArrayList<ArrayList<String>>();
-				currentTransition = new TransitionFunctionPA();
-				listOfAttempts = new ArrayList<ArrayList<TransitionFunctionPA>>();
-				attempt = new ArrayList<TransitionFunctionPA>();
-				variablesThatGeneratedTerminals = new HashSet<String>();
-				variablesThatGeneratedTerminals = variablesStackingTerminals(automaton, gc);
-				//TransitionFunctionPA auxTransition = new TransitionFunctionPA();
-
-				//realiza passo 1 do algoritmo: empilha símbolo inicial
-				automaton.push(g.getInitialSymbol());
-				System.activity_out.println(automaton.getStack());
-				attempt.add(new TransitionFunctionPA("q0", gc.getInitialSymbol(), "q1", Grammar.LAMBDA, Grammar.LAMBDA));
-
-				do {
-					System.activity_out.println("Stack: " + automaton.getStack());
-					System.activity_out.println("Top: " + automaton.getTopOfStack());
-					if (g.getVariables().contains(automaton.getTopOfStack())) {
-						//variável no topo da pilha
-						//pega o topo da pilha
-						String variableAtTop = automaton.getTopOfStack();
-
-						//seleciona uma transição válida
-						currentTransition = selectTransition(automaton, attempt, listOfAttempts, variableAtTop, counterOfAttempts);
-						//currentTransition = selectTransition(usedTransitions, automaton);
-
-						//salva estado atual da pilha
-						if (saveStack(variableAtTop, automaton) && !stacks.contains(automaton.getStack()) && compareWithLengthOfWord(word, generatedSentence, automaton)) {
-							stacks.add(new ArrayList<String>(automaton.getStack()));
-							counterOfStacks = stacks.size() - 1;
-						}
-
-						//desempilha o topo atual
-						automaton.pop();
-						System.activity_out.println(automaton.getStack());
-
-						//empilha
-						automaton.push(currentTransition.getStacking());
-						System.activity_out.println(automaton.getStack());
-						attempt.add(new TransitionFunctionPA(currentTransition));
-						//attempt.add(new PushdownAutomaton(automaton));
-
-					} else if (g.getTerminals().contains(automaton.getTopOfStack())) {
-						//terminal no topo da pilha
-						//verifica o próximo terminal da expressão está no topo da pilha
-						StringBuilder charAtVariable = new StringBuilder();
-						charAtVariable.append(word.charAt((currentIndex < word.length()) ? (currentIndex) : (word.length() - 1)));
-						//charAtVariable.append(word.charAt(generatedSentence.length()));
-						if (automaton.getTopOfStack().equals(charAtVariable.toString()) && currentIndex < word.length()) {
-							currentIndex++;
-							generatedSentence.append(automaton.getTopOfStack());
-							automaton.pop();
-							usedTransitions = new ArrayList<TransitionFunctionPA>();
-							counter++;
-						} else {
-							usedTransitions.addAll(attempt);
-							counter--;
-							//automaton.setStack(new ArrayList<String>(stacks.get(getIndexOfStack(stacks, automaton, currentIndex, word, variablesThatGeneratedTerminals))));
-							automaton.setStack(new ArrayList<String>(stacks.get((currentIndex < word.length()) ? (currentIndex - 1) : (stacks.size() - 1))));
-							//counterOfStacks--;
-							currentIndex = updateCurrentIndex(automaton, stacks);
-							listOfAttempts.add(new ArrayList<TransitionFunctionPA>(attempt));
-							attempt = new ArrayList<TransitionFunctionPA>(getNewList(attempt, automaton));
-							counterOfAttempts++;
-						}
-					} else {
-						counter--;
-						currentIndex--;
-						automaton.setStack(stacks.get(counter));
-					}
-				} while (!automaton.getStack().isEmpty());
-				if (resultOfDerivation.equals(attempt)) {
-					flag = true;
-				}
-				i++;
-			}
-		} else {
-			academic.append("A palavra inserida não pertence à gramática, logo, não existe possíveis derivações.");
-		}*/
-    //}
-
-    /**
-     * verifica quais variáveis estão presentes no conjunto Prev
-     *
-     * @param variables
-     * @param prev
-     * @return
-     */
-    public static boolean searchVariables(String variables, Set<String> prev) {
-        boolean found = false;
-        for (int i = 0; i < variables.length() && !found; i++) {
-            if (prev.contains(Character.toString(variables.charAt(i)))) {
-                found = true;
-            }
-        }
-        return found;
-    }
-
-    /**
-     * Substitui LAMBDA por vazio
-     *
-     * @param element
-     * @param gc
-     * @return
-     */
-    public static String replaceEmpty(Rule element, Grammar gc) {
-        String aux = element.getRightSide();
-        if (!element.getLeftSide().equals(gc.getInitialSymbol())) {
-            if (gc.getTerminals().contains(Character.toString(Character.toLowerCase(element.getLeftSide().charAt(0))))) {
-                aux = Character.toString(Character.toLowerCase(element.getLeftSide().charAt(0)));
-            } else {
-                aux = "";
-            }
-        }
-        return aux;
-    }
 
     private static Set<Set<Integer>> combinationsP(List<Integer> groupSize) {
         Set<Set<Integer>> combinations = new HashSet<>();
@@ -796,30 +360,6 @@ public class GrammarParser {
 
 
     /**
-     * @param set
-     * @return conjunto de variáveis anuláveis
-     */
-    public static String printSet(Set<String> set) {
-        String variablesInSet = "";
-        for (String variable : set) {
-            variablesInSet += variable + ", ";
-        }
-        return variablesInSet;
-    }
-
-    public static boolean newProductions(String production, String leftSide, Grammar g) {
-        for (Rule element : g.getRules()) {
-            if (element.getLeftSide().equals(leftSide)) {
-                if (element.getRightSide().equals(production)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-
-    /**
      * Verifica a existência de variáveis no conjunto Prev
      *
      * @param prev
@@ -866,13 +406,10 @@ public class GrammarParser {
             if (prev.contains(element.getLeftSide())) {
                 String newRule = "";
                 boolean insertOnNewRule = true;
-                for (int j = 0; j < element.getRightSide().length() && insertOnNewRule != false; j++) {
+                for (int j = 0; j < element.getRightSide().length() && insertOnNewRule; j++) {
                     if (Character.isUpperCase(element.getRightSide().charAt(j))) {
-                        if (prev.contains(Character.toString(element.getRightSide().charAt(j)))) {
-                            insertOnNewRule = true;
-                        } else {
-                            insertOnNewRule = false;
-                        }
+                        insertOnNewRule = prev.contains(Character.toString(element
+                                .getRightSide().charAt(j)));
                     } else if (Character.isLowerCase(element.getRightSide().charAt(j))) {
                         insertOnNewRule = true;
                     } else if (element.getRightSide().charAt(j) == '.') {
@@ -918,22 +455,6 @@ public class GrammarParser {
         return newTerminals;
     }
 
-
-    /**
-     * Retorna os elementos que pertencem ao conjunto Term e não pertencem ao conjunto noTerm
-     *
-     * @param term
-     * @param noTerm
-     * @return
-     */
-    public static Set<String> termMinusNoTerm(Set<String> term, Set<String> noTerm) {
-        for (String element : noTerm) {
-            if (term.contains(element)) {
-                term.remove(element);
-            }
-        }
-        return term;
-    }
 
     /**
      * Retorna os elementos que pertentem ao conjunto Reach mas não pertencem ao conjunto Prev
@@ -1036,7 +557,7 @@ public class GrammarParser {
         for (Rule element : newSetOfRules) {
             if (element.getLeftSide().contains("T")) {
                 String aux = element.getLeftSide().substring(1);
-                if (Integer.parseInt(aux) > counter) {
+                if (!aux.isEmpty() && Integer.parseInt(aux) > counter) {
                     counter = Integer.parseInt(aux);
                 }
             }
@@ -1075,30 +596,6 @@ public class GrammarParser {
             }
         }
         return true;
-    }
-
-    /**
-     * @param gc : GLC
-     * @return : verdadeiro se estiver em FNC e falso caso contrário.
-     */
-    public static boolean isFNC2(final Grammar gc) {
-        boolean test = true;
-        Iterator<Rule> it = gc.getRules().iterator();
-        while (it.hasNext() && test) {
-            Rule element = it.next();
-            if (!element.getRightSide().equals(".") &&
-                    !Character.isLowerCase(element.getRightSide().charAt(0)) &&
-                    counterOfRightSide(element.getRightSide()) != 2) {
-                test = false;
-            } else if (counterOfRightSide(element.getRightSide()) == 2) {
-                for (int i = 0; i < element.getRightSide().length() && test; i++) {
-                    if (Character.isLowerCase(element.getRightSide().charAt(i))) {
-                        test = false;
-                    }
-                }
-            }
-        }
-        return test;
     }
 
     /**
@@ -1391,26 +888,6 @@ public class GrammarParser {
         return newSetOfRules;
     }
 
-    //verifica se é necessário realizar substituições
-    public static boolean canReplace(String variable, final Grammar g, final Map<String, String> variablesInOrder) {
-        boolean test = false;
-        for (Rule element : g.getRules()) {
-            if (variable.equals(element.getLeftSide())) {
-                int leftValue = Integer.parseInt(variablesInOrder.get(variable));
-                int rightValue;
-                for (int i = 0; i < element.getRightSide().length(); i++) {
-                    if (Character.isUpperCase(element.getRightSide().charAt(i))) {
-                        rightValue = Integer.parseInt(variablesInOrder.get(determinesRightSide(element.getRightSide(), i)));
-                        if (leftValue > rightValue) {
-                            test = true;
-                        }
-                    }
-                }
-            }
-        }
-        return test;
-    }
-
     //determina qual variável é a primeira de determinada produção
     public static String determinesRightSide(String rightSide, int counter) {
         while (Character.isDigit(rightSide.charAt(counter))) {
@@ -1428,28 +905,6 @@ public class GrammarParser {
             }
         }
         return variable;
-    }
-
-    //verifica se uma determinada regra está ou não em uma FNG
-    public static boolean isInFNG(String variable, final Grammar g) {
-        boolean test = true;
-        Iterator<Rule> it = g.getRules().iterator();
-        Rule element;
-        while (it.hasNext() && test) {
-            element = it.next();
-            if (variable.equals(element.getLeftSide())) {
-                if (!element.getRightSide().equals(".")) {
-                    int counterOfLowerCase = 0;
-                    for (int i = 0; i < element.getRightSide().length(); i++) {
-                        if (Character.isLowerCase(element.getRightSide().charAt(i))) {
-                            counterOfLowerCase++;
-                        }
-                    }
-                    test = counterOfLowerCase == 1;
-                }
-            }
-        }
-        return test;
     }
 
 
@@ -1614,20 +1069,6 @@ public class GrammarParser {
             }
         } else {
             index++;
-            while (index < cell.length() && Character.isDigit(cell.charAt(index))) {
-                index++;
-            }
-        }
-        return index;
-    }
-
-    private static int getBeginOfSentence(final String cell, final int current) {
-        int index = current;
-        if (index + 1 < cell.length()) {
-            while (index + 1 < cell.length() && Character.isDigit(cell.charAt(index + 1))) {
-                index++;
-            }
-        } else if (Character.isDigit(cell.charAt(index))) {
             while (index < cell.length() && Character.isDigit(cell.charAt(index))) {
                 index++;
             }

@@ -18,7 +18,6 @@ import java.util.Set;
 public class Grammar implements Cloneable {
 
     public static final String LAMBDA = "λ";
-    //public static final String LAMBDA_INTERN = ".";
     //public static final String RULE_SEPARATOR = "|";
     //public static final String RULE_PRODUCTION = "->";
     public static final String CHOMSKY_PREFIX = "T";
@@ -175,6 +174,31 @@ public class Grammar implements Cloneable {
 
     // algorithms
 
+    /** Verifica se a gramática possui recursão no símbolo inicial.
+     * @return true se a gramática possui recursão no símbolo inicial, caso contrário, false.
+     */
+    public boolean initialSymbolIsRecursive() {
+        for (Rule rule : getRules()) {
+            if (rule.getRightSide().contains(initialSymbol)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** Verifica se a gramática possui recursão no símbolo inicial.
+     * @return true se a gramática possui recursão no símbolo inicial, caso contrário, false.
+     */
+    public Set<Rule> getRulesWithRecursiveOnInitialSymbol() {
+        Set<Rule> rules = new HashSet<>();
+        for (Rule rule : getRules()) {
+            if (rule.getRightSide().contains(initialSymbol)) {
+                rules.add((Rule) rule.clone());
+            }
+        }
+        return rules;
+    }
+
     /**
      * @param g gramática livre de contexto
      * @return : gramática livre de contexto sem recursão no símbolo inicial
@@ -190,10 +214,11 @@ public class Grammar implements Cloneable {
         String initialSymbol = gc.getInitialSymbol();
         boolean insert = false;
         int counter = 1;
-        for (Rule element : gc.getRules()) {
-            if (element.getRightSide().contains(initialSymbol)) {
+        for (Rule rule : gc.getRules()) {
+            if (rule.getRightSide().contains(initialSymbol)) {
                 insert = true;
-                problems.put(counter, "Recursão encontrada na regra: " + element.getLeftSide() + " -> " + element.getRightSide() + "\n");
+                problems.put(counter, "Recursão encontrada na regra: " + rule.getLeftSide() +
+                        " -> " + rule.getRightSide() + "\n");
                 counter++;
             }
         }
@@ -472,6 +497,15 @@ public class Grammar implements Cloneable {
         return aux;
     }
 
+    public Map<String, Rule> rulesThatProduceOnlyOneTerminal() {
+        Map<String, Rule> rulesTPOOTerm = new HashMap<>();
+        for (Rule rule : rules) {
+            if (rule.producesOnlyOneTerminal()) {
+                rulesTPOOTerm.put(rule.getRightSide(), rule);
+            }
+        }
+        return rulesTPOOTerm;
+    }
 
     /**
      * @param g gramática livre de contexto
@@ -487,94 +521,182 @@ public class Grammar implements Cloneable {
             gc = getGrammarWithoutNoTerm(gc, new AcademicSupport());
             gc = getGrammarWithoutNoReach(gc, new AcademicSupport());
             academic.setSituation(true);
-            Set<Rule> newSetOfRules = new HashSet<>();
+
             Set<Rule> auxSetOfRules = new HashSet<>();
             Set<String> newSetOfVariables = new HashSet<>();
+            Set<Rule> newSetOfRules = new HashSet<>();
+            Set<Rule> deleteRules = new HashSet<>();
             int contInsertions = 1;
-            for (Rule element : gc.getRules()) {
-                String newProduction = "";
-                String sentence = element.getRightSide();
-                int cont = 0;
-                int changeCounter = 0;
-                // primeiro, cria-se produções para todos os símbolos terminais
-                String newSentence = "";
-                if (GrammarParser.sentenceSize(sentence) >= 2) {
-                    for (int i = 0; i < sentence.length(); i++) {
-                        if (Character.isLowerCase(sentence.charAt(i))) {
-                            if (!GrammarParser.existsProduction(element.getLeftSide(), Character.toString(sentence.charAt(i)), newSetOfRules)) {
-                                Rule r = new Rule();
-                                r.setLeftSide(CHOMSKY_PREFIX + contInsertions);
-                                r.setRightSide(Character.toString(sentence.charAt(i)));
-                                academic.insertNewRule(r);
-                                newSetOfRules.add(r);
-                                newSentence += CHOMSKY_PREFIX + contInsertions;
-                                newSetOfVariables.add(CHOMSKY_PREFIX + contInsertions);//
-                                contInsertions = GrammarParser.updateNumberOfInsertions(newSetOfRules, contInsertions);
-                            } else {
-                                newSentence += GrammarParser.getVariable(Character.toString(sentence.charAt(i)), newSetOfRules);
-                            }
+            int contChomskyVariables = 1;
+            Map<String, Rule> rulesThatProduceTerminal = rulesThatProduceOnlyOneTerminal();
+            for (Rule rule : gc.rules) {
+                if (rule.getLenghtOfRightSide() > 1 && rule.containsTerminalOnRightSide()) {
+                    deleteRules.add(rule);
+                    StringBuilder sb = new StringBuilder(rule.getRightSide());
+                    int i = 0;
+                    while (true) {
+                        while (i < sb.length() && !Character.isLowerCase(sb.charAt(i))) {
+                            i++;
+                        }
+                        if (i == sb.length()) {
+                            break;
+                        }
+                        Rule newRule = rulesThatProduceTerminal.get(Character
+                                .toString(sb.charAt(i)));
+                        if (newRule != null) {
+                            sb.deleteCharAt(i);
+                            sb.insert(i, newRule.getLeftSide());
                         } else {
-                            newSentence += Character.toString(sentence.charAt(i));
-                        }
-                    }
-                    academic.insertIrregularRule(new Rule(element));
-                } else {
-                    Rule r = new Rule();
-                    r.setLeftSide(element.getLeftSide());
-                    r.setRightSide(element.getRightSide());
-                    auxSetOfRules.add(r);
-                }
-                if (GrammarParser.sentenceSize(newSentence) > 2) {
-                    while (cont < newSentence.length()) {
-                        if (Character.isLetter(newSentence.charAt(cont))) {
-                            if (changeCounter == 1) {
-                                if (GrammarParser.canInsert(newProduction)) {
-                                    newProduction += CHOMSKY_PREFIX + contInsertions;
-                                }
-                                String insertOnRightSide = GrammarParser.splitSentence(cont, newSentence, contInsertions);
-                                newSentence = GrammarParser.splitSentence(newSentence);
-                                Rule r = new Rule();
-                                r.setLeftSide(CHOMSKY_PREFIX + contInsertions);
-                                r.setRightSide(insertOnRightSide);
-                                newSetOfRules.add(r);
-                                academic.insertNewRule(r);
-                                newSetOfVariables.add(CHOMSKY_PREFIX + contInsertions);
-                                contInsertions = GrammarParser.updateNumberOfInsertions(newSetOfRules, contInsertions);
-                                changeCounter = 0;
-                                cont = -1;
-                            } else {
-                                if (GrammarParser.canInsert(newProduction)) {
-                                    newProduction += GrammarParser.partialSentence(newSentence);
-                                    newSentence = GrammarParser.splitSentence(newSentence);
-                                }
-                                changeCounter++;
+                            String leftSide = Character.toUpperCase(sb.charAt(i)) + "'";
+                            while (gc.variables.contains(leftSide)) {
+                                leftSide = CHOMSKY_PREFIX + contChomskyVariables;
+                                contChomskyVariables++;
                             }
+                            gc.variables.add(leftSide);
+                            newRule = new Rule(leftSide, Character.toString(sb.charAt(i)));
+                            sb.deleteCharAt(i);
+                            sb.insert(i, leftSide);
+                            rulesThatProduceTerminal.put(newRule.getRightSide(), newRule);
+                            newSetOfRules.add(newRule);
                         }
-                        cont++;
                     }
-                    Rule r = new Rule();
-                    r.setLeftSide(element.getLeftSide());
-                    r.setRightSide(newProduction);
-                    newSetOfRules.add(r);
-                    academic.insertNewRule(r);
-                } else if (GrammarParser.sentenceSize(newSentence) == 2) {
-                    Rule r = new Rule();
-                    r.setLeftSide(element.getLeftSide());
-                    r.setRightSide(newSentence);
-                    newSetOfRules.add(r);
-                    academic.insertNewRule(r);
+                    newSetOfRules.add(new Rule(rule.getLeftSide(), sb.toString()));
                 }
-                //academic.insertNewRule(new Rule(element.getLeftSide(), newProduction));
             }
-            // update the variables
-            for (String variable : newSetOfVariables) {
-                gc.insertVariable(variable);
+            gc.getRules().removeAll(deleteRules);
+            gc.getRules().addAll(newSetOfRules);
+            deleteRules.clear();
+            newSetOfRules.clear();
+            Map<String, Set<String>> rulesMapUToV = gc.getRulesMapUToV();
+            for (Rule rule : gc.rules) {
+                if (rule.getLenghtOfRightSide() > 2) {
+                    deleteRules.add(rule);
+                    Rule newRule;
+                    if (rulesMapUToV.containsKey(rule.getRightSide().substring(1))) {
+                        newRule = new Rule(rule.getLeftSide(), rule.getRightSide().substring(0,1) +
+                        rulesMapUToV.get(rule.getRightSide().substring(1)).toArray()[0]);
+                        newSetOfRules.add(newRule);
+                        if (!rulesMapUToV.containsKey(newRule.getRightSide())) {
+                            Set<String> set = new HashSet<>();
+                            set.add(newRule.getLeftSide());
+                            rulesMapUToV.put(newRule.getRightSide(), set);
+                        }
+                    } else {
+                        String leftSide;
+                        do {
+                            leftSide = CHOMSKY_PREFIX + contChomskyVariables;
+                            contChomskyVariables++;
+                        } while (gc.variables.contains(leftSide));
+                        gc.variables.add(leftSide);
+                        newRule = new Rule(leftSide, rule.getRightSide().substring(1));
+                        newSetOfRules.add(newRule);
+                        if (!rulesMapUToV.containsKey(newRule.getRightSide())) {
+                            Set<String> set = new HashSet<>();
+                            set.add(rule.getLeftSide());
+                            rulesMapUToV.put(newRule.getRightSide(), set);
+                        }
+                        newRule = new Rule(rule.getLeftSide(), rule.getRightSide().substring(0,1) +
+                                newRule.getLeftSide());
+                        newSetOfRules.add(newRule);
+                        if (!rulesMapUToV.containsKey(newRule.getRightSide())) {
+                            Set<String> set = new HashSet<>();
+                            set.add(rule.getLeftSide());
+                            rulesMapUToV.put(newRule.getRightSide(), set);
+                        }
+                    }
+                }
             }
-
-            // update the rules
-            newSetOfRules.addAll(auxSetOfRules);
-            newSetOfRules = gc.removeRulesWithEqualProductions(newSetOfRules);
-            gc.setRules(newSetOfRules);
+            gc.getRules().removeAll(deleteRules);
+            gc.getRules().addAll(newSetOfRules);
+//            for (Rule element : gc.getRules()) {
+//                String newProduction = "";
+//                String sentence = element.getRightSide();
+//                int cont = 0;
+//                int changeCounter = 0;
+//                // primeiro, cria-se produções para todos os símbolos terminais
+//                String newSentence = "";
+//                if (GrammarParser.sentenceSize(sentence) > 1) {
+//                    for (int i = 0; i < sentence.length(); i++) {
+//                        if (Character.isLowerCase(sentence.charAt(i))) {
+//                            if (!GrammarParser.existsProduction(element.getLeftSide(),
+//                                    Character.toString(sentence.charAt(i)), newSetOfRules)) {
+//                                Rule r = new Rule();
+//                                r.setLeftSide(CHOMSKY_PREFIX + contInsertions);
+//                                r.setRightSide(Character.toString(sentence.charAt(i)));
+//                                academic.insertNewRule(r);
+//                                newSetOfRules.add(r);
+//                                newSentence += CHOMSKY_PREFIX + contInsertions;
+//                                newSetOfVariables.add(CHOMSKY_PREFIX + contInsertions);
+//                                contInsertions = GrammarParser
+//                                        .updateNumberOfInsertions(newSetOfRules, contInsertions);
+//                            } else {
+//                                newSentence += GrammarParser.getVariable(Character
+//                                        .toString(sentence.charAt(i)), newSetOfRules);
+//                            }
+//                        } else {
+//                            newSentence += Character.toString(sentence.charAt(i));
+//                        }
+//                    }
+//                    academic.insertIrregularRule(new Rule(element));
+//                } else {
+//                    Rule r = new Rule();
+//                    r.setLeftSide(element.getLeftSide());
+//                    r.setRightSide(element.getRightSide());
+//                    auxSetOfRules.add(r);
+//                }
+//                if (GrammarParser.sentenceSize(newSentence) > 2) {
+//                    while (cont < newSentence.length()) {
+//                        if (Character.isLetter(newSentence.charAt(cont))) {
+//                            if (changeCounter == 1) {
+//                                if (GrammarParser.canInsert(newProduction)) {
+//                                    newProduction += CHOMSKY_PREFIX + contInsertions;
+//                                }
+//                                String insertOnRightSide = GrammarParser
+//                                        .splitSentence(cont, newSentence, contInsertions);
+//                                newSentence = GrammarParser.splitSentence(newSentence);
+//                                Rule r = new Rule();
+//                                r.setLeftSide(CHOMSKY_PREFIX + contInsertions);
+//                                r.setRightSide(insertOnRightSide);
+//                                newSetOfRules.add(r);
+//                                academic.insertNewRule(r);
+//                                newSetOfVariables.add(CHOMSKY_PREFIX + contInsertions);
+//                                contInsertions = GrammarParser
+//                                        .updateNumberOfInsertions(newSetOfRules, contInsertions);
+//                                changeCounter = 0;
+//                                cont = -1;
+//                            } else {
+//                                if (GrammarParser.canInsert(newProduction)) {
+//                                    newProduction += GrammarParser.partialSentence(newSentence);
+//                                    newSentence = GrammarParser.splitSentence(newSentence);
+//                                }
+//                                changeCounter++;
+//                            }
+//                        }
+//                        cont++;
+//                    }
+//                    Rule r = new Rule();
+//                    r.setLeftSide(element.getLeftSide());
+//                    r.setRightSide(newProduction);
+//                    newSetOfRules.add(r);
+//                    academic.insertNewRule(r);
+//                } else if (GrammarParser.sentenceSize(newSentence) == 2) {
+//                    Rule r = new Rule();
+//                    r.setLeftSide(element.getLeftSide());
+//                    r.setRightSide(newSentence);
+//                    newSetOfRules.add(r);
+//                    academic.insertNewRule(r);
+//                }
+//                //academic.insertNewRule(new Rule(element.getLeftSide(), newProduction));
+//            }
+//            // update the variables
+//            for (String variable : newSetOfVariables) {
+//                gc.insertVariable(variable);
+//            }
+//
+//            // update the rules
+//            newSetOfRules.addAll(auxSetOfRules);
+//            newSetOfRules = gc.removeRulesWithEqualProductions(newSetOfRules);
+//            gc.setRules(newSetOfRules);
         }
         return gc;
     }
