@@ -2,7 +2,9 @@ package com.ufla.lfapp.vo;
 
 import android.support.annotation.NonNull;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class Rule implements Cloneable, Comparable<Rule> {
@@ -116,6 +118,10 @@ public class Rule implements Cloneable, Comparable<Rule> {
 		return rightSide.compareTo(another.rightSide);
 	}
 
+	public static boolean isDigitOrApostrophe(char c) {
+		return Character.isDigit(c) || c == '\'';
+	}
+
 	/**
 	 * Verifica se o lado direito da regra contém um determinado símbolo.
 	 * @param symbol símbolo a ser verificado se está contido no lado direito
@@ -131,8 +137,7 @@ public class Rule implements Cloneable, Comparable<Rule> {
 					return true;
 				}
 				if (rightSide.length() > index+symbol.length() &&
-						!Character.isDigit(rightSide.charAt(index+symbol
-								.length()))) {
+						!isDigitOrApostrophe(rightSide.charAt(index+symbol.length())) ){
 					return true;
 				}
 				index += symbol.length();
@@ -159,12 +164,11 @@ public class Rule implements Cloneable, Comparable<Rule> {
 		if (rightSide.length() == 1) {
 			return Character.isLowerCase(rightSide.charAt(0));
 		}
-
 		int index = 0;
 		if (!Character.isUpperCase(rightSide.charAt(index++))) {
 				return false;
 		}
-		while (Character.isDigit(rightSide.charAt(index))) {
+		while (isDigitOrApostrophe(rightSide.charAt(index))) {
 			index++;
 			if(index == rightSide.length()) {
 				return false;
@@ -177,7 +181,7 @@ public class Rule implements Cloneable, Comparable<Rule> {
 			return true;
 		}
 		while (index != rightSide.length() &&
-				Character.isDigit(rightSide.charAt(index))) {
+				isDigitOrApostrophe(rightSide.charAt(index))) {
 			index++;
 		}
 		return index == rightSide.length();
@@ -202,7 +206,7 @@ public class Rule implements Cloneable, Comparable<Rule> {
 		}
 		if (Character.isLowerCase(rightSide.charAt(0))) {
 			for (int i = 1; i < rightSide.length(); i++) {
-				if ( ! (Character.isDigit(rightSide.charAt(i)) ||
+				if ( ! (isDigitOrApostrophe(rightSide.charAt(i)) ||
 						Character.isUpperCase(rightSide.charAt(i))) ) {
 					return false;
 				}
@@ -220,7 +224,7 @@ public class Rule implements Cloneable, Comparable<Rule> {
 	public boolean existsLeftRecursion() {
 		if (rightSide.length() > leftSide.length()) {
 			return rightSide.startsWith(leftSide) &&
-					!Character.isDigit(rightSide.charAt(leftSide.length()));
+					!isDigitOrApostrophe(rightSide.charAt(leftSide.length()));
 		}
 		return rightSide.length() == leftSide.length() &&
 				rightSide.equals(leftSide);
@@ -237,7 +241,7 @@ public class Rule implements Cloneable, Comparable<Rule> {
 		}
 		int index = 0;
 		while (index+1 != rightSide.length() &&
-				Character.isDigit(rightSide.charAt(index+1))) {
+				isDigitOrApostrophe(rightSide.charAt(index+1)) ) {
 			index++;
 		}
 		return rightSide.substring(0, index+1);
@@ -252,7 +256,11 @@ public class Rule implements Cloneable, Comparable<Rule> {
 	 * regra.
 	 */
 	public Set<String> getSymbolsOfRightSide() {
-		Set<String> symbolsOfRightSide = new HashSet<>();
+		return  new HashSet<>(getListOfSymbolsOnRightSide());
+	}
+
+	public List<String> getListOfSymbolsOnRightSide() {
+		List<String> symbolsOfRightSide = new ArrayList<>();
 		if (rightSide.equals(Grammar.LAMBDA)) {
 			symbolsOfRightSide.add(rightSide);
 			return  symbolsOfRightSide;
@@ -263,7 +271,7 @@ public class Rule implements Cloneable, Comparable<Rule> {
 			} else if (Character.isUpperCase(rightSide.charAt(i))) {
 				int sizeOfSymbol = 1;
 				while (i+sizeOfSymbol < rightSide.length() &&
-						Character.isDigit(rightSide.charAt(i+sizeOfSymbol))) {
+						isDigitOrApostrophe(rightSide.charAt(i+sizeOfSymbol)) ) {
 					sizeOfSymbol++;
 				}
 				symbolsOfRightSide.add(rightSide.substring(i,i+sizeOfSymbol));
@@ -272,6 +280,7 @@ public class Rule implements Cloneable, Comparable<Rule> {
 		}
 		return  symbolsOfRightSide;
 	}
+
 
 	/**
 	 * Verifica se há recursão.
@@ -319,7 +328,7 @@ public class Rule implements Cloneable, Comparable<Rule> {
 		}
 		int index = 1;
 		while (index != rightSide.length() &&
-				Character.isDigit(rightSide.charAt(index))) {
+				isDigitOrApostrophe(rightSide.charAt(index))) {
 			index++;
 		}
 		return index == rightSide.length();
@@ -338,8 +347,30 @@ public class Rule implements Cloneable, Comparable<Rule> {
 		return false;
 	}
 
-	public int getLenghtOfRightSide() {
-		return rightSide.length();
+	public int getNumberOfSymbolsInRightSide() {
+		return getNumberOfSymbolsInRightSide(rightSide);
+	}
+
+	public static int getNumberOfSymbolsInRightSide(String rightSide) {
+		int cont = 0;
+		for (int i = 0; i < rightSide.length(); i++) {
+			if (Character.isLetter(rightSide.charAt(i))) {
+				cont++;
+			}
+		}
+		return cont;
+	}
+
+
+	public int getIndiceOfSecondSymbolInRightSide() {
+		int cont = 1;
+		while (cont < rightSide.length() && !Character.isLetter(rightSide.charAt(cont))) {
+			cont++;
+		}
+		if (cont == rightSide.length()) {
+			return -1;
+		}
+		return cont;
 	}
 
 

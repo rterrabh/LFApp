@@ -26,7 +26,6 @@ public class Grammar09Test {
 	
 	@Test
 	public void testRemovingTheImmediateLeftRecursion() {
-		
 		Grammar newG = g.removingTheImmediateLeftRecursion(this.g, new AcademicSupport());
 		
 		String[] expectedVariables = new String[]{"A","Z1"};
@@ -35,15 +34,12 @@ public class Grammar09Test {
 		String[] expectedRules = new String[]{
 				"A -> bZ1 | cZ1 | b | c",
 				"Z1 -> aZ1 | bZ1 | a | b" };
-		
-		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);		
+		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals,
+				expectedInitialSymbol, expectedRules);
 		
 		assertEquals(expectedGrammar.getInitialSymbol(), newG.getInitialSymbol());
-		
 		assertEquals(expectedGrammar.getTerminals(), newG.getTerminals());
-		
 		assertEquals(expectedGrammar.getRules(), newG.getRules());
-		
 		assertEquals(expectedGrammar.getVariables(), newG.getVariables());
 	}	
 

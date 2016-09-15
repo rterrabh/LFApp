@@ -32,7 +32,8 @@ public class MenuActivity extends HeaderGrammarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_menu);
         super.onCreate(savedInstanceState);
-        if (!GrammarParser.contextFreeGrammar(getGrammar(), new StringBuilder())) {
+        if (!GrammarParser.contextFreeGrammar(getGrammar(), new StringBuilder()) &&
+                !GrammarParser.regularGrammar(getGrammar(), new StringBuilder())) {
             findViewById(R.id.FNCButton).setVisibility(View.GONE);
             findViewById(R.id.RemoveRecursionDirectLeftButton).setVisibility(View.GONE);
             findViewById(R.id.RemoveRecursionLeftButton).setVisibility(View.GONE);

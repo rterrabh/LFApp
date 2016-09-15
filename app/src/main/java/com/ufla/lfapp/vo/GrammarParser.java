@@ -2,10 +2,10 @@ package com.ufla.lfapp.vo;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
 
@@ -36,8 +36,8 @@ public class GrammarParser {
      * @param txt : gramática informada
      * @return : variáveis extraídas
      */
-    public static Set<String> extractVariablesFromFull(String txt) {
-        Set<String> variables = new HashSet<>();
+    public static SortedSet<String> extractVariablesFromFull(String txt) {
+        SortedSet<String> variables = new TreeSet<>();
         for (int i = 0; i < txt.length(); ) {
             if (Character.isUpperCase(txt.charAt(i))) {
                 int k = i+1;
@@ -60,8 +60,8 @@ public class GrammarParser {
      * @param txt : gramática informada
      * @return : terminais extraídos
      */
-    public static Set<String> extractTerminalsFromFull(String txt) {
-        Set<String> terminals = new HashSet<>();
+    public static SortedSet<String> extractTerminalsFromFull(String txt) {
+        SortedSet<String> terminals = new TreeSet<>();
         for (int i = 0; i < txt.length(); i++) {
             if (Character.isLowerCase(txt.charAt(i))) {
                 terminals.add(Character.toString(txt.charAt(i)));
@@ -76,11 +76,11 @@ public class GrammarParser {
      * @param txt : gramática informada
      * @return : regras extraídas
      */
-    public static Set<Rule> extractRulesFromFull(String txt) {
-        Set<Rule> rules = new HashSet<>();
+    public static SortedSet<Rule> extractRulesFromFull(String txt) {
+        SortedSet<Rule> rules = new TreeSet<>(new RuleComparator(extractInitialSymbolFromFull(txt)));
         Rule rule = new Rule();
         String[] auxRule;
-        for (String x : txt.split("\n")) {
+        for (String x : txt.trim().split("\n")) {
             auxRule = x.split("->");
             rule.setLeftSide(auxRule[0].trim());
             //ArrayIndexOutOfBoundsException
@@ -400,8 +400,9 @@ public class GrammarParser {
      * @param g
      * @return
      */
-    public static Set<Rule> updateRules(Set<String> prev, Grammar g, final AcademicSupport academic) {
-        Set<Rule> newRules = new HashSet<>();
+    public static SortedSet<Rule> updateRules(SortedSet<String> prev, Grammar g,
+                                              final AcademicSupport academic) {
+        SortedSet<Rule> newRules = new TreeSet<>();
         for (Rule element : g.getRules()) {
             if (prev.contains(element.getLeftSide())) {
                 String newRule = "";
@@ -442,8 +443,8 @@ public class GrammarParser {
      * @param g
      * @return
      */
-    public static Set<String> updateTerminals(Grammar g) {
-        Set<String> newTerminals = new HashSet<>();
+    public static SortedSet<String> updateTerminals(Grammar g) {
+        SortedSet<String> newTerminals = new TreeSet<>();
         for (Rule element : g.getRules()) {
             for (int i = 0; i < element.getRightSide().length(); i++) {
                 if (Character.isLowerCase(element.getRightSide().charAt(i))) {
@@ -485,190 +486,6 @@ public class GrammarParser {
             }
         }
         return reach;
-    }
-
-
-    /**
-     * Verifica a existência de determinada produção.
-     *
-     * @param leftSide
-     * @param symbol
-     * @param newSetOfRules
-     * @return
-     */
-    public static boolean existsProduction(String leftSide, String symbol, Set<Rule> newSetOfRules) {
-        for (Rule element : newSetOfRules) {
-            if (element.getRightSide().equals(symbol)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Retorna determinada variável.
-     *
-     * @param symbol
-     * @param newSetOfRules
-     * @return
-     */
-    public static String getVariable(String symbol, Set<Rule> newSetOfRules) {
-        String variable = "";
-        boolean found = false;
-        for (Rule element : newSetOfRules) {
-            String[] aux = element.getRightSide().split(" | ");
-            for (int i = 0; i < aux.length && !found; i++) {
-                aux[i] = aux[i].trim();
-                if (aux[i].equals(symbol)) {
-                    variable = element.getLeftSide();
-                    found = true;
-                }
-            }
-        }
-        return variable;
-    }
-
-    /**
-     * Verifica o tamanho de uma dada sentença.
-     *
-     * @param sentence
-     * @return
-     */
-    static int sentenceSize(String sentence) {
-        int count = 0;
-        for (int i = 0; i < sentence.length(); i++) {
-            if (Character.isLetter(sentence.charAt(i))) {
-                count++;
-            }
-        }
-        return count;
-    }
-
-    /**
-     * Atualiza o número de inserções realizadas.
-     *
-     * @param newSetOfRules
-     * @param contInsertions
-     * @return
-     */
-    static int updateNumberOfInsertions(Set<Rule> newSetOfRules,
-                                        int contInsertions) {
-        int counter = 0;
-        for (Rule element : newSetOfRules) {
-            if (element.getLeftSide().contains("T")) {
-                String aux = element.getLeftSide().substring(1);
-                if (!aux.isEmpty() && Integer.parseInt(aux) > counter) {
-                    counter = Integer.parseInt(aux);
-                }
-            }
-        }
-        return (counter + 1);
-    }
-
-    /**
-     * Verifica se é possível realizar uma nova inserção.
-     *
-     * @param sentence
-     * @return
-     */
-    static boolean canInsert(String sentence) {
-        String[] productions = sentence.split(" | ");
-        boolean insert = false;
-        int contNumbers = 0;
-        String target = productions[productions.length - 1];
-        for (int i = 0; i < target.length(); i++) {
-            if (Character.isDigit(target.charAt(i))) {
-                contNumbers++;
-            }
-        }
-        if ((contNumbers == 0 && target.length() != 2)
-                || (contNumbers == 1 && target.length() != 3)
-                || (contNumbers == 2 && target.length() != 4)) {
-            insert = true;
-        }
-        return insert;
-    }
-
-    public static boolean isFNC(final Grammar gc) {
-        for (Rule rule : gc.getRules()) {
-            if (!rule.isFnc(gc.getInitialSymbol())) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Realiza split de uma determinada sentença.
-     *
-     * @param newSentence
-     * @return
-     */
-    static String splitSentence(String newSentence) {
-        if (newSentence.charAt(0) != 'T') {
-            newSentence = newSentence.substring(1);
-        } else {
-            newSentence = newSentence.substring(1);
-            while (Character.isDigit(newSentence.charAt(0))) {
-                newSentence = newSentence.substring(1);
-            }
-        }
-        return newSentence;
-    }
-
-    /**
-     * Realiza split de uma determinada sentença.
-     *
-     * @param newSentence
-     * @return
-     */
-    static String splitSentence(int cont, String newSentence, int contInsertions) {
-        String aux = "";
-        if (newProductionSize(newSentence) == 2) {
-            aux = newSentence;
-        } else {
-            aux = Character.toString(newSentence.charAt(0));
-            if (newSentence.charAt(0) == 'T') {
-                for (int i = 1; !Character.isLetter(newSentence.charAt(i)); i++) {
-                    aux += Character.toString(newSentence.charAt(i));
-                }
-            }
-            aux += "T" + (contInsertions + 1);
-        }
-        return aux;
-    }
-
-    /**
-     * @param sentence
-     * @return
-     */
-    static String partialSentence(String sentence) {
-        String partial = "";
-        if (sentence.charAt(0) == 'T') {
-            partial += "T";
-            for (int i = 1; !Character.isLetter(sentence.charAt(i)); i++) {
-                partial += Character.toString(sentence.charAt(i));
-            }
-        } else {
-            partial = Character.toString(sentence.charAt(0));
-        }
-        return partial;
-    }
-
-    /**
-     * Verifica o tamanho de uma nova produção.
-     *
-     * @param newProduction
-     * @return
-     */
-    private static int newProductionSize(String newProduction) {
-        int count = 0;
-        for (int i = 0; i < newProduction.length(); i++) {
-            if (Character.isLetter(newProduction.charAt(i))) {
-                count++;
-            }
-        }
-        return count;
     }
 
     /**
@@ -832,83 +649,6 @@ public class GrammarParser {
     }
 
     /**
-     * Verifica se a gramática dada está na forma normal de Greibach.
-     *
-     * @param rules
-     * @return
-     */
-    static boolean isFNG(Set<Rule> rules) {
-        boolean fng = true;
-        Iterator<Rule> it = rules.iterator();
-        while (it.hasNext() && fng) {
-            Rule element = it.next();
-            if (!Character.isLowerCase(element.getRightSide().charAt(0)) && !"." .equals(element.getRightSide())) {
-                fng = false;
-            }
-        }
-        return fng;
-    }
-
-
-    //cria novas regras realizando as substituições necessárias
-    public static Set<Rule> createNewRules(String variable, Grammar gc, Map<String, String> variablesInOrder) {
-        Set<Rule> newSetOfRules = new HashSet<>();
-        for (Rule element : gc.getRules()) {
-            String newProduction;
-            if (variable.equals(element.getLeftSide())) {
-                int leftValue = Integer.parseInt(variablesInOrder.get(variable));
-                int rightValue;
-                boolean test = true;
-                for (int i = 0; i < element.getRightSide().length() && test; i++) {
-                    if (Character.isLetter(element.getRightSide().charAt(i)) && Character.isUpperCase(element.getRightSide().charAt(i))) {
-                        rightValue = Integer.parseInt(variablesInOrder.get(determinesRightSide(element.getRightSide(), i)));
-                        if (leftValue > rightValue) {
-                            test = false;
-                            String searchVariable = determinesRightSide(element.getRightSide(), i);
-                            for (Rule secondElement : gc.getRules()) {
-                                if (searchVariable.equals(secondElement.getLeftSide())) {
-                                    newProduction = element.getRightSide();
-                                    newProduction = newProduction.replace(searchVariable, secondElement.getRightSide());
-                                    Rule r = new Rule(element.getLeftSide(), newProduction);
-                                    newSetOfRules.add(r);
-                                }
-                            }
-                        }
-                    } else if (Character.isLowerCase(element.getRightSide().charAt(i))) {
-                        Rule r = new Rule(variable, element.getRightSide());
-                        newSetOfRules.add(r);
-                    }
-                }
-                if (test) {
-                    Rule r = new Rule(variable, element.getRightSide());
-                    newSetOfRules.add(r);
-                }
-            }
-        }
-        return newSetOfRules;
-    }
-
-    //determina qual variável é a primeira de determinada produção
-    public static String determinesRightSide(String rightSide, int counter) {
-        while (Character.isDigit(rightSide.charAt(counter))) {
-            counter++;
-        }
-        String variable = Character.toString(rightSide.charAt(counter));
-        boolean test = true;
-        while (rightSide.length() > counter + 1 && test) {
-            if (Character.isDigit(rightSide.charAt(counter + 1))) {
-                variable += Character.toString(rightSide.charAt(counter + 1));
-            }
-            counter++;
-            if (Character.isLetter(rightSide.charAt(counter))) {
-                test = false;
-            }
-        }
-        return variable;
-    }
-
-
-    /**
      * @param g: gramática livre de contexto
      * @return automaton: gramática livre de contexto convertida em autômato de pilha
      */
@@ -916,13 +656,13 @@ public class GrammarParser {
         Grammar gc = (Grammar) g.clone();
         AcademicSupport academic = new AcademicSupport();
 
-        if (!isFNG(gc.getRules())) {
+        if (!gc.isFNG()) {
             gc = g.FNG(gc, academic);
         }
 
         PushdownAutomaton automaton = new PushdownAutomaton();
 
-        if (isFNG(gc.getRules())) {
+        if (gc.isFNG()) {
             //inicializando o automato
             //adiciona estado final
             Set<String> finalStates = new HashSet<>();
@@ -968,159 +708,6 @@ public class GrammarParser {
         }
 
         return automaton;
-    }
-
-
-    public static Set<String>[][] fillOthersLines(Set<String>[][] x, Grammar g, int count, int line, int column, String word) {
-
-        int counterLine = 1;
-        int counterColumn = 1;
-        int targetLine = word.length() - 3;
-        int targetColumn = 0;
-        int counterLineOfSecondElement = line - 1;
-        int delimiter = word.length() - 2;
-        int auxFlag = 1;
-
-        int lineFirstElement = line;
-        int lineSecondElement = line - 1;
-        int columnFirstElement = column;
-        int columnSecondElement = column + 1;
-
-
-        while (count != word.length() + 1) {
-
-
-            while (counterColumn + auxFlag != word.length()) {
-                while (lineFirstElement >= delimiter) {
-                    String firstCell = returnsAlphabeticSymbols(x[lineFirstElement][columnFirstElement]);
-                    String secondCell = returnsAlphabeticSymbols(x[lineSecondElement][columnSecondElement]);
-                    for (int counterOfFirstCell = 0; counterOfFirstCell < firstCell.length(); ) {
-                        String sentence = "";
-                        //sentence += Character.toString(firstCell.charAt(counterOfFirstCell)).trim();
-                        sentence += firstCell.substring(counterOfFirstCell, getLengthOfSentence(firstCell, counterOfFirstCell));
-                        for (int counterOfSecondCell = 0; counterOfSecondCell < secondCell.length(); ) {
-                            //sentence += Character.toString(secondCell.charAt(counterOfSecondCell)).trim();
-                            sentence += secondCell.substring(counterOfSecondCell, getLengthOfSentence(secondCell, counterOfSecondCell));
-                            Set<String> aux = checksEquality(g, sentence);
-                            x[targetLine][targetColumn].addAll(aux);
-                            //sentence = sentence.substring(0, sentence.length() - 1);
-                            sentence = sentence.substring(0, getIndexOfLastVariable(sentence));
-                            counterOfSecondCell = updateCounter(secondCell, counterOfSecondCell);
-                        }
-                        counterOfFirstCell = updateCounter(firstCell, counterOfFirstCell);
-                    }
-                    lineFirstElement--;
-                    lineSecondElement++;
-                    columnSecondElement++;
-                }
-                targetColumn++;
-                columnFirstElement++;
-                lineFirstElement = line;
-                lineSecondElement = line - counterLine;
-                counterColumn++;
-                columnSecondElement = column + counterColumn;
-            }
-            auxFlag++;
-            counterLine++;
-            counterLineOfSecondElement--;
-            lineFirstElement = line;
-            columnFirstElement = column;
-            lineSecondElement = counterLineOfSecondElement;
-            columnSecondElement = column + 1;
-            targetColumn = 0;
-            targetLine--;
-            count++;
-            delimiter--;
-            counterColumn = 1;
-
-        }
-        return x;
-    }
-
-    static Set<String>[][] fillSecondLine(Set<String>[][] x, Grammar g,
-                                          String word) {
-        for (int j = 0; j < word.length() - 1; j++) {
-            String firstCell = returnsAlphabeticSymbols(x[word.length() - 1][j]);
-            String secondCell = returnsAlphabeticSymbols(x[word.length() - 1][j + 1]);
-            int counterOfFirstCell = 0;
-            while (counterOfFirstCell < firstCell.length()) {
-                String sentence = "";
-                //counterOfFirstCell = getBeginOfSentence(firstCell, counterOfFirstCell);
-                sentence += firstCell.substring(counterOfFirstCell, getLengthOfSentence(firstCell, counterOfFirstCell));
-                int counterOfSecondCell = 0;
-                while (counterOfSecondCell < secondCell.length()) {
-                    sentence += secondCell.substring(counterOfSecondCell, getLengthOfSentence(secondCell, counterOfSecondCell));
-                    Set<String> aux = checksEquality(g, sentence);
-                    x[word.length() - 2][j].addAll(aux);
-                    sentence = sentence.substring(0, getIndexOfLastVariable(sentence));
-                    counterOfSecondCell = updateCounter(secondCell, counterOfSecondCell);
-                }
-                counterOfFirstCell = updateCounter(firstCell, counterOfFirstCell);
-            }
-        }
-        return x;
-    }
-
-    private static int updateCounter(final String cell, final int current) {
-        int index = current;
-        if (Character.isDigit(cell.charAt(index))) {
-            while (index < cell.length() && Character.isDigit(index)) {
-                index++;
-            }
-        } else {
-            index++;
-            while (index < cell.length() && Character.isDigit(cell.charAt(index))) {
-                index++;
-            }
-        }
-        return index;
-    }
-
-    private static int getIndexOfLastVariable(final String sentence) {
-        int lenght = sentence.length() - 1;
-        while (Character.isDigit(sentence.charAt(lenght))) {
-            lenght--;
-        }
-        return lenght;
-    }
-
-
-    private static int getLengthOfSentence(final String cell, final int begin) {
-        int end = begin + 1;
-        while (end < cell.length() && Character.isDigit(cell.charAt(end))) {
-            end++;
-        }
-        return end;
-    }
-
-    //remove caracteres que não sejam alfabéticos
-    private static String returnsAlphabeticSymbols(Set<String> set) {
-        String aux = "";
-        for (String element : set) {
-            if (Character.isLetter(element.charAt(0))) {
-                aux += element;
-            }
-        }
-        return aux;
-    }
-
-    //preenche a primeira linha da tabela
-    static Set<String>[][] fillFirstLine(Set<String>[][] x, Grammar g, String word) {
-        for (int j = 0; j < word.length(); j++) {
-            x[word.length() - 1][j] = checksEquality(g,
-                    Character.toString(word.charAt(j)));
-        }
-        return x;
-    }
-
-    private static Set<String> checksEquality(Grammar g, String letter) {
-        Set<String> found = new TreeSet<>();
-        for (Rule element : g.getRules()) {
-            if (element.getRightSide().equals(letter)) {
-                found.add(element.getLeftSide());
-            }
-        }
-        return found;
     }
 
     public static String[][] turnsTreesetOnArray(Set<String>[][] CYK, String word) {

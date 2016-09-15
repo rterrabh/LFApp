@@ -2,7 +2,6 @@ package com.ufla.lfapp.vo;
 
 import static org.junit.Assert.*;
 
-import java.util.HashMap;
 import java.util.Set;
 
 import org.junit.*;
@@ -35,7 +34,6 @@ public class Grammar03Test {
 	
 	@Test
 	public void testInitialSymbolNotRecursive() {
-		
 		Grammar newG = g.getGrammarWithInitialSymbolNotRecursive(this.g, new AcademicSupport());
 		
 		String[] expectedVariables = new String[]{"S'", "S", "A", "B", "C"};
@@ -47,21 +45,17 @@ public class Grammar03Test {
 				"A -> aA | a",
 				"B -> Sb | λ",
 				"C -> cdC | dC | e" };
-		
-		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);
+		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, 
+				expectedInitialSymbol, expectedRules);
 		
 		assertEquals(expectedGrammar.getInitialSymbol(), newG.getInitialSymbol());
-		
 		assertEquals(expectedGrammar.getTerminals(), newG.getTerminals());
-		
 		assertEquals(expectedGrammar.getRules(), newG.getRules());
-		
 		assertEquals(expectedGrammar.getVariables(), newG.getVariables());
 	}
 	
 	@Test
 	public void testGrammarEssentiallyNonContracting() {
-		
 		Grammar newG = g.getGrammarEssentiallyNoncontracting(this.g, new AcademicSupport());
 		
 		String[] expectedVariables = new String[] {"S", "A", "B", "C"};
@@ -72,15 +66,12 @@ public class Grammar03Test {
 				"A -> aA | a",
 				"B -> Sb",
 				"C -> cdC | dC | e" };
-		
-		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);
+		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, 
+				expectedInitialSymbol, expectedRules);
 		
 		assertEquals(expectedGrammar.getInitialSymbol(), newG.getInitialSymbol());
-				
 		assertEquals(expectedGrammar.getTerminals(), newG.getTerminals());
-		
 		assertEquals(expectedGrammar.getRules(), newG.getRules());
-		
 		assertEquals(expectedGrammar.getVariables(), newG.getVariables());
 	}
 	
@@ -95,15 +86,12 @@ public class Grammar03Test {
 				"S -> ABC | SA | aA | a",
 				"A -> aA | a", "B -> Sb | λ",
 				"C -> cdC | dC | e" };
-		
-		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);
+		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, 
+				expectedInitialSymbol, expectedRules);
 		
 		assertEquals(expectedGrammar.getRules(), newG.getRules());
-		
-		assertEquals(newG.getInitialSymbol(), expectedGrammar.getInitialSymbol());
-		
+		assertEquals(expectedGrammar.getInitialSymbol(), newG.getInitialSymbol());
 		assertEquals(expectedGrammar.getTerminals(), newG.getTerminals());
-		
 		assertEquals(expectedGrammar.getVariables(), newG.getVariables());
 	}
 	
@@ -119,15 +107,12 @@ public class Grammar03Test {
 				"A -> aA | a",
 				"B -> Sb | λ",
 				"C -> cdC | dC | e" };
-		
-		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);
+		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, 
+				expectedInitialSymbol, expectedRules);
 		
 		assertEquals(expectedGrammar.getRules(), newG.getRules());
-		
-		assertEquals(newG.getInitialSymbol(), expectedGrammar.getInitialSymbol());
-		
+		assertEquals(expectedGrammar.getInitialSymbol(), newG.getInitialSymbol());
 		assertEquals(expectedGrammar.getTerminals(), newG.getTerminals());
-		
 		assertEquals(expectedGrammar.getVariables(), newG.getVariables());
 	}
 	
@@ -143,15 +128,110 @@ public class Grammar03Test {
 				"A -> aA | a",
 				"B -> Sb | λ",
 				"C -> cdC | dC | e" };
-		
-		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);
+		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, 
+				expectedInitialSymbol, expectedRules);
 		
 		assertEquals(expectedGrammar.getRules(), newG.getRules());
-		
-		assertEquals(newG.getInitialSymbol(), expectedGrammar.getInitialSymbol());
-		
+		assertEquals(expectedGrammar.getInitialSymbol(), newG.getInitialSymbol());
 		assertEquals(expectedGrammar.getTerminals(), newG.getTerminals());
-		
+		assertEquals(expectedGrammar.getVariables(), newG.getVariables());
+	}
+
+	@Test
+	public void testPreFNC2() {
+		Grammar newG = this.g.getGrammarWithInitialSymbolNotRecursive(this.g, new AcademicSupport());
+		newG = newG.getGrammarEssentiallyNoncontracting(newG, new AcademicSupport());
+
+		String[] expectedVariables = new String[]{"S'", "S", "A", "B", "C"};
+		String[] expectedTerminals = new String[]{"a", "b", "c", "d", "e"};
+		String expectedInitialSymbol = "S'";
+		String[] expectedRules = new String[]{
+				"S' -> S",
+				"S -> ABC | SA | A | AC",
+				"A -> aA | a",
+				"B -> Sb",
+				"C -> cdC | dC | e" };
+		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals,
+				expectedInitialSymbol, expectedRules);
+
+		assertEquals(expectedGrammar.getRules(), newG.getRules());
+		assertEquals(expectedGrammar.getInitialSymbol(), newG.getInitialSymbol());
+		assertEquals(expectedGrammar.getTerminals(), newG.getTerminals());
+		assertEquals(expectedGrammar.getVariables(), newG.getVariables());
+	}
+
+	@Test
+	public void testPreFNC3() {
+		Grammar newG = this.g.getGrammarWithInitialSymbolNotRecursive(this.g, new AcademicSupport());
+		newG = newG.getGrammarEssentiallyNoncontracting(newG, new AcademicSupport());
+		newG = newG.getGrammarWithoutChainRules(newG, new AcademicSupport());
+
+		String[] expectedVariables = new String[]{"S'", "S", "A", "B", "C"};
+		String[] expectedTerminals = new String[]{"a", "b", "c", "d", "e"};
+		String expectedInitialSymbol = "S'";
+		String[] expectedRules = new String[]{
+				"S' -> ABC | SA | AC | aA | a",
+				"S -> ABC | SA | AC | aA | a",
+				"A -> aA | a",
+				"B -> Sb",
+				"C -> cdC | dC | e" };
+		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals,
+				expectedInitialSymbol, expectedRules);
+
+		assertEquals(expectedGrammar.getRules(), newG.getRules());
+		assertEquals(expectedGrammar.getInitialSymbol(), newG.getInitialSymbol());
+		assertEquals(expectedGrammar.getTerminals(), newG.getTerminals());
+		assertEquals(expectedGrammar.getVariables(), newG.getVariables());
+	}
+
+	@Test
+	public void testPreFNC4() {
+		Grammar newG = this.g.getGrammarWithInitialSymbolNotRecursive(this.g, new AcademicSupport());
+		newG = newG.getGrammarEssentiallyNoncontracting(newG, new AcademicSupport());
+		newG = newG.getGrammarWithoutChainRules(newG, new AcademicSupport());
+		newG = newG.getGrammarWithoutNoTerm(newG, new AcademicSupport());
+
+		String[] expectedVariables = new String[]{"S'", "S", "A", "B", "C"};
+		String[] expectedTerminals = new String[]{"a", "b", "c", "d", "e"};
+		String expectedInitialSymbol = "S'";
+		String[] expectedRules = new String[]{
+				"S' -> ABC | SA | AC | aA | a",
+				"S -> ABC | SA | AC | aA | a",
+				"A -> aA | a",
+				"B -> Sb",
+				"C -> cdC | dC | e" };
+		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals,
+				expectedInitialSymbol, expectedRules);
+
+		assertEquals(expectedGrammar.getRules(), newG.getRules());
+		assertEquals(expectedGrammar.getInitialSymbol(), newG.getInitialSymbol());
+		assertEquals(expectedGrammar.getTerminals(), newG.getTerminals());
+		assertEquals(expectedGrammar.getVariables(), newG.getVariables());
+	}
+
+	@Test
+	public void testPreFNCComplete() {
+		Grammar newG = this.g.getGrammarWithInitialSymbolNotRecursive(this.g, new AcademicSupport());
+		newG = newG.getGrammarEssentiallyNoncontracting(newG, new AcademicSupport());
+		newG = newG.getGrammarWithoutChainRules(newG, new AcademicSupport());
+		newG = newG.getGrammarWithoutNoTerm(newG, new AcademicSupport());
+		newG = newG.getGrammarWithoutNoReach(newG, new AcademicSupport());
+
+		String[] expectedVariables = new String[]{"S'", "S", "A", "B", "C"};
+		String[] expectedTerminals = new String[]{"a", "b", "c", "d", "e"};
+		String expectedInitialSymbol = "S'";
+		String[] expectedRules = new String[]{
+				"S' -> ABC | SA | AC | aA | a",
+				"S -> ABC | SA | AC | aA | a",
+				"A -> aA | a",
+				"B -> Sb",
+				"C -> cdC | dC | e" };
+		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals,
+				expectedInitialSymbol, expectedRules);
+
+		assertEquals(expectedGrammar.getRules(), newG.getRules());
+		assertEquals(expectedGrammar.getInitialSymbol(), newG.getInitialSymbol());
+		assertEquals(expectedGrammar.getTerminals(), newG.getTerminals());
 		assertEquals(expectedGrammar.getVariables(), newG.getVariables());
 	}
 	
@@ -160,31 +240,27 @@ public class Grammar03Test {
 		Grammar newG = g.FNC(this.g, new AcademicSupport());
 
 		String[] expectedVariables = new String[] {"S'", "S", "A", "B", "C",
-				"T1", "T2", "T3", "T4", "T5", "T6"};
+				"A'", "B'", "C'", "D'", "T1", "T2"};
 		String[] expectedTerminals = new String[] {"a", "b", "c", "d", "e"};
 		String expectedInitialSymbol = "S'";
 		String[] expectedRules = new String[] {
-				"S' -> AT5 | AC | SA | a | T1A",
-				"S -> AT5 | AC | SA | a | T1A",
-				"A -> a | T1A",
-				"B -> ST6",
-				"C -> T2T4 | T3C | e",
-				"T1 -> a",
-				"T2 -> c",
-				"T3 -> d",
-				"T4 -> T3C",
-				"T5 -> BC",
-				"T6 -> b" };
-		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);
+				"S' -> AT1 | AC | SA | a | A'A",
+				"S -> AT1 | AC | SA | a | A'A",
+				"A -> a | A'A",
+				"B -> SB'",
+				"C -> C'T2 | D'C | e",
+				"A' -> a",
+				"B' -> b",
+				"C' -> c",
+				"D' -> d",
+				"T1 -> BC",
+				"T2 -> D'C", };
+		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals,
+				expectedInitialSymbol, expectedRules);
 
 		assertEquals(expectedGrammar.getRules(), newG.getRules());
-		
-		assertEquals(expectedGrammar.getRules(), newG.getRules());
-		
-		assertEquals(newG.getInitialSymbol(), expectedGrammar.getInitialSymbol());
-		
+		assertEquals(expectedGrammar.getInitialSymbol(), newG.getInitialSymbol());
 		assertEquals(expectedGrammar.getTerminals(), newG.getTerminals());
-		
 		assertEquals(expectedGrammar.getVariables(), newG.getVariables());
 	}
 	
@@ -195,7 +271,8 @@ public class Grammar03Test {
 		boolean fng = true;
 		for (com.ufla.lfapp.vo.Rule element : newG.getRules()) {
 			int counter = 0;
-			if (!element.getLeftSide().equals(newG.getInitialSymbol()) && element.getRightSide().equals("")) {
+			if (!element.getLeftSide().equals(newG.getInitialSymbol()) &&
+					element.getRightSide().equals("")) {
 				fng = false;
 				//counter = 1;
 			} else {
@@ -224,9 +301,7 @@ public class Grammar03Test {
 		Set<String> topVariables = matrix[0][0];
 		
 		assertEquals(0, topVariables.size());
-
 		assertTrue(topVariables.isEmpty());
-		
 	}
 
 }

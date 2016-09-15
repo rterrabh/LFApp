@@ -28,7 +28,6 @@ public class Grammar07Test {
 
 	@Test
 	public void testInitialSymbolNotRecursive() {
-		
 		Grammar newG = g.getGrammarWithInitialSymbolNotRecursive(this.g, new AcademicSupport());
 		
 		String[] expectedVariables = new String[]{"A'", "A", "B"};
@@ -38,22 +37,18 @@ public class Grammar07Test {
 				"A' -> A",
 				"A -> AB | BA | a",
 				"B -> b | c" };
-		
-		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);
+		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals,
+				expectedInitialSymbol, expectedRules);
 		
 		assertEquals(expectedGrammar.getInitialSymbol(), newG.getInitialSymbol());
-		
 		assertEquals(expectedGrammar.getTerminals(), newG.getTerminals());
-		
 		assertEquals(expectedGrammar.getRules(), newG.getRules());
-		
 		assertEquals(expectedGrammar.getVariables(), newG.getVariables());
 	}
 	
 	
 	@Test
 	public void testGrammarEssentiallyNonContracting() {
-		
 		Grammar newG = g.getGrammarEssentiallyNoncontracting(this.g, new AcademicSupport());
 		
 		String[] expectedVariables = new String[] {"A", "B"};
@@ -62,15 +57,12 @@ public class Grammar07Test {
 		String[] expectedRules = new String[] {
 				"A -> AB | BA | a",
 				"B -> b | c" };
-		
-		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);
+		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals,
+				expectedInitialSymbol, expectedRules);
 		
 		assertEquals(expectedGrammar.getInitialSymbol(), newG.getInitialSymbol());
-		
 		assertEquals(expectedGrammar.getTerminals(), newG.getTerminals());
-	
 		assertEquals(expectedGrammar.getRules(), newG.getRules());
-		
 		assertEquals(expectedGrammar.getVariables(), newG.getVariables());		
 	}
 	
@@ -85,15 +77,12 @@ public class Grammar07Test {
 		String[] expectedRules = new String[] {
 				"A -> AB | BA | a",
 				"B -> b | c" };
-		
-		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);
+		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals,
+				expectedInitialSymbol, expectedRules);
 		
 		assertEquals(expectedGrammar.getRules(), newG.getRules());
-		
-		assertEquals(newG.getInitialSymbol(), expectedGrammar.getInitialSymbol());
-		
+		assertEquals(expectedGrammar.getInitialSymbol(), newG.getInitialSymbol());
 		assertEquals(expectedGrammar.getTerminals(), newG.getTerminals());
-		
 		assertEquals(expectedGrammar.getVariables(), newG.getVariables());		
 	}
 	
@@ -107,15 +96,12 @@ public class Grammar07Test {
 		String[] expectedRules = new String[] {
 				"A -> AB | BA | a",
 				"B -> b | c" };
-		
-		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);
+		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals,
+				expectedInitialSymbol, expectedRules);
 		
 		assertEquals(expectedGrammar.getRules(), newG.getRules());
-		
-		assertEquals(newG.getInitialSymbol(), expectedGrammar.getInitialSymbol());
-		
+		assertEquals(expectedGrammar.getInitialSymbol(), newG.getInitialSymbol());
 		assertEquals(expectedGrammar.getTerminals(), newG.getTerminals());
-		
 		assertEquals(expectedGrammar.getVariables(), newG.getVariables());			
 	}
 	
@@ -129,21 +115,18 @@ public class Grammar07Test {
 		String[] expectedRules = new String[] {
 				"A -> AB | BA | a",
 				"B -> b | c" };
-		
-		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);
+		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals,
+				expectedInitialSymbol, expectedRules);
 		
 		assertEquals(expectedGrammar.getRules(), newG.getRules());
-		
-		assertEquals(newG.getInitialSymbol(), expectedGrammar.getInitialSymbol());
-		
+		assertEquals(expectedGrammar.getInitialSymbol(), newG.getInitialSymbol());
 		assertEquals(expectedGrammar.getTerminals(), newG.getTerminals());
-		
 		assertEquals(expectedGrammar.getVariables(), newG.getVariables());
 	}
 	
 	
 	@Test
-	public void testNFC() {
+	public void testFNC() {
 		Grammar newG = g.FNC(this.g, new AcademicSupport());
 		
 		String[] expectedVariables = new String[] {"A'","A", "B"};
@@ -153,26 +136,17 @@ public class Grammar07Test {
 				"A' -> AB | BA | a",
 				"A -> AB | BA | a",
 				"B -> b | c" };
-		
-		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);
-//		System.activity_out.println("________________________________");
-//		for (Rule element : newG.getRules()) {
-//			System.activity_out.println(element.getLeftSide() + "->" + element.getRightSide());
-//		}
-//		System.activity_out.println("_______________________________");
+		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals,
+				expectedInitialSymbol, expectedRules);
 		
 		assertEquals(expectedGrammar.getRules(), newG.getRules());
-		
-		assertEquals(newG.getInitialSymbol(), expectedGrammar.getInitialSymbol());
-		
+		assertEquals(expectedGrammar.getInitialSymbol(), newG.getInitialSymbol());
 		assertEquals(expectedGrammar.getTerminals(), newG.getTerminals());
-		
 		assertEquals(expectedGrammar.getVariables(), newG.getVariables());	
 	}
 	
 	@Test
 	public void testRemovingTheImmediateLeftRecursion() {
-		
 		Grammar newG = g.removingTheImmediateLeftRecursion(this.g, new AcademicSupport());
 		
 		String[] expectedVariables = new String[]{"A", "B", "Z1"};
@@ -182,15 +156,12 @@ public class Grammar07Test {
 				"A -> BAZ1 | aZ1 | BA | a",
 				"B -> b | c",
 				"Z1 -> BZ1 | B" };
-		
-		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals, expectedInitialSymbol, expectedRules);		
+		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals,
+				expectedInitialSymbol, expectedRules);
 		
 		assertEquals(expectedGrammar.getInitialSymbol(), newG.getInitialSymbol());
-		
 		assertEquals(expectedGrammar.getTerminals(), newG.getTerminals());
-		
 		assertEquals(expectedGrammar.getRules(), newG.getRules());
-		
 		assertEquals(expectedGrammar.getVariables(), newG.getVariables());
 	}
 
