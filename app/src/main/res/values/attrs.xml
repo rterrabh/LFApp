@@ -9,4 +9,24 @@
         <attr name="metaButtonBarButtonStyle" format="reference"/>
     </declare-styleable>
 
+    <declare-styleable name="AutomataView">
+
+    </declare-styleable>
+
+    <declare-styleable name="StateView">
+        <attr name="name" format="string"/>
+        <attr name="posX" format="float"/>
+        <attr name="posY" format="float"/>
+        <attr name="lineColor" format="color"/>
+        <attr name="lineWidth" format="float"/>
+        <attr name="internColor" format="color"/>
+        <attr name="nameColor" format="color"/>
+        <attr name="nameSize" format="float"/>
+        <attr name="radius" format="float"/>
+    </declare-styleable>
+
+    <declare-styleable name="TransitionViewB">
+
+    </declare-styleable>
+
 </resources>

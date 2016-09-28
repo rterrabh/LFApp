@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,7 +16,6 @@ import com.ufla.lfapp.R;
 import com.ufla.lfapp.activities.menu.MenuActivity;
 import com.ufla.lfapp.activities.utils.Algorithm;
 import com.ufla.lfapp.persistence.DbAcess;
-import com.ufla.lfapp.vo.Grammar;
 import com.ufla.lfapp.vo.GrammarParser;
 
 public class MainActivity extends AppCompatActivity {

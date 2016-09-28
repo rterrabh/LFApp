@@ -3,7 +3,6 @@ package com.ufla.lfapp.activities.menu;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 
 import com.ufla.lfapp.R;
 import com.ufla.lfapp.activities.algorithms.CYKActivity;
@@ -18,8 +17,6 @@ import com.ufla.lfapp.activities.algorithms.RemoveInitialSymbolRecursiveActivity
 import com.ufla.lfapp.activities.algorithms.RemoveLeftDirectRecursionActivity;
 import com.ufla.lfapp.activities.algorithms.RemoveLeftRecursionActivity;
 import com.ufla.lfapp.activities.utils.Algorithm;
-import com.ufla.lfapp.vo.AcademicSupport;
-import com.ufla.lfapp.vo.AcademicSupportForRemoveLeftRecursion;
 import com.ufla.lfapp.vo.GrammarParser;
 
 /**
