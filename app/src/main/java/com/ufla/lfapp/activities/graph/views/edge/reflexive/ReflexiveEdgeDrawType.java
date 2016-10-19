@@ -1,11 +1,11 @@
-package com.ufla.lfapp.activities.graph.views.edge;
+package com.ufla.lfapp.activities.graph.views.edge.reflexive;
 
 import android.graphics.Path;
 
 /**
  * Created by carlos on 18/10/16.
  */
-public interface ArcEdgeDrawType {
+public interface ReflexiveEdgeDrawType {
 
     Path getEdge();
 

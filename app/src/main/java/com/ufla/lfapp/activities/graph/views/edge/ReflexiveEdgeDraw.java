@@ -4,6 +4,10 @@ import android.graphics.Path;
 import android.graphics.Point;
 import android.util.Pair;
 
+import com.ufla.lfapp.activities.graph.views.edge.reflexive.ReflexiveEdgeDrawBottom;
+import com.ufla.lfapp.activities.graph.views.edge.reflexive.ReflexiveEdgeDrawType;
+import com.ufla.lfapp.activities.graph.views.edge.reflexive.ReflexiveEdgeDrawUp;
+
 /**
  * Created by carlos on 18/10/16.
  */

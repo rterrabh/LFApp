@@ -56,6 +56,10 @@ public class LFAppKeyboard extends InputMethodService {
                 return;
             }
             EditText editText = (EditText) focusCurrent;
+            int pos = editText.getBaseline()+editText.getScrollY();
+            if (pos > mKeyboardView.getBaseline()) {
+                editText.scrollTo(0, mKeyboardView.getBaseline()-10-editText.getBaseline());
+            }
             Editable editable = editText.getText();
             int start = editText.getSelectionStart();
             int end = editText.getSelectionEnd();
@@ -92,6 +96,13 @@ public class LFAppKeyboard extends InputMethodService {
                 default: editable.insert(start, Character.toString((char) primaryCode)); break;
 
             }
+            if (pos > mKeyboardView.getBaseline()) {
+                editText.scrollTo(0, mKeyboardView.getBaseline()-10-editText.getBaseline());
+            }
+            System.out.println("EditText Base"+editText.getBaseline());
+            System.out.println("EditText scroll"+editText.getScrollY());
+            System.out.println("Keyboard base"+mKeyboardView.getBaseline());
+
         }
 
         @Override

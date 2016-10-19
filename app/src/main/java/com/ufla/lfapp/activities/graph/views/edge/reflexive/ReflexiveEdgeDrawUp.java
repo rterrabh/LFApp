@@ -1,4 +1,4 @@
-package com.ufla.lfapp.activities.graph.views.edge;
+package com.ufla.lfapp.activities.graph.views.edge.reflexive;
 
 import android.graphics.Path;
 import android.graphics.PointF;
@@ -10,11 +10,11 @@ import com.ufla.lfapp.activities.graph.views.VertexView;
 /**
  * Created by carlos on 18/10/16.
  */
-public class ReflexiveEdgeDrawBottom extends AbstractReflexiveEdgeDrawType {
+public class ReflexiveEdgeDrawUp extends AbstractReflexiveEdgeDrawType {
 
-    private static final int BEGIN_ANGLE = 0;
+    private static final int BEGIN_ANGLE = 180;
 
-    public ReflexiveEdgeDrawBottom(Pair<PointF, PointF> circPoints) {
+    public ReflexiveEdgeDrawUp(Pair<PointF, PointF> circPoints) {
         super(circPoints);
     }
 
@@ -22,15 +22,15 @@ public class ReflexiveEdgeDrawBottom extends AbstractReflexiveEdgeDrawType {
         float cathetus = VertexView.stateRadius / (float) Math.sqrt(2.0f);
         float sqDim = VertexView.squareDimension() * 0.8f;
         return new RectF(circPoints.first.x - cathetus,
-                circPoints.first.y + cathetus - sqDim,
+                circPoints.first.y - cathetus - sqDim,
                 circPoints.second.x + cathetus,
-                circPoints.second.y + cathetus + sqDim);
+                circPoints.second.y - cathetus + sqDim);
     }
 
     @Override
     public Path getEdge() {
         Path edge = new Path();
-        edge.addArc(getRectF(), ReflexiveEdgeDrawBottom.BEGIN_ANGLE,
+        edge.addArc(getRectF(), ReflexiveEdgeDrawUp.BEGIN_ANGLE,
                 ANGLE_LENGHT);
         return edge;
     }
@@ -38,7 +38,7 @@ public class ReflexiveEdgeDrawBottom extends AbstractReflexiveEdgeDrawType {
     @Override
     public Path getInvertedEdge() {
         Path invertedEdge = new Path();
-        invertedEdge.addArc(getRectF(), ReflexiveEdgeDrawBottom.BEGIN_ANGLE +
+        invertedEdge.addArc(getRectF(), ReflexiveEdgeDrawUp.BEGIN_ANGLE +
                 ANGLE_LENGHT, -ANGLE_LENGHT);
         return invertedEdge;
     }

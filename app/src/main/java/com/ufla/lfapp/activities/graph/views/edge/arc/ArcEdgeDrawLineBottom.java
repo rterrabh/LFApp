@@ -1,4 +1,4 @@
-package com.ufla.lfapp.activities.graph.views.edge;
+package com.ufla.lfapp.activities.graph.views.edge.arc;
 
 import android.graphics.Path;
 import android.graphics.PointF;

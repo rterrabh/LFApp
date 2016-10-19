@@ -1,4 +1,4 @@
-package com.ufla.lfapp.activities.graph.views.edge;
+package com.ufla.lfapp.activities.graph.views.edge.arc;
 
 import android.graphics.Path;
 import android.graphics.PointF;
@@ -10,41 +10,41 @@ import com.ufla.lfapp.activities.graph.views.VertexView;
 /**
  * Created by carlos on 18/10/16.
  */
-public class ArcEdgeDrawQuadrantII extends AbstractArcEdgeDrawType {
+public class ArcEdgeDrawQuadrantIII extends AbstractArcEdgeDrawType {
 
-    private static final int BEGIN_ANGLE = 180;
+    private static final int BEGIN_ANGLE = 90;
 
-    public ArcEdgeDrawQuadrantII(Pair<PointF, PointF> circPoints) {
+    public ArcEdgeDrawQuadrantIII(Pair<PointF, PointF> circPoints) {
         super(circPoints);
         setCircPoints();
     }
 
     private void setCircPoints() {
-        circPoints.first.y -= VertexView.stateRadius;
-        circPoints.second.x -= VertexView.stateRadius;
+        circPoints.first.x -= VertexView.stateRadius;
+        circPoints.second.y += VertexView.stateRadius;
     }
 
     private RectF getRectF() {
         float distX = Math.abs(circPoints.first.x - circPoints.second.x);
         float distY = Math.abs(circPoints.first.y - circPoints.second.y);
-        return new RectF(Math.min(circPoints.first.x, circPoints.second.x),
-                Math.min(circPoints.first.y, circPoints.second.y),
+        return new RectF(
+                Math.min(circPoints.first.x, circPoints.second.x),
+                Math.min(circPoints.first.y, circPoints.second.y) - distY,
                 Math.max(circPoints.first.x, circPoints.second.x) + distX,
-                Math.max(circPoints.first.y, circPoints.second.y) + distY);
+                Math.max(circPoints.first.y, circPoints.second.y));
     }
 
     @Override
     public Path getEdge() {
         Path edge = new Path();
-        edge.addArc(getRectF(), ArcEdgeDrawQuadrantII.BEGIN_ANGLE,
-                ANGLE_LENGHT);
+        edge.addArc(getRectF(), ArcEdgeDrawQuadrantIII.BEGIN_ANGLE, ANGLE_LENGHT);
         return edge;
     }
 
     @Override
     public Path getInvertedEdge() {
         Path invertedEdge = new Path();
-        invertedEdge.addArc(getRectF(), ArcEdgeDrawQuadrantII.BEGIN_ANGLE
+        invertedEdge.addArc(getRectF(), ArcEdgeDrawQuadrantIII.BEGIN_ANGLE
                 + ANGLE_LENGHT, -ANGLE_LENGHT);
         return invertedEdge;
     }

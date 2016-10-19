@@ -1,4 +1,4 @@
-package com.ufla.lfapp.activities.graph.views.edge;
+package com.ufla.lfapp.activities.graph.views.edge.arc;
 
 import android.graphics.Path;
 import android.graphics.PointF;
@@ -10,25 +10,25 @@ import com.ufla.lfapp.activities.graph.views.VertexView;
 /**
  * Created by carlos on 18/10/16.
  */
-public class ArcEdgeDrawColumnBottom extends AbstractArcEdgeDrawType {
+public class ArcEdgeDrawLineUp extends AbstractArcEdgeDrawType {
 
-    private static final int BEGIN_ANGLE = 90;
+    private static final int BEGIN_ANGLE = 180;
 
-    public ArcEdgeDrawColumnBottom(Pair<PointF, PointF> circPoints) {
+    public ArcEdgeDrawLineUp(Pair<PointF, PointF> circPoints) {
         super(circPoints);
     }
 
     private RectF getRectF() {
-        return new RectF(circPoints.first.x - (VertexView.stateRadius + VertexView.SPACE),
-                Math.min(circPoints.first.y, circPoints.second.y),
-                circPoints.first.x + (VertexView.stateRadius + VertexView.SPACE),
-                Math.max(circPoints.first.y, circPoints.second.y));
+        return new RectF(Math.min(circPoints.first.x, circPoints.second.x),
+                circPoints.first.y - (VertexView.stateRadius + VertexView.SPACE),
+                Math.max(circPoints.first.x, circPoints.second.x),
+                circPoints.first.y + (VertexView.stateRadius + VertexView.SPACE));
     }
 
     @Override
     public Path getEdge() {
         Path edge = new Path();
-        edge.addArc(getRectF(), ArcEdgeDrawColumnBottom.BEGIN_ANGLE,
+        edge.addArc(getRectF(), ArcEdgeDrawLineUp.BEGIN_ANGLE,
                 ANGLE_LENGHT + ANGLE_LENGHT);
         return edge;
     }
@@ -36,7 +36,7 @@ public class ArcEdgeDrawColumnBottom extends AbstractArcEdgeDrawType {
     @Override
     public Path getInvertedEdge() {
         Path invertedEdge = new Path();
-        invertedEdge.addArc(getRectF(), ArcEdgeDrawColumnBottom.BEGIN_ANGLE
+        invertedEdge.addArc(getRectF(), ArcEdgeDrawLineUp.BEGIN_ANGLE
                         + ANGLE_LENGHT + ANGLE_LENGHT,
                 -(ANGLE_LENGHT + ANGLE_LENGHT));
         return invertedEdge;
