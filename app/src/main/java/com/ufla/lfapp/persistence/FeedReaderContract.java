@@ -3,7 +3,7 @@ package com.ufla.lfapp.persistence;
 import android.provider.BaseColumns;
 
 /**
- * Created by root on 03/08/16.
+ * Created by carlos on 03/08/16.
  */
 public final class FeedReaderContract {
     // To prevent someone from accidentally instantiating the contract class,

@@ -18,7 +18,7 @@ import com.ufla.lfapp.vo.AcademicSupport;
 import com.ufla.lfapp.vo.Grammar;
 
 /**
- * Created by root on 20/07/16.
+ * Created by carlos on 20/07/16.
  */
 public abstract class HeaderGrammarActivity extends AppCompatActivity {
 

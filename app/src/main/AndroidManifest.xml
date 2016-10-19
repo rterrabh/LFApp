@@ -1,156 +1,156 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ufla.lfapp">
+          package="com.ufla.lfapp">
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/lfapp_icon"
         android:label="LFApp"
         android:theme="@style/AppTheme">
-
-        <activity android:name=".activities.automata.DrawActivity">
+        <activity android:name=".activities.EditAutomataActivity">
 
         </activity>
-
         <activity
             android:name=".activities.MainActivity"
             android:label="LFApp"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible|adjustResize">
         </activity>
         <activity
             android:name=".activities.InfoActivity"
-            android:label="LFApp" />
+            android:label="LFApp"/>
         <activity
             android:name=".activities.AboutActivity"
             android:label="LFApp - Sobre"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity" />
+                android:value=".activities.MainActivity"/>
         </activity>
         <activity
             android:name=".activities.menu.MenuActivity"
             android:label="LFApp - Menu">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity" />
+                android:value=".activities.MainActivity"/>
         </activity>
         <activity
             android:name=".activities.algorithms.IdGrammarActivity"
             android:label="LFApp">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.menu.MenuActivity" />
+                android:value=".activities.menu.MenuActivity"/>
         </activity>
         <activity
             android:name=".activities.algorithms.DerivationMoreLeftActivity"
             android:label="LFApp">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.menu.MenuActivity" />
+                android:value=".activities.menu.MenuActivity"/>
         </activity>
         <activity
             android:name=".activities.algorithms.RemoveInitialSymbolRecursiveActivity"
             android:label="LFApp">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.menu.MenuActivity" />
+                android:value=".activities.menu.MenuActivity"/>
         </activity>
         <activity
             android:name=".activities.algorithms.EmptyProductionActivity"
             android:label="LFApp">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.menu.MenuActivity" />
+                android:value=".activities.menu.MenuActivity"/>
         </activity>
         <activity
             android:name=".activities.algorithms.ChainRulesActivity"
             android:label="LFApp">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.menu.MenuActivity" />
+                android:value=".activities.menu.MenuActivity"/>
         </activity>
         <activity
             android:name=".activities.algorithms.NoTermSymbolsActivity"
             android:label="LFApp">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.menu.MenuActivity" />
+                android:value=".activities.menu.MenuActivity"/>
         </activity>
         <activity
             android:name=".activities.algorithms.NoReachSymbolsActivity"
             android:label="LFApp">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.menu.MenuActivity" />
+                android:value=".activities.menu.MenuActivity"/>
         </activity>
         <activity
             android:name=".activities.algorithms.ChomskyNormalFormActivity"
             android:label="LFApp">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.menu.MenuActivity" />
+                android:value=".activities.menu.MenuActivity"/>
         </activity>
         <activity
             android:name=".activities.menu.ChomskyNormalFormMenuActivity"
             android:label="LFApp - FNC">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.menu.MenuActivity" />
+                android:value=".activities.menu.MenuActivity"/>
         </activity>
         <activity
             android:name=".activities.algorithms.RemoveLeftDirectRecursionActivity"
             android:label="LFApp">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.menu.MenuActivity" />
+                android:value=".activities.menu.MenuActivity"/>
         </activity>
         <activity
             android:name=".activities.algorithms.RemoveLeftRecursionActivity"
             android:label="LFApp">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.menu.MenuActivity" />
+                android:value=".activities.menu.MenuActivity"/>
         </activity>
         <activity
             android:name=".activities.menu.GreibachNormalFormMenuActivity"
             android:label="LFApp - FNG">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.menu.MenuActivity" />
+                android:value=".activities.menu.MenuActivity"/>
         </activity>
         <activity
             android:name=".activities.algorithms.CYKActivity"
             android:label="LFApp">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.menu.MenuActivity" />
+                android:value=".activities.menu.MenuActivity"/>
         </activity>
         <activity
             android:name=".activities.algorithms.GreibachNormalFormActivity"
             android:label="LFApp - FNG - 8/8">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.menu.MenuActivity" />
+                android:value=".activities.menu.MenuActivity"/>
         </activity>
         <activity
             android:name=".activities.HistoricalGrammarsActivity"
             android:label="LFApp - Histórico">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity" />
+                android:value=".activities.MainActivity"/>
         </activity>
 
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+            android:value="@integer/google_play_services_version"/>
 
+        <activity android:name=".activities.Home">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

@@ -1,47 +1,44 @@
-package com.ufla.lfapp.activities.automata;
+package com.ufla.lfapp.activities;
 
 import android.content.ClipData;
-import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.ufla.lfapp.R;
+import com.ufla.lfapp.activities.graph.layout.EditGraphLayout;
 
+/**
+ * Created by carlos on 9/21/16.
+ */
 
-public class DrawActivity extends AppCompatActivity {
-
-
+public class EditAutomataActivity extends AppCompatActivity {
 
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_draw);
-        RelativeLayout r1 = (RelativeLayout) findViewById(R.id.draw);
-        RelativeLayout.LayoutParams params;
-        ImageView iv = new ImageView(this);
-        iv.setBackgroundColor(Color.YELLOW);
-        //r1.addView(iv);
-        params = new RelativeLayout.LayoutParams(60, 60);
-        params.leftMargin = 100;
-        params.topMargin = 100;
-        r1.addView(iv, params);
-//        r1.addView(new StateViewB(this), 0, params);
-//        params.leftMargin = 200;
-//        params.topMargin = 200;
-//        r1.addView(new StateViewB(this), 1, params);
+        EditGraphLayout automataView = new EditGraphLayout(this);
+        for (int i = 0; i < 100; i += 5) {
+            for (int j = 0; j < 100; j += 5) {
+                automataView.addVertexView(new Point(i, j));
+            }
+        }
+        Point p1 = new Point(3, 1);
+        Point p2 = new Point(1, 3);
+        automataView.addVertexView(p1);
+        automataView.addVertexView(p2);
+        //automataView.addTransitionView(automataView.getVertexView(p1), automataView.getVertexView(p2));
+
+        setContentView(automataView.getRootView());
 
     }
+
 
     private final class MyTouchListener implements View.OnTouchListener {
         public boolean onTouch(View view, MotionEvent motionEvent) {

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">LFApp_01</string>
 
-    <string name="hello_world" />
+    <string name="hello_world"/>
     <string name="action_settings">Settings</string>
     <string name="type">Tipo</string>
     <string name="leftSide">u</string>
@@ -136,4 +136,6 @@
     <string name="copy">Copiar</string>
     <string name="delete_grammar">Delete grammar.</string>
     <string name="clean_historical_grammar">Limpar histórico</string>
+    <string name="m_quina_de_estados">Máquina de Estados</string>
+    <string name="hist_rico">Histórico</string>
 </resources>

@@ -15,6 +15,8 @@ import android.widget.EditText;
 
 import com.ufla.lfapp.R;
 
+
+
 /**
  * Example of writing an input method for a soft lfapp_keyboard.  This code is
  * focused on simplicity over completeness, so it should in no way be considered
@@ -24,6 +26,9 @@ import com.ufla.lfapp.R;
  */
 public class LFAppKeyboard extends InputMethodService {
 
+
+
+    private OnKeyboardStateChangedListener listener;
     private KeyboardView mKeyboardView;
     private Activity mHostActivity;
     private boolean move = true;
@@ -143,6 +148,7 @@ public class LFAppKeyboard extends InputMethodService {
         // Hide the standard lfapp_keyboard initially
         mHostActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.
                 SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        listener = (OnKeyboardStateChangedListener) host;
     }
 
     /** Returns whether the CustomKeyboard is visible. */
@@ -156,6 +162,7 @@ public class LFAppKeyboard extends InputMethodService {
         mKeyboardView.setVisibility(View.VISIBLE);
         mKeyboardView.setEnabled(true);
         if(v != null) {
+            listener.OnDisplay(v, mKeyboardView);
             ((InputMethodManager) mHostActivity.getSystemService(Activity.
                     INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(v.getWindowToken(), 0);
         }
@@ -165,6 +172,7 @@ public class LFAppKeyboard extends InputMethodService {
     public void hideLFAppKeyboard() {
         mKeyboardView.setVisibility(View.GONE);
         mKeyboardView.setEnabled(false);
+        listener.OnHide(mKeyboardView);
     }
 
     /**
@@ -209,6 +217,7 @@ public class LFAppKeyboard extends InputMethodService {
                 int offsetFinish = -1;
                 int offsetMove = -1;
                 int offsetActual = edittext.getSelectionStart();
+
                 if(event.getAction() == MotionEvent.ACTION_DOWN) {
                     offsetBegin = edittext.getOffsetForPosition(event.getX(), event.getY());
                 }

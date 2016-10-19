@@ -37,6 +37,16 @@ public class Rule01Test {
     }
 
     @Test
+    public void test() {
+        double x = -3.0d;
+        double y = -10d;
+        double radius = Math.sqrt( x * x + y * y );
+        double angleInRadians = Math.acos( x / radius );
+        double angle = Math.atan2(-3.0d , -10.0d);
+        System.out.println((int) 2.5f * 2);
+    }
+
+    @Test
     public void testIsFnc1() {
         assertFalse(rule.isFnc("S"));
     }

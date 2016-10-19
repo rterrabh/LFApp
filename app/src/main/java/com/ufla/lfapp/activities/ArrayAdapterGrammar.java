@@ -12,7 +12,7 @@ import com.ufla.lfapp.R;
 import java.util.List;
 
 /**
- * Created by root on 03/08/16.
+ * Created by carlos on 03/08/16.
  */
 public class ArrayAdapterGrammar extends ArrayAdapter<String> {
 
@@ -31,14 +31,14 @@ public class ArrayAdapterGrammar extends ArrayAdapter<String> {
                     false);
         }
         LayoutInflater buckysInflater = LayoutInflater.from(getContext());
-        View arrayAdapterGrammar = buckysInflater.inflate(R.layout.grammar_item_view, parent,
+        View view = buckysInflater.inflate(R.layout.grammar_item_view, parent,
                 false);
 
-        ((TextView) arrayAdapterGrammar.findViewById(R.id.grammar)).setText(singleGrammarItem);
-        ((TextView) arrayAdapterGrammar.findViewById(R.id.id)).setText
+        ((TextView) view.findViewById(R.id.grammar)).setText(singleGrammarItem);
+        ((TextView) view.findViewById(R.id.id)).setText
                 (String.valueOf(HistoricalGrammarsActivity
                 .getGrammarId(singleGrammarItem)));
-        return arrayAdapterGrammar;
+        return view;
     }
 
 }

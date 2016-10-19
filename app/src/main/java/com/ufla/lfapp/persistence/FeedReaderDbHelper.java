@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 /**
- * Created by root on 03/08/16.
+ * Created by carlos on 03/08/16.
  */
 public class FeedReaderDbHelper extends SQLiteOpenHelper {
 

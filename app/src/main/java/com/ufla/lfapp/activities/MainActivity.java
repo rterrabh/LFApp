@@ -4,24 +4,31 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.inputmethodservice.KeyboardView;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.ufla.lfapp.R;
 import com.ufla.lfapp.activities.menu.MenuActivity;
 import com.ufla.lfapp.activities.utils.Algorithm;
+import com.ufla.lfapp.activities.utils.LFAppKeyboard;
+import com.ufla.lfapp.activities.utils.OnKeyboardStateChangedListener;
 import com.ufla.lfapp.persistence.DbAcess;
 import com.ufla.lfapp.vo.GrammarParser;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnKeyboardStateChangedListener {
 
     private EditText inputGrammar, inputWord;
-//    private LFAppKeyboard mCustomKeyboard;
+    private LFAppKeyboard mCustomKeyboard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,18 +36,49 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         this.inputGrammar = (EditText) findViewById(R.id.inputGrammar);
         this.inputWord = (EditText) findViewById(R.id.inputWord);
-//        mCustomKeyboard= new LFAppKeyboard(this, R.id.lfappKeyboardView, R.xml.lfapp_keyboard);
-//        mCustomKeyboard.registerEditText(R.id.inputGrammar);
-//        mCustomKeyboard.registerEditText(R.id.inputWord);
+        mCustomKeyboard = new LFAppKeyboard(this, R.id.lfappKeyboardView, R.xml.lfapp_keyboard);
+        mCustomKeyboard.registerEditText(R.id.inputGrammar);
+        //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        final EditText inputGrammar = (EditText) findViewById(R.id.inputGrammar);
+        inputGrammar.setOnTouchListener(new View.OnTouchListener() {
+
+            public boolean onTouch(View v, MotionEvent event) {
+                MainActivity.this.getWindow().setSoftInputMode(WindowManager.LayoutParams
+                        .SOFT_INPUT_ADJUST_UNSPECIFIED);
+                return false;
+            }
+        });
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
-        inputGrammar.setText(preferences.getString("inputGrammar", ""));
+        this.inputGrammar.setText(preferences.getString("inputGrammar", ""));
         inputWord.setText(preferences.getString("inputWord", ""));
         Intent intent = getIntent();
         if (intent != null
                 && intent.getExtras() != null
                 && intent.getExtras().getString("grammar") != null) {
-            inputGrammar.setText(intent.getExtras().getString("grammar"));
+            this.inputGrammar.setText(intent.getExtras().getString("grammar"));
         }
+    }
+
+
+
+    @Override
+    public void OnDisplay(View currentview, KeyboardView currentKeyboard) {
+        ScrollView mScroll = (ScrollView) findViewById(R.id.principal);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT);
+        params.addRule(RelativeLayout.ABOVE,  currentKeyboard.getId());
+        mScroll.setLayoutParams(params);
+        mScroll.scrollTo(0, currentview.getBaseline()); //Scrolls to focused EditText
+
+    }
+
+    @Override
+    public void OnHide(KeyboardView currentKeyboard) {
+        ScrollView mScroll = (ScrollView) findViewById(R.id.principal);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        mScroll.setLayoutParams(params);
+
     }
 
     @Override
@@ -63,33 +101,34 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-//        if(mCustomKeyboard.isLFAppKeyboardVisible()) {
-//            mCustomKeyboard.hideLFAppKeyboard();
-//        } else {
+        if(mCustomKeyboard.isLFAppKeyboardVisible()) {
+            mCustomKeyboard.hideLFAppKeyboard();
+        } else {
 //            super.onBackPressed();
 //        }
-        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case DialogInterface.BUTTON_POSITIVE:
-                        dialog.cancel();
-                        finish();
-                        break;
+            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which) {
+                        case DialogInterface.BUTTON_POSITIVE:
+                            dialog.cancel();
+                            finish();
+                            break;
 
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        dialog.cancel();
-                        break;
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            dialog.cancel();
+                            break;
+                    }
                 }
-            }
-        };
-        //Solicita confirmação de saída do lfapp
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Sair");
-        builder.setMessage("Sair do LFApp?");
-        builder.setPositiveButton("Sim", dialogClickListener);
-        builder.setNegativeButton("Não", dialogClickListener);
-        builder.show();
+            };
+            //Solicita confirmação de saída do lfapp
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Sair");
+            builder.setMessage("Sair do LFApp?");
+            builder.setPositiveButton("Sim", dialogClickListener);
+            builder.setNegativeButton("Não", dialogClickListener);
+            builder.show();
+        }
     }
 
     public void insertLambda(View view) {
