@@ -47,7 +47,6 @@ public class EditGraphLayout extends GridLayout {
 
     public EditGraphLayout(Context context) {
         super(context);
-        context.getResources().getDrawable(R.drawable.border_transparent);
         init();
     }
 

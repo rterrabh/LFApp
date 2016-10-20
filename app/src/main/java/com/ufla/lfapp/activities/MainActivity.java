@@ -9,6 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -22,22 +25,53 @@ import com.ufla.lfapp.vo.GrammarParser;
 
 public class MainActivity extends AppCompatActivity {
 
+    private RelativeLayout screenGrammar;
+    private LinearLayout form, buttons;
     private EditText inputGrammar, inputWord;
-    private boolean onEditText;
-    //private LFAppKeyboard mCustomKeyboard;
+    private View historical, about, labelGrammar, labelWord, insertLambda, insertPipe,
+    insertArrow, confirmGrammar;
+    private boolean isInputGrammarOnFocus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        screenGrammar = (RelativeLayout) findViewById(R.id.screenGrammar);
+        form = (LinearLayout) findViewById(R.id.form);
+        buttons = (LinearLayout) findViewById(R.id.buttons);
+        labelGrammar = findViewById(R.id.labelGrammar);
+        labelWord = findViewById(R.id.labelWord);
         inputGrammar = (EditText) findViewById(R.id.inputGrammar);
         inputWord = (EditText) findViewById(R.id.inputWord);
-
-
-        //mCustomKeyboard = new LFAppKeyboard(this, R.id.lfappKeyboardView, R.xml.lfapp_keyboard);
-        //mCustomKeyboard.registerEditText(R.id.inputGrammar);
-        //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        insertLambda = findViewById(R.id.insertLambda);
+        insertPipe = findViewById(R.id.insertPipe);
+        insertArrow = findViewById(R.id.insertArrow);
+        confirmGrammar = findViewById(R.id.confirmGrammar);
+        historical = findViewById(R.id.historical);
+        about = findViewById(R.id.about);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams
+                .SOFT_INPUT_ADJUST_RESIZE);
+        screenGrammar.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver
+                .OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                int heightDiff = screenGrammar.getRootView().getHeight() - screenGrammar.getHeight();
+                int contentViewTop = getWindow().findViewById(Window.ID_ANDROID_CONTENT).getHeight();
+                boolean isShowKeyboard = heightDiff > contentViewTop;
+                if (isShowKeyboard && inputGrammar.hasFocus()) {
+                    historical.setVisibility(View.GONE);
+                    about.setVisibility(View.GONE);
+                    labelWord.setVisibility(View.GONE);
+                    inputWord.setVisibility(View.GONE);
+                } else {
+                    historical.setVisibility(View.VISIBLE);
+                    about.setVisibility(View.VISIBLE);
+                    labelWord.setVisibility(View.VISIBLE);
+                    inputWord.setVisibility(View.VISIBLE);
+                }
+                screenGrammar.invalidate();
+            }
+        });
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
         inputGrammar.setText(preferences.getString("inputGrammar", ""));
         inputWord.setText(preferences.getString("inputWord", ""));
@@ -49,23 +83,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
     protected void onStop() {
+        super.onStop();
         SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
         editor.putString("inputGrammar", inputGrammar.getText().toString());
         editor.putString("inputWord", inputWord.getText().toString());
         editor.apply();
-        super.onStop();
     }
 
     @Override
     protected void onDestroy() {
+        super.onDestroy();
         SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
         editor.putString("inputGrammar", inputGrammar.getText().toString());
         editor.putString("inputWord", inputWord.getText().toString());
         editor.apply();
-        super.onDestroy();
     }
 
     @Override
