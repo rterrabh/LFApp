@@ -16,12 +16,6 @@ public class ArcEdgeDrawQuadrantIII extends AbstractArcEdgeDrawType {
 
     public ArcEdgeDrawQuadrantIII(Pair<PointF, PointF> circPoints) {
         super(circPoints);
-        setCircPoints();
-    }
-
-    private void setCircPoints() {
-        circPoints.first.x -= VertexView.stateRadius;
-        circPoints.second.y += VertexView.stateRadius;
     }
 
     private RectF getRectF() {

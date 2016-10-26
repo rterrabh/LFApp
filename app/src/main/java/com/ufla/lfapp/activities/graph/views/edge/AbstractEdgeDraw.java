@@ -44,7 +44,7 @@ public abstract class AbstractEdgeDraw implements EdgeDraw {
      *
      * @return
      */
-    private void setCircPointsOnCenter() {
+    protected void setCircPointsOnCenter() {
         Pair<Point, Point> gridPointsOnOrigin = getGridPointsOnOrigin();
         PointF first = new PointF();
         PointF second = new PointF();
@@ -59,9 +59,9 @@ public abstract class AbstractEdgeDraw implements EdgeDraw {
                 VertexView.stateRadius + VertexView.SPACE;
 
         if (first.x == second.x && first.y == second.y) {
-            float sqDim = VertexView.squareDimension();
-            first.y += sqDim;
-            second.y += sqDim;
+//            float sqDim = VertexView.squareDimension();
+//            first.y += sqDim;
+//            second.y += sqDim;
         } else {
 //            //Setando o primeiro ponto na circunferência
 //            float angle = (float) Math.atan2((second.y - first.y), (second.x - first.x));

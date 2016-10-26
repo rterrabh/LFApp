@@ -20,21 +20,22 @@ import com.ufla.lfapp.activities.graph.layout.EditGraphLayout;
 
 public class EditAutomataActivity extends AppCompatActivity {
 
+    private MyDragListener myDragListener;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EditGraphLayout automataView = new EditGraphLayout(this);
-        for (int i = 0; i < 100; i += 5) {
-            for (int j = 0; j < 100; j += 5) {
-                automataView.addVertexView(new Point(i, j));
-            }
-        }
-        Point p1 = new Point(3, 1);
-        Point p2 = new Point(1, 3);
-        automataView.addVertexView(p1);
-        automataView.addVertexView(p2);
-        //automataView.addTransitionView(automataView.getVertexView(p1), automataView.getVertexView(p2));
-
+//        for (int i = 0; i < 15; i += 5) {
+//            for (int j = 0; j < 15; j += 5) {
+//                automataView.addVertexView(new Point(i, j));
+//            }
+//        }
+//        Point p1 = new Point(3, 1);
+//        Point p2 = new Point(1, 3);
+//        automataView.addVertexView(p1);
+//        automataView.addVertexView(p2);
+        //automataView.addEdgeView(automataView.getVertexView(p1), automataView.getVertexView(p2));
+        myDragListener = new MyDragListener();
         setContentView(automataView.getRootView());
 
     }

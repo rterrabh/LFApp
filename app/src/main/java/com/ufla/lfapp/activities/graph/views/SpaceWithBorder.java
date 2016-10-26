@@ -31,4 +31,15 @@ public class SpaceWithBorder extends View {
         canvas.drawRect(0, 0, VertexView.squareDimension(), VertexView.squareDimension(),
                 SpaceWithBorder.mBorderPaint);
     }
+
+    /**
+     * Define a largura e a altura do estado a ser desenhado.
+     *
+     * @param widthMeasureSpec  largura.
+     * @param heightMeasureSpec altura.
+     */
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        setMeasuredDimension(VertexView.squareDimension(), VertexView.squareDimension());
+    }
 }

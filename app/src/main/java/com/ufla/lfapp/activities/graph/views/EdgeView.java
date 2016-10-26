@@ -35,6 +35,11 @@ public class EdgeView extends View {
     private static final float ARROW_ANGLE = (float) Math.toRadians(45.0f);
     private static final float ARROW_ANGLE_INTERN = (float) Math.toRadians(30.0f);
     private static final float TEXT_SPACE_FROM_EDGE = 20.0f;
+    private String label = "";
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
 
 
     public static float getArrowHeadLenght() {
@@ -143,11 +148,11 @@ public class EdgeView extends View {
         } else {
             spaceFromLine = TEXT_SPACE_FROM_EDGE + TEXT_SPACE_FROM_EDGE;
         }
-        String symbol = "a";
-
-        canvas.drawTextOnPath(symbol, edgeDraw.getLabelPath(), 0.0f, spaceFromLine, mTransitionText);
+        canvas.drawTextOnPath(label, edgeDraw.getLabelPath(), 0.0f, spaceFromLine, mTransitionText);
         canvas.drawPath(edgeDraw.getEdge(), mTransitionLine);
-        //canvas.drawPath(edgeDraw.getArrowHead(), mTransitionLine);
+        if (!(edgeDraw instanceof ReflexiveEdgeDraw)) {
+            canvas.drawPath(edgeDraw.getArrowHead(), mTransitionLine);
+        }
 
     }
 

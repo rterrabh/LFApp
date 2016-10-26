@@ -1,10 +1,13 @@
 package com.ufla.lfapp.activities.graph.views;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.util.DisplayMetrics;
 import android.view.View;
 
 // Color Line #FFCCCC
@@ -16,25 +19,44 @@ import android.view.View;
  */
 public class VertexView extends View {
 
+    private static float dpi;
     private static int mStateLineColor = Color.parseColor("#968D8D");
     private static int mStateInternColor = Color.parseColor("#FFCCCC");
     private static int mStateInternColorSelect = Color.parseColor("#FF6666");
     private Paint mStateInternPaint;
     private Paint mStateLinePaint;
     private Paint mStateText;
-    private int textSize = 40;
-    public static int stateRadius = 60;
-    public static int SPACE = 5;
+    private final static int textSize;
+    public final static int stateRadius;
+    public final static int SPACE;
     private Point gridPoint;
-    private String label;
+    private String label = "";
     private boolean select;
+
+    static {
+        dpi = Resources.getSystem().getDisplayMetrics().densityDpi;
+        //dpi = 1.0f;
+//        if (dpi == 160.0) {
+//            stateRadius = (int) (Math.sqrt(dpi));
+//        } else {
+//            stateRadius = (int) (Math.sqrt(dpi) * 2.0f);
+//
+//        }
+        textSize = (int) (dpi / 8.0f);
+        stateRadius = (int) (dpi / 5.0);
+        SPACE = (int) (0.02f * dpi);
+    }
 
     public VertexView(Context context) {
         super(context);
         init();
         defineDefault();
+        System.out.println(dpi);
     }
 
+    public void setLabel(String label) {
+        this.label = label;
+    }
     public Point getGridPoint() {
         return gridPoint;
     }
@@ -159,7 +181,6 @@ public class VertexView extends View {
         mStateInternPaint.setColor(VertexView.mStateInternColor);
         mStateText.setColor(Color.BLACK);
         mStateText.setTextSize(textSize);
-        stateRadius = 60;
     }
 
     /**
@@ -182,7 +203,7 @@ public class VertexView extends View {
             mStateInternPaint.setColor(mStateInternColor);
         }
         //Texto
-        canvas.drawText("ad", VertexView.centerPoint(), VertexView.centerPoint(),
+        canvas.drawText(label, VertexView.centerPoint(), VertexView.centerPoint(),
                 mStateText);
         //Círculo contorno
         canvas.drawCircle(VertexView.centerPoint(), VertexView.centerPoint(),

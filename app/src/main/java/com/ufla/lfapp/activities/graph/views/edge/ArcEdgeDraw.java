@@ -23,6 +23,8 @@ public class ArcEdgeDraw extends AbstractEdgeDraw {
 
     public ArcEdgeDraw(Pair<Point, Point> gridPoints) {
         super(gridPoints);
+        arcEdgeDrawType = new ArcEdgeDrawImplement(circPoints);
+        /*
         if (sameColumn() && circPoints.first.y < circPoints.second.y) {
             arcEdgeDrawType = new ArcEdgeDrawColumnUp(circPoints);
         } else if (sameColumn() && circPoints.first.y > circPoints.second.y) {
@@ -39,7 +41,7 @@ public class ArcEdgeDraw extends AbstractEdgeDraw {
             arcEdgeDrawType = new ArcEdgeDrawQuadrantIII(circPoints);
         } else if (isQuadrantIV()) {
             arcEdgeDrawType = new ArcEdgeDrawQuadrantIV(circPoints);
-        }
+        }*/
     }
 
     private boolean sameColumn() {
@@ -73,7 +75,8 @@ public class ArcEdgeDraw extends AbstractEdgeDraw {
 
     @Override
     public Path getEdge() {
-        return arcEdgeDrawType.getEdge();
+        Path edge = arcEdgeDrawType.getEdge();
+        return edge;
     }
 
     @Override

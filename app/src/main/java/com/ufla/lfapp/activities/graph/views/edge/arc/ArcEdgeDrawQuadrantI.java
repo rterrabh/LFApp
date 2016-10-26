@@ -16,7 +16,6 @@ public class ArcEdgeDrawQuadrantI extends AbstractArcEdgeDrawType {
 
     public ArcEdgeDrawQuadrantI(Pair<PointF, PointF> circPoints) {
         super(circPoints);
-        setCircPoints();
     }
 
     private RectF getRectF() {
@@ -26,11 +25,6 @@ public class ArcEdgeDrawQuadrantI extends AbstractArcEdgeDrawType {
                 Math.min(circPoints.first.y, circPoints.second.y),
                 Math.max(circPoints.first.x, circPoints.second.x),
                 Math.max(circPoints.first.y, circPoints.second.y) + distY);
-    }
-
-    private void setCircPoints() {
-        circPoints.first.x += VertexView.stateRadius;
-        circPoints.second.y -= VertexView.stateRadius;
     }
 
     @Override
