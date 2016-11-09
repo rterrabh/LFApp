@@ -30,6 +30,7 @@ public class VertexView extends View {
     public final static int stateRadius;
     public final static int SPACE;
     private Point gridPoint;
+    private static int cont_views = 0;
     private String label = "";
     private boolean select;
 
@@ -51,7 +52,6 @@ public class VertexView extends View {
         super(context);
         init();
         defineDefault();
-        System.out.println(dpi);
     }
 
     public void setLabel(String label) {
@@ -165,6 +165,8 @@ public class VertexView extends View {
         mStateText.setStyle(Paint.Style.FILL);
         mStateText.setTextAlign(Paint.Align.CENTER);
         select = false;
+        label = "q" + cont_views;
+        cont_views++;
     }
 
     public void onSelect() {

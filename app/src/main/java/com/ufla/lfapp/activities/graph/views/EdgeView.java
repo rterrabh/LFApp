@@ -1,5 +1,6 @@
 package com.ufla.lfapp.activities.graph.views;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -14,6 +15,10 @@ import com.ufla.lfapp.activities.graph.views.edge.ArcEdgeDraw;
 import com.ufla.lfapp.activities.graph.views.edge.EdgeDraw;
 import com.ufla.lfapp.activities.graph.views.edge.ReflexiveEdgeDraw;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by carlos on 9/21/16.
  * Representa a visão de uma transição em um autômato ou máquina de estados.
@@ -21,6 +26,8 @@ import com.ufla.lfapp.activities.graph.views.edge.ReflexiveEdgeDraw;
 
 public class EdgeView extends View {
 
+    public static final List<Character> alphabet = new ArrayList<>(Arrays.asList(
+            new Character[] {'?', 'a', 'b', 'c', 'd', 'e', 'f', 'g'} ) );
     public static final int LINE = 0;
     public static final int ARC = 1;
     private EdgeDraw edgeDraw;
@@ -36,11 +43,38 @@ public class EdgeView extends View {
     private static final float ARROW_ANGLE_INTERN = (float) Math.toRadians(30.0f);
     private static final float TEXT_SPACE_FROM_EDGE = 20.0f;
     private String label = "";
+    private int indLabel = 0;
+    private boolean changeLabel = false;
+    public Thread tRed;
 
     public void setLabel(String label) {
         this.label = label;
     }
 
+    public void reloadBlack() {
+        tRed = new Thread() {
+            public void run() {
+                try {
+                    sleep(4000);
+                    ((Activity) getContext()).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mTransitionText.setColor(Color.BLACK);
+                            invalidate();
+                        }
+                    });
+                } catch (InterruptedException e) {
+
+                }
+            }
+        };
+        tRed.start();
+    }
+
+    public void reReloadBlack() {
+        tRed.interrupt();
+        reloadBlack();
+    }
 
     public static float getArrowHeadLenght() {
         return ARROW_HEAD_LENGHT;
@@ -80,6 +114,22 @@ public class EdgeView extends View {
         this.mTransitionText.setStrokeWidth(EdgeView.STROKE_WIDTH_TEXT);
         this.mTransitionText.setStyle(Paint.Style.FILL);
         this.mTransitionText.setTextAlign(Paint.Align.CENTER);
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (tRed != null && tRed.isAlive()) {
+                    if (indLabel == alphabet.size()) {
+                        indLabel = 1;
+                    }
+                    label = alphabet.get(indLabel++).toString();
+                    changeLabel = true;
+                    invalidate();
+                } else {
+                    View parent = (View) view.getParent();
+                    parent.performClick();
+                }
+            }
+        });
     }
 
     public void setVertices(Pair<VertexView, VertexView> vertices) {
@@ -95,9 +145,11 @@ public class EdgeView extends View {
      * Define valores padrões para os objetos Paint da transição.
      */
     private void defineDefault() {
+        label = alphabet.get(indLabel++).toString();
+        changeLabel = true;
         this.mTransitionLine.setColor(Color.BLACK);
         this.mTransitionLine.setStrokeWidth(EdgeView.STROKE_WIDTH_LINE);
-        this.mTransitionText.setColor(Color.BLACK);
+        this.mTransitionText.setColor(Color.RED);
         this.mTransitionText.setTextSize(EdgeView.TEXT_SIZE);
     }
 
@@ -153,7 +205,12 @@ public class EdgeView extends View {
         if (!(edgeDraw instanceof ReflexiveEdgeDraw)) {
             canvas.drawPath(edgeDraw.getArrowHead(), mTransitionLine);
         }
-
+        if (tRed == null) {
+            reloadBlack();
+        } else if (changeLabel) {
+            reReloadBlack();
+        }
+        changeLabel = false;
     }
 
     /**

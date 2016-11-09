@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -48,12 +49,13 @@ public class EditGraphLayout extends GridLayout {
 
     private static final int INITIAL_NUM_COLUMNS = 20;
     private static final int INITIAL_NUM_ROWS = 15;
-    private static final int DIST_FREE_SPACE_MIN = 5;
+    private static final int DIST_FREE_SPACE_MIN = 3;
     private int actualNumColumns;
     private int actualNumRows;
     private int distColumnsFree;
     private int distRowsFree;
     private View viewsOnGrid[][];
+    private EdgeView edgesOnGrid[][];
     private List<EdgeView> edgeViews;
     private Map<VertexView, List<EdgeView>> edgeDependecies;
     private GestureDetector gestureDetector;
@@ -105,14 +107,24 @@ public class EditGraphLayout extends GridLayout {
         distColumnsFree = actualNumColumns;
         distRowsFree = actualNumRows;
         viewsOnGrid = new View[actualNumRows][actualNumColumns];
+        edgesOnGrid = new EdgeView[actualNumRows][actualNumColumns];
 
         hScrollView.addView(this);
         scrollView.addView(hScrollView);
         fillSpace();
+        fillEdges();
         this.gestureDetector = new GestureDetector(getContext(), new GestureListener());
         onSelectState = false;
         stateSelect = null;
         edgeViews = new ArrayList<>();
+    }
+
+    public void fillEdges() {
+        for (int i = 0; i < actualNumColumns; i++) {
+            for (int j = 0; j < actualNumRows; j++) {
+                edgesOnGrid[j][i] = null;
+            }
+        }
     }
 
     /**
@@ -120,7 +132,14 @@ public class EditGraphLayout extends GridLayout {
      * em 1.5 vezes do tamanho atual.
      */
     private void growColumns() {
+        View viewsOnGridOld[][] = viewsOnGrid;
+        int oldNumColumns = actualNumColumns;
+        actualNumColumns += actualNumColumns << 1;
+        viewsOnGrid = new View[actualNumRows][actualNumColumns];
+        setColumnCount(actualNumColumns);
+        for (int i = 0; i < viewsOnGridOld.length; i++) {
 
+        }
     }
 
     /**
@@ -128,7 +147,7 @@ public class EditGraphLayout extends GridLayout {
      * em 1.5 vezes do tamanho atual.
      */
     private void growRows() {
-
+        actualNumRows += actualNumRows << 1;
     }
 
     private VertexView viewOnDrag;
@@ -144,54 +163,38 @@ public class EditGraphLayout extends GridLayout {
         vertexView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
         vertexView.setGridPoint(gridPoint);
-        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService( Context.LAYOUT_INFLATER_SERVICE );
-        builder.setView(inflater.inflate(R.layout.dialog_label_vertex, null))
-                .setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        Dialog f = (Dialog) dialog;
-                        EditText label = (EditText) f.findViewById(R.id.labelVertex);
-                        vertexView.setLabel(label.getText().toString());
-                        removeView(viewsOnGrid[gridPoint.y][gridPoint.x]);
-                        viewsOnGrid[gridPoint.y][gridPoint.x] = vertexView;
-                        addView(vertexView, new LayoutParams(GridLayout.spec(gridPoint.y),
-                                GridLayout.spec(gridPoint.x)));
-                        int distRowsFreeFromState = Math.max(gridPoint.y, actualNumRows - gridPoint.y);
-                        if (distRowsFreeFromState < distRowsFree) {
-                            distRowsFree = distRowsFreeFromState;
-                        }
-                        int distColumnsFreeFromState = Math.max(gridPoint.x, actualNumColumns - gridPoint.x);
-                        if (distColumnsFreeFromState < distColumnsFree) {
-                            distColumnsFree = distColumnsFreeFromState;
-                        }
-                        if (distColumnsFreeFromState < DIST_FREE_SPACE_MIN) {
-                            growColumns();
-                        }
-                        if (distRowsFreeFromState < DIST_FREE_SPACE_MIN) {
-                            growRows();
-                        }
-                        edgeDependecies.put(vertexView, new ArrayList<EdgeView>());
-                        dialog.cancel();
+        removeView(viewsOnGrid[gridPoint.y][gridPoint.x]);
+        viewsOnGrid[gridPoint.y][gridPoint.x] = vertexView;
+        addView(vertexView, new LayoutParams(GridLayout.spec(gridPoint.y),
+                GridLayout.spec(gridPoint.x)));
+        int distRowsFreeFromState = Math.max(gridPoint.y, actualNumRows - gridPoint.y);
+        if (distRowsFreeFromState < distRowsFree) {
+            distRowsFree = distRowsFreeFromState;
+        }
+        int distColumnsFreeFromState = Math.max(gridPoint.x, actualNumColumns - gridPoint.x);
+        if (distColumnsFreeFromState < distColumnsFree) {
+            distColumnsFree = distColumnsFreeFromState;
+        }
+        if (distColumnsFreeFromState < DIST_FREE_SPACE_MIN) {
+            growColumns();
+        }
+        if (distRowsFreeFromState < DIST_FREE_SPACE_MIN) {
+            growRows();
+        }
+        edgeDependecies.put(vertexView, new ArrayList<EdgeView>());
 
+//        vertexView.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                ClipData data = ClipData.newPlainText("", "");
+//                View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(vertexView);
+//                vertexView.startDrag(data, shadowBuilder, vertexView, 0);
+//                vertexView.setVisibility(View.INVISIBLE);
+//                return true;
+//            }
+//        });
 
-//                        vertexView.setOnLongClickListener(new View.OnLongClickListener() {
-//                            @Override
-//                            public boolean onLongClick(View v) {
-//                                ClipData data = ClipData.newPlainText("", "");
-//                                View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(vertexView);
-//                                vertexView.startDrag(data, shadowBuilder, vertexView, 0);
-//                                vertexView.setVisibility(View.INVISIBLE);
-//                                return true;
-//                            }
-//                        });
-//
-//                        vertexView.setOnDragListener(myOnDragListener);
-
-                    }
-                })
-                .create()
-                .show();
+        vertexView.setOnDragListener(myOnDragListener);
 
 
     }
@@ -285,6 +288,8 @@ public class EditGraphLayout extends GridLayout {
         space.setMinimumHeight(VertexView.squareDimension());
         space.setMinimumWidth(VertexView.squareDimension());
         for (EdgeView edgeView : edgeDependecies.get(viewsOnGrid[gridPoint.y][gridPoint.x])) {
+            nullableEdgesOnView(edgeView);
+            nullableEdgesOnView(edgeView);
             removeView(edgeView);
         }
         edgeDependecies.remove(viewsOnGrid[gridPoint.y][gridPoint.x]);
@@ -333,22 +338,80 @@ public class EditGraphLayout extends GridLayout {
         }
         edgeDependecies.get(sourceVertex).add(edgeView);
         edgeDependecies.get(targetVertex).add(edgeView);
-        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService( Context.LAYOUT_INFLATER_SERVICE );
-        builder.setView(inflater.inflate(R.layout.dialog_label_edge, null))
-                .setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        Dialog f = (Dialog) dialog;
-                        EditText label = (EditText) f.findViewById(R.id.labelEdge);
-                        edgeView.setLabel(label.getText().toString());
-                        addView(edgeView, new GridLayout.LayoutParams(rowSpec, columnSpec));
-                        dialog.cancel();
+        setEdgesOnView(edgeView, gridPointSourceVertex, gridPointTargetVertex);
+        addView(edgeView, new GridLayout.LayoutParams(rowSpec, columnSpec));
+//        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+//        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+//        builder.setView(inflater.inflate(R.layout.dialog_label_edge, null))
+//                .setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int id) {
+//                        Dialog f = (Dialog) dialog;
+//                        EditText label = (EditText) f.findViewById(R.id.labelEdge);
+//                        edgeView.setLabel(label.getText().toString());
+//                        addView(edgeView, new GridLayout.LayoutParams(rowSpec, columnSpec));
+//                        dialog.cancel();
+//
+//                    }
+//                })
+//                .create()
+//                .show();
+    }
 
-                    }
-                })
-                .create()
-                .show();
+    public void setEdgesOnView(EdgeView edgeView, Point gridPointSourceVertex,
+                               Point gridPointTargetVertex) {
+        int menorX, maiorX, menorY, maiorY;
+
+        if (gridPointSourceVertex.x < gridPointTargetVertex.x) {
+            menorX = gridPointSourceVertex.x;
+            maiorX = gridPointTargetVertex.x;
+        } else {
+            menorX = gridPointTargetVertex.x;
+            maiorX = gridPointSourceVertex.x;
+        }
+
+        if (gridPointSourceVertex.y < gridPointTargetVertex.y) {
+            menorY = gridPointSourceVertex.y;
+            maiorY = gridPointTargetVertex.y;
+        } else {
+            menorY = gridPointTargetVertex.y;
+            maiorY = gridPointSourceVertex.y;
+        }
+
+        for (int j = menorY; j <= maiorY; j++) {
+            for (int i = menorX; i <= maiorX; i++) {
+                edgesOnGrid[j][i] = edgeView;
+            }
+        }
+    }
+
+    public void nullableEdgesOnView(EdgeView edgeView) {
+        Pair<Point, Point> gridPoints = edgeView.getGridPoints();
+        Point gridPointSourceVertex = gridPoints.first;
+        Point gridPointTargetVertex = gridPoints.second;
+        int menorX, maiorX, menorY, maiorY;
+
+        if (gridPointSourceVertex.x < gridPointTargetVertex.x) {
+            menorX = gridPointSourceVertex.x;
+            maiorX = gridPointTargetVertex.x;
+        } else {
+            menorX = gridPointTargetVertex.x;
+            maiorX = gridPointSourceVertex.x;
+        }
+
+        if (gridPointSourceVertex.y < gridPointTargetVertex.y) {
+            menorY = gridPointSourceVertex.y;
+            maiorY = gridPointTargetVertex.y;
+        } else {
+            menorY = gridPointTargetVertex.y;
+            maiorY = gridPointSourceVertex.y;
+        }
+
+        for (int j = menorY; j <= maiorY; j++) {
+            for (int i = menorX; i <= maiorX; i++) {
+                edgesOnGrid[j][i] = null;
+            }
+        }
     }
 
 
@@ -391,6 +454,21 @@ public class EditGraphLayout extends GridLayout {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        final int action = MotionEventCompat.getActionMasked(ev);
+
+        float x = ev.getX();
+        float y = ev.getY();
+        int xGrid = (int) (x / VertexView.squareDimension());
+        int yGrid = (int) (y / VertexView.squareDimension());
+        EdgeView edgeView = edgesOnGrid[yGrid][xGrid];
+        if (edgeView != null && edgeView.tRed.isAlive()) {
+            return false;
+        }
+        return true;
     }
 
     @Override

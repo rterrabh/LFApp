@@ -25,11 +25,6 @@ public class CloneTest {
     }
 
     @Test
-    public void test() {
-        System.out.println(Math.round(104.4f/10));
-    }
-
-    @Test
     public void testClone() throws CloneNotSupportedException {
         Grammar gc = (Grammar) this.g.clone();
 
