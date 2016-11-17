@@ -1,32 +1,21 @@
 package com.ufla.lfapp.activities.graph.layout;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.ClipData;
-import android.content.ClipDescription;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Point;
-import android.os.Bundle;
 import android.support.v4.view.MotionEventCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Pair;
 import android.view.DragEvent;
 import android.view.GestureDetector;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.HorizontalScrollView;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
-import com.ufla.lfapp.R;
 import com.ufla.lfapp.activities.graph.views.SpaceWithBorder;
 import com.ufla.lfapp.activities.graph.views.EdgeView;
 import com.ufla.lfapp.activities.graph.views.VertexView;
@@ -35,9 +24,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static android.os.Parcelable.CONTENTS_FILE_DESCRIPTOR;
-import static android.view.MotionEvent.ACTION_UP;
 
 /**
  * Created by carlos on 06/10/16.
@@ -54,6 +40,7 @@ public class EditGraphLayout extends GridLayout {
     private int actualNumRows;
     private int distColumnsFree;
     private int distRowsFree;
+    private VertexView initialState;
     private View viewsOnGrid[][];
     private EdgeView edgesOnGrid[][];
     private List<EdgeView> edgeViews;
@@ -65,6 +52,23 @@ public class EditGraphLayout extends GridLayout {
     private VertexView stateSelect;
     private Context context;
     private MyOnDragListener myOnDragListener = new MyOnDragListener();
+
+
+    public boolean isStateSelected() {
+        return onSelectState;
+    }
+
+    public void setOnStateSelected(boolean onSelectState) {
+        this.onSelectState = onSelectState;
+    }
+
+    public VertexView getStateSelect() {
+        return stateSelect;
+    }
+
+    public void setStateSelect(VertexView stateSelect) {
+        this.stateSelect = stateSelect;
+    }
 
     public EditGraphLayout(Context context) {
         super(context);
@@ -324,6 +328,12 @@ public class EditGraphLayout extends GridLayout {
         Point gridPointSourceVertex = sourceVertex.getGridPoint();
         Point gridPointTargetVertex = targetVertex.getGridPoint();
         edgeView.setVertices(Pair.create(sourceVertex, targetVertex));
+        for (EdgeView edgeView1 : edgeViews) {
+            if (edgeView.equals(edgeView1)) {
+                Log.d("EdgeView", "EdgeView repetida");
+                return;
+            }
+        }
         final GridLayout.Spec rowSpec;
         final GridLayout.Spec columnSpec;
         if (sourceVertex.equals(targetVertex)) {
@@ -338,6 +348,7 @@ public class EditGraphLayout extends GridLayout {
         }
         edgeDependecies.get(sourceVertex).add(edgeView);
         edgeDependecies.get(targetVertex).add(edgeView);
+        edgeViews.add(edgeView);
         setEdgesOnView(edgeView, gridPointSourceVertex, gridPointTargetVertex);
         addView(edgeView, new GridLayout.LayoutParams(rowSpec, columnSpec));
 //        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -464,8 +475,12 @@ public class EditGraphLayout extends GridLayout {
         float y = ev.getY();
         int xGrid = (int) (x / VertexView.squareDimension());
         int yGrid = (int) (y / VertexView.squareDimension());
+        View view = viewsOnGrid[yGrid][xGrid];
+        if (view instanceof  VertexView) {
+            return false;
+        }
         EdgeView edgeView = edgesOnGrid[yGrid][xGrid];
-        if (edgeView != null && edgeView.tRed.isAlive()) {
+        if (edgeView != null) {
             return false;
         }
         return true;
@@ -494,21 +509,15 @@ public class EditGraphLayout extends GridLayout {
 
         @Override
         public boolean onDown(MotionEvent e) {
-//            if (onSelectState) {
-//                float x = e.getX();
-//                float y = e.getY();
-//                Point gridPoint = new Point();
-//                gridPoint.x = (int) (x / VertexView.squareDimension());
-//                gridPoint.y = (int) (y / VertexView.squareDimension());
-//                View view = viewsOnGrid[gridPoint.y][gridPoint.x];
-//                if (view instanceof VertexView) {
-//                    if (onSelectState) {
-//                        addEdgeView(stateSelect, (VertexView) view);
-//                        stateSelect.onSelect();
-//                        onSelectState = false;
-//                    }
-//                }
+//            float x = e.getX();
+//            float y = e.getY();
+//            Point gridPoint = new Point();
+//            gridPoint.x = (int) (x / VertexView.squareDimension());
+//            gridPoint.y = (int) (y / VertexView.squareDimension());
+//            View view = viewsOnGrid[gridPoint.y][gridPoint.x];
+//            if (view instanceof VertexView) {
 //            }
+            Log.d("Layout - onDown", "Layout - onDown");
             return true;
         }
 
@@ -516,6 +525,7 @@ public class EditGraphLayout extends GridLayout {
 
         @Override
         public boolean onContextClick(MotionEvent e) {
+            Log.d("Layout - onContextClick", "Layout - onContextClick");
             return super.onContextClick(e);
         }
 
@@ -538,6 +548,7 @@ public class EditGraphLayout extends GridLayout {
                     stateSelect.onSelect();
                 }
             }
+            Log.d("Layout - onLongPress", "Layout - onLongPress");
         }
 
         // event when double tap occurs
@@ -556,7 +567,7 @@ public class EditGraphLayout extends GridLayout {
             }
 
 
-            Log.d("Double Tap", "Tapped at: (" + x + "," + y + ")");
+            Log.d("Layout - Double Tap", "Layout - Tapped at: (" + x + "," + y + ")");
 
             return true;
         }

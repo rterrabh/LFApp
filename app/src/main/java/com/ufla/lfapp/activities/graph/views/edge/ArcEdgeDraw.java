@@ -4,14 +4,6 @@ import android.graphics.Path;
 import android.graphics.Point;
 import android.util.Pair;
 
-import com.ufla.lfapp.activities.graph.views.edge.arc.ArcEdgeDrawColumnBottom;
-import com.ufla.lfapp.activities.graph.views.edge.arc.ArcEdgeDrawColumnUp;
-import com.ufla.lfapp.activities.graph.views.edge.arc.ArcEdgeDrawLineBottom;
-import com.ufla.lfapp.activities.graph.views.edge.arc.ArcEdgeDrawLineUp;
-import com.ufla.lfapp.activities.graph.views.edge.arc.ArcEdgeDrawQuadrantI;
-import com.ufla.lfapp.activities.graph.views.edge.arc.ArcEdgeDrawQuadrantII;
-import com.ufla.lfapp.activities.graph.views.edge.arc.ArcEdgeDrawQuadrantIII;
-import com.ufla.lfapp.activities.graph.views.edge.arc.ArcEdgeDrawQuadrantIV;
 import com.ufla.lfapp.activities.graph.views.edge.arc.ArcEdgeDrawType;
 
 /**

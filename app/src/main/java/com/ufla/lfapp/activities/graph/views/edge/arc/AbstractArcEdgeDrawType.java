@@ -3,8 +3,6 @@ package com.ufla.lfapp.activities.graph.views.edge.arc;
 import android.graphics.PointF;
 import android.util.Pair;
 
-import com.ufla.lfapp.activities.graph.views.VertexView;
-
 /**
  * Created by carlos on 18/10/16.
  */

@@ -7,9 +7,14 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.Pair;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import com.ufla.lfapp.activities.graph.views.edge.ArcEdgeDraw;
 import com.ufla.lfapp.activities.graph.views.edge.EdgeDraw;
@@ -32,6 +37,7 @@ public class EdgeView extends View {
     public static final int ARC = 1;
     private EdgeDraw edgeDraw;
     private boolean directed;
+    private Pair<RectF, RectF> verticesRectF;
     private Pair<VertexView, VertexView> vertices;
     private Paint mTransitionLine;
     private Paint mTransitionText;
@@ -46,6 +52,7 @@ public class EdgeView extends View {
     private int indLabel = 0;
     private boolean changeLabel = false;
     public Thread tRed;
+    private GestureDetector gestureDetector;
 
     public void setLabel(String label) {
         this.label = label;
@@ -55,6 +62,13 @@ public class EdgeView extends View {
         tRed = new Thread() {
             public void run() {
                 try {
+                    ((Activity) getContext()).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getContext(), "Modo de edição rápida!", Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+                    });
                     sleep(4000);
                     ((Activity) getContext()).runOnUiThread(new Runnable() {
                         @Override
@@ -101,6 +115,17 @@ public class EdgeView extends View {
         return Pair.create(firstGridPoint, secondGridPoint);
     }
 
+    private Pair<Point, Point> getGridPointsOnOrigin() {
+        Pair<Point, Point> gridPointsOnOrigin = clonePairPoints(getPairGridPoint());
+        int minx = Math.min(gridPointsOnOrigin.first.x, gridPointsOnOrigin.second.x);
+        int miny = Math.min(gridPointsOnOrigin.first.y, gridPointsOnOrigin.second.y);
+        gridPointsOnOrigin.first.x -= minx;
+        gridPointsOnOrigin.second.x -= minx;
+        gridPointsOnOrigin.first.y -= miny;
+        gridPointsOnOrigin.second.y -= miny;
+        return gridPointsOnOrigin;
+    }
+
 
     /**
      * Inicializa os objetos Paint da transição.
@@ -114,26 +139,27 @@ public class EdgeView extends View {
         this.mTransitionText.setStrokeWidth(EdgeView.STROKE_WIDTH_TEXT);
         this.mTransitionText.setStyle(Paint.Style.FILL);
         this.mTransitionText.setTextAlign(Paint.Align.CENTER);
-        setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (tRed != null && tRed.isAlive()) {
-                    if (indLabel == alphabet.size()) {
-                        indLabel = 1;
-                    }
-                    label = alphabet.get(indLabel++).toString();
-                    changeLabel = true;
-                    invalidate();
-                } else {
-                    View parent = (View) view.getParent();
-                    parent.performClick();
-                }
-            }
-        });
+        gestureDetector = new GestureDetector(getContext(), new EdgeView.GestureListener());
     }
 
     public void setVertices(Pair<VertexView, VertexView> vertices) {
         this.vertices = vertices;
+        Pair<Point, Point> verticesOnGridOrigin = getGridPointsOnOrigin();
+        verticesRectF = new Pair<>(new RectF(), new RectF());
+        verticesRectF.first.left = verticesOnGridOrigin.first.x * VertexView.squareDimension();
+        verticesRectF.first.right = (verticesOnGridOrigin.first.x + 1) *
+                VertexView.squareDimension();
+        verticesRectF.first.top = verticesOnGridOrigin.first.y * VertexView.squareDimension();
+        verticesRectF.first.bottom = (verticesOnGridOrigin.first.y + 1) *
+                VertexView.squareDimension();
+
+        verticesRectF.second.left = verticesOnGridOrigin.second.x * VertexView.squareDimension();
+        verticesRectF.second.right = (verticesOnGridOrigin.second.x + 1) *
+                VertexView.squareDimension();
+        verticesRectF.second.top = verticesOnGridOrigin.second.y * VertexView.squareDimension();
+        verticesRectF.second.bottom = (verticesOnGridOrigin.second.y + 1) *
+                VertexView.squareDimension();
+
         if (vertices.first.equals(vertices.second)) {
             edgeDraw = new ReflexiveEdgeDraw(getGridPoints());
         } else {
@@ -177,6 +203,18 @@ public class EdgeView extends View {
         float distX = points.second.x - points.first.x;
         float distY = points.second.y - points.first.y;
         return (float) Math.sqrt(distX * distX + distY * distY);
+    }
+
+    private Point clonePoint(Point point) {
+        Point pointClone = new Point();
+        pointClone.set(point.x, point.y);
+        return pointClone;
+    }
+
+    private Pair<Point, Point> clonePairPoints(Pair<Point, Point> pairPoints) {
+        Point pointFirstClone = clonePoint(pairPoints.first);
+        Point pointSecondClone = clonePoint(pairPoints.second);
+        return Pair.create(pointFirstClone, pointSecondClone);
     }
 
 
@@ -234,4 +272,98 @@ public class EdgeView extends View {
         setMeasuredDimension(width, height);
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        return gestureDetector.onTouchEvent(event);
+    }
+
+
+    private MotionEvent getMotioEventForVertexView(MotionEvent e) {
+        e.setLocation(e.getX() % VertexView.squareDimension(),
+                    e.getY() % VertexView.squareDimension());
+        return e;
+    }
+    private class GestureListener extends GestureDetector.SimpleOnGestureListener {
+
+        @Override
+        public boolean onDown(MotionEvent e) {
+            if (verticesRectF.first.contains(e.getX(), e.getY())) {
+                return vertices.first.onDownAction(getMotioEventForVertexView(e));
+            }
+            if (verticesRectF.second.contains(e.getX(), e.getY())) {
+                return vertices.second.onDownAction(getMotioEventForVertexView(e));
+            }
+
+            if (tRed != null && tRed.isAlive()) {
+                if (indLabel == alphabet.size()) {
+                    indLabel = 1;
+                }
+                label = alphabet.get(indLabel++).toString();
+                changeLabel = true;
+                invalidate();
+            }
+            Log.d(label + " - onDown", label + " - onDown" +
+                    " (" + e.getX() + ", " + e.getY() + ")");
+            return true;
+        }
+
+
+
+        @Override
+        public boolean onContextClick(MotionEvent e) {
+            Log.d(label + " - onContextClick", label + " - onContextClick" +
+                    " (" + e.getX() + ", " + e.getY() + ")");
+            if (verticesRectF.first.contains(e.getX(), e.getY())) {
+                return vertices.first.onTouchEvent(getMotioEventForVertexView(e));
+            }
+            if (verticesRectF.second.contains(e.getX(), e.getY())) {
+                return vertices.second.onTouchEvent(getMotioEventForVertexView(e));
+            }
+
+            return true;
+        }
+
+        @Override
+        public void onLongPress(MotionEvent e) {
+            if (verticesRectF.first.contains(e.getX(), e.getY())) {
+                vertices.first.onLongPressAction(getMotioEventForVertexView(e));
+            }
+            if (verticesRectF.second.contains(e.getX(), e.getY())) {
+                vertices.second.onLongPressAction(getMotioEventForVertexView(e));
+            }
+            Log.d(label + " - onLongPress", label + " - onLongPress" +
+                    " (" + e.getX() + ", " + e.getY() + ")");
+        }
+
+        // event when double tap occurs
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            if (verticesRectF.first.contains(e.getX(), e.getY())) {
+                return vertices.first.onDoubleTapAction(getMotioEventForVertexView(e));
+            }
+            if (verticesRectF.second.contains(e.getX(), e.getY())) {
+                return vertices.second.onDoubleTapAction(getMotioEventForVertexView(e));
+            }
+
+            Log.d(label + " - Double Tap", "Tapped at: (" + e.getX() + "," + e.getY() + ")");
+
+            return true;
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        EdgeView edgeView = (EdgeView) o;
+
+        return vertices != null ? vertices.equals(edgeView.vertices) : edgeView.vertices == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return vertices != null ? vertices.hashCode() : 0;
+    }
 }

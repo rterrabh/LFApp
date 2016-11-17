@@ -5,7 +5,6 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.util.Pair;
 
-import com.ufla.lfapp.activities.graph.views.VertexView;
 
 /**
  * Created by carlos on 18/10/16.
