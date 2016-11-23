@@ -6,7 +6,7 @@ import android.graphics.Point;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.util.Pair;
+import android.support.v4.util.Pair;
 import android.view.DragEvent;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.GridLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.ufla.lfapp.activities.graph.views.SpaceWithBorder;
 import com.ufla.lfapp.activities.graph.views.EdgeView;
@@ -22,8 +23,10 @@ import com.ufla.lfapp.activities.graph.views.VertexView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by carlos on 06/10/16.
@@ -43,7 +46,7 @@ public class EditGraphLayout extends GridLayout {
     private VertexView initialState;
     private View viewsOnGrid[][];
     private EdgeView edgesOnGrid[][];
-    private List<EdgeView> edgeViews;
+    private Set<EdgeView> edgeViews;
     private Map<VertexView, List<EdgeView>> edgeDependecies;
     private GestureDetector gestureDetector;
     private boolean onSelectState;
@@ -120,7 +123,7 @@ public class EditGraphLayout extends GridLayout {
         this.gestureDetector = new GestureDetector(getContext(), new GestureListener());
         onSelectState = false;
         stateSelect = null;
-        edgeViews = new ArrayList<>();
+        edgeViews = new HashSet<>();
     }
 
     public void fillEdges() {
@@ -328,27 +331,51 @@ public class EditGraphLayout extends GridLayout {
         Point gridPointSourceVertex = sourceVertex.getGridPoint();
         Point gridPointTargetVertex = targetVertex.getGridPoint();
         edgeView.setVertices(Pair.create(sourceVertex, targetVertex));
+        EdgeView invertedEdge = null;
         for (EdgeView edgeView1 : edgeViews) {
             if (edgeView.equals(edgeView1)) {
                 Log.d("EdgeView", "EdgeView repetida");
+                Toast.makeText(getContext(), "Transição já existe!", Toast.LENGTH_SHORT)
+                        .show();
                 return;
             }
+            if (edgeView.isInvertedEdge(edgeView1)) {
+                invertedEdge = edgeView1;
+            }
+        }
+        if (invertedEdge != null) {
+            edgeView.setInvertedEdge(invertedEdge);
+            invertedEdge.setInvertedEdge(edgeView);
         }
         final GridLayout.Spec rowSpec;
         final GridLayout.Spec columnSpec;
         if (sourceVertex.equals(targetVertex)) {
             rowSpec = GridLayout.spec(gridPointSourceVertex.y - 1, 3);
             columnSpec = GridLayout.spec(gridPointSourceVertex.x);
+            System.out.println("1");
+        } else if (gridPointSourceVertex.x == gridPointTargetVertex.x) {
+            rowSpec = GridLayout.spec(Math.min(gridPointSourceVertex.y,
+                    gridPointTargetVertex.y), Math.abs(gridPointSourceVertex.y -
+                    gridPointTargetVertex.y) + 1);
+            columnSpec = GridLayout.spec(gridPointSourceVertex.x);
+            System.out.println("2");
+        } else if (gridPointSourceVertex.y == gridPointTargetVertex.y) {
+            rowSpec = GridLayout.spec(gridPointSourceVertex.y);
+            columnSpec = GridLayout.spec(Math.min(gridPointSourceVertex.x, gridPointTargetVertex.x),
+                    Math.abs(gridPointSourceVertex.x - gridPointTargetVertex.x) + 1);
+            System.out.println("3");
         } else {
             rowSpec = GridLayout.spec(Math.min(gridPointSourceVertex.y,
-                    gridPointTargetVertex.y), Math.max(gridPointSourceVertex.y,
+                    gridPointTargetVertex.y), Math.abs(gridPointSourceVertex.y -
                     gridPointTargetVertex.y) + 1);
             columnSpec = GridLayout.spec(Math.min(gridPointSourceVertex.x, gridPointTargetVertex.x),
-                    Math.max(gridPointSourceVertex.x, gridPointTargetVertex.x) + 1);
+                    Math.abs(gridPointSourceVertex.x - gridPointTargetVertex.x) + 1);
+            System.out.println("4");
         }
         edgeDependecies.get(sourceVertex).add(edgeView);
         edgeDependecies.get(targetVertex).add(edgeView);
         edgeViews.add(edgeView);
+        System.out.println(gridPointSourceVertex + " " + gridPointTargetVertex);
         setEdgesOnView(edgeView, gridPointSourceVertex, gridPointTargetVertex);
         addView(edgeView, new GridLayout.LayoutParams(rowSpec, columnSpec));
 //        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -533,21 +560,21 @@ public class EditGraphLayout extends GridLayout {
         public void onLongPress(MotionEvent e) {
             float x = e.getX();
             float y = e.getY();
-            Point gridPoint = new Point();
-            gridPoint.x = (int) (x / VertexView.squareDimension());
-            gridPoint.y = (int) (y / VertexView.squareDimension());
-            View view = viewsOnGrid[gridPoint.y][gridPoint.x];
-            if (view instanceof VertexView) {
-                if (onSelectState) {
-                    addEdgeView(stateSelect, (VertexView) view);
-                    stateSelect.onSelect();
-                    onSelectState = false;
-                } else {
-                    onSelectState = true;
-                    stateSelect = (VertexView) view;
-                    stateSelect.onSelect();
-                }
-            }
+//            Point gridPoint = new Point();
+//            gridPoint.x = (int) (x / VertexView.squareDimension());
+//            gridPoint.y = (int) (y / VertexView.squareDimension());
+//            View view = viewsOnGrid[gridPoint.y][gridPoint.x];
+//            if (view instanceof VertexView) {
+//                if (onSelectState) {
+//                    addEdgeView(stateSelect, (VertexView) view);
+//                    stateSelect.onSelect();
+//                    onSelectState = false;
+//                } else {
+//                    onSelectState = true;
+//                    stateSelect = (VertexView) view;
+//                    stateSelect.onSelect();
+//                }
+//            }
             Log.d("Layout - onLongPress", "Layout - onLongPress");
         }
 

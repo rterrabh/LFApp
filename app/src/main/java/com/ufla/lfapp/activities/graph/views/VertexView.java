@@ -27,26 +27,31 @@ import com.ufla.lfapp.activities.graph.layout.EditGraphLayout;
  */
 public class VertexView extends EditText {
 
-    private static float dpi;
+    private final static float dpi;
     private static int mStateLineColor = Color.parseColor("#968D8D");
     private static int mStateInternColor = Color.parseColor("#FFCCCC");
     private static int mStateInternColorSelect = Color.parseColor("#FF6666");
     private Paint mStateInternPaint;
     private Paint mStateLinePaint;
     private Paint mStateText;
-    private final static int textSize;
     public final static int stateRadius;
     public final static int SPACE;
+    private final static int X_FOR_DISPATCH_TOUCH_EVENT_TO_EDIT_TEXT = 3;
+    private final static int MAX_LENGHT_LABEL = 5;
+    private static float textSize;
+    private static float stateTextStrokeWidth;
+    private static float stateLinePaintStrokeWidth;
+    private static float errorRectLabel;
     private Point gridPoint;
-    private static int cont_views = 0;
+    private static int cont_vertex = 0;
     private String label = "";
     private boolean select;
     private boolean showCursor;
     private boolean cursorShowed;
     private RectF rectLabel;
-    private GestureDetector gestureDetector;
-    private boolean delegateTouchEvent;
     private int cursorInd;
+    private GestureDetector gestureDetector;
+
 
     static {
         dpi = Resources.getSystem().getDisplayMetrics().densityDpi;
@@ -57,9 +62,12 @@ public class VertexView extends EditText {
 //            stateRadius = (int) (Math.sqrt(dpi) * 2.0f);
 //
 //        }
-        textSize = (int) (dpi / 8.0f);
-        stateRadius = (int) (dpi / 5.0);
-        SPACE = (int) (0.025f * dpi);
+        stateRadius = (int) (dpi / 5.0f);
+        SPACE = (int) (dpi / 40.0f);
+        textSize = dpi / 8.0f;
+        stateTextStrokeWidth = dpi / 240.0f;
+        stateLinePaintStrokeWidth = dpi / 96.0f;
+        errorRectLabel = (dpi / 32.0f);
     }
 
     public VertexView(Context context) {
@@ -84,8 +92,9 @@ public class VertexView extends EditText {
     public void setLabel(String label) {
         this.label = label;
     }
+
     public Point getGridPoint() {
-        return gridPoint;
+        return PointUtils.clonePoint(gridPoint);
     }
 
     public void setGridPoint(Point gridPoint) {
@@ -189,12 +198,12 @@ public class VertexView extends EditText {
         mStateLinePaint.setStyle(Paint.Style.STROKE);
         mStateText = new Paint();
         mStateText.setAntiAlias(true);
-        mStateText.setStrokeWidth(2.0f);
+        mStateText.setStrokeWidth(stateTextStrokeWidth);
         mStateText.setStyle(Paint.Style.FILL);
         mStateText.setTextAlign(Paint.Align.CENTER);
         select = false;
-        label = "q" + cont_views;
-        cont_views++;
+        label = "q" + cont_vertex;
+        cont_vertex++;
         setInputType(InputType.TYPE_CLASS_TEXT);
         setText(label);
         setEnabled(true);
@@ -214,10 +223,14 @@ public class VertexView extends EditText {
      */
     private void defineDefault() {
         mStateLinePaint.setColor(VertexView.mStateLineColor);
-        mStateLinePaint.setStrokeWidth(5.0f);
+        mStateLinePaint.setStrokeWidth(stateLinePaintStrokeWidth);
         mStateInternPaint.setColor(VertexView.mStateInternColor);
         mStateText.setColor(Color.BLACK);
         mStateText.setTextSize(textSize);
+        rectLabel = new RectF(0,
+                VertexView.centerPoint() - mStateText.getTextSize(),
+                VertexView.squareDimension(),
+                VertexView.centerPoint() + mStateText.getTextSize());
     }
 
 
@@ -228,32 +241,28 @@ public class VertexView extends EditText {
      */
     @Override
     protected void onDraw(Canvas canvas) {
-        //Borda
+        // Borda
         canvas.drawRect(0, 0, VertexView.squareDimension(), VertexView.squareDimension(),
                 SpaceWithBorder.mBorderPaint);
         if (select) {
             mStateInternPaint.setColor(mStateInternColorSelect);
         }
-        //Círculo interno
+        // Círculo interno
         mStateText.getTextSize();
         canvas.drawCircle(VertexView.centerPoint(), VertexView.centerPoint(),
                 VertexView.stateRadius, mStateInternPaint);
         if (select) {
             mStateInternPaint.setColor(mStateInternColor);
         }
-        //Texto
+        // Texto
         String label = getText().toString();
-        if (label.length() <= 5) {
+        if (label.length() <= MAX_LENGHT_LABEL) {
             setSelection(cursorInd, cursorInd);
             setSelection(cursorInd);
             this.label = label;
             float textLenght = mStateText.measureText(label);
             canvas.drawText(label, VertexView.centerPoint(), VertexView.centerPoint() +
-                    mStateText.getTextSize() * 0.30f, mStateText);
-            rectLabel = new RectF(VertexView.centerPoint() - textLenght / 2.0f - 15.0f,
-                    VertexView.centerPoint() - mStateText.getTextSize(),
-                    VertexView.centerPoint() + textLenght / 2.0f + 15.0f,
-                    VertexView.centerPoint() + mStateText.getTextSize());
+                    mStateText.getTextSize() * 0.3f, mStateText);
             showCursor = isFocused();
             if (showCursor) {
                 if (!cursorShowed) {
@@ -268,30 +277,32 @@ public class VertexView extends EditText {
             }
         } else {
             setText(this.label);
-            Toast.makeText(getContext(), "Tamanho máximo para nome de estado é 5 caracteres!",
+            Toast.makeText(getContext(), "Tamanho máximo para nome de estado é " +
+                    MAX_LENGHT_LABEL + " caracteres!",
                     Toast.LENGTH_SHORT).show();
         }
 
-        //Círculo contorno
+        // Círculo contorno
         canvas.drawCircle(VertexView.centerPoint(), VertexView.centerPoint(),
                 VertexView.stateRadius, mStateLinePaint);
 
-        //Estado final
-        canvas.drawCircle(VertexView.centerPoint(), VertexView.centerPoint(),
-                VertexView.stateRadius + VertexView.SPACE, mStateLinePaint);
-        //super.onDraw(canvas);
+        // Estado final
+//        canvas.drawCircle(VertexView.centerPoint(), VertexView.centerPoint(),
+//                VertexView.stateRadius + VertexView.SPACE, mStateLinePaint);
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         Log.d("onKeyDown", "keycode "+keyCode);
-        if (getText().toString().length() < 5 || keyCode == KeyEvent.KEYCODE_DEL ||
+        if (getText().toString().length() < MAX_LENGHT_LABEL || keyCode == KeyEvent.KEYCODE_DEL ||
                 keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_CLEAR
                 || keyCode == KeyEvent.KEYCODE_ESCAPE) {
             return super.onKeyDown(keyCode, event);
         }
-        Toast.makeText(getContext(), "Tamanho máximo para nome de estado é 5 caracteres!",
-                Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Tamanho máximo para nome de estado é " + MAX_LENGHT_LABEL
+                + " caracteres!",
+                Toast.LENGTH_SHORT)
+                .show();
         return false;
     }
 
@@ -315,14 +326,14 @@ public class VertexView extends EditText {
         Log.d(label + " - onDown", label + " - onDown" +
                 " (" + e.getX() + ", " + e.getY() + ")");
         float x = e.getX();
-        e.setLocation(3, e.getY());
+        e.setLocation(X_FOR_DISPATCH_TOUCH_EVENT_TO_EDIT_TEXT, e.getY());
         super.onTouchEvent(e);
         e.setLocation(x, e.getY());
         if (rectLabel.contains(e.getX(), e.getY())) {
             int indice = 0;
             label = getText().toString();
-            while (indice < label.length() && rectLabel.left + 15.0f + mStateText.measureText(label
-                    .substring(0, indice)) < e.getX()) {
+            while (indice < label.length() && rectLabel.left + errorRectLabel +
+                    mStateText.measureText(label.substring(0, indice)) < e.getX()) {
                 indice++;
             }
             cursorInd = indice;
@@ -330,8 +341,8 @@ public class VertexView extends EditText {
             setSelection(indice);
             invalidate();
             Log.d("e", e.getX() + ", " + e.getY());
-                Log.d(label + " - onCursor", label + " - onCursor" +
-                        " (" + e.getX() + ", " + e.getY() + ")");
+            Log.d(label + " - onCursor", label + " - onCursor" + " (" + e.getX() + ", " +
+                    e.getY() + ")");
         }
         return true;
     }

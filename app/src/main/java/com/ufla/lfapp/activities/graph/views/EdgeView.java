@@ -2,92 +2,79 @@ package com.ufla.lfapp.activities.graph.views;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.support.v4.util.Pair;
+import android.text.InputType;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.util.Pair;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
-import com.ufla.lfapp.activities.graph.views.edge.ArcEdgeDraw;
 import com.ufla.lfapp.activities.graph.views.edge.EdgeDraw;
-import com.ufla.lfapp.activities.graph.views.edge.ReflexiveEdgeDraw;
+import com.ufla.lfapp.activities.graph.views.edge.EdgeDrawFactory;
+import com.ufla.lfapp.activities.graph.views.edge.EdgeDrawType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by carlos on 9/21/16.
  * Representa a visão de uma transição em um autômato ou máquina de estados.
  */
 
-public class EdgeView extends View {
 
-    public static final List<Character> alphabet = new ArrayList<>(Arrays.asList(
-            new Character[] {'?', 'a', 'b', 'c', 'd', 'e', 'f', 'g'} ) );
+public class EdgeView extends EditText {
+
+    private final static float dpi;
+    private static Alphabet alphabet = new Alphabet(Arrays.asList(
+            new String[] {"a", "b", "c", "d", "e", "f", "g"} ) );
+    private boolean reLoadFastEdition;
+    private int indFastEdition;
+    private Thread tFastEdition;
+    private final static int X_FOR_DISPATCH_TOUCH_EVENT_TO_EDIT_TEXT = 3;
+    private static final long TIME_FAST_EDITION = 3000;
     public static final int LINE = 0;
     public static final int ARC = 1;
     private EdgeDraw edgeDraw;
-    private boolean directed;
     private Pair<RectF, RectF> verticesRectF;
     private Pair<VertexView, VertexView> vertices;
+    private EdgeView invertedEdge;
     private Paint mTransitionLine;
     private Paint mTransitionText;
-    private static final float STROKE_WIDTH_TEXT = 3.0f;
-    private static final float STROKE_WIDTH_LINE = 3.0f;
-    private static final float TEXT_SIZE = 50.0f;
-    private static final float ARROW_HEAD_LENGHT = 25.0f;
-    private static final float ARROW_ANGLE = (float) Math.toRadians(45.0f);
-    private static final float ARROW_ANGLE_INTERN = (float) Math.toRadians(30.0f);
-    private static final float TEXT_SPACE_FROM_EDGE = 20.0f;
-    private String label = "";
-    private int indLabel = 0;
+    private static final float STROKE_WIDTH_TEXT;
+    private static final float STROKE_WIDTH_LINE;
+    private static final float TEXT_SIZE;
+    private static final float TEXT_SPACE_FROM_EDGE;
+    private static final float ARROW_HEAD_LENGHT;
+    private static final float ARROW_ANGLE = (float) Math.toRadians(35.0f);
+    private String label;
+    private int cursorInd;
+    private boolean showCursor;
+    private boolean cursorShowed;
     private boolean changeLabel = false;
-    public Thread tRed;
     private GestureDetector gestureDetector;
+    private PointF onDown;
 
-    public void setLabel(String label) {
-        this.label = label;
-    }
+    static {
+        dpi = Resources.getSystem().getDisplayMetrics().densityDpi;
 
-    public void reloadBlack() {
-        tRed = new Thread() {
-            public void run() {
-                try {
-                    ((Activity) getContext()).runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getContext(), "Modo de edição rápida!", Toast.LENGTH_SHORT)
-                                    .show();
-                        }
-                    });
-                    sleep(4000);
-                    ((Activity) getContext()).runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mTransitionText.setColor(Color.BLACK);
-                            invalidate();
-                        }
-                    });
-                } catch (InterruptedException e) {
-
-                }
-            }
-        };
-        tRed.start();
-    }
-
-    public void reReloadBlack() {
-        tRed.interrupt();
-        reloadBlack();
+        STROKE_WIDTH_TEXT = dpi / 160.0f;
+        STROKE_WIDTH_LINE = dpi / 160.0f;
+        TEXT_SIZE = dpi / 9.6f;
+        TEXT_SPACE_FROM_EDGE = dpi / 24.0f;
+        ARROW_HEAD_LENGHT = dpi / 19.2f;
     }
 
     public static float getArrowHeadLenght() {
@@ -96,6 +83,69 @@ public class EdgeView extends View {
 
     public static float getArrowAngle() {
         return ARROW_ANGLE;
+    }
+
+    public void loadFastEdition() {
+        tFastEdition = new Thread() {
+            public void run() {
+                try {
+                    ((Activity) getContext()).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getContext(), "Modo de edição rápida!",
+                                    Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+                    });
+                    if (!reLoadFastEdition) {
+                        indFastEdition = 0;
+                    }
+                    sleep(TIME_FAST_EDITION);
+                    ((Activity) getContext()).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mTransitionText.setColor(Color.BLACK);
+                            invalidate();
+                            reLoadFastEdition = false;
+                        }
+                    });
+                } catch (InterruptedException e) {
+
+                }
+            }
+        };
+        tFastEdition.start();
+    }
+
+    public void reloadFastEdition() {
+        reLoadFastEdition = true;
+        tFastEdition.interrupt();
+        loadFastEdition();
+    }
+
+    public boolean haveInvertedEdge() {
+        return invertedEdge != null;
+    }
+
+    public void setInvertedEdge(EdgeView invertedEdge) {
+        this.invertedEdge = invertedEdge;
+        if (haveInvertedEdge()) {
+            edgeDraw = new EdgeDrawFactory()
+                    .createEdgeDraw(EdgeDrawType.ARC_EDGE_DRAW, getGridPoints());
+        } else {
+            edgeDraw = new EdgeDrawFactory()
+                    .createEdgeDraw(EdgeDrawType.LINE_EDGE_DRAW, getGridPoints());
+        }
+        invalidate();
+    }
+
+    public boolean isInvertedEdge(EdgeView invertedEdge) {
+        if (vertices != null && invertedEdge.vertices != null &&
+                vertices.first.equals(invertedEdge.vertices.second) &&
+                vertices.second.equals(invertedEdge.vertices.first)) {
+            return true;
+        }
+        return false;
     }
 
     public EdgeView(Context context, AttributeSet attrs) {
@@ -109,24 +159,6 @@ public class EdgeView extends View {
         defineDefault();
     }
 
-    public Pair<Point, Point> getPairGridPoint() {
-        Point firstGridPoint = vertices.first.getGridPoint();
-        Point secondGridPoint = vertices.second.getGridPoint();
-        return Pair.create(firstGridPoint, secondGridPoint);
-    }
-
-    private Pair<Point, Point> getGridPointsOnOrigin() {
-        Pair<Point, Point> gridPointsOnOrigin = clonePairPoints(getPairGridPoint());
-        int minx = Math.min(gridPointsOnOrigin.first.x, gridPointsOnOrigin.second.x);
-        int miny = Math.min(gridPointsOnOrigin.first.y, gridPointsOnOrigin.second.y);
-        gridPointsOnOrigin.first.x -= minx;
-        gridPointsOnOrigin.second.x -= minx;
-        gridPointsOnOrigin.first.y -= miny;
-        gridPointsOnOrigin.second.y -= miny;
-        return gridPointsOnOrigin;
-    }
-
-
     /**
      * Inicializa os objetos Paint da transição.
      */
@@ -139,12 +171,20 @@ public class EdgeView extends View {
         this.mTransitionText.setStrokeWidth(EdgeView.STROKE_WIDTH_TEXT);
         this.mTransitionText.setStyle(Paint.Style.FILL);
         this.mTransitionText.setTextAlign(Paint.Align.CENTER);
+        setInputType(InputType.TYPE_CLASS_TEXT);
+        label = "?";
+        setText(label);
+        setEnabled(true);
+        changeLabel = true;
+        showCursor = false;
+        cursorShowed = false;
+        setBackgroundColor(Color.TRANSPARENT);
         gestureDetector = new GestureDetector(getContext(), new EdgeView.GestureListener());
     }
 
     public void setVertices(Pair<VertexView, VertexView> vertices) {
         this.vertices = vertices;
-        Pair<Point, Point> verticesOnGridOrigin = getGridPointsOnOrigin();
+        Pair<Point, Point> verticesOnGridOrigin = PointUtils.getPointsOnOrigin(getGridPoints());
         verticesRectF = new Pair<>(new RectF(), new RectF());
         verticesRectF.first.left = verticesOnGridOrigin.first.x * VertexView.squareDimension();
         verticesRectF.first.right = (verticesOnGridOrigin.first.x + 1) *
@@ -161,9 +201,11 @@ public class EdgeView extends View {
                 VertexView.squareDimension();
 
         if (vertices.first.equals(vertices.second)) {
-            edgeDraw = new ReflexiveEdgeDraw(getGridPoints());
+            edgeDraw = new EdgeDrawFactory()
+                    .createEdgeDraw(EdgeDrawType.REFLEXIVE_BOTTOM_EDGE_DRAW, getGridPoints());
         } else {
-            edgeDraw = new ArcEdgeDraw(getGridPoints());
+            edgeDraw = new EdgeDrawFactory()
+                    .createEdgeDraw(EdgeDrawType.LINE_EDGE_DRAW, getGridPoints());
         }
     }
 
@@ -171,52 +213,11 @@ public class EdgeView extends View {
      * Define valores padrões para os objetos Paint da transição.
      */
     private void defineDefault() {
-        label = alphabet.get(indLabel++).toString();
-        changeLabel = true;
         this.mTransitionLine.setColor(Color.BLACK);
         this.mTransitionLine.setStrokeWidth(EdgeView.STROKE_WIDTH_LINE);
         this.mTransitionText.setColor(Color.RED);
         this.mTransitionText.setTextSize(EdgeView.TEXT_SIZE);
     }
-
-
-    /**
-     * Calcula a distância mínima entre um ponto e uma reta. A reta é informada via um par de
-     * pontos.
-     *
-     * @param line  par de pontos que definem a reta
-     * @param point ponto que será calculada a distância entre ele e a reta
-     * @return distância mínima entre o ponto e a reta
-     */
-    public float distFromAPointToALine(Pair<PointF, PointF> line, PointF point) {
-        return Math.abs((line.second.y - line.first.y) * point.x - (line.second.x - line.first.x) * point.y +
-                line.second.x * line.first.y - line.second.y * line.first.x) / dist(line);
-    }
-
-    /**
-     * Calcula a distância entre dois pontos.
-     *
-     * @param points par de pontos em que será calculada a distância
-     * @return distância entre os dois pontos
-     */
-    public float dist(Pair<PointF, PointF> points) {
-        float distX = points.second.x - points.first.x;
-        float distY = points.second.y - points.first.y;
-        return (float) Math.sqrt(distX * distX + distY * distY);
-    }
-
-    private Point clonePoint(Point point) {
-        Point pointClone = new Point();
-        pointClone.set(point.x, point.y);
-        return pointClone;
-    }
-
-    private Pair<Point, Point> clonePairPoints(Pair<Point, Point> pairPoints) {
-        Point pointFirstClone = clonePoint(pairPoints.first);
-        Point pointSecondClone = clonePoint(pairPoints.second);
-        return Pair.create(pointFirstClone, pointSecondClone);
-    }
-
 
     public Pair<Point, Point> getGridPoints() {
         Point firstGridPoint = vertices.first.getGridPoint();
@@ -224,131 +225,13 @@ public class EdgeView extends View {
         return Pair.create(firstGridPoint, secondGridPoint);
     }
 
-
-    /**
-     * @param canvas
-     */
-    @Override
-    protected void onDraw(Canvas canvas) {
-        Pair<Point, Point> gridPoints = edgeDraw.getGridPoints();
-        float spaceFromLine;
+    private float getSpaceFromLine() {
+        Pair<Point, Point> gridPoints = getGridPoints();
         if (gridPoints.first.x < gridPoints.second.x || (gridPoints.first.x == gridPoints.second.x
                 && gridPoints.first.y <= gridPoints.second.y)) {
-            spaceFromLine = -TEXT_SPACE_FROM_EDGE;
+            return -TEXT_SPACE_FROM_EDGE;
         } else {
-            spaceFromLine = TEXT_SPACE_FROM_EDGE + TEXT_SPACE_FROM_EDGE;
-        }
-        canvas.drawTextOnPath(label, edgeDraw.getLabelPath(), 0.0f, spaceFromLine, mTransitionText);
-        canvas.drawPath(edgeDraw.getEdge(), mTransitionLine);
-        if (!(edgeDraw instanceof ReflexiveEdgeDraw)) {
-            canvas.drawPath(edgeDraw.getArrowHead(), mTransitionLine);
-        }
-        if (tRed == null) {
-            reloadBlack();
-        } else if (changeLabel) {
-            reReloadBlack();
-        }
-        changeLabel = false;
-    }
-
-    /**
-     * @param widthMeasureSpec
-     * @param heightMeasureSpec
-     */
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        Point gridPointSourceVertex = vertices.first.getGridPoint();
-        Point gridPointTargetVertex = vertices.second.getGridPoint();
-        System.out.println("OLA(" + gridPointSourceVertex.x + "," + gridPointSourceVertex.y + ") -> (" +
-                gridPointTargetVertex.x + "," + gridPointTargetVertex.y + ")");
-        int width = (Math.abs(gridPointSourceVertex.x - gridPointTargetVertex.x) + 1) *
-                VertexView.squareDimension();
-        int height = (Math.abs(gridPointSourceVertex.y - gridPointTargetVertex.y) + 1) *
-                VertexView.squareDimension();
-        if (vertices.first.equals(vertices.second)) {
-            width = VertexView.squareDimension();
-            height = VertexView.squareDimension() * 3;
-        }
-        setMeasuredDimension(width, height);
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-
-        return gestureDetector.onTouchEvent(event);
-    }
-
-
-    private MotionEvent getMotioEventForVertexView(MotionEvent e) {
-        e.setLocation(e.getX() % VertexView.squareDimension(),
-                    e.getY() % VertexView.squareDimension());
-        return e;
-    }
-    private class GestureListener extends GestureDetector.SimpleOnGestureListener {
-
-        @Override
-        public boolean onDown(MotionEvent e) {
-            if (verticesRectF.first.contains(e.getX(), e.getY())) {
-                return vertices.first.onDownAction(getMotioEventForVertexView(e));
-            }
-            if (verticesRectF.second.contains(e.getX(), e.getY())) {
-                return vertices.second.onDownAction(getMotioEventForVertexView(e));
-            }
-
-            if (tRed != null && tRed.isAlive()) {
-                if (indLabel == alphabet.size()) {
-                    indLabel = 1;
-                }
-                label = alphabet.get(indLabel++).toString();
-                changeLabel = true;
-                invalidate();
-            }
-            Log.d(label + " - onDown", label + " - onDown" +
-                    " (" + e.getX() + ", " + e.getY() + ")");
-            return true;
-        }
-
-
-
-        @Override
-        public boolean onContextClick(MotionEvent e) {
-            Log.d(label + " - onContextClick", label + " - onContextClick" +
-                    " (" + e.getX() + ", " + e.getY() + ")");
-            if (verticesRectF.first.contains(e.getX(), e.getY())) {
-                return vertices.first.onTouchEvent(getMotioEventForVertexView(e));
-            }
-            if (verticesRectF.second.contains(e.getX(), e.getY())) {
-                return vertices.second.onTouchEvent(getMotioEventForVertexView(e));
-            }
-
-            return true;
-        }
-
-        @Override
-        public void onLongPress(MotionEvent e) {
-            if (verticesRectF.first.contains(e.getX(), e.getY())) {
-                vertices.first.onLongPressAction(getMotioEventForVertexView(e));
-            }
-            if (verticesRectF.second.contains(e.getX(), e.getY())) {
-                vertices.second.onLongPressAction(getMotioEventForVertexView(e));
-            }
-            Log.d(label + " - onLongPress", label + " - onLongPress" +
-                    " (" + e.getX() + ", " + e.getY() + ")");
-        }
-
-        // event when double tap occurs
-        @Override
-        public boolean onDoubleTap(MotionEvent e) {
-            if (verticesRectF.first.contains(e.getX(), e.getY())) {
-                return vertices.first.onDoubleTapAction(getMotioEventForVertexView(e));
-            }
-            if (verticesRectF.second.contains(e.getX(), e.getY())) {
-                return vertices.second.onDoubleTapAction(getMotioEventForVertexView(e));
-            }
-
-            Log.d(label + " - Double Tap", "Tapped at: (" + e.getX() + "," + e.getY() + ")");
-
-            return true;
+            return TEXT_SPACE_FROM_EDGE + TEXT_SPACE_FROM_EDGE;
         }
     }
 
@@ -366,4 +249,286 @@ public class EdgeView extends View {
     public int hashCode() {
         return vertices != null ? vertices.hashCode() : 0;
     }
+
+    private boolean inFastEdition() {
+        return tFastEdition != null;
+    }
+
+    private boolean onDown() {
+        return onDown != null;
+    }
+
+    /**
+     * @param canvas
+     */
+    @Override
+    protected void onDraw(Canvas canvas) {
+        label = getText().toString();
+        setSelection(cursorInd, cursorInd);
+        setSelection(cursorInd);
+        alphabet.update(label);
+        canvas.drawTextOnPath(label, edgeDraw.getLabelPath(), 0.0f, getSpaceFromLine(),
+                mTransitionText);
+        canvas.drawPath(edgeDraw.getEdge(), mTransitionLine);
+        canvas.drawPath(edgeDraw.getArrowHead(), mTransitionLine);
+        // Teste retângulo de interação
+        mTransitionLine.setColor(Color.RED);
+        canvas.drawPath(edgeDraw.getPathInteractArea(), mTransitionLine);
+        if (onDown()) {
+            mTransitionLine.setStrokeWidth(STROKE_WIDTH_LINE * 5.0f);
+            canvas.drawPoint(onDown.x, onDown.y, mTransitionLine);
+            onDown = null;
+            mTransitionLine.setStrokeWidth(STROKE_WIDTH_LINE);
+        }
+        mTransitionLine.setColor(Color.BLACK);
+        // Teste retângulo de interação
+        if (!inFastEdition()) {
+            loadFastEdition();
+        } else if (changeLabel) {
+            reloadFastEdition();
+        }
+        changeLabel = false;
+    }
+
+    /**
+     * @param widthMeasureSpec
+     * @param heightMeasureSpec
+     */
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        Point gridPointSourceVertex = vertices.first.getGridPoint();
+        Point gridPointTargetVertex = vertices.second.getGridPoint();
+        int width = (Math.abs(gridPointSourceVertex.x - gridPointTargetVertex.x) + 1) *
+                VertexView.squareDimension();
+        int height = (Math.abs(gridPointSourceVertex.y - gridPointTargetVertex.y) + 1) *
+                VertexView.squareDimension();
+        if (vertices.first.equals(vertices.second)) {
+            width = VertexView.squareDimension();
+            height = VertexView.squareDimension() * 3;
+        }
+        setMeasuredDimension(width, height);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return gestureDetector.onTouchEvent(event);
+    }
+
+    private MotionEvent getMotionEventForVertexView(MotionEvent e) {
+        e.setLocation(e.getX() % VertexView.squareDimension(),
+                    e.getY() % VertexView.squareDimension());
+        return e;
+    }
+
+    public boolean onDownAction(MotionEvent e) {
+        if (verticesRectF.first.contains(e.getX(), e.getY())) {
+            return vertices.first.onDownAction(getMotionEventForVertexView(e));
+        }
+        if (verticesRectF.second.contains(e.getX(), e.getY())) {
+            return vertices.second.onDownAction(getMotionEventForVertexView(e));
+        }
+
+        onDown = new PointF(e.getX(), e.getY());
+        invalidate();
+        if (edgeDraw.isOnInteractArea(onDown)) {
+            Log.d("IS_ON_INTERACT_AREA", "IS_ON_INTERACT_AREA");
+            if (inFastEdition() && tFastEdition.isAlive()) {
+                if (alphabet.isEmpty()) {
+                    Toast.makeText(getContext(), "Ainda não há caracteres no alfabeto!",
+                            Toast.LENGTH_SHORT)
+                            .show();
+                } else {
+                    if (alphabet.isOutOfIndexBounded(indFastEdition)) {
+                        indFastEdition = 0;
+                        Toast.makeText(getContext(), "Todos caracteres do alfabeto foram " +
+                                "percorridos!", Toast.LENGTH_SHORT)
+                                .show();
+                    }
+                    label = alphabet.get(indFastEdition);
+                    setText(label);
+                    indFastEdition++;
+                    changeLabel = true;
+                    invalidate();
+                }
+            } else {
+                float x = e.getX();
+                e.setLocation(X_FOR_DISPATCH_TOUCH_EVENT_TO_EDIT_TEXT, e.getY());
+                super.onTouchEvent(e);
+                e.setLocation(x, e.getY());
+                float distanceToPoint = edgeDraw.distanceToCircumferenceOfSourceVertex(onDown);
+                float distanceToOtherCirc = edgeDraw.distanceFromCircumferences();
+                float distInit = distanceToOtherCirc / 2.0f -
+                        mTransitionText.measureText(label) / 2.0f;
+                int indice = 0;
+                label = getText().toString();
+                while (indice < label.length() && distanceToPoint > distInit +
+                        mTransitionText.measureText(label.substring(0, indice))) {
+                    indice++;
+                }
+                cursorInd = indice;
+                setSelection(indice, indice);
+                setSelection(indice);
+                invalidate();
+                Log.d("e", e.getX() + ", " + e.getY());
+                Log.d(label + " - onCursor", label + " - onCursor" + " (" + e.getX() + ", " +
+                        e.getY() + ")");
+            }
+
+        } else {
+            Log.d("NOT_IS_ON_INTERACT_AREA", "NOT_IS_ON_INTERACT_AREA");
+        }
+        Log.d(label + " - onDown", label + " - onDown" +
+                " (" + e.getX() + ", " + e.getY() + ")");
+        return true;
+    }
+
+    public boolean onContextClickAction(MotionEvent e) {
+        Log.d(label + " - onContextClick", label + " - onContextClick" +
+                " (" + e.getX() + ", " + e.getY() + ")");
+        if (verticesRectF.first.contains(e.getX(), e.getY())) {
+            return vertices.first.onTouchEvent(getMotionEventForVertexView(e));
+        }
+        if (verticesRectF.second.contains(e.getX(), e.getY())) {
+            return vertices.second.onTouchEvent(getMotionEventForVertexView(e));
+        }
+
+        return true;
+    }
+
+    public void onLongPressAction(MotionEvent e) {
+        if (verticesRectF.first.contains(e.getX(), e.getY())) {
+            vertices.first.onLongPressAction(getMotionEventForVertexView(e));
+        }
+        if (verticesRectF.second.contains(e.getX(), e.getY())) {
+            vertices.second.onLongPressAction(getMotionEventForVertexView(e));
+        }
+        Log.d(label + " - onLongPress", label + " - onLongPress" +
+                " (" + e.getX() + ", " + e.getY() + ")");
+    }
+
+    public boolean onDoubleTapAction(MotionEvent e) {
+        if (verticesRectF.first.contains(e.getX(), e.getY())) {
+            return vertices.first.onDoubleTapAction(getMotionEventForVertexView(e));
+        }
+        if (verticesRectF.second.contains(e.getX(), e.getY())) {
+            return vertices.second.onDoubleTapAction(getMotionEventForVertexView(e));
+        }
+
+        Log.d(label + " - Double Tap", "Tapped at: (" + e.getX() + "," + e.getY() + ")");
+
+        return true;
+    }
+
+    private class GestureListener extends GestureDetector.SimpleOnGestureListener {
+
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return onDownAction(e);
+        }
+
+        @Override
+        public boolean onContextClick(MotionEvent e) {
+            return onContextClick(e);
+        }
+
+        @Override
+        public void onLongPress(MotionEvent e) {
+            onLongPressAction(e);
+        }
+
+        // event when double tap occurs
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+            return onDoubleTapAction(e);
+        }
+    }
+
+    private static class Alphabet {
+
+        private Set<String> setAlphabet;
+        private List<String> listAlphabet;
+
+        public Alphabet() {
+            setAlphabet = new HashSet<>();
+            listAlphabet = new ArrayList<>();
+        }
+
+        public Alphabet(Collection<String> alphabet) {
+            setAlphabet = new HashSet<>(alphabet);
+            listAlphabet = new ArrayList<>(alphabet);
+        }
+
+        public boolean contains(String letter) {
+            return setAlphabet.contains(letter);
+        }
+
+        public String get(int indice) {
+            return listAlphabet.get(indice);
+        }
+
+        public boolean isEmpty() {
+            return listAlphabet.isEmpty();
+        }
+
+        public boolean isOutOfIndexBounded(int indice) {
+            return indice >= listAlphabet.size();
+        }
+
+        public int size() {
+            return listAlphabet.size();
+        }
+
+        public void add(String letter) {
+            if (!setAlphabet.contains(letter)) {
+                setAlphabet.add(letter);
+                listAlphabet.add(letter);
+            }
+        }
+
+        public void update(String word) {
+            for (int i = 0; i < word.length(); i++) {
+                String letter = word.substring(i, i + 1);
+                add(letter);
+            }
+        }
+
+        public boolean remove(String letter) {
+            listAlphabet.remove(letter);
+            return setAlphabet.remove(letter);
+        }
+
+        public Set<String> getAlphabetSet() {
+            return new HashSet<>(setAlphabet);
+        }
+
+        public List<String> getAlphabetList() {
+            return new ArrayList<>(listAlphabet);
+        }
+
+        public int addAll(Collection<String> letters) {
+            int cont = 0;
+            for (String letter : letters) {
+                if (!setAlphabet.contains(letter)) {
+                    setAlphabet.add(letter);
+                    listAlphabet.add(letter);
+                    cont++;
+                }
+            }
+            return cont;
+        }
+
+        public int removeAll(Collection<String> letters) {
+            int cont = 0;
+            for (String letter : letters) {
+                if (setAlphabet.contains(letter)) {
+                    setAlphabet.remove(letter);
+                    listAlphabet.remove(letter);
+                    cont++;
+                }
+            }
+            return cont;
+        }
+
+    }
+
 }

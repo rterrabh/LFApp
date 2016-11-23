@@ -3,39 +3,67 @@ package com.ufla.lfapp.activities.graph.views.edge;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.PointF;
-import android.util.Pair;
+import android.support.v4.util.Pair;
 
+import com.ufla.lfapp.activities.graph.views.PointUtils;
 import com.ufla.lfapp.activities.graph.views.VertexView;
+import com.ufla.lfapp.activities.graph.views.edge.interactarea.InteractArea;
+import com.ufla.lfapp.activities.graph.views.edge.interactarea.InteractQuadrilateralAreaBuilder;
 
 /**
  * Created by carlos on 17/10/16.
  */
 public abstract class AbstractEdgeDraw implements EdgeDraw {
 
+    protected static final double ANGLE_90 = Math.toRadians(90.0f);
     protected Pair<Point, Point> gridPoints;
     protected Pair<PointF, PointF> circPoints;
+    protected InteractArea interactArea;
 
     public AbstractEdgeDraw(Pair<Point, Point> gridPoints) {
         this.gridPoints = gridPoints;
         setCircPointsOnCenter();
+        setCircPointsOnCircumference();
+        setPointControl();
+        defineInteractArea();
     }
 
-    public Pair<Point, Point> getGridPoints() {
-        return this.gridPoints;
+    protected abstract Pair<PointF, PointF> getPointsControlInteractArea();
+
+    protected abstract void setCircPointsOnCircumference();
+
+    protected abstract void setPointControl();
+
+    private void defineInteractArea() {
+        interactArea = new InteractQuadrilateralAreaBuilder()
+                .withCircumferencePoints(circPoints)
+                .withControlPoints(getPointsControlInteractArea())
+                .create();
     }
 
-    /**
-     * Calcula a distância entre dois pontos.
-     *
-     * @param points par de pontos em que será calculada a distância
-     * @return distância entre os dois pontos
-     */
-    public float dist(Pair<PointF, PointF> points) {
-        float distX = points.second.x - points.first.x;
-        float distY = points.second.y - points.first.y;
-        return (float) Math.sqrt(distX * distX + distY * distY);
+    protected abstract Path getInvertedEdge();
+
+    @Override
+    public float distanceFromCircumferences() {
+        return interactArea.distanceFromCircumferences();
     }
 
+    @Override
+    public float distanceToCircumferenceOfSourceVertex(PointF point) {
+        return interactArea.distanceToCircumferenceOfSourceVertex(point);
+    }
+
+    public Path getPathInteractArea() {
+        return interactArea.getInteractArea();
+    }
+
+    public InteractArea getInteractArea() {
+        return interactArea.clone();
+    }
+
+    public boolean isOnInteractArea(PointF point) {
+        return interactArea.isOnInteractArea(point);
+    }
 
     /**
      * Calcula os pontos mais próximos nas circunferências entre dois círculos. Recebe um par de
@@ -45,7 +73,7 @@ public abstract class AbstractEdgeDraw implements EdgeDraw {
      * @return
      */
     protected void setCircPointsOnCenter() {
-        Pair<Point, Point> gridPointsOnOrigin = getGridPointsOnOrigin();
+        Pair<Point, Point> gridPointsOnOrigin = PointUtils.getPointsOnOrigin(gridPoints);
         PointF first = new PointF();
         PointF second = new PointF();
         //Setando os pontos no centro de cada círculo
@@ -58,49 +86,8 @@ public abstract class AbstractEdgeDraw implements EdgeDraw {
         second.x = gridPointsOnOrigin.second.x * VertexView.squareDimension() +
                 VertexView.stateRadius + VertexView.SPACE;
 
-        if (first.x == second.x && first.y == second.y) {
-//            float sqDim = VertexView.squareDimension();
-//            first.y += sqDim;
-//            second.y += sqDim;
-        } else {
-//            //Setando o primeiro ponto na circunferência
-//            float angle = (float) Math.atan2((second.y - first.y), (second.x - first.x));
-//            first.x += VertexView.stateRadius * Math.cos(angle);
-//            first.y += VertexView.stateRadius * Math.sin(angle);
-//
-//            //Setando o segundo ponto na circunferência
-//            angle = (float) Math.atan2((first.y - second.y), (first.x - second.x));
-//            second.x += VertexView.stateRadius * Math.cos(angle);
-//            second.y += VertexView.stateRadius * Math.sin(angle);
-        }
-
         circPoints = Pair.create(first, second);
     }
-
-    private Point clonePoint(Point point) {
-        Point pointClone = new Point();
-        pointClone.set(point.x, point.y);
-        return pointClone;
-    }
-
-    private Pair<Point, Point> clonePairPoints(Pair<Point, Point> pairPoints) {
-        Point pointFirstClone = clonePoint(pairPoints.first);
-        Point pointSecondClone = clonePoint(pairPoints.second);
-        return Pair.create(pointFirstClone, pointSecondClone);
-    }
-
-    private Pair<Point, Point> getGridPointsOnOrigin() {
-        Pair<Point, Point> gridPointsOnOrigin = clonePairPoints(gridPoints);
-        int minx = Math.min(gridPointsOnOrigin.first.x, gridPointsOnOrigin.second.x);
-        int miny = Math.min(gridPointsOnOrigin.first.y, gridPointsOnOrigin.second.y);
-        gridPointsOnOrigin.first.x -= minx;
-        gridPointsOnOrigin.second.x -= minx;
-        gridPointsOnOrigin.first.y -= miny;
-        gridPointsOnOrigin.second.y -= miny;
-        return gridPointsOnOrigin;
-    }
-
-    protected abstract Path getInvertedEdge();
 
     @Override
     public Path getLabelPath() {

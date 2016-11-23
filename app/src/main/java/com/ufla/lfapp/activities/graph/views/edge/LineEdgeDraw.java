@@ -2,20 +2,65 @@ package com.ufla.lfapp.activities.graph.views.edge;
 
 import android.graphics.Path;
 import android.graphics.Point;
-import android.util.Pair;
+import android.graphics.PointF;
+import android.support.v4.util.Pair;
 
 import com.ufla.lfapp.activities.graph.views.EdgeView;
+import com.ufla.lfapp.activities.graph.views.PointUtils;
+import com.ufla.lfapp.activities.graph.views.VertexView;
 
 /**
  * Created by carlos on 17/10/16.
  */
 public class LineEdgeDraw extends AbstractEdgeDraw {
 
+    private static final float ERROR_RECT_F_LABEL = VertexView.stateRadius * 0.60f;
 
     public LineEdgeDraw(Pair<Point, Point> gridPoint) {
         super(gridPoint);
     }
 
+    @Override
+    protected void setCircPointsOnCircumference() {
+        //Setando o primeiro ponto na circunferência
+        float angle = (float) Math.atan2((circPoints.second.y - circPoints.first.y),
+                (circPoints.second.x - circPoints.first.x));
+        circPoints.first.x += VertexView.stateRadius * Math.cos(angle);
+        circPoints.first.y += VertexView.stateRadius * Math.sin(angle);
+
+        //Setando o segundo ponto na circunferência
+        angle = (float) Math.atan2((circPoints.first.y - circPoints.second.y),
+                (circPoints.first.x - circPoints.second.x));
+        circPoints.second.x += VertexView.stateRadius * Math.cos(angle);
+        circPoints.second.y += VertexView.stateRadius * Math.sin(angle);
+    }
+
+    /**
+     * Não possui ponto de controle. Na verdade é ponto médio entre os pontos nas circuferências
+     * dos vértices.
+     */
+    @Override
+    protected void setPointControl() {
+        return;
+    }
+
+    @Override
+    protected Pair<PointF, PointF> getPointsControlInteractArea() {
+        PointF middlePoint = PointUtils.getMiddlePoint(circPoints);
+        float angle = (float) Math.atan2((circPoints.second.y - middlePoint.y),
+                (circPoints.second.x - middlePoint.x));
+        PointF pointControl1 = new PointF();
+        PointF pointControl2 = new PointF();
+        pointControl1.x = (float) (middlePoint.x + ERROR_RECT_F_LABEL *
+                Math.cos(angle - ANGLE_90));
+        pointControl1.y = (float) (middlePoint.y + ERROR_RECT_F_LABEL *
+                Math.sin(angle - ANGLE_90));
+        pointControl2.x = (float) (middlePoint.x + ERROR_RECT_F_LABEL *
+                Math.cos(angle + ANGLE_90));
+        pointControl2.y = (float) (middlePoint.y + ERROR_RECT_F_LABEL *
+                Math.sin(angle + ANGLE_90));
+        return Pair.create(pointControl1, pointControl2);
+    }
 
     @Override
     public Path getEdge() {
