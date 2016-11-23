@@ -55,6 +55,19 @@ public class VertexView extends EditText {
     private RectF rectLabel;
     private int cursorInd;
     private boolean finalState;
+    private boolean initialState;
+    private GestureDetector gestureDetector;
+    private List<EdgeView> edgeDependencies;
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+        setText(label);
+        invalidate();
+    }
 
     public boolean isInitialState() {
         return initialState;
@@ -73,10 +86,6 @@ public class VertexView extends EditText {
         this.finalState = finalState;
         invalidate();
     }
-
-    private boolean initialState;
-    private GestureDetector gestureDetector;
-    private List<EdgeView> edgeDependecies;
 
 
     static {
@@ -202,7 +211,7 @@ public class VertexView extends EditText {
         cursorShowed = false;
         setBackgroundColor(Color.TRANSPARENT);
         gestureDetector = new GestureDetector(getContext(), new VertexView.GestureListener());
-        edgeDependecies = new ArrayList<>();
+        edgeDependencies = new ArrayList<>();
     }
 
     public void onSelect() {
@@ -226,15 +235,15 @@ public class VertexView extends EditText {
     }
 
     public void addEdgeDependencies(EdgeView edgeView) {
-        edgeDependecies.add(edgeView);
+        edgeDependencies.add(edgeView);
     }
 
     public void removeEdgeDependencies(EdgeView edgeView) {
-        edgeDependecies.remove(edgeView);
+        edgeDependencies.remove(edgeView);
     }
 
     public List<EdgeView> getEdgeDependencies() {
-        return edgeDependecies;
+        return edgeDependencies;
     }
 
     /**

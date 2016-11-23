@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,6 +16,10 @@ import android.widget.Toast;
 
 import com.ufla.lfapp.R;
 import com.ufla.lfapp.activities.graph.layout.EditGraphLayout;
+import com.ufla.lfapp.vo.Automaton;
+import com.ufla.lfapp.vo.TransitionFunction;
+
+import java.util.Set;
 
 /**
  * Created by carlos on 9/21/16.
@@ -72,7 +77,23 @@ public class EditAutomataActivity extends AppCompatActivity {
                         .show();
                 return true;
             case R.id.completeAutomaton:
+                Automaton automaton = editMachineLayout.getAutomaton();
+                if (automaton != null) {
+                    Log.d("automato", automaton.toString());
+                    Set<TransitionFunction> transitionFunctionsToComplAuto =
+                            automaton.getTransitionFunctionsToCompleteAutomaton();
+                    if (transitionFunctionsToComplAuto.isEmpty()) {
+                        Toast.makeText(this, "Autômato já está completo!", Toast.LENGTH_SHORT)
+                                .show();
+                    } else {
+                        editMachineLayout.selectErrorState(automaton.getStateError(),
+                                transitionFunctionsToComplAuto);
+                        Toast.makeText(this, "Selecione a posição para inserir o estado de erro!",
+                                Toast.LENGTH_SHORT)
+                                .show();
+                    }
 
+                }
                 return true;
             case R.id.defineInitialState:
                 editMachineLayout.defineInitialStateMode();

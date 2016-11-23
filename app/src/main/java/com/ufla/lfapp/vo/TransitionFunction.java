@@ -49,6 +49,7 @@ public class TransitionFunction {
 
 	@Override
 	public String toString() {
-		return "(" + this.getCurrentState() + ", " + this.getSymbol() + ") -> (" + this.getFutureState() + ")";
+		return "(" + this.getCurrentState() + ", " + this.getSymbol() + ") -> (" +
+				this.getFutureState() + ")";
 	}	
 }

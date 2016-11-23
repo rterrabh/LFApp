@@ -21,6 +21,7 @@ import com.ufla.lfapp.activities.graph.layout.EditGraphLayout;
 import com.ufla.lfapp.activities.graph.views.edge.EdgeDraw;
 import com.ufla.lfapp.activities.graph.views.edge.EdgeDrawFactory;
 import com.ufla.lfapp.activities.graph.views.edge.EdgeDrawType;
+import com.ufla.lfapp.vo.TransitionFunction;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -81,6 +82,27 @@ public class EdgeView extends EditText {
 
     public void setOnDown(PointF onDown) {
         this.onDown = onDown;
+        invalidate();
+    }
+
+    public boolean labelDefinied() {
+        return !label.equals("?");
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public void appendLabel(String append) {
+        if (label.equals("?")) {
+            label = "";
+        }
+        if (label.isEmpty()) {
+            label = append;
+        } else {
+            label = label + ", " + append;
+        }
+        setText(label);
         invalidate();
     }
 
@@ -282,6 +304,17 @@ public class EdgeView extends EditText {
         return onDown != null;
     }
 
+    public Set<TransitionFunction> getTransitionFuctions() {
+        String currentState = vertices.first.getLabel();
+        String futureState = vertices.second.getLabel();
+        Set<TransitionFunction> transitionFunctions = new HashSet<>();
+        for (String symbol : label.split("[ ,]")) {
+            if (symbol.length() > 0) {
+                transitionFunctions.add(new TransitionFunction(currentState, symbol, futureState));
+            }
+        }
+        return transitionFunctions;
+    }
     /**
      * @param canvas
      */

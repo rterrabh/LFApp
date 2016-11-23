@@ -56,5 +56,18 @@ public abstract class Machine {
 
 	public void setFinalStates(Set<String> finalStates) {
 		this.finalStates = finalStates;
-	}	
+	}
+
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Estados: ")
+				.append(states.toString())
+				.append("\nAlfabeto: ")
+				.append(alphabet.toString())
+				.append("\nEstados finais: ")
+				.append(finalStates.toString())
+				.append("\nEstado inicial: ")
+				.append(initialState);
+		return sb.toString();
+	}
 }

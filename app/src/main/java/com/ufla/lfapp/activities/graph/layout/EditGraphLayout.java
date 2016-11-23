@@ -23,8 +23,12 @@ import android.widget.Toast;
 import com.ufla.lfapp.activities.graph.views.EdgeView;
 import com.ufla.lfapp.activities.graph.views.SpaceWithBorder;
 import com.ufla.lfapp.activities.graph.views.VertexView;
+import com.ufla.lfapp.vo.Automaton;
+import com.ufla.lfapp.vo.TransitionFunction;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -56,6 +60,56 @@ public class EditGraphLayout extends GridLayout {
     private VertexView createEdgeFirstVertex;
     private Paint mTransitionLine;
     private boolean defineInitialState;
+    private String errorStateLabel;
+    private Set<TransitionFunction> transitionFunctionsToCompAuto;
+
+    public void selectErrorState(String errorStateLabel,
+                                 Set<TransitionFunction> transitionFunctionsToCompAuto) {
+        this.errorStateLabel = errorStateLabel;
+        this.transitionFunctionsToCompAuto = transitionFunctionsToCompAuto;
+    }
+
+    public Automaton getAutomaton() {
+        if (initialState == null) {
+            Toast.makeText(getContext(), "Erro, não possui estado inicial!",
+                    Toast.LENGTH_SHORT)
+                    .show();
+            return null;
+        }
+        String initialStateStr = initialState.getLabel();
+        Set<String> alphabet = new HashSet<>();
+        Set<String> states = new HashSet<>();
+        Set<String> finalStates = new HashSet<>();
+        Set<TransitionFunction> transitionFunctions = new HashSet<>();
+        for (int i = 0; i < viewsOnGrid.length; i++) {
+            for (int j = 0; j < viewsOnGrid[i].length; j++) {
+                if (viewsOnGrid[i][j] instanceof VertexView) {
+                    VertexView vertexView = (VertexView) viewsOnGrid[i][j];
+                    String label = vertexView.getLabel();
+                    if (states.contains(label) && !vertexView.equals(initialState)) {
+                        Toast.makeText(getContext(), "Erro, estados com mesmo nome (" + label +
+                                ")!", Toast.LENGTH_SHORT)
+                                .show();
+                        return null;
+                    }
+                    states.add(label);
+                    if (vertexView.isFinalState()) {
+                        finalStates.add(label);
+                    }
+                }
+            }
+        }
+        for (EdgeView edgeView : edgeViews) {
+            transitionFunctions.addAll(edgeView.getTransitionFuctions());
+        }
+        for (TransitionFunction transitionFunction : transitionFunctions) {
+            String symbol = transitionFunction.getSymbol();
+            for (int i = 0; i < symbol.length(); i++) {
+                alphabet.add(Character.toString(symbol.charAt(i)));
+            }
+        }
+        return new Automaton(states, alphabet, initialStateStr, finalStates, transitionFunctions);
+    }
 
     public int getMode() {
         return mode;
@@ -63,6 +117,10 @@ public class EditGraphLayout extends GridLayout {
 
     public boolean onDefineInitialState() {
         return defineInitialState;
+    }
+
+    public boolean onSelectErrorState() {
+        return errorStateLabel != null;
     }
 
     public void defineInitialStateMode() {
@@ -266,7 +324,7 @@ public class EditGraphLayout extends GridLayout {
      *
      * @param gridPoint linha do estado a ser adicionado.
      */
-    public void addVertexView(final Point gridPoint) {
+    public VertexView addVertexView(final Point gridPoint) {
         final VertexView vertexView = new VertexView(getContext());
         vertexView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -294,7 +352,7 @@ public class EditGraphLayout extends GridLayout {
 //        });
 
         vertexView.setOnDragListener(myOnDragListener);
-
+        return vertexView;
 
     }
 
@@ -418,11 +476,21 @@ public class EditGraphLayout extends GridLayout {
                 (VertexView) viewsOnGrid[gridPoint.y][gridPoint.x] : null;
     }
 
+    public EdgeView addEdgeView(VertexView sourceVertex, VertexView targetVertex, String label) {
+        EdgeView edgeView = addEdgeView(sourceVertex, targetVertex, false);
+        edgeView.appendLabel(label);
+        return edgeView;
+    }
+
+    public EdgeView addEdgeView(VertexView sourceVertex, VertexView targetVertex) {
+        return addEdgeView(sourceVertex, targetVertex, true);
+    }
+
     /**
      * Adiciona uma transição entre dois estados. Por parâmetro é recebido as coordenadas dos
      * estado atual e futuro, respectivamente, também recebe o símbolo da transição.
      */
-    public void addEdgeView(VertexView sourceVertex, VertexView targetVertex) {
+    public EdgeView addEdgeView(VertexView sourceVertex, VertexView targetVertex, boolean toast) {
         final EdgeView edgeView = new EdgeView(getContext());
         edgeView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams
                 .WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -474,9 +542,11 @@ public class EditGraphLayout extends GridLayout {
         for (EdgeView edgeView1 : edgeViews) {
             if (edgeView.equals(edgeView1)) {
                 Log.d("EdgeView", "EdgeView repetida");
-                Toast.makeText(getContext(), "Transição já existe!", Toast.LENGTH_SHORT)
-                        .show();
-                return;
+                if (toast) {
+                    Toast.makeText(getContext(), "Transição já existe!", Toast.LENGTH_SHORT)
+                            .show();
+                }
+                return edgeView1;
             }
             if (edgeView.isInvertedEdge(edgeView1)) {
                 invertedEdge = edgeView1;
@@ -508,6 +578,7 @@ public class EditGraphLayout extends GridLayout {
 //                })
 //                .create()
 //                .show();
+        return edgeView;
     }
 
     public void setEdgesOnView(EdgeView edgeView, Point gridPointSourceVertex,
@@ -592,6 +663,20 @@ public class EditGraphLayout extends GridLayout {
                 addView(space, new LayoutParams(GridLayout.spec(j), GridLayout.spec(i)));
             }
         }
+    }
+
+    public Map<String, VertexView> getVertexViewByLabel() {
+        Map<String, VertexView> vertexViewByLabel = new HashMap<>();
+        for (int i = 0; i < viewsOnGrid.length; i++) {
+            for (int j = 0; j < viewsOnGrid[i].length; j++) {
+                if (viewsOnGrid[i][j] instanceof VertexView) {
+                    VertexView vertexView = (VertexView) viewsOnGrid[i][j];
+                    String label = vertexView.getLabel();
+                    vertexViewByLabel.put(label, vertexView);
+                }
+            }
+        }
+        return vertexViewByLabel;
     }
 
     /**
@@ -705,7 +790,7 @@ public class EditGraphLayout extends GridLayout {
             if (view instanceof  VertexView) {
                 if (view == initialState &&
                         viewsOnGrid[gridPoint.y][gridPoint.x + 1] == initialState) {
-                    return true;
+                    return;
                 }
                 ((VertexView) view).onLongPressAction(getMotionEventForVertexView(e));
                 return;
@@ -748,6 +833,19 @@ public class EditGraphLayout extends GridLayout {
                                 edgeView.getGridBeginHeight(), edgeView.getGridBeginWidth()));
                     }
                 }
+            }
+            if (errorStateLabel != null) {
+                VertexView errorState = addVertexView(gridPoint);
+                errorState.setLabel(errorStateLabel);
+                Map<String, VertexView> vertexViewByLabel = getVertexViewByLabel();
+                vertexViewByLabel.put(errorStateLabel, errorState);
+                for (TransitionFunction transitionFunction : transitionFunctionsToCompAuto) {
+                    addEdgeView(vertexViewByLabel.get(transitionFunction.getCurrentState()),
+                            vertexViewByLabel.get(transitionFunction.getFutureState()),
+                            transitionFunction.getSymbol());
+                }
+                transitionFunctionsToCompAuto = null;
+                errorStateLabel = null;
             }
             if (mode == CREATION_MODE) {
                 addVertexView(gridPoint);
