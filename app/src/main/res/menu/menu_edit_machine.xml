@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activities.MainActivity">
+
+    <item
+        android:id="@+id/editionMode"
+        android:title="Modo Edição"
+        android:orderInCategory="100"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/creationMode"
+        android:title="Modo Criação"
+        android:orderInCategory="100"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/defineInitialState"
+        android:title="Definir estado inicial"
+        android:orderInCategory="100"
+        app:showAsAction="collapseActionView"/>
+
+    <item
+        android:id="@+id/completeAutomaton"
+        android:title="Autômato Completo"
+        android:orderInCategory="100"
+        app:showAsAction="collapseActionView"/>
+
+</menu>

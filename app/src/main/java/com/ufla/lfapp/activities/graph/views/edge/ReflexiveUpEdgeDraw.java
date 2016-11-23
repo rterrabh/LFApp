@@ -19,27 +19,16 @@ public class ReflexiveUpEdgeDraw extends AbstractReflexiveEdgeDraw {
 
     @Override
     protected void setCircPointsOnCircumference() {
+        circPoints.first.y += VertexView.squareDimension();
+        circPoints.second.y += VertexView.squareDimension();
         super.setCircPointsOnCircumference();
-        float angle = (float) Math.atan2((up.y - circPoints.first
-                .y), (up.x - circPoints.first.x));
-        circPoints.first.x += VertexView.stateRadius * Math.cos(angle - ANGLE);
-        circPoints.first.y += VertexView.stateRadius * Math.sin(angle - ANGLE);
-        circPoints.second.x += VertexView.stateRadius * Math.cos(angle + ANGLE);
-        circPoints.second.y += VertexView.stateRadius * Math.sin(angle + ANGLE);
     }
 
     @Override
     protected void setPointControl() {
-        setUp();
         pointControl = new PointF();
         pointControl.x = up.x;
         pointControl.y = up.y - LENGHT;
-    }
-
-    private void setUp() {
-        up = new PointF();
-        up.x = circPoints.first.x;
-        up.y = circPoints.first.y - VertexView.stateRadius;
     }
 
     @Override
@@ -51,6 +40,16 @@ public class ReflexiveUpEdgeDraw extends AbstractReflexiveEdgeDraw {
         pointControl2.x = pointControl.x;
         pointControl2.y = pointControl.y - ERROR_RECT_F_LABEL;
         return Pair.create(pointControl1, pointControl2);
+    }
+
+    protected void setExtremePoint() {
+        up = new PointF();
+        up.x = circPoints.first.x;
+        up.y = circPoints.first.y - VertexView.stateRadius;
+    }
+
+    protected PointF getExtremePoint() {
+        return up;
     }
 
 }

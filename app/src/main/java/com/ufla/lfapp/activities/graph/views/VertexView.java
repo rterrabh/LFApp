@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.RectF;
 import android.text.InputType;
@@ -17,6 +18,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.ufla.lfapp.activities.graph.layout.EditGraphLayout;
+
+import java.util.ArrayList;
+import java.util.List;
 
 // Color Line #FFCCCC
 // #FFCCCC
@@ -50,18 +54,33 @@ public class VertexView extends EditText {
     private boolean cursorShowed;
     private RectF rectLabel;
     private int cursorInd;
+    private boolean finalState;
+
+    public boolean isInitialState() {
+        return initialState;
+    }
+
+    public void setInitialState(boolean initialState) {
+        this.initialState = initialState;
+        invalidate();
+    }
+
+    public boolean isFinalState() {
+        return finalState;
+    }
+
+    public void setFinalState(boolean finalState) {
+        this.finalState = finalState;
+        invalidate();
+    }
+
+    private boolean initialState;
     private GestureDetector gestureDetector;
+    private List<EdgeView> edgeDependecies;
 
 
     static {
         dpi = Resources.getSystem().getDisplayMetrics().densityDpi;
-        //dpi = 1.0f;
-//        if (dpi == 160.0) {
-//            stateRadius = (int) (Math.sqrt(dpi));
-//        } else {
-//            stateRadius = (int) (Math.sqrt(dpi) * 2.0f);
-//
-//        }
         stateRadius = (int) (dpi / 5.0f);
         SPACE = (int) (dpi / 40.0f);
         textSize = dpi / 8.0f;
@@ -88,17 +107,12 @@ public class VertexView extends EditText {
         defineDefault();
     }
 
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
     public Point getGridPoint() {
         return PointUtils.clonePoint(gridPoint);
     }
 
     public void setGridPoint(Point gridPoint) {
-        this.gridPoint = gridPoint;
+        this.gridPoint = PointUtils.clonePoint(gridPoint);
     }
 
     /**
@@ -118,28 +132,6 @@ public class VertexView extends EditText {
     public static int centerPoint() {
         return VertexView.stateRadius + VertexView.SPACE;
     }
-
-    /**
-     * Define o nome do estado a ser desenhado.
-     *
-     * @param vertexLabel nome do vértice a ser desenhado.
-     */
-    public void setVertexLabel(String vertexLabel) {
-
-    }
-
-    public String getVertexLabel() {
-        return null;
-    }
-
-//    /**
-//     * Define o estado a ser desenhado.
-//     * @param row coordenada x do estado a ser desenhado.
-//     * @param col coordenada y do estado a ser desenhado.
-//     */
-//    public void defineState(int row, int col) {
-//        vertex = new State(row, col);
-//    }
 
     /*public StateViewB(Context context, AttributeSet attrs) {
         super(context);
@@ -189,7 +181,6 @@ public class VertexView extends EditText {
     /**
      * Inicializa os objetos Paint do estado.
      */
-    //@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void init() {
         mStateInternPaint = new Paint();
         mStateInternPaint.setStyle(Paint.Style.FILL);
@@ -211,6 +202,7 @@ public class VertexView extends EditText {
         cursorShowed = false;
         setBackgroundColor(Color.TRANSPARENT);
         gestureDetector = new GestureDetector(getContext(), new VertexView.GestureListener());
+        edgeDependecies = new ArrayList<>();
     }
 
     public void onSelect() {
@@ -233,6 +225,17 @@ public class VertexView extends EditText {
                 VertexView.centerPoint() + mStateText.getTextSize());
     }
 
+    public void addEdgeDependencies(EdgeView edgeView) {
+        edgeDependecies.add(edgeView);
+    }
+
+    public void removeEdgeDependencies(EdgeView edgeView) {
+        edgeDependecies.remove(edgeView);
+    }
+
+    public List<EdgeView> getEdgeDependencies() {
+        return edgeDependecies;
+    }
 
     /**
      * Desenha o estado na tela.
@@ -241,35 +244,64 @@ public class VertexView extends EditText {
      */
     @Override
     protected void onDraw(Canvas canvas) {
+        cursorInd = getSelectionStart();
+        if (cursorInd < 0) {
+            cursorInd = 0;
+        }
+        setSelection(cursorInd, cursorInd);
+        setSelection(cursorInd);
         // Borda
         canvas.drawRect(0, 0, VertexView.squareDimension(), VertexView.squareDimension(),
                 SpaceWithBorder.mBorderPaint);
+        if (initialState) {
+            canvas.drawRect(VertexView.squareDimension(), 0, VertexView.squareDimension() * 2,
+                    VertexView.squareDimension(), SpaceWithBorder.mBorderPaint);
+        }
         if (select) {
             mStateInternPaint.setColor(mStateInternColorSelect);
         }
         // Círculo interno
         mStateText.getTextSize();
-        canvas.drawCircle(VertexView.centerPoint(), VertexView.centerPoint(),
-                VertexView.stateRadius, mStateInternPaint);
+        if (initialState) {
+            canvas.drawCircle(VertexView.centerPoint() + VertexView.squareDimension(),
+                    VertexView.centerPoint(), VertexView.stateRadius, mStateInternPaint);
+        } else {
+            canvas.drawCircle(VertexView.centerPoint(), VertexView.centerPoint(),
+                    VertexView.stateRadius, mStateInternPaint);
+        }
         if (select) {
             mStateInternPaint.setColor(mStateInternColor);
         }
         // Texto
         String label = getText().toString();
         if (label.length() <= MAX_LENGHT_LABEL) {
-            setSelection(cursorInd, cursorInd);
-            setSelection(cursorInd);
+            //setSelection(cursorInd, cursorInd);
+            //setSelection(cursorInd);
             this.label = label;
             float textLenght = mStateText.measureText(label);
-            canvas.drawText(label, VertexView.centerPoint(), VertexView.centerPoint() +
-                    mStateText.getTextSize() * 0.3f, mStateText);
+            if (initialState) {
+                canvas.drawText(label, VertexView.centerPoint() + VertexView.squareDimension(),
+                        VertexView.centerPoint() + mStateText.getTextSize() * 0.3f, mStateText);
+            } else {
+                canvas.drawText(label, VertexView.centerPoint(), VertexView.centerPoint() +
+                        mStateText.getTextSize() * 0.3f, mStateText);
+            }
             showCursor = isFocused();
             if (showCursor) {
                 if (!cursorShowed) {
                     float cursor = mStateText.measureText(label.substring(0, getSelectionStart())) +
                             VertexView.centerPoint() - textLenght / 2.0f;
-                    canvas.drawLine(cursor, VertexView.centerPoint() - mStateText.getTextSize() * 0.7f,
-                            cursor, VertexView.centerPoint() + mStateText.getTextSize() * 0.7f, mStateLinePaint);
+                    if (initialState) {
+                        canvas.drawLine(cursor + VertexView.squareDimension(),
+                                VertexView.centerPoint() + - mStateText.getTextSize() * 0.7f,
+                                cursor + VertexView.squareDimension(),
+                                VertexView.centerPoint()  + mStateText.getTextSize() * 0.7f,
+                                mStateLinePaint);
+                    } else {
+                        canvas.drawLine(cursor, VertexView.centerPoint() - mStateText.getTextSize() * 0.7f,
+                                cursor, VertexView.centerPoint() + mStateText.getTextSize() * 0.7f,
+                                mStateLinePaint);
+                    }
                     cursorShowed = true;
                 } else {
                     cursorShowed = false;
@@ -283,12 +315,34 @@ public class VertexView extends EditText {
         }
 
         // Círculo contorno
-        canvas.drawCircle(VertexView.centerPoint(), VertexView.centerPoint(),
-                VertexView.stateRadius, mStateLinePaint);
+        if (initialState) {
+            canvas.drawCircle(VertexView.centerPoint() + VertexView.squareDimension(),
+                    VertexView.centerPoint(), VertexView.stateRadius, mStateLinePaint);
+        } else {
+            canvas.drawCircle(VertexView.centerPoint(), VertexView.centerPoint(),
+                    VertexView.stateRadius, mStateLinePaint);
+        }
 
         // Estado final
-//        canvas.drawCircle(VertexView.centerPoint(), VertexView.centerPoint(),
-//                VertexView.stateRadius + VertexView.SPACE, mStateLinePaint);
+        if (finalState) {
+            if (initialState) {
+                canvas.drawCircle(VertexView.centerPoint() + VertexView.squareDimension(),
+                        VertexView.centerPoint() , VertexView.stateRadius - VertexView.SPACE,
+                        mStateLinePaint);
+            } else {
+                canvas.drawCircle(VertexView.centerPoint(), VertexView.centerPoint(),
+                        VertexView.stateRadius - VertexView.SPACE, mStateLinePaint);
+            }
+        }
+
+        if (initialState) {
+            Path initialState = new Path();
+            initialState.moveTo(VertexView.centerPoint(), VertexView.centerPoint() + VertexView.stateRadius);
+            initialState.lineTo(VertexView.squareDimension() + VertexView.SPACE, VertexView.centerPoint());
+            initialState.lineTo(VertexView.centerPoint(), VertexView.centerPoint() - VertexView.stateRadius);
+            initialState.lineTo(VertexView.centerPoint(), VertexView.centerPoint() + VertexView.stateRadius);
+            canvas.drawPath(initialState, mStateLinePaint);
+        }
     }
 
     @Override
@@ -314,7 +368,11 @@ public class VertexView extends EditText {
      */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        setMeasuredDimension(VertexView.squareDimension(), VertexView.squareDimension());
+        if (initialState) {
+            setMeasuredDimension(VertexView.squareDimension() * 2, VertexView.squareDimension());
+        } else {
+            setMeasuredDimension(VertexView.squareDimension(), VertexView.squareDimension());
+        }
     }
 
     @Override
@@ -325,45 +383,69 @@ public class VertexView extends EditText {
     public boolean onDownAction(MotionEvent e) {
         Log.d(label + " - onDown", label + " - onDown" +
                 " (" + e.getX() + ", " + e.getY() + ")");
-        float x = e.getX();
-        e.setLocation(X_FOR_DISPATCH_TOUCH_EVENT_TO_EDIT_TEXT, e.getY());
-        super.onTouchEvent(e);
-        e.setLocation(x, e.getY());
-        if (rectLabel.contains(e.getX(), e.getY())) {
-            int indice = 0;
-            label = getText().toString();
-            while (indice < label.length() && rectLabel.left + errorRectLabel +
-                    mStateText.measureText(label.substring(0, indice)) < e.getX()) {
-                indice++;
+        EditGraphLayout parentView = ((EditGraphLayout) getParent());
+        int mode = parentView.getMode();
+        if (mode == EditGraphLayout.CREATION_MODE) {
+            if (parentView.isStateSelected()) {
+                parentView.addEdgeView(parentView.getStateSelect(), VertexView.this);
+                parentView.getStateSelect().onSelect();
+                parentView.setOnStateSelected(false);
             }
-            cursorInd = indice;
-            setSelection(indice, indice);
-            setSelection(indice);
-            invalidate();
-            Log.d("e", e.getX() + ", " + e.getY());
-            Log.d(label + " - onCursor", label + " - onCursor" + " (" + e.getX() + ", " +
-                    e.getY() + ")");
+        } else if (mode == EditGraphLayout.EDITION_MODE) {
         }
         return true;
     }
 
     public void onLongPressAction(MotionEvent e) {
         EditGraphLayout parentView = ((EditGraphLayout) getParent());
-        if (parentView.isStateSelected()) {
-            parentView.addEdgeView(parentView.getStateSelect(), VertexView.this);
-            parentView.getStateSelect().onSelect();
-            parentView.setOnStateSelected(false);
-        } else {
-            parentView.setOnStateSelected(true);
-            parentView.setStateSelect(VertexView.this);
-            onSelect();
+        if (parentView.onDefineInitialState()) {
+            parentView.setInitialState(this);
+            return;
+        }
+        int mode = parentView.getMode();
+        if (mode == EditGraphLayout.CREATION_MODE) {
+            if (select) {
+                parentView.setOnStateSelected(false);
+                parentView.setStateSelect(null);
+                onSelect();
+            } else {
+                parentView.setOnStateSelected(true);
+                parentView.setStateSelect(VertexView.this);
+                onSelect();
+            }
+        } else if (mode == EditGraphLayout.EDITION_MODE) {
+            setFinalState(!finalState);
         }
         Log.d(label + " - onLongPress", label + " - onLongPress" +
                 " (" + e.getX() + ", " + e.getY() + ")");
     }
 
     public boolean onDoubleTapAction(MotionEvent e) {
-        ((EditGraphLayout) getParent()).removeVertexView(gridPoint);
+        EditGraphLayout parentView = ((EditGraphLayout) getParent());
+        int mode = parentView.getMode();
+        if (mode == EditGraphLayout.CREATION_MODE) {
+            parentView.removeVertexView(gridPoint);
+        } else if (mode == EditGraphLayout.EDITION_MODE) {
+            float x = e.getX();
+            e.setLocation(X_FOR_DISPATCH_TOUCH_EVENT_TO_EDIT_TEXT, e.getY());
+            super.onTouchEvent(e);
+            e.setLocation(x, e.getY());
+            if (rectLabel.contains(e.getX(), e.getY())) {
+                int indice = 0;
+                label = getText().toString();
+                while (indice < label.length() && rectLabel.left + errorRectLabel +
+                        mStateText.measureText(label.substring(0, indice)) < e.getX()) {
+                    indice++;
+                }
+                cursorInd = indice;
+                //setSelection(indice, indice);
+                //setSelection(indice);
+                invalidate();
+                Log.d("e", e.getX() + ", " + e.getY());
+                Log.d(label + " - onCursor", label + " - onCursor" + " (" + e.getX() + ", " +
+                        e.getY() + ")");
+            }
+        }
 
         Log.d(label + " - Double Tap", "Tapped at: (" + e.getX() + "," + e.getY() + ")");
 

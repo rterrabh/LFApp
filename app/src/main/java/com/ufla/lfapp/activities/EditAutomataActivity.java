@@ -1,15 +1,17 @@
 package com.ufla.lfapp.activities;
 
 import android.content.ClipData;
-import android.graphics.Point;
 import android.graphics.drawable.Drawable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.DragEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.ufla.lfapp.R;
 import com.ufla.lfapp.activities.graph.layout.EditGraphLayout;
@@ -21,10 +23,11 @@ import com.ufla.lfapp.activities.graph.layout.EditGraphLayout;
 public class EditAutomataActivity extends AppCompatActivity {
 
     private MyDragListener myDragListener;
+    private EditGraphLayout editMachineLayout;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EditGraphLayout automataView = new EditGraphLayout(this);
+        editMachineLayout = new EditGraphLayout(this);
 //        for (int i = 0; i < 15; i += 5) {
 //            for (int j = 0; j < 15; j += 5) {
 //                automataView.addVertexView(new Point(i, j));
@@ -36,8 +39,49 @@ public class EditAutomataActivity extends AppCompatActivity {
 //        automataView.addVertexView(p2);
         //automataView.addEdgeView(automataView.getVertexView(p1), automataView.getVertexView(p2));
         myDragListener = new MyDragListener();
-        setContentView(automataView.getRootView());
+        setContentView(editMachineLayout.getRootView());
 
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_edit_machine, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                //NavUtils.navigateUpFromSameTask(this);
+                return true;
+            case R.id.creationMode:
+                editMachineLayout.setMode(EditGraphLayout.CREATION_MODE);
+                Toast.makeText(this, "Modo de criação selecionado!", Toast.LENGTH_SHORT)
+                        .show();
+                return true;
+            case R.id.editionMode:
+                editMachineLayout.setMode(EditGraphLayout.EDITION_MODE);
+                Toast.makeText(this, "Modo de edição selecionado!", Toast.LENGTH_SHORT)
+                        .show();
+                return true;
+            case R.id.completeAutomaton:
+
+                return true;
+            case R.id.defineInitialState:
+                editMachineLayout.defineInitialStateMode();
+                Toast.makeText(this, "Selecione o estado inicial!", Toast.LENGTH_SHORT)
+                        .show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 
@@ -55,6 +99,8 @@ public class EditAutomataActivity extends AppCompatActivity {
             }
         }
     }
+
+
 
     class MyDragListener implements View.OnDragListener {
         Drawable enterShape = getResources().getDrawable(

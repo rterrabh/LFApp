@@ -15,32 +15,13 @@ public class ReflexiveBottomEdgeDraw extends AbstractReflexiveEdgeDraw {
 
     public ReflexiveBottomEdgeDraw(Pair<Point, Point> gridPoints) {
         super(gridPoints);
-        setCircPointsOnCircumference();
-    }
-
-    @Override
-    protected void setCircPointsOnCircumference() {
-        super.setCircPointsOnCircumference();
-        float angle = (float) Math.atan2((bottom.y - circPoints.first
-                .y), (bottom.x - circPoints.first.x));
-        circPoints.first.x += VertexView.stateRadius * Math.cos(angle - ANGLE);
-        circPoints.first.y += VertexView.stateRadius * Math.sin(angle - ANGLE);
-        circPoints.second.x += VertexView.stateRadius * Math.cos(angle + ANGLE);
-        circPoints.second.y += VertexView.stateRadius * Math.sin(angle + ANGLE);
     }
 
     @Override
     protected void setPointControl() {
-        setBottom();
         pointControl = new PointF();
         pointControl.x = bottom.x;
         pointControl.y = bottom.y + LENGHT;
-    }
-
-    private void setBottom() {
-        bottom = new PointF();
-        bottom.x = circPoints.first.x;
-        bottom.y = circPoints.first.y + VertexView.stateRadius;
     }
 
     @Override
@@ -52,6 +33,16 @@ public class ReflexiveBottomEdgeDraw extends AbstractReflexiveEdgeDraw {
         pointControl2.x = pointControl.x;
         pointControl2.y = pointControl.y + ERROR_RECT_F_LABEL;
         return Pair.create(pointControl1, pointControl2);
+    }
+
+    protected void setExtremePoint() {
+        bottom = new PointF();
+        bottom.x = circPoints.first.x;
+        bottom.y = circPoints.first.y + VertexView.stateRadius;
+    }
+
+    protected PointF getExtremePoint() {
+        return bottom;
     }
 
 }
