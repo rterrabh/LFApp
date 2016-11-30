@@ -23,6 +23,14 @@ public class TransitionFunction {
 				transitionFunction.getFutureState());
 	}
 
+	public TransitionFunction copy() {
+		TransitionFunction t = new TransitionFunction();
+		t.currentState = currentState;
+		t.symbol = symbol;
+		t.futureState = futureState;
+		return t;
+	}
+
 	public String getCurrentState() {
 		return currentState;
 	}

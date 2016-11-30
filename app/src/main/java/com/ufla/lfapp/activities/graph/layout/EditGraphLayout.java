@@ -69,9 +69,23 @@ public class EditGraphLayout extends GridLayout {
         this.transitionFunctionsToCompAuto = transitionFunctionsToCompAuto;
     }
 
+
+    public void clear() {
+        for (int i = 0; i < viewsOnGrid.length; i++) {
+            for (int j = 0; j < viewsOnGrid[i].length; j++) {
+                if (viewsOnGrid[i][j] instanceof VertexView &&
+                        !viewsOnGrid[i][j+1].equals(initialState)) {
+                    VertexView vertexView = (VertexView) viewsOnGrid[i][j];
+                    removeVertexView(vertexView.getGridPoint());
+                }
+            }
+        }
+        invalidate();
+    }
+
     public Automaton getAutomaton() {
         if (initialState == null) {
-            Toast.makeText(getContext(), "Erro, não possui estado inicial!",
+            Toast.makeText(getContext(), "Erro! Não possui estado inicial!",
                     Toast.LENGTH_SHORT)
                     .show();
             return null;
@@ -87,7 +101,7 @@ public class EditGraphLayout extends GridLayout {
                     VertexView vertexView = (VertexView) viewsOnGrid[i][j];
                     String label = vertexView.getLabel();
                     if (states.contains(label) && !vertexView.equals(initialState)) {
-                        Toast.makeText(getContext(), "Erro, estados com mesmo nome (" + label +
+                        Toast.makeText(getContext(), "Erro. Estados com mesmo nome (" + label +
                                 ")!", Toast.LENGTH_SHORT)
                                 .show();
                         return null;
@@ -98,6 +112,11 @@ public class EditGraphLayout extends GridLayout {
                     }
                 }
             }
+        }
+        if (finalStates.isEmpty()) {
+            Toast.makeText(getContext(), "Erro. Não possui estado final!", Toast.LENGTH_SHORT)
+                    .show();
+            return null;
         }
         for (EdgeView edgeView : edgeViews) {
             transitionFunctions.addAll(edgeView.getTransitionFuctions());
@@ -319,12 +338,43 @@ public class EditGraphLayout extends GridLayout {
     private VertexView viewOnDrag;
     private String msg;
 
+    public VertexView addVertexView(final Point gridPoint, String label) {
+        VertexView vertexView = addVertexView(gridPoint);
+        vertexView.setLabel(label);
+        return vertexView;
+    }
+
+    public void setVertexViewAsFinal(final Point gridPoint) {
+        if (viewsOnGrid[gridPoint.y][gridPoint.x] instanceof VertexView) {
+            VertexView vertexView = (VertexView) viewsOnGrid[gridPoint.y][gridPoint.x];
+            vertexView.setFinalState(true);
+            vertexView.invalidate();
+        }
+
+    }
+
+    public void setVertexViewAsInitial(final Point gridPoint) {
+        if (viewsOnGrid[gridPoint.y][gridPoint.x] instanceof VertexView) {
+            setInitialState((VertexView) viewsOnGrid[gridPoint.y][gridPoint.x]);
+        }
+    }
+
+    public void validatePoint(final Point gridPoint) {
+        while (actualNumRows - gridPoint.y < DIST_FREE_SPACE_MIN ) {
+            growRows();
+        }
+        while (actualNumColumns - gridPoint.x < DIST_FREE_SPACE_MIN) {
+            growColumns();
+        }
+    }
+
     /**
      * Adiciona um estado nas coordenadas informadas por parâmetros.
      *
      * @param gridPoint linha do estado a ser adicionado.
      */
     public VertexView addVertexView(final Point gridPoint) {
+        validatePoint(gridPoint);
         final VertexView vertexView = new VertexView(getContext());
         vertexView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -333,12 +383,6 @@ public class EditGraphLayout extends GridLayout {
         viewsOnGrid[gridPoint.y][gridPoint.x] = vertexView;
         addView(vertexView, new LayoutParams(GridLayout.spec(gridPoint.y),
                 GridLayout.spec(gridPoint.x)));
-        if (actualNumRows - gridPoint.y < DIST_FREE_SPACE_MIN) {
-            growRows();
-        }
-        if (actualNumColumns - gridPoint.x < DIST_FREE_SPACE_MIN) {
-            growColumns();
-        }
 
 //        vertexView.setOnLongClickListener(new View.OnLongClickListener() {
 //            @Override
@@ -440,12 +484,15 @@ public class EditGraphLayout extends GridLayout {
     }
 
     public void removeVertexView(Point gridPoint) {
-        removeView(viewsOnGrid[gridPoint.y][gridPoint.x]);
+        VertexView vertexView = (VertexView) viewsOnGrid[gridPoint.y][gridPoint.x];
+        if (vertexView.equals(initialState)) {
+            removeInitialState();
+        }
+        removeView(vertexView);
         SpaceWithBorder space = new SpaceWithBorder(getContext());
         space.setMinimumHeight(VertexView.squareDimension());
         space.setMinimumWidth(VertexView.squareDimension());
-        for (EdgeView edgeView : ((VertexView) viewsOnGrid[gridPoint.y][gridPoint.x])
-                .getEdgeDependencies()) {
+        for (EdgeView edgeView : vertexView.getEdgeDependencies()) {
             nullableEdgesOnView(edgeView);
             removeView(edgeView);
             edgeViews.remove(edgeView);
@@ -474,6 +521,10 @@ public class EditGraphLayout extends GridLayout {
     public VertexView getVertexView(Point gridPoint) {
         return (viewsOnGrid[gridPoint.y][gridPoint.x] instanceof VertexView) ?
                 (VertexView) viewsOnGrid[gridPoint.y][gridPoint.x] : null;
+    }
+
+    public EdgeView addEdgeView(Point sourcePoint, Point targetPoint, String label) {
+        return addEdgeView(getVertexView(sourcePoint), getVertexView(targetPoint), label);
     }
 
     public EdgeView addEdgeView(VertexView sourceVertex, VertexView targetVertex, String label) {

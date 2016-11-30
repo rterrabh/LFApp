@@ -29,4 +29,16 @@
         android:orderInCategory="100"
         app:showAsAction="collapseActionView"/>
 
+    <item
+        android:id="@+id/verifyEntry"
+        android:title="Processar palavra"
+        android:orderInCategory="100"
+        app:showAsAction="collapseActionView"/>
+
+    <item
+        android:id="@+id/transformAFNDInAFD"
+        android:title="Transformar AFND em AFD"
+        android:orderInCategory="100"
+        app:showAsAction="collapseActionView"/>
+
 </menu>
