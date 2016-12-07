@@ -24,7 +24,7 @@ import com.ufla.lfapp.activities.utils.Algorithm;
 import com.ufla.lfapp.persistence.DbAcess;
 import com.ufla.lfapp.vo.GrammarParser;
 
-public class MainActivity extends AppCompatActivity {
+public class GrammarActivity extends AppCompatActivity {
 
     private RelativeLayout screenGrammar;
     private LinearLayout form, buttons;

@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -24,7 +25,10 @@ import android.widget.Toast;
 
 import com.ufla.lfapp.R;
 import com.ufla.lfapp.activities.graph.layout.EditGraphLayout;
+import com.ufla.lfapp.persistence.DbAcess;
 import com.ufla.lfapp.vo.Automaton;
+import com.ufla.lfapp.vo.AutomatonDAO;
+import com.ufla.lfapp.vo.AutomatonGUI;
 import com.ufla.lfapp.vo.TransitionFunction;
 
 import java.util.Map;
@@ -56,7 +60,55 @@ public class EditAutomataActivity extends AppCompatActivity {
         //automataView.addEdgeView(automataView.getVertexView(p1), automataView.getVertexView(p2));
         myDragListener = new MyDragListener();
         setContentView(editMachineLayout.getRootView());
+        Intent intent = getIntent();
+        if (intent != null
+                && intent.getSerializableExtra("Automaton") != null) {
+            drawAutomaton((AutomatonGUI) intent.getSerializableExtra("Automaton"));
+        }
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        new DbAcess(this).putAutomaton(new AutomatonDAO(editMachineLayout.getAutomaton()));
+//        SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
+//        editor.putString("inputGrammar", inputGrammar.getText().toString());
+//        editor.putString("inputWord", inputWord.getText().toString());
+//        editor.apply();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+    }
+
+    public void drawAutomaton(AutomatonGUI automaton) {
+        Map<String, Point> statesPoints =
+                automaton.getStateGridPositions();
+        editMachineLayout.clear();
+        for (Map.Entry<String, Point> entry : statesPoints.entrySet()) {
+            editMachineLayout.addVertexView(entry.getValue(), entry.getKey());
+        }
+        for (Map.Entry<Pair<String, String>, SortedSet<String>> entry :
+                automaton.getTransitionsAFD().entrySet()) {
+            StringBuilder sb = new StringBuilder();
+            for (String str : entry.getValue()) {
+                sb.append(str)
+                        .append(',');
+            }
+            sb.deleteCharAt(sb.length() - 1);
+            editMachineLayout.addEdgeView(statesPoints.get(entry.getKey().first),
+                    statesPoints.get(entry.getKey().second), sb.toString());
+        }
+        editMachineLayout.setVertexViewAsInitial(statesPoints.get(
+                automaton.getInitialState()));
+        for (String state : automaton.getFinalStates()) {
+            editMachineLayout.setVertexViewAsFinal(statesPoints.get(
+                    state));
+        }
+        Log.d("automato", automaton.toString());
     }
 
 
@@ -167,7 +219,7 @@ public class EditAutomataActivity extends AppCompatActivity {
                         Automaton automatonAFDSimplify =
                                 automatonAFD.getAutomatonWithStatesNameSimplify();
                         SortedMap<String, Point> statesPoints =
-                                automatonAFDSimplify.getStatesPoints();
+                                automatonAFDSimplify.getStatesPointsFake();
                         editMachineLayout.clear();
                         for (SortedMap.Entry<String, Point> entry : statesPoints.entrySet()) {
                             editMachineLayout.addVertexView(entry.getValue(), entry.getKey());
@@ -193,6 +245,12 @@ public class EditAutomataActivity extends AppCompatActivity {
                         Log.d("automatoAFD", automatonAFD.toString());
                     }
                 }
+                return true;
+            case R.id.minimizeAFD:
+                return true;
+            case R.id.history:
+                Intent intent = new Intent(this, HistoricalAutomataActivity.class);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

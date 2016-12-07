@@ -4,9 +4,33 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Point;
 
+import com.ufla.lfapp.persistence.contract.table.GrammarContract;
+import com.ufla.lfapp.persistence.contract.table.GridPositionContract;
+import com.ufla.lfapp.persistence.contract.table.MachineContract;
+import com.ufla.lfapp.persistence.contract.table.MachineFinalStateContract;
+import com.ufla.lfapp.persistence.contract.table.MachineStatePositionContract;
+import com.ufla.lfapp.persistence.contract.table.MachineTransitionContract;
+import com.ufla.lfapp.persistence.contract.table.StateContract;
+import com.ufla.lfapp.persistence.contract.table.SymbolContract;
+import com.ufla.lfapp.persistence.contract.table.TransitionContract;
+import com.ufla.lfapp.persistence.contract.view.MachineAlphabetViewContract;
+import com.ufla.lfapp.persistence.contract.view.MachineFinalStateViewContract;
+import com.ufla.lfapp.persistence.contract.view.MachineStatePositionViewContract;
+import com.ufla.lfapp.persistence.contract.view.MachineTransitionViewContract;
+import com.ufla.lfapp.vo.Automaton;
+import com.ufla.lfapp.vo.AutomatonDAO;
+import com.ufla.lfapp.vo.AutomatonGUI;
+import com.ufla.lfapp.vo.TransitionFunction;
+
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by carlos on 03/08/16.
@@ -19,18 +43,513 @@ public class DbAcess {
         mDbHelper = new FeedReaderDbHelper(context);
     }
 
+    private long getGridPositionId(int x, int y) {
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        String[] projection = { GridPositionContract.Columns._ID };
+        String selection = GridPositionContract.Columns.X + " = ? AND "
+                + GridPositionContract.Columns.Y + " = ?";
+        String[] selectionArgs = { Integer.toString(x), Integer.toString(y) };
+        Cursor c = db.query(
+                GridPositionContract.TABLE_NAME,              // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                     // The sort order
+        );
+        long gridPositionId = -1;
+        if (c != null) {
+            if (c.moveToFirst()) {
+                gridPositionId = c.getLong(c.getColumnIndex(GridPositionContract.Columns._ID));
+            }
+            c.close();
+        }
+        db.close();
+        return gridPositionId;
+    }
+
+    private long putGridPosition(Point point) {
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(GridPositionContract.Columns.X, point.x);
+        values.put(GridPositionContract.Columns.Y, point.y);
+
+        // Insert the new row, returning the primary key value of the new row
+        long gridPositionId = db.insert(GridPositionContract.TABLE_NAME,
+                null,
+                values);
+        db.close();
+        return gridPositionId;
+    }
+
+    private long getTransitionId(long currentState, long symbol, long futureState) {
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        String[] projection = { TransitionContract.Columns._ID };
+        String selection = TransitionContract.Columns.CURRENT_STATE + " = ? AND "
+                + TransitionContract.Columns.SYMBOL + " = ? AND "
+                + TransitionContract.Columns.FUTURE_STATE + " = ?" ;
+        String[] selectionArgs = { Long.toString(currentState), Long.toString(symbol),
+                Long.toString(futureState) };
+        Cursor c = db.query(
+                TransitionContract.TABLE_NAME,              // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                     // The sort order
+        );
+        long transitionId = -1;
+        if (c != null) {
+            if (c.moveToFirst()) {
+                transitionId = c.getLong(c.getColumnIndex(TransitionContract.Columns._ID));
+            }
+            c.close();
+        }
+        db.close();
+        return transitionId;
+    }
+
+    private long putTransition(long currentState, long symbol, long futureState) {
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(TransitionContract.Columns.CURRENT_STATE, currentState);
+        values.put(TransitionContract.Columns.SYMBOL, symbol);
+        values.put(TransitionContract.Columns.FUTURE_STATE, futureState);
+
+        // Insert the new row, returning the primary key value of the new row
+        long transitionId = db.insert(TransitionContract.TABLE_NAME,
+                null,
+                values);
+        db.close();
+        return transitionId;
+    }
+
+    private long getSymbolId(String symbolName) {
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        String[] projection = { SymbolContract.Columns._ID };
+        String selection = SymbolContract.Columns.NAME + " = ?";
+        String[] selectionArgs = { symbolName };
+        Cursor c = db.query(
+                SymbolContract.TABLE_NAME,              // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                     // The sort order
+        );
+        long symbolId = -1;
+        if (c != null) {
+            if (c.moveToFirst()) {
+                symbolId = c.getLong(c.getColumnIndex(SymbolContract.Columns._ID));
+            }
+            c.close();
+        }
+        db.close();
+        return symbolId;
+    }
+
+    private long putSymbol(String symbolName) {
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(SymbolContract.Columns.NAME, symbolName);
+
+        // Insert the new row, returning the primary key value of the new row
+        long symbolId = db.insert(SymbolContract.TABLE_NAME,
+                null,
+                values);
+        db.close();
+        return symbolId;
+    }
+
+    private long getStateId(String stateName) {
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        String[] projection = { StateContract.Columns._ID };
+        String selection = StateContract.Columns.NAME + " = ?";
+        String[] selectionArgs = { stateName };
+        Cursor c = db.query(
+                StateContract.TABLE_NAME,               // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                     // The sort order
+        );
+        long stateId = -1;
+        if (c != null) {
+            if (c.moveToFirst()) {
+                stateId = c.getLong(c.getColumnIndex(StateContract.Columns._ID));
+            }
+            c.close();
+        }
+        db.close();
+        return stateId;
+    }
+
+    private long putState(String stateName) {
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(StateContract.Columns.NAME, stateName);
+
+        // Insert the new row, returning the primary key value of the new row
+        long stateId = db.insert(StateContract.TABLE_NAME,
+               null,
+                values);
+        db.close();
+        return stateId;
+    }
+
+    private long putMachineDB(Long initialState, String label, long creationTime, Integer contUses) {
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(MachineContract.Columns.CREATION_TIME, creationTime);
+        if (initialState != null) {
+            values.put(MachineContract.Columns.INITIAL_STATE, initialState);
+        }
+        if (label != null) {
+            values.put(MachineContract.Columns.LABEL, label);
+        }
+        if (contUses != null) {
+            values.put(MachineContract.Columns.CONT_USES, contUses);
+        }
+
+        // Insert the new row, returning the primary key value of the new row
+        long machineId = db.insert(MachineContract.TABLE_NAME,
+                null,
+                values);
+        db.close();
+        return machineId;
+    }
+
+    private long putMachineFinalState(long machineId, long stateId) {
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(MachineFinalStateContract.Columns.MACHINE, machineId);
+        values.put(MachineFinalStateContract.Columns.STATE, stateId);
+
+        // Insert the new row, returning the primary key value of the new row
+        long machineFinalStateId = db.insert(MachineFinalStateContract.TABLE_NAME,
+                null,
+                values);
+        db.close();
+        return machineFinalStateId;
+    }
+
+    private long putMachineStatePosition(long machineId, long stateId, long positionId) {
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(MachineStatePositionContract.Columns.MACHINE, machineId);
+        values.put(MachineStatePositionContract.Columns.STATE, stateId);
+        values.put(MachineStatePositionContract.Columns.POSITION, positionId);
+
+        // Insert the new row, returning the primary key value of the new row
+        long machineStatePositionId = db.insert(MachineStatePositionContract.TABLE_NAME,
+                null,
+                values);
+        db.close();
+        return machineStatePositionId;
+    }
+
+    private long putMachineTransition(long machineId, long transitionId) {
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(MachineTransitionContract.Columns.MACHINE, machineId);
+        values.put(MachineTransitionContract.Columns.TRANSITION, transitionId);
+
+        // Insert the new row, returning the primary key value of the new row
+        long machineTransitionId = db.insert(MachineTransitionContract.TABLE_NAME,
+                null,
+                values);
+        db.close();
+        return machineTransitionId;
+    }
+
+    public void putAutomaton(AutomatonDAO automatonDAO) {
+        for (String state : automatonDAO.getStates()) {
+            long stateId = getStateId(state);
+            if (stateId == -1) {
+                stateId = putState(state);
+            }
+            automatonDAO.putStateId(state, stateId);
+        }
+
+        String initialState = automatonDAO.getInitialState();
+        Long initialStateId = (initialState == null) ? null :
+                automatonDAO.getStateId(initialState);
+        long machineId = putMachineDB(initialStateId, automatonDAO.getLabel(),
+                automatonDAO.getCreationDate().getTime(), automatonDAO.getContUses());
+        automatonDAO.setId(machineId);
+        for (String finalState : automatonDAO.getFinalStates()) {
+            putMachineFinalState(machineId, automatonDAO.getStateId(finalState));
+        }
+        for (String symbol : automatonDAO.getAlphabet()) {
+            long symbolId = getSymbolId(symbol);
+            if (symbolId == -1) {
+                symbolId = putSymbol(symbol);
+            }
+            automatonDAO.putSymbolId(symbol, symbolId);
+        }
+        for (Point gridPosition : automatonDAO.getStateGridPositions().values()) {
+            long gridPositionId = getGridPositionId(gridPosition.x, gridPosition.y);
+            if (gridPositionId == -1) {
+                gridPositionId = putGridPosition(gridPosition);
+            }
+            automatonDAO.putGridPositionId(gridPosition, gridPositionId);
+        }
+        for (Map.Entry<String, Point> entry : automatonDAO.getStateGridPositions().entrySet()) {
+            putMachineStatePosition(machineId, automatonDAO.getStateId(entry.getKey()),
+                    automatonDAO.getGridPositionId(entry.getValue()));
+        }
+        for (TransitionFunction t : automatonDAO.getTransitionFunctions()) {
+            long currentState = automatonDAO.getStateId(t.getCurrentState());
+            long symbol = automatonDAO.getSymbolId(t.getSymbol());
+            long futureState = automatonDAO.getStateId(t.getFutureState());
+            long transitionId = getTransitionId(currentState, symbol, futureState);
+            if (transitionId == -1) {
+                transitionId = putTransition(currentState, symbol, futureState);
+            }
+            automatonDAO.putTransitionId(t, transitionId);
+        }
+        for (long transictionId : automatonDAO.getTransitionsId()) {
+            putMachineTransition(machineId, transictionId);
+        }
+    }
+
+    private Map<String, Point> getStatesGridPoints (long machineId) {
+        Map<String, Point> stateGridPositions = new HashMap<>();
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        String[] projection = {MachineStatePositionViewContract.Columns.STATE,
+                MachineStatePositionViewContract.Columns.X,
+                MachineStatePositionViewContract.Columns.Y };
+        String selection = MachineStatePositionViewContract.Columns.MACHINE + " = ?";
+        String[] selectionArgs = { Long.toString(machineId) };
+        Cursor c = db.query(
+                MachineStatePositionViewContract.VIEW_NAME, // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                     // The sort order
+        );
+        if (c != null) {
+            if (c.moveToFirst()) {
+                do {
+                    Point p = new Point();
+                    p.x = c.getInt(c.getColumnIndex(MachineStatePositionViewContract.Columns.X));
+                    p.y = c.getInt(c.getColumnIndex(MachineStatePositionViewContract.Columns.Y));
+                    stateGridPositions.put(c.getString(c.getColumnIndex(
+                            MachineStatePositionViewContract.Columns.STATE)), p);
+                } while (c.moveToNext());
+            }
+            c.close();
+        }
+        db.close();
+        return stateGridPositions;
+    }
+
+    private Set<String> getFinalStates (long machineId) {
+        Set<String> finalStates = new HashSet<>();
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        String[] projection = { MachineFinalStateViewContract.Columns.STATE };
+        String selection = MachineFinalStateViewContract.Columns.MACHINE + " = ?";
+        String[] selectionArgs = { Long.toString(machineId) };
+        Cursor c = db.query(
+                MachineFinalStateViewContract.VIEW_NAME,     // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                     // The sort order
+        );
+        if (c != null) {
+            if (c.moveToFirst()) {
+                do {
+                    finalStates.add(c.getString(c.getColumnIndex(
+                            MachineFinalStateViewContract.Columns.STATE)));
+                } while (c.moveToNext());
+            }
+            c.close();
+        }
+        db.close();
+        return finalStates;
+    }
+
+    private Set<String> getAlphabet (long machineId) {
+        Set<String> alphabet = new HashSet<>();
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        String[] projection = { MachineAlphabetViewContract.Columns.ALPHABET };
+        String selection = MachineFinalStateViewContract.Columns.MACHINE + " = ?";
+        String[] selectionArgs = { Long.toString(machineId) };
+        Cursor c = db.query(
+                MachineAlphabetViewContract.VIEW_NAME,     // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                     // The sort order
+        );
+        if (c != null) {
+            if (c.moveToFirst()) {
+                do {
+                    alphabet.add(c.getString(c.getColumnIndex(
+                            MachineAlphabetViewContract.Columns.ALPHABET)));
+                } while (c.moveToNext());
+            }
+            c.close();
+        }
+        db.close();
+        return alphabet;
+    }
+
+    private Set<TransitionFunction>  getTransitionFunctions (long machineId) {
+        Set<TransitionFunction> transitionFunctions = new HashSet<>();
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        String[] projection = { MachineTransitionViewContract.Columns.CURRENT_STATE,
+                MachineTransitionViewContract.Columns.SYMBOL,
+                MachineTransitionViewContract.Columns.FUTURE_STATE };
+        String selection = MachineTransitionViewContract.Columns.MACHINE + " = ?";
+        String[] selectionArgs = { Long.toString(machineId) };
+        Cursor c = db.query(
+                MachineTransitionViewContract.VIEW_NAME,     // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                     // The sort order
+        );
+        if (c != null) {
+            if (c.moveToFirst()) {
+                do {
+                    transitionFunctions.add(new TransitionFunction(
+                            c.getString(c.getColumnIndex(
+                                    MachineTransitionViewContract.Columns.CURRENT_STATE)),
+                            c.getString(c.getColumnIndex(
+                                MachineTransitionViewContract.Columns.SYMBOL)),
+                            c.getString(c.getColumnIndex(
+                                MachineTransitionViewContract.Columns.FUTURE_STATE))));
+                } while (c.moveToNext());
+            }
+            c.close();
+        }
+        db.close();
+        return transitionFunctions;
+    }
+
+    private class MachineTable {
+        long id;
+        String initialState;
+        String label;
+        Date creationDate;
+        int contUses;
+    }
+
+    private MachineTable getMachineTable(long machineId) {
+        MachineTable machineTable = new MachineTable();
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        String[] projection = { MachineContract.Columns._ID,
+                MachineContract.Columns.INITIAL_STATE,
+                MachineContract.Columns.LABEL,
+                MachineContract.Columns.CREATION_TIME,
+                MachineContract.Columns.CONT_USES };
+        String selection = MachineContract.Columns._ID + " = ?";
+        String[] selectionArgs = { Long.toString(machineId) };
+        Cursor c = db.query(
+                MachineContract.TABLE_NAME,     // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                     // The sort order
+        );
+        if (c != null) {
+            if (c.moveToFirst()) {
+                machineTable.id = c.getLong(c.getColumnIndex(MachineContract.Columns._ID));
+                machineTable.initialState = c.getString(c.getColumnIndex(
+                            MachineContract.Columns.INITIAL_STATE));
+                machineTable.label = c.getString(c.getColumnIndex(MachineContract.Columns.LABEL));
+                machineTable.creationDate = new Date(c.getLong(c.getColumnIndex(
+                            MachineContract.Columns.CREATION_TIME)));
+                machineTable.contUses = c.getInt(c.getColumnIndex(MachineContract.Columns.CONT_USES));
+            }
+            c.close();
+        }
+        db.close();
+        return machineTable;
+    }
+
+    public List<Long> getIdsLastMachine() {
+        List<Long> idsLastMachine = new ArrayList<>();
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        String[] projection = { MachineContract.Columns._ID };
+        Cursor c = db.query(
+                MachineContract.TABLE_NAME,     // The table to query
+                projection,                               // The columns to return
+                null,                                // The columns for the WHERE clause
+                null,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                MachineContract.Columns._ID + " ASC",     // The sort order
+                "10"
+        );
+        if (c != null) {
+            if (c.moveToFirst()) {
+                idsLastMachine.add(c.getLong(c.getColumnIndex(MachineContract.Columns._ID)));
+            }
+            c.close();
+        }
+        db.close();
+        return idsLastMachine;
+    }
+
+    public AutomatonGUI getAutomaton(long machineId) {
+        Map<String, Point> statesGridPoints = getStatesGridPoints(machineId);
+        Set<String> states = statesGridPoints.keySet();
+        Set<String> finalStates = getFinalStates(machineId);
+        Set<String> alphabet = getAlphabet(machineId);
+        Set<TransitionFunction> transitionFunctions = getTransitionFunctions(machineId);
+        MachineTable machineTable = getMachineTable(machineId);
+        AutomatonGUI automatonGUI = new AutomatonGUI(new Automaton(states, alphabet,
+                machineTable.initialState, finalStates, transitionFunctions), statesGridPoints);
+        automatonGUI.setLabel(machineTable.label);
+        automatonGUI.setId(machineTable.id);
+        automatonGUI.setContUses(machineTable.contUses);
+        automatonGUI.setCreationDate(machineTable.creationDate);
+        return automatonGUI;
+    }
+
+    public List<AutomatonGUI> getAutomatons() {
+        List<AutomatonGUI> automatonGUIs = new ArrayList<>();
+        for (Long machineId : getIdsLastMachine()) {
+            automatonGUIs.add(getAutomaton(machineId));
+        }
+        return automatonGUIs;
+    }
+
     public void putGrammar(String grammar) {
         // Gets the data repository in write mode
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
         // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
-        values.put(FeedReaderContract.FeedEntry.COLUMN_NAME_GRAMMAR, grammar);
+        values.put(GrammarContract.Columns.COLUMN_GRAMMAR_GRAMMAR, grammar);
 
         // Insert the new row, returning the primary key value of the new row
-       db.insert(FeedReaderContract.FeedEntry.TABLE_NAME,
-                FeedReaderContract.FeedEntry.COLUMN_NAME_NULLABLE,
+       db.insert(GrammarContract.Columns.TABLE_GRAMMAR,
+                GrammarContract.Columns.COLUMN_GRAMMAR_NULLABLE,
                 values);
+        db.close();
     }
 
     public Map<String, Integer> readGrammars() {
@@ -39,19 +558,13 @@ public class DbAcess {
         // Define a projection that specifies which columns from the database
         // you will actually use after this query.
         String[] projection = {
-                FeedReaderContract.FeedEntry.COLUMN_NAME_ID,
-                FeedReaderContract.FeedEntry.COLUMN_NAME_GRAMMAR,
-//                FeedReaderContract.FeedEntry.COLUMN_NAME_UPDATED
+                GrammarContract.Columns.COLUMN_GRAMMAR_ID,
+                GrammarContract.Columns.COLUMN_GRAMMAR_GRAMMAR,
+//                GrammarContract.Columns.COLUMN_NAME_UPDATED
         };
 
-        // How you want the results sorted in the resulting Cursor
-//        String sortOrder =
-//                FeedReaderContract.FeedEntry.COLUMN_NAME_UPDATED + " DESC";
-        String selection = "";
-        String[] selectionArgs = {""};
-
         Cursor c = db.query(
-                FeedReaderContract.FeedEntry.TABLE_NAME,  // The table to query
+                GrammarContract.Columns.TABLE_GRAMMAR,  // The table to query
                 projection,                               // The columns to return
                 null,                                // The columns for the WHERE clause
                 null,                            // The values for the WHERE clause
@@ -60,34 +573,60 @@ public class DbAcess {
                 null                                     // The sort order
         );
         Map<String, Integer> result = new HashMap<>();
-        if(c != null ) {
+        if (c != null ) {
             if (c.moveToFirst()) {
                 int columnIndexGrammar = c.getColumnIndex
-                        (FeedReaderContract.FeedEntry.COLUMN_NAME_GRAMMAR);
-                int columnIndexId = c.getColumnIndex(FeedReaderContract.FeedEntry.COLUMN_NAME_ID);
+                        (GrammarContract.Columns.COLUMN_GRAMMAR_GRAMMAR);
+                int columnIndexId = c.getColumnIndex(GrammarContract.Columns.COLUMN_GRAMMAR_ID);
                 do {
                     result.put(c.getString(columnIndexGrammar), c.getInt(columnIndexId));
-                } while(c.moveToNext());
+                } while (c.moveToNext());
             }
+            c.close();
         }
-        c.close();
+
+        db.close();
         return result;
+    }
+
+    public void deleteAutomaton(Long id) {
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        db.execSQL("PRAGMA foreign_keys = ON;");
+
+        // Define 'where' part of query.
+        String selection = MachineContract.Columns._ID + " = ?";
+        // Specify arguments in placeholder order.
+        String[] selectionArgs = { Long.toString(id) };
+        // Issue SQL statement.
+        db.delete(MachineContract.TABLE_NAME, selection, selectionArgs);
+        db.close();
+    }
+
+    public void cleanHistoryAutomaton() {
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        db.execSQL("PRAGMA foreign_keys = ON;");
+        db.delete(MachineContract.TABLE_NAME, null, null);
+        db.close();
     }
 
     public void deleteGrammar(Integer id) {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
         // Define 'where' part of query.
-        String selection = FeedReaderContract.FeedEntry.COLUMN_NAME_ID
+        String selection = GrammarContract.Columns.COLUMN_GRAMMAR_ID
                 + " = ?";
         // Specify arguments in placeholder order.
         String[] selectionArgs = { String.valueOf(id) };
         // Issue SQL statement.
-        db.delete(FeedReaderContract.FeedEntry.TABLE_NAME, selection, selectionArgs);
+        db.delete(GrammarContract.Columns.TABLE_GRAMMAR, selection, selectionArgs);
+        db.close();
     }
 
-    public void cleanHistory() {
-        mDbHelper.cleanHistory();
+    public void cleanHistoryGrammar() {
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        db.delete(GrammarContract.Columns.TABLE_GRAMMAR, null, null);
+        db.close();
     }
 
 

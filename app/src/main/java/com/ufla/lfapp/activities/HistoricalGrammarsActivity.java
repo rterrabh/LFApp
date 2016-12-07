@@ -46,7 +46,7 @@ public class HistoricalGrammarsActivity extends AppCompatActivity {
         params.putString("grammar", String.valueOf(((TextView)
                 ((View) (view.getParent().getParent())).findViewById(R.id.grammar)).getText()));
         System.out.println();
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, GrammarActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtras(params);
         startActivity(intent);
@@ -64,7 +64,7 @@ public class HistoricalGrammarsActivity extends AppCompatActivity {
 
     public void cleanHistoricalGrammar (View view) {
         listAdapterGrammar.clear();
-        new DbAcess(this).cleanHistory();
+        new DbAcess(this).cleanHistoryGrammar();
     }
 
 

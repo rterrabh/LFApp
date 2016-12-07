@@ -1,6 +1,8 @@
 package com.ufla.lfapp.vo;
 
-public class TransitionFunction {
+import java.io.Serializable;
+
+public class TransitionFunction implements Serializable {
 	
 	protected String currentState;
 	protected String symbol;

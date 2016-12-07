@@ -24,6 +24,7 @@ import com.ufla.lfapp.activities.graph.views.EdgeView;
 import com.ufla.lfapp.activities.graph.views.SpaceWithBorder;
 import com.ufla.lfapp.activities.graph.views.VertexView;
 import com.ufla.lfapp.vo.Automaton;
+import com.ufla.lfapp.vo.AutomatonGUI;
 import com.ufla.lfapp.vo.TransitionFunction;
 
 import java.util.HashMap;
@@ -83,13 +84,14 @@ public class EditGraphLayout extends GridLayout {
         invalidate();
     }
 
-    public Automaton getAutomaton() {
+    public AutomatonGUI getAutomaton() {
         if (initialState == null) {
             Toast.makeText(getContext(), "Erro! Não possui estado inicial!",
                     Toast.LENGTH_SHORT)
                     .show();
             return null;
         }
+        Map<String, Point> stateGridPositions = new HashMap<>();
         String initialStateStr = initialState.getLabel();
         Set<String> alphabet = new HashSet<>();
         Set<String> states = new HashSet<>();
@@ -106,6 +108,7 @@ public class EditGraphLayout extends GridLayout {
                                 .show();
                         return null;
                     }
+                    stateGridPositions.put(label, new Point(i, j));
                     states.add(label);
                     if (vertexView.isFinalState()) {
                         finalStates.add(label);
@@ -127,7 +130,8 @@ public class EditGraphLayout extends GridLayout {
                 alphabet.add(Character.toString(symbol.charAt(i)));
             }
         }
-        return new Automaton(states, alphabet, initialStateStr, finalStates, transitionFunctions);
+        return new AutomatonGUI(new Automaton(states, alphabet, initialStateStr, finalStates,
+                transitionFunctions), stateGridPositions);
     }
 
     public int getMode() {

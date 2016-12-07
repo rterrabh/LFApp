@@ -11,7 +11,7 @@
 
         </activity>
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".activities.GrammarActivity"
             android:label="LFApp"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible|adjustResize">
@@ -25,14 +25,14 @@
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity"/>
+                android:value=".activities.GrammarActivity"/>
         </activity>
         <activity
             android:name=".activities.menu.MenuActivity"
             android:label="LFApp - Menu">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity"/>
+                android:value=".activities.GrammarActivity"/>
         </activity>
         <activity
             android:name=".activities.algorithms.IdGrammarActivity"
@@ -137,7 +137,15 @@
             android:label="LFApp - Histórico">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MainActivity"/>
+                android:value=".activities.GrammarActivity"/>
+        </activity>
+
+        <activity
+            android:name=".activities.HistoricalAutomataActivity"
+            android:label="LFApp - Histórico">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.EditAutomataActivity"/>
         </activity>
 
         <meta-data

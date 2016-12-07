@@ -1,9 +1,10 @@
 package com.ufla.lfapp.vo;
 
+import java.io.Serializable;
 import java.util.Set;
 import java.util.HashSet;
 
-public abstract class Machine {
+public abstract class Machine implements Serializable {
 
 	protected Set<String> states; 
 	protected Set<String> alphabet;
@@ -24,6 +25,15 @@ public abstract class Machine {
 		this.alphabet = alphabet;
 		this.initialState = initialState;
 		this.finalStates = finalStates;
+		if (this.states == null) {
+			this.states = new HashSet<>();
+		}
+		if (this.alphabet == null) {
+			this.alphabet = new HashSet<>();
+		}
+		if (this.finalStates == null) {
+			this.finalStates = new HashSet<>();
+		}
 	}
 
 	public Set<String> getStates() {

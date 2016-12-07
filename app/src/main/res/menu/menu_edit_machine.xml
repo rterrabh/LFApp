@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".activities.MainActivity">
+    tools:context=".activities.GrammarActivity">
 
     <item
         android:id="@+id/editionMode"
@@ -38,6 +38,18 @@
     <item
         android:id="@+id/transformAFNDInAFD"
         android:title="Transformar AFND em AFD"
+        android:orderInCategory="100"
+        app:showAsAction="collapseActionView"/>
+
+    <item
+        android:id="@+id/minimizeAFD"
+        android:title="Minimizar AFD"
+        android:orderInCategory="100"
+        app:showAsAction="collapseActionView"/>
+
+    <item
+        android:id="@+id/history"
+        android:title="Histórico"
         android:orderInCategory="100"
         app:showAsAction="collapseActionView"/>
 

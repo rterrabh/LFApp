@@ -25,7 +25,7 @@ public class InfoActivity extends AppCompatActivity {
         infoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent trocaTela = new Intent(InfoActivity.this, MainActivity.class);
+                Intent trocaTela = new Intent(InfoActivity.this, GrammarActivity.class);
                 InfoActivity.this.startActivity(trocaTela);
                 InfoActivity.this.finish();
             }

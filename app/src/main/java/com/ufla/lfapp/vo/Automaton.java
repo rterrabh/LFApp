@@ -4,6 +4,7 @@ package com.ufla.lfapp.vo;
 import android.graphics.Point;
 import android.support.v4.util.Pair;
 
+import java.io.Serializable;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -22,15 +23,16 @@ import java.util.TreeSet;
  * Created by carlos on 11/23/16.
  */
 
-public class Automaton extends Machine {
+public class Automaton extends Machine implements Serializable {
 
     public static final String STATE_ERROR = "err";
-    private Set<TransitionFunction> transitionFunctions;
-    private String stateError;
-    private static String LAMBDA = ".";
-    private static String FECHO_LAMBDA = "*";
-    private static final int MAX_PROCESS = 100000;
-    private Set<String> initialStatesFromAFNDLambdaToAFD;
+    protected Set<TransitionFunction> transitionFunctions;
+    protected String stateError;
+    protected static String LAMBDA = ".";
+    protected static String FECHO_LAMBDA = "*";
+    protected static final int MAX_PROCESS = 100000;
+    protected Set<String> initialStatesFromAFNDLambdaToAFD;
+
 
     public Automaton(Set<String> states, Set<String> alphabet,
                    String initialState, Set<String> finalStates,
@@ -39,8 +41,30 @@ public class Automaton extends Machine {
         this.transitionFunctions = transitionFunctions;
     }
 
-    protected Automaton() {
+    public Automaton(Automaton automaton) {
+        if (automaton == null) {
+            states = new HashSet<>();
+            alphabet = new HashSet<>();
+            initialState = null;
+            finalStates = new HashSet<>();
+            transitionFunctions = new HashSet<>();
+        } else {
+            states = (automaton.states == null) ? new HashSet<String>() : automaton.states;
+            alphabet = (automaton.alphabet == null) ? new HashSet<String>()
+                    : automaton.alphabet;
+            initialState = automaton.initialState;
+            finalStates = (automaton.finalStates == null) ? new HashSet<String>()
+                    : automaton.finalStates;
+            transitionFunctions = new HashSet<>(automaton.transitionFunctions);
+        }
+    }
 
+    protected Automaton() {
+        states = new HashSet<>();
+        finalStates = new HashSet<>();
+        alphabet = new HashSet<>();
+        transitionFunctions = new HashSet<>();
+        initialStatesFromAFNDLambdaToAFD = new HashSet<>();
     }
 
     public Set<String> statesWithout(String state) {
@@ -59,6 +83,12 @@ public class Automaton extends Machine {
             contStates++;
         }
         return statesMap;
+    }
+
+    public Automaton getMinimizeAutomaton() {
+        Automaton automaton = new Automaton();
+
+        return automaton;
     }
 
     public Set<TransitionFunction> getTransitionFunctions() {
@@ -84,7 +114,7 @@ public class Automaton extends Machine {
         return automaton;
     }
 
-    public SortedMap<String, Point> getStatesPoints() {
+    public SortedMap<String, Point> getStatesPointsFake() {
         SortedMap<String, Point> statesPoints = new TreeMap<>();
         int qtdMaxPoint = (int) Math.ceil(Math.sqrt(states.size()));
         int cont=0, x=2, y=2;
@@ -217,6 +247,16 @@ public class Automaton extends Machine {
             automatonAFND.alphabet.add(t.getSymbol());
         }
         return automatonAFND;
+    }
+
+    public SortedSet<String> getSymbols(String currentState, String futureState) {
+        SortedSet<String> symbols = new TreeSet<>();
+        for (TransitionFunction t : transitionFunctions) {
+            if (t.currentState.equals(currentState) && t.futureState.equals(futureState))  {
+                symbols.add(t.symbol);
+            }
+        }
+        return symbols;
     }
 
     public Automaton AFNDtoAFD() {
