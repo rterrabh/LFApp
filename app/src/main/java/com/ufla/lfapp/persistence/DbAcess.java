@@ -9,6 +9,7 @@ import android.graphics.Point;
 import com.ufla.lfapp.persistence.contract.table.GrammarContract;
 import com.ufla.lfapp.persistence.contract.table.GridPositionContract;
 import com.ufla.lfapp.persistence.contract.table.MachineContract;
+import com.ufla.lfapp.persistence.contract.table.MachineDotLanguageContract;
 import com.ufla.lfapp.persistence.contract.table.MachineFinalStateContract;
 import com.ufla.lfapp.persistence.contract.table.MachineStatePositionContract;
 import com.ufla.lfapp.persistence.contract.table.MachineTransitionContract;
@@ -19,18 +20,19 @@ import com.ufla.lfapp.persistence.contract.view.MachineAlphabetViewContract;
 import com.ufla.lfapp.persistence.contract.view.MachineFinalStateViewContract;
 import com.ufla.lfapp.persistence.contract.view.MachineStatePositionViewContract;
 import com.ufla.lfapp.persistence.contract.view.MachineTransitionViewContract;
-import com.ufla.lfapp.vo.Automaton;
-import com.ufla.lfapp.vo.AutomatonDAO;
-import com.ufla.lfapp.vo.AutomatonGUI;
-import com.ufla.lfapp.vo.TransitionFunction;
+import com.ufla.lfapp.vo.machine.Automaton;
+import com.ufla.lfapp.vo.machine.AutomatonDAO;
+import com.ufla.lfapp.vo.machine.AutomatonGUI;
+import com.ufla.lfapp.vo.machine.DotLanguage;
+import com.ufla.lfapp.vo.machine.TransitionFunction;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * Created by carlos on 03/08/16.
@@ -355,8 +357,8 @@ public class DbAcess {
         return stateGridPositions;
     }
 
-    private Set<String> getFinalStates (long machineId) {
-        Set<String> finalStates = new HashSet<>();
+    private SortedSet<String> getFinalStates (long machineId) {
+        SortedSet<String> finalStates = new TreeSet<>();
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
         String[] projection = { MachineFinalStateViewContract.Columns.STATE };
         String selection = MachineFinalStateViewContract.Columns.MACHINE + " = ?";
@@ -383,8 +385,8 @@ public class DbAcess {
         return finalStates;
     }
 
-    private Set<String> getAlphabet (long machineId) {
-        Set<String> alphabet = new HashSet<>();
+    private SortedSet<String> getAlphabet (long machineId) {
+        SortedSet<String> alphabet = new TreeSet<>();
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
         String[] projection = { MachineAlphabetViewContract.Columns.ALPHABET };
         String selection = MachineFinalStateViewContract.Columns.MACHINE + " = ?";
@@ -411,8 +413,8 @@ public class DbAcess {
         return alphabet;
     }
 
-    private Set<TransitionFunction>  getTransitionFunctions (long machineId) {
-        Set<TransitionFunction> transitionFunctions = new HashSet<>();
+    private SortedSet<TransitionFunction>  getTransitionFunctions (long machineId) {
+        SortedSet<TransitionFunction> transitionFunctions = new TreeSet<>();
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
         String[] projection = { MachineTransitionViewContract.Columns.CURRENT_STATE,
                 MachineTransitionViewContract.Columns.SYMBOL,
@@ -515,12 +517,11 @@ public class DbAcess {
 
     public AutomatonGUI getAutomaton(long machineId) {
         Map<String, Point> statesGridPoints = getStatesGridPoints(machineId);
-        Set<String> states = statesGridPoints.keySet();
-        Set<String> finalStates = getFinalStates(machineId);
-        Set<String> alphabet = getAlphabet(machineId);
-        Set<TransitionFunction> transitionFunctions = getTransitionFunctions(machineId);
+        SortedSet<String> states = new TreeSet<>(statesGridPoints.keySet());
+        SortedSet<String> finalStates = getFinalStates(machineId);
+        SortedSet<TransitionFunction> transitionFunctions = getTransitionFunctions(machineId);
         MachineTable machineTable = getMachineTable(machineId);
-        AutomatonGUI automatonGUI = new AutomatonGUI(new Automaton(states, alphabet,
+        AutomatonGUI automatonGUI = new AutomatonGUI(new Automaton(states,
                 machineTable.initialState, finalStates, transitionFunctions), statesGridPoints);
         automatonGUI.setLabel(machineTable.label);
         automatonGUI.setId(machineTable.id);
@@ -535,6 +536,247 @@ public class DbAcess {
             automatonGUIs.add(getAutomaton(machineId));
         }
         return automatonGUIs;
+    }
+
+    public void putAutomatonGUI(AutomatonGUI automatonGUI) {
+        putMachineDotLanguage(DotLanguage.parseDotLanguage(automatonGUI));
+    }
+
+    public void putMachineDotLanguage(DotLanguage dotLanguage) {
+        if (existMachineDotLanguage(dotLanguage.getGraph())) {
+            return;
+        }
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(MachineDotLanguageContract.Columns.DOT_LANGUAGE, dotLanguage.getGraph());
+        values.put(MachineDotLanguageContract.Columns.LABEL, dotLanguage.getLabel());
+        values.put(MachineDotLanguageContract.Columns.CREATION_TIME,
+                Long.toString(dotLanguage.getCreationDate().getTime()));
+        db.insert(MachineDotLanguageContract.TABLE_NAME,
+                null,
+                values);
+        db.close();
+    }
+
+    public AutomatonGUI getAutomatonGUI(long id) {
+        DotLanguage dotLanguage = getMachineDotLanguage(id);
+        return (dotLanguage == null) ? null : dotLanguage.toAutomatonGUI();
+    }
+
+    public DotLanguage getMachineDotLanguage(long id) {
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        String[] projection = { MachineDotLanguageContract.Columns._ID,
+                MachineDotLanguageContract.Columns.DOT_LANGUAGE,
+                MachineDotLanguageContract.Columns.LABEL,
+                MachineDotLanguageContract.Columns.CREATION_TIME,
+                MachineDotLanguageContract.Columns.CONT_USES };
+        String selection = MachineContract.Columns._ID + " = ?";
+        String[] selectionArgs = { Long.toString(id) };
+        Cursor c = db.query(
+                MachineDotLanguageContract.TABLE_NAME,     // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                     // The sort order
+        );
+        String graph = null;
+        String label = null;
+        Date creationDate = null;
+        int contUses = 1;
+        if (c != null) {
+            if (c.moveToFirst()) {
+                graph = c.getString(c.getColumnIndex(
+                        MachineDotLanguageContract.Columns.DOT_LANGUAGE));
+                label = c.getString(c.getColumnIndex(
+                        MachineDotLanguageContract.Columns.LABEL));
+                creationDate = new Date(c.getLong(c.getColumnIndex(
+                        MachineDotLanguageContract.Columns.CREATION_TIME)));
+                contUses = c.getInt(c.getColumnIndex(
+                        MachineDotLanguageContract.Columns.CONT_USES));
+            }
+            c.close();
+        }
+        db.close();
+        if (graph == null) {
+            return null;
+        }
+        return new DotLanguage(id, graph, label, contUses, creationDate);
+    }
+
+    public boolean existMachineDotLanguage(String graph) {
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        String[] projection = { MachineDotLanguageContract.Columns._ID };
+        String selection = MachineDotLanguageContract.Columns.DOT_LANGUAGE + " = ?";
+        String[] selectionArgs = { graph };
+        Cursor c = db.query(
+                MachineDotLanguageContract.TABLE_NAME,     // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                     // The sort order
+        );
+        boolean exist = false;
+        if (c != null) {
+            if (c.moveToFirst()) {
+                exist = true;
+            }
+            c.close();
+        }
+        db.close();
+        return exist;
+    }
+
+    public AutomatonGUI getAutomatonGUIByLabel(String label) {
+        DotLanguage dotLanguage = getMachineDotLanguageByLabel(label);
+        return (dotLanguage == null) ? null : dotLanguage.toAutomatonGUI();
+    }
+
+    public DotLanguage getMachineDotLanguageByLabel(String label) {
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        String[] projection = { MachineDotLanguageContract.Columns._ID,
+                MachineDotLanguageContract.Columns.DOT_LANGUAGE,
+                MachineDotLanguageContract.Columns.LABEL,
+                MachineDotLanguageContract.Columns.CREATION_TIME,
+                MachineDotLanguageContract.Columns.CONT_USES };
+        String selection = MachineDotLanguageContract.Columns.LABEL + " = ?";
+        String[] selectionArgs = { label };
+        Cursor c = db.query(
+                MachineDotLanguageContract.TABLE_NAME,     // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                     // The sort order
+        );
+        String graph = null;
+        long id = -1l;
+        Date creationDate = null;
+        int contUses = 1;
+        if (c != null) {
+            if (c.moveToFirst()) {
+                graph = c.getString(c.getColumnIndex(
+                        MachineDotLanguageContract.Columns.DOT_LANGUAGE));
+                id = c.getLong(c.getColumnIndex(
+                        MachineDotLanguageContract.Columns._ID));
+                creationDate = new Date(c.getLong(c.getColumnIndex(
+                        MachineDotLanguageContract.Columns.CREATION_TIME)));
+                contUses = c.getInt(c.getColumnIndex(
+                        MachineDotLanguageContract.Columns.CONT_USES));
+            }
+            c.close();
+        }
+        db.close();
+        if (graph == null) {
+            return null;
+        }
+        return new DotLanguage(id, graph, label, contUses, creationDate);
+    }
+
+    public List<DotLanguage> getMachineDotLanguages() {
+        List<DotLanguage> dotLanguages = new ArrayList<>();
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        String[] projection = { MachineDotLanguageContract.Columns._ID,
+                MachineDotLanguageContract.Columns.DOT_LANGUAGE,
+                MachineDotLanguageContract.Columns.LABEL,
+                MachineDotLanguageContract.Columns.CREATION_TIME,
+                MachineDotLanguageContract.Columns.CONT_USES };
+
+        Cursor c = db.query(
+                MachineDotLanguageContract.TABLE_NAME,  // The table to query
+                projection,                               // The columns to return
+                null,                                // The columns for the WHERE clause
+                null,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                null                                     // The sort order
+        );
+        if (c != null ) {
+            if (c.moveToFirst()) {
+                do {
+                    String graph = c.getString(c.getColumnIndex(
+                            MachineDotLanguageContract.Columns.DOT_LANGUAGE));
+                    String label = c.getString(c.getColumnIndex(
+                            MachineDotLanguageContract.Columns.LABEL));
+                    long id = c.getLong(c.getColumnIndex(
+                            MachineDotLanguageContract.Columns._ID));
+                    Date creationDate = new Date(c.getLong(c.getColumnIndex(
+                            MachineDotLanguageContract.Columns.CREATION_TIME)));
+                    int contUses = c.getInt(c.getColumnIndex(
+                            MachineDotLanguageContract.Columns.CONT_USES));
+                    dotLanguages.add(new DotLanguage(id, graph, label, contUses, creationDate));
+                    } while (c.moveToNext());
+            }
+            c.close();
+        }
+        db.close();
+        return dotLanguages;
+    }
+
+    public List<AutomatonGUI> getAutomatonGUIs() {
+        List<DotLanguage> dotLanguages = getMachineDotLanguages();
+        List<AutomatonGUI> automatonGUIs = new ArrayList<>();
+        for (DotLanguage dotLanguage : dotLanguages) {
+            automatonGUIs.add(dotLanguage.toAutomatonGUI());
+        }
+        return automatonGUIs;
+    }
+
+
+    public List<AutomatonGUI> getLastAutomatonGUIs() {
+        List<DotLanguage> dotLanguages = getLastMachineDotLanguages();
+        List<AutomatonGUI> automatonGUIs = new ArrayList<>();
+        for (DotLanguage dotLanguage : dotLanguages) {
+            automatonGUIs.add(dotLanguage.toAutomatonGUI());
+        }
+        return automatonGUIs;
+    }
+
+    public List<DotLanguage> getLastMachineDotLanguages() {
+        List<DotLanguage> dotLanguages = new ArrayList<>();
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        String[] projection = { MachineDotLanguageContract.Columns._ID,
+                MachineDotLanguageContract.Columns.DOT_LANGUAGE,
+                MachineDotLanguageContract.Columns.LABEL,
+                MachineDotLanguageContract.Columns.CREATION_TIME,
+                MachineDotLanguageContract.Columns.CONT_USES };
+
+        Cursor c = db.query(
+                MachineDotLanguageContract.TABLE_NAME,  // The table to query
+                projection,                               // The columns to return
+                null,                                // The columns for the WHERE clause
+                null,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                MachineDotLanguageContract.Columns._ID + " ASC",
+                "10"// The sort order
+        );
+        if (c != null ) {
+            if (c.moveToFirst()) {
+                do {
+                    String graph = c.getString(c.getColumnIndex(
+                            MachineDotLanguageContract.Columns.DOT_LANGUAGE));
+                    String label = c.getString(c.getColumnIndex(
+                            MachineDotLanguageContract.Columns.LABEL));
+                    long id = c.getLong(c.getColumnIndex(
+                            MachineDotLanguageContract.Columns._ID));
+                    Date creationDate = new Date(c.getLong(c.getColumnIndex(
+                            MachineDotLanguageContract.Columns.CREATION_TIME)));
+                    int contUses = c.getInt(c.getColumnIndex(
+                            MachineDotLanguageContract.Columns.CONT_USES));
+                    dotLanguages.add(new DotLanguage(id, graph, label, contUses, creationDate));
+                } while (c.moveToNext());
+            }
+            c.close();
+        }
+        db.close();
+        return dotLanguages;
     }
 
     public void putGrammar(String grammar) {
@@ -610,7 +852,47 @@ public class DbAcess {
         db.close();
     }
 
-    public void deleteGrammar(Integer id) {
+    public void deleteMachineDotLanguage(long id) {
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        // Define 'where' part of query.
+        String selection = MachineDotLanguageContract.Columns._ID + " = ?";
+        // Specify arguments in placeholder order.
+        String[] selectionArgs = { Long.toString(id) };
+        // Issue SQL statement.
+        db.delete(MachineDotLanguageContract.TABLE_NAME, selection, selectionArgs);
+        db.close();
+    }
+
+    public boolean updateMachineDotLanguage(AutomatonGUI automatonGUI) {
+        return updateMachineDotLanguage(DotLanguage.parseDotLanguage(automatonGUI));
+    }
+
+    public boolean updateMachineDotLanguage(DotLanguage dotLanguage) {
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        // Define 'where' part of query.
+        String selection = MachineDotLanguageContract.Columns._ID + " = ?";
+        // Specify arguments in placeholder order.
+        String[] selectionArgs = { Long.toString(dotLanguage.getId()) };
+        // Issue SQL statement.
+        ContentValues values = new ContentValues();
+        values.put(MachineDotLanguageContract.Columns.DOT_LANGUAGE, dotLanguage.getGraph());
+        values.put(MachineDotLanguageContract.Columns.LABEL, dotLanguage.getLabel());
+        values.put(MachineDotLanguageContract.Columns.CREATION_TIME,
+                Long.toString(dotLanguage.getCreationDate().getTime()));
+        int rows = db.update(MachineDotLanguageContract.TABLE_NAME, values, selection, selectionArgs);
+        db.close();
+        return rows > 0;
+    }
+
+    public void cleanHistoryMachineDotLanguage() {
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        db.delete(MachineDotLanguageContract.TABLE_NAME, null, null);
+        db.close();
+    }
+
+    public void deleteGrammar(long id) {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
         // Define 'where' part of query.

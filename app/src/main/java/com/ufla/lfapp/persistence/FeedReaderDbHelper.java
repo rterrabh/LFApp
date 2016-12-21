@@ -3,11 +3,11 @@ package com.ufla.lfapp.persistence;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import com.ufla.lfapp.persistence.contract.table.GrammarContract;
 import com.ufla.lfapp.persistence.contract.table.GridPositionContract;
 import com.ufla.lfapp.persistence.contract.table.MachineContract;
+import com.ufla.lfapp.persistence.contract.table.MachineDotLanguageContract;
 import com.ufla.lfapp.persistence.contract.table.MachineFinalStateContract;
 import com.ufla.lfapp.persistence.contract.table.MachineStatePositionContract;
 import com.ufla.lfapp.persistence.contract.table.MachineTransitionContract;
@@ -57,8 +57,9 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
                 MachineTransitionViewContract.CREATE_VIEW };
 
 
-    private static final String SQL_DELETE_ENTRIES =
-            "DROP TABLE IF EXISTS " + GrammarContract.Columns.TABLE_GRAMMAR;
+    private static final String SQL_DELETE_ENTRIES[] = new String[]{
+            "DROP TABLE IF EXISTS " + GrammarContract.Columns.TABLE_GRAMMAR,
+            "DROP TABLE IF EXISTS " + MachineDotLanguageContract.TABLE_NAME };
 
     public FeedReaderDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -66,16 +67,15 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
 
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_ENTRIES);
-        for (String SqlCreate : SQL_CREATE_ENTRIES_2) {
-            db.execSQL(SqlCreate);
-            Log.d("SQL", SqlCreate);
-        }
+        db.execSQL(MachineDotLanguageContract.CREATE_TABLE);
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // This database is only a cache for online data, so its upgrade policy is
         // to simply to discard the data and start over
-        db.execSQL(SQL_DELETE_ENTRIES);
+        for (String sqlDelete : SQL_DELETE_ENTRIES) {
+            db.execSQL(sqlDelete);
+        }
         onCreate(db);
     }
 

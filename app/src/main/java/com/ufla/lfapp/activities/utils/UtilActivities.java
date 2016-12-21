@@ -1,16 +1,15 @@
 package com.ufla.lfapp.activities.utils;
 
 import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.ufla.lfapp.R;
-import com.ufla.lfapp.vo.AcademicSupport;
-import com.ufla.lfapp.vo.Grammar;
-import com.ufla.lfapp.vo.Rule;
+import com.ufla.lfapp.vo.grammar.AcademicSupport;
+import com.ufla.lfapp.vo.grammar.Grammar;
+import com.ufla.lfapp.vo.grammar.Rule;
 
 import java.util.ArrayList;
 import java.util.Collections;

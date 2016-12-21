@@ -8,9 +8,9 @@ import android.widget.TextView;
 
 import com.ufla.lfapp.R;
 import com.ufla.lfapp.activities.HeaderGrammarActivity;
-import com.ufla.lfapp.vo.AcademicSupport;
-import com.ufla.lfapp.vo.Grammar;
-import com.ufla.lfapp.vo.GrammarParser;
+import com.ufla.lfapp.vo.grammar.AcademicSupport;
+import com.ufla.lfapp.vo.grammar.Grammar;
+import com.ufla.lfapp.vo.grammar.GrammarParser;
 
 /**
  * Created by root on 18/07/16.

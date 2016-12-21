@@ -22,7 +22,7 @@ import com.ufla.lfapp.R;
 import com.ufla.lfapp.activities.menu.MenuActivity;
 import com.ufla.lfapp.activities.utils.Algorithm;
 import com.ufla.lfapp.persistence.DbAcess;
-import com.ufla.lfapp.vo.GrammarParser;
+import com.ufla.lfapp.vo.grammar.GrammarParser;
 
 public class GrammarActivity extends AppCompatActivity {
 

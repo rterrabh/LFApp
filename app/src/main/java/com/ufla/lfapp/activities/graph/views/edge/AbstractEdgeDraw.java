@@ -5,8 +5,8 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.support.v4.util.Pair;
 
+import com.ufla.lfapp.activities.graph.layout.EditGraphLayout;
 import com.ufla.lfapp.activities.graph.views.PointUtils;
-import com.ufla.lfapp.activities.graph.views.VertexView;
 import com.ufla.lfapp.activities.graph.views.edge.interactarea.InteractArea;
 import com.ufla.lfapp.activities.graph.views.edge.interactarea.InteractQuadrilateralAreaBuilder;
 
@@ -19,9 +19,17 @@ public abstract class AbstractEdgeDraw implements EdgeDraw {
     protected Pair<Point, Point> gridPoints;
     protected Pair<PointF, PointF> circPoints;
     protected InteractArea interactArea;
+    protected int vertexRadius;
+    protected int vertexSpace;
+    protected int vertexSquareDimension;
+    protected float arrowHeadLenght;
 
-    public AbstractEdgeDraw(Pair<Point, Point> gridPoints) {
+    public AbstractEdgeDraw(Pair<Point, Point> gridPoints, EditGraphLayout editGraphLayout) {
         this.gridPoints = gridPoints;
+        vertexRadius = editGraphLayout.getVertexRadius();
+        vertexSpace = editGraphLayout.getVertexSpace();
+        vertexSquareDimension = editGraphLayout.getVertexSquareDimension();
+        arrowHeadLenght = editGraphLayout.getEdgeArrowHeadLenght();
         setCircPointsOnCenter();
         setCircPointsOnCircumference();
         setPointControl();
@@ -53,14 +61,17 @@ public abstract class AbstractEdgeDraw implements EdgeDraw {
         return interactArea.distanceToCircumferenceOfSourceVertex(point);
     }
 
+    @Override
     public Path getPathInteractArea() {
         return interactArea.getInteractArea();
     }
 
+    @Override
     public InteractArea getInteractArea() {
         return interactArea.clone();
     }
 
+    @Override
     public boolean isOnInteractArea(PointF point) {
         return interactArea.isOnInteractArea(point);
     }
@@ -77,14 +88,14 @@ public abstract class AbstractEdgeDraw implements EdgeDraw {
         PointF first = new PointF();
         PointF second = new PointF();
         //Setando os pontos no centro de cada círculo
-        first.y = gridPointsOnOrigin.first.y * VertexView.squareDimension() +
-                VertexView.stateRadius + VertexView.SPACE;
-        first.x = gridPointsOnOrigin.first.x * VertexView.squareDimension() +
-                VertexView.stateRadius + VertexView.SPACE;
-        second.y = gridPointsOnOrigin.second.y * VertexView.squareDimension() +
-                VertexView.stateRadius + VertexView.SPACE;
-        second.x = gridPointsOnOrigin.second.x * VertexView.squareDimension() +
-                VertexView.stateRadius + VertexView.SPACE;
+        first.y = gridPointsOnOrigin.first.y * vertexSquareDimension +
+                vertexRadius + vertexSpace;
+        first.x = gridPointsOnOrigin.first.x * vertexSquareDimension +
+                vertexRadius + vertexSpace;
+        second.y = gridPointsOnOrigin.second.y * vertexSquareDimension +
+                vertexRadius + vertexSpace;
+        second.x = gridPointsOnOrigin.second.x * vertexSquareDimension +
+                vertexRadius + vertexSpace;
 
         circPoints = Pair.create(first, second);
     }

@@ -3,6 +3,7 @@ package com.ufla.lfapp.activities.graph.views.edge.interactarea;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.support.v4.util.Pair;
+import android.util.Log;
 
 import com.ufla.lfapp.activities.graph.views.PointUtils;
 
@@ -48,7 +49,7 @@ public class InteractQuadrilateralArea implements InteractArea, Cloneable {
             red = (p.y - a.y) / (double) (p.x - a.x);
             blue = (b.y - a.y) / (double) (b.x - a.x);
         } catch (ArithmeticException e) {
-
+            Log.d("ArithmeticException", "InteractQuadrilateral");
         }
         return red >= blue;
     }

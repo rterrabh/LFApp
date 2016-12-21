@@ -4,7 +4,7 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.support.v4.util.Pair;
 
-import com.ufla.lfapp.activities.graph.views.VertexView;
+import com.ufla.lfapp.activities.graph.layout.EditGraphLayout;
 
 /**
  * Created by carlos on 18/10/16.
@@ -13,12 +13,14 @@ public class ReflexiveBottomEdgeDraw extends AbstractReflexiveEdgeDraw {
 
     private PointF bottom;
 
-    public ReflexiveBottomEdgeDraw(Pair<Point, Point> gridPoints) {
-        super(gridPoints);
+    public ReflexiveBottomEdgeDraw(Pair<Point, Point> gridPoints, EditGraphLayout editGraphLayout) {
+        super(gridPoints, editGraphLayout);
     }
 
     @Override
     protected void setPointControl() {
+        LENGHT = vertexRadius * 2.2f;
+        ERROR_RECT_F_LABEL = LENGHT * 0.40f;
         pointControl = new PointF();
         pointControl.x = bottom.x;
         pointControl.y = bottom.y + LENGHT;
@@ -38,7 +40,7 @@ public class ReflexiveBottomEdgeDraw extends AbstractReflexiveEdgeDraw {
     protected void setExtremePoint() {
         bottom = new PointF();
         bottom.x = circPoints.first.x;
-        bottom.y = circPoints.first.y + VertexView.stateRadius;
+        bottom.y = circPoints.first.y + vertexRadius;
     }
 
     protected PointF getExtremePoint() {

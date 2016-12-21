@@ -17,7 +17,7 @@ import com.ufla.lfapp.activities.algorithms.RemoveInitialSymbolRecursiveActivity
 import com.ufla.lfapp.activities.algorithms.RemoveLeftDirectRecursionActivity;
 import com.ufla.lfapp.activities.algorithms.RemoveLeftRecursionActivity;
 import com.ufla.lfapp.activities.utils.Algorithm;
-import com.ufla.lfapp.vo.GrammarParser;
+import com.ufla.lfapp.vo.grammar.GrammarParser;
 
 /**
  * Created by root on 18/07/16.

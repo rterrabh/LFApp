@@ -22,6 +22,23 @@ public class PointUtils {
         return (float) Math.sqrt(distX * distX + distY * distY);
     }
 
+
+    /**
+     * Calcula o ângulo para o ponto p2, usando o ponto p1 como referência.
+     *
+     * @param p1 ponto referência para o cálculo do ângulo
+     * @param p2 ponto destino para o cálculo do ângulo
+     *
+     * @return ângulo do ponto p1 para o ponto p2
+     */
+    public static float angleFromP1ToP2(Point p1, Point p2) {
+        return (float) Math.atan2((p2.y - p1.y), (p2.x - p1.x));
+    }
+
+    public static float angleFromP1ToP2(PointF p1, PointF p2) {
+        return (float) Math.atan2((p2.y - p1.y), (p2.x - p1.x));
+    }
+
     public static float dist(PointF point1, PointF point2) {
         float distX = point2.x - point1.x;
         float distY = point2.y - point1.y;

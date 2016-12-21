@@ -5,23 +5,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".activities.GrammarActivity">
 
-    <item
-        android:id="@+id/editionMode"
-        android:title="Modo Edição"
-        android:orderInCategory="100"
-        app:showAsAction="always"/>
+    <!--<item-->
+        <!--android:id="@+id/editionMode"-->
+        <!--android:title="Modo Edição"-->
+        <!--android:orderInCategory="100"-->
+        <!--app:showAsAction="always"/>-->
 
-    <item
-        android:id="@+id/creationMode"
-        android:title="Modo Criação"
-        android:orderInCategory="100"
-        app:showAsAction="always"/>
+    <!--<item-->
+        <!--android:id="@+id/creationMode"-->
+        <!--android:title="Modo Criação"-->
+        <!--android:orderInCategory="100"-->
+        <!--app:showAsAction="always"/>-->
 
-    <item
-        android:id="@+id/defineInitialState"
-        android:title="Definir estado inicial"
-        android:orderInCategory="100"
-        app:showAsAction="collapseActionView"/>
+    <!--<item-->
+        <!--android:id="@+id/defineInitialState"-->
+        <!--android:title="Definir estado inicial"-->
+        <!--android:orderInCategory="100"-->
+        <!--app:showAsAction="collapseActionView"/>-->
 
     <item
         android:id="@+id/completeAutomaton"

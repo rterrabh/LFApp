@@ -1,26 +1,33 @@
 package com.ufla.lfapp.activities.graph.views;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
-import android.content.res.Resources;
+import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.RectF;
-import android.text.InputType;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ufla.lfapp.R;
 import com.ufla.lfapp.activities.graph.layout.EditGraphLayout;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 // Color Line #FFCCCC
 // #FFCCCC
@@ -29,27 +36,21 @@ import java.util.List;
  * Created by carlos on 9/21/16.
  * Representa a visão de um estado em um autômato ou máquina de estados.
  */
-public class VertexView extends EditText {
+public class VertexView extends View {
 
-    private final static float dpi;
     private static int mStateLineColor = Color.parseColor("#968D8D");
     private static int mStateInternColor = Color.parseColor("#FFCCCC");
     private static int mStateInternColorSelect = Color.parseColor("#FF6666");
+    private static int mStateInternColorSelectBlue = Color.parseColor("#7f7fff");
     private Paint mStateInternPaint;
     private Paint mStateLinePaint;
     private Paint mStateText;
-    public final static int stateRadius;
-    public final static int SPACE;
-    private final static int X_FOR_DISPATCH_TOUCH_EVENT_TO_EDIT_TEXT = 3;
     private final static int MAX_LENGHT_LABEL = 5;
-    private static float textSize;
-    private static float stateTextStrokeWidth;
-    private static float stateLinePaintStrokeWidth;
-    private static float errorRectLabel;
     private Point gridPoint;
     private static int cont_vertex = 0;
     private String label = "";
     private boolean select;
+    private boolean selectBlue;
     private boolean showCursor;
     private boolean cursorShowed;
     private RectF rectLabel;
@@ -57,7 +58,12 @@ public class VertexView extends EditText {
     private boolean finalState;
     private boolean initialState;
     private GestureDetector gestureDetector;
-    private List<EdgeView> edgeDependencies;
+    private Set<EdgeView> edgeDependencies;
+    private static int ANGLE_INITIAL_STATE = 30;
+
+    public static void clearContVertex() {
+        cont_vertex = 0;
+    }
 
     public String getLabel() {
         return label;
@@ -65,8 +71,11 @@ public class VertexView extends EditText {
 
     public void setLabel(String label) {
         this.label = label;
-        setText(label);
         invalidate();
+    }
+
+    public EditGraphLayout getParentEditGraphLayout() {
+        return (EditGraphLayout) getParent();
     }
 
     public boolean isInitialState() {
@@ -87,16 +96,6 @@ public class VertexView extends EditText {
         invalidate();
     }
 
-
-    static {
-        dpi = Resources.getSystem().getDisplayMetrics().densityDpi;
-        stateRadius = (int) (dpi / 5.0f);
-        SPACE = (int) (dpi / 40.0f);
-        textSize = dpi / 8.0f;
-        stateTextStrokeWidth = dpi / 240.0f;
-        stateLinePaintStrokeWidth = dpi / 96.0f;
-        errorRectLabel = (dpi / 32.0f);
-    }
 
     public VertexView(Context context) {
         super(context);
@@ -122,24 +121,6 @@ public class VertexView extends EditText {
 
     public void setGridPoint(Point gridPoint) {
         this.gridPoint = PointUtils.clonePoint(gridPoint);
-    }
-
-    /**
-     * Retorna o lado do quadrado onde está desenhado o estado.
-     *
-     * @return lado do quadrado onde está desenhado o estado.
-     */
-    public static int squareDimension() {
-        return (VertexView.stateRadius + VertexView.SPACE) * 2;
-    }
-
-    /**
-     * Retorna o valor x que representa as coordenadas (x, x) do ponto central do estado desenhado.
-     *
-     * @return valor x que representa as coordenadas (x, x) do ponto central do estado desenhado.
-     */
-    public static int centerPoint() {
-        return VertexView.stateRadius + VertexView.SPACE;
     }
 
     /*public StateViewB(Context context, AttributeSet attrs) {
@@ -171,7 +152,7 @@ public class VertexView extends EditText {
             mStateInternPaint.setColor(a.getColor(R.styleable.StateView_internColor, Color.TRANSPARENT));
             mStateText.setColor(a.getColor(R.styleable.StateView_nameColor, Color.BLACK));
             mStateText.setTextSize(a.getFloat(R.styleable.StateView_nameSize, 40.0f));
-            stateRadius = a.getFloat(R.styleable.StateView_radius, 60.0f);
+            vertexRadius = a.getFloat(R.styleable.StateView_radius, 60.0f);
             String stateName = a.getString(R.styleable.StateView_name);
             int stateX = a.getInt(R.styleable.StateView_posX, 100);
             int stateY = a.getInt(R.styleable.StateView_posY, 100);
@@ -198,24 +179,40 @@ public class VertexView extends EditText {
         mStateLinePaint.setStyle(Paint.Style.STROKE);
         mStateText = new Paint();
         mStateText.setAntiAlias(true);
-        mStateText.setStrokeWidth(stateTextStrokeWidth);
         mStateText.setStyle(Paint.Style.FILL);
         mStateText.setTextAlign(Paint.Align.CENTER);
         select = false;
+        selectBlue = false;
         label = "q" + cont_vertex;
+        initialState = false;
         cont_vertex++;
-        setInputType(InputType.TYPE_CLASS_TEXT);
-        setText(label);
         setEnabled(true);
         showCursor = false;
         cursorShowed = false;
         setBackgroundColor(Color.TRANSPARENT);
         gestureDetector = new GestureDetector(getContext(), new VertexView.GestureListener());
-        edgeDependencies = new ArrayList<>();
+        edgeDependencies = new HashSet<>();
+    }
+
+    public void setStyle() {
+        EditGraphLayout parentView = getParentEditGraphLayout();
+        mStateText.setStrokeWidth(parentView.getVertexTextStrokeWidth());
+        mStateLinePaint.setStrokeWidth(parentView.getVertexLineStrokeWidth());
+        mStateText.setTextSize(parentView.getVertexTextSize());
+        rectLabel = new RectF(0,
+                parentView.getVertexCenterPoint() - mStateText.getTextSize(),
+                parentView.getVertexSquareDimension(),
+                parentView.getVertexCenterPoint() + mStateText.getTextSize());
+        invalidate();
     }
 
     public void onSelect() {
         select = !select;
+        invalidate();
+    }
+
+    public void onSelectBlue() {
+        selectBlue = !selectBlue;
         invalidate();
     }
 
@@ -224,14 +221,8 @@ public class VertexView extends EditText {
      */
     private void defineDefault() {
         mStateLinePaint.setColor(VertexView.mStateLineColor);
-        mStateLinePaint.setStrokeWidth(stateLinePaintStrokeWidth);
         mStateInternPaint.setColor(VertexView.mStateInternColor);
         mStateText.setColor(Color.BLACK);
-        mStateText.setTextSize(textSize);
-        rectLabel = new RectF(0,
-                VertexView.centerPoint() - mStateText.getTextSize(),
-                VertexView.squareDimension(),
-                VertexView.centerPoint() + mStateText.getTextSize());
     }
 
     public void addEdgeDependencies(EdgeView edgeView) {
@@ -242,7 +233,7 @@ public class VertexView extends EditText {
         edgeDependencies.remove(edgeView);
     }
 
-    public List<EdgeView> getEdgeDependencies() {
+    public Set<EdgeView> getEdgeDependencies() {
         return edgeDependencies;
     }
 
@@ -253,48 +244,56 @@ public class VertexView extends EditText {
      */
     @Override
     protected void onDraw(Canvas canvas) {
+        EditGraphLayout parentView = getParentEditGraphLayout();
+        int vertexSquareDimension = parentView.getVertexSquareDimension();
+        int vertexCenterPoint = parentView.getVertexCenterPoint();
+        int vertexRadius = parentView.getVertexRadius();
+        int vertexSpace = parentView.getVertexSpace();
+        Paint mVertexBorderPaint = parentView.getmVertexBorderPaint();
+        float vertexInitialStateSize = parentView.getVertexInitialStateSize();
+        /*
         cursorInd = getSelectionStart();
         if (cursorInd < 0) {
             cursorInd = 0;
         }
         setSelection(cursorInd, cursorInd);
         setSelection(cursorInd);
-        // Borda
-        canvas.drawRect(0, 0, VertexView.squareDimension(), VertexView.squareDimension(),
-                SpaceWithBorder.mBorderPaint);
+        // Borda*/
+        canvas.drawRect(0, 0, vertexSquareDimension, vertexSquareDimension, mVertexBorderPaint);
         if (initialState) {
-            canvas.drawRect(VertexView.squareDimension(), 0, VertexView.squareDimension() * 2,
-                    VertexView.squareDimension(), SpaceWithBorder.mBorderPaint);
+            canvas.drawRect(vertexSquareDimension, 0, vertexSquareDimension * 2,
+                    vertexSquareDimension, mVertexBorderPaint);
         }
         if (select) {
             mStateInternPaint.setColor(mStateInternColorSelect);
         }
+        if (selectBlue) {
+            mStateInternPaint.setColor(mStateInternColorSelectBlue);
+        }
         // Círculo interno
         mStateText.getTextSize();
         if (initialState) {
-            canvas.drawCircle(VertexView.centerPoint() + VertexView.squareDimension(),
-                    VertexView.centerPoint(), VertexView.stateRadius, mStateInternPaint);
+            canvas.drawCircle(vertexCenterPoint + vertexSquareDimension, vertexCenterPoint,
+                    vertexRadius, mStateInternPaint);
         } else {
-            canvas.drawCircle(VertexView.centerPoint(), VertexView.centerPoint(),
-                    VertexView.stateRadius, mStateInternPaint);
+            canvas.drawCircle(vertexCenterPoint, vertexCenterPoint, vertexRadius,
+                    mStateInternPaint);
         }
-        if (select) {
-            mStateInternPaint.setColor(mStateInternColor);
-        }
+        mStateInternPaint.setColor(mStateInternColor);
         // Texto
-        String label = getText().toString();
-        if (label.length() <= MAX_LENGHT_LABEL) {
+        //if (label.length() <= MAX_LENGHT_LABEL) {
             //setSelection(cursorInd, cursorInd);
             //setSelection(cursorInd);
             this.label = label;
-            float textLenght = mStateText.measureText(label);
+            //float textLenght = mStateText.measureText(label);
             if (initialState) {
-                canvas.drawText(label, VertexView.centerPoint() + VertexView.squareDimension(),
-                        VertexView.centerPoint() + mStateText.getTextSize() * 0.3f, mStateText);
+                canvas.drawText(label, vertexCenterPoint + vertexSquareDimension,
+                        vertexCenterPoint + mStateText.getTextSize() * 0.3f, mStateText);
             } else {
-                canvas.drawText(label, VertexView.centerPoint(), VertexView.centerPoint() +
+                canvas.drawText(label, vertexCenterPoint, vertexCenterPoint +
                         mStateText.getTextSize() * 0.3f, mStateText);
             }
+            /*
             showCursor = isFocused();
             if (showCursor) {
                 if (!cursorShowed) {
@@ -321,52 +320,44 @@ public class VertexView extends EditText {
             Toast.makeText(getContext(), "Tamanho máximo para nome de estado é " +
                     MAX_LENGHT_LABEL + " caracteres!",
                     Toast.LENGTH_SHORT).show();
-        }
+        }*/
 
         // Círculo contorno
         if (initialState) {
-            canvas.drawCircle(VertexView.centerPoint() + VertexView.squareDimension(),
-                    VertexView.centerPoint(), VertexView.stateRadius, mStateLinePaint);
+            canvas.drawCircle(vertexCenterPoint + vertexSquareDimension, vertexCenterPoint,
+                    vertexRadius, mStateLinePaint);
         } else {
-            canvas.drawCircle(VertexView.centerPoint(), VertexView.centerPoint(),
-                    VertexView.stateRadius, mStateLinePaint);
+            canvas.drawCircle(vertexCenterPoint, vertexCenterPoint, vertexRadius, mStateLinePaint);
         }
 
         // Estado final
         if (finalState) {
             if (initialState) {
-                canvas.drawCircle(VertexView.centerPoint() + VertexView.squareDimension(),
-                        VertexView.centerPoint() , VertexView.stateRadius - VertexView.SPACE,
-                        mStateLinePaint);
+                canvas.drawCircle(vertexCenterPoint + vertexSquareDimension, vertexCenterPoint,
+                        vertexRadius - vertexSpace, mStateLinePaint);
             } else {
-                canvas.drawCircle(VertexView.centerPoint(), VertexView.centerPoint(),
-                        VertexView.stateRadius - VertexView.SPACE, mStateLinePaint);
+                canvas.drawCircle(vertexCenterPoint, vertexCenterPoint, vertexRadius - vertexSpace,
+                        mStateLinePaint);
             }
         }
 
         if (initialState) {
-            Path initialState = new Path();
-            initialState.moveTo(VertexView.centerPoint(), VertexView.centerPoint() + VertexView.stateRadius);
-            initialState.lineTo(VertexView.squareDimension() + VertexView.SPACE, VertexView.centerPoint());
-            initialState.lineTo(VertexView.centerPoint(), VertexView.centerPoint() - VertexView.stateRadius);
-            initialState.lineTo(VertexView.centerPoint(), VertexView.centerPoint() + VertexView.stateRadius);
-            canvas.drawPath(initialState, mStateLinePaint);
+            Path initialStatePath = new Path();
+            Point referencePoint  = new Point(vertexCenterPoint, vertexCenterPoint);
+            Point onStatePoint = new Point(vertexSquareDimension + vertexSpace, vertexCenterPoint);
+            float angle = PointUtils.angleFromP1ToP2(onStatePoint, referencePoint);
+            initialStatePath.moveTo(onStatePoint.x, onStatePoint.y);
+            initialStatePath.lineTo(onStatePoint.x + vertexInitialStateSize *
+                    (float) Math.cos(angle + Math.toRadians(30)),
+                    onStatePoint.y + vertexInitialStateSize *
+                            (float) Math.sin(angle + Math.toRadians(30)));
+            initialStatePath.moveTo(onStatePoint.x, onStatePoint.y);
+            initialStatePath.lineTo(onStatePoint.x + vertexInitialStateSize *
+                            (float) Math.cos(angle - Math.toRadians(30)),
+                    onStatePoint.y + vertexInitialStateSize *
+                            (float) Math.sin(angle - Math.toRadians(30)));
+            canvas.drawPath(initialStatePath, mStateLinePaint);
         }
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        Log.d("onKeyDown", "keycode "+keyCode);
-        if (getText().toString().length() < MAX_LENGHT_LABEL || keyCode == KeyEvent.KEYCODE_DEL ||
-                keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_CLEAR
-                || keyCode == KeyEvent.KEYCODE_ESCAPE) {
-            return super.onKeyDown(keyCode, event);
-        }
-        Toast.makeText(getContext(), "Tamanho máximo para nome de estado é " + MAX_LENGHT_LABEL
-                + " caracteres!",
-                Toast.LENGTH_SHORT)
-                .show();
-        return false;
     }
 
     /**
@@ -377,23 +368,37 @@ public class VertexView extends EditText {
      */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int vertexSquareDimension = getParentEditGraphLayout().getVertexSquareDimension();
         if (initialState) {
-            setMeasuredDimension(VertexView.squareDimension() * 2, VertexView.squareDimension());
+            setMeasuredDimension(vertexSquareDimension * 2, vertexSquareDimension);
         } else {
-            setMeasuredDimension(VertexView.squareDimension(), VertexView.squareDimension());
+            setMeasuredDimension(vertexSquareDimension, vertexSquareDimension);
         }
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        return gestureDetector.onTouchEvent(event);
+        gestureDetector.onTouchEvent(event);
+        return true;
     }
 
-    public boolean onDownAction(MotionEvent e) {
+    public void onDownRun(MotionEvent e) {
         Log.d(label + " - onDown", label + " - onDown" +
                 " (" + e.getX() + ", " + e.getY() + ")");
         EditGraphLayout parentView = ((EditGraphLayout) getParent());
-        int mode = parentView.getMode();
+        if (parentView == null) {
+            return;
+        }
+        if (parentView.isStateSelected()) {
+            parentView.addEdgeView(parentView.getStateSelect(), VertexView.this);
+            parentView.getStateSelect().onSelectBlue();
+            parentView.setOnStateSelected(false);
+        } else {
+            parentView.setOnStateSelected(true);
+            parentView.setStateSelect(VertexView.this);
+            onSelectBlue();
+        }
+        /*int mode = parentView.getMode();
         if (mode == EditGraphLayout.CREATION_MODE) {
             if (parentView.isStateSelected()) {
                 parentView.addEdgeView(parentView.getStateSelect(), VertexView.this);
@@ -401,13 +406,28 @@ public class VertexView extends EditText {
                 parentView.setOnStateSelected(false);
             }
         } else if (mode == EditGraphLayout.EDITION_MODE) {
-        }
+        }*/
+
+    }
+
+    public boolean onDownAction(MotionEvent e) {
+        EditGraphLayout parentView = ((EditGraphLayout) getParent());
+        onDownRun(e);
         return true;
     }
 
     public void onLongPressAction(MotionEvent e) {
-        EditGraphLayout parentView = ((EditGraphLayout) getParent());
-        if (parentView.onDefineInitialState()) {
+        final EditGraphLayout parentView = ((EditGraphLayout) getParent());
+        if (selectBlue) {
+            parentView.setOnStateSelected(false);
+            parentView.setStateSelect(null);
+            onSelectBlue();
+        }
+        if (!select) {
+            onSelect();
+        }
+
+        /*if (parentView.onDefineInitialState()) {
             parentView.setInitialState(this);
             return;
         }
@@ -424,14 +444,147 @@ public class VertexView extends EditText {
             }
         } else if (mode == EditGraphLayout.EDITION_MODE) {
             setFinalState(!finalState);
+        }*/
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(
+                Context.LAYOUT_INFLATER_SERVICE );
+        final LinearLayout dialogState = (LinearLayout) inflater.inflate(R.layout.dialog_state,
+                null);
+        final EditText stateName = (EditText) dialogState.findViewById(R.id.stateName);
+        final CheckBox checkBoxInitial = (CheckBox) dialogState.findViewById(R.id.chkInitial);
+        final CheckBox checkBoxFinal = (CheckBox) dialogState.findViewById(R.id.chkFinal);
+        final CheckBox checkBoxMove = (CheckBox) dialogState.findViewById(R.id.chkMove);
+        VertexView initialState = parentView.getInitialState();
+        final boolean finalIsDefinied = !(initialState == null || initialState.equals(this));
+        stateName.setText(label);
+        stateName.setEnabled(true);
+        stateName.setSelection(0, stateName.length());
+
+        checkBoxInitial.setChecked(false);
+        if (isInitialState()) {
+            checkBoxInitial.setChecked(true);
         }
+        checkBoxInitial.setEnabled(true);
+        checkBoxFinal.setChecked(false);
+        if (isFinalState()) {
+            checkBoxFinal.setChecked(true);
+        }
+        checkBoxFinal.setEnabled(true);
+        checkBoxMove.setChecked(false);
+        checkBoxMove.setEnabled(true);
+        final boolean[] confirmDialogCancel = { false };
+        stateName.setOnKeyListener(new OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                Log.d("EDITOR", ((TextView) v).length() + ",");
+                if (((TextView) v).length() > MAX_LENGHT_LABEL) {
+                    Toast.makeText(getContext(), "Aviso! Tamanho máximo para nome de estado são " +
+                                    MAX_LENGHT_LABEL + " caracteres!",
+                            Toast.LENGTH_SHORT).show();
+                }
+                return false;
+            }
+        });
+        stateName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                Log.d("EDITOR", v.getText().length() + "," + v.length());
+                if (v.length() > MAX_LENGHT_LABEL) {
+                    Toast.makeText(getContext(), "Aviso! Tamanho máximo para nome de estado são " +
+                                    MAX_LENGHT_LABEL + " caracteres!",
+                            Toast.LENGTH_SHORT).show();
+                }
+                return false;
+            }
+        });
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                if (!confirmDialogCancel[0]) {
+                    VertexView.this.onSelect();
+                }
+            }
+        });
+        builder.setView(dialogState)
+                .setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        Dialog f = (Dialog) dialog;
+                        String newLabel = stateName.getText().toString();
+                        if (newLabel.length() > MAX_LENGHT_LABEL) {
+                            Toast.makeText(getContext(), "Erro! Tamanho máximo para nome de estado são " +
+                                            MAX_LENGHT_LABEL + " caracteres!",
+                                    Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                        if (parentView.isDefiniedLabel(newLabel)) {
+                            Toast.makeText(getContext(), "Erro! Máquina já possui estado com esse " +
+                                    "nome!",
+                                    Toast.LENGTH_LONG)
+                                    .show();
+                            return;
+                        }
+//                        if (finalIsDefinied && checkBoxInitial.isChecked()) {
+//                            Toast.makeText(getContext(), "Erro! Máquina já possui estado inicial!",
+//                                    Toast.LENGTH_SHORT)
+//                                    .show();
+//                            return;
+//                        }
+                        label = newLabel;
+                        if (checkBoxInitial.isChecked() && !VertexView.this.equals(
+                                parentView.getInitialState())) {
+                            parentView.setInitialState(VertexView.this);
+                        }
+                        if (!checkBoxInitial.isChecked() && VertexView.this.equals(
+                                parentView.getInitialState())) {
+                            parentView.removeInitialState();
+                        }
+                        if (checkBoxFinal.isChecked()) {
+                            parentView.setVertexViewAsFinal(VertexView.this.getGridPoint());
+                        }
+                        if (!checkBoxFinal.isChecked() &&
+                                VertexView.this.isFinalState()) {
+                            VertexView.this.setFinalState(false);
+                        }
+                        if (checkBoxMove.isChecked()) {
+                            if (parentView.isOnMove()) {
+                                parentView.onMove.onSelect();
+                            }
+                            parentView.setOnMove(VertexView.this);
+                            Toast.makeText(getContext(), "Indique para onde " +
+                                    VertexView.this.label + " deve ser movido.",
+                                    Toast.LENGTH_LONG)
+                                    .show();
+                        } else {
+                            VertexView.this.onSelect();
+                        }
+                        VertexView.this.invalidate();
+                        confirmDialogCancel[0] = true;
+                        dialog.cancel();
+                    }
+                })
+                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        //  Your code when user clicked on Cancel
+                    }
+                })
+                .create()
+                .show();
         Log.d(label + " - onLongPress", label + " - onLongPress" +
                 " (" + e.getX() + ", " + e.getY() + ")");
     }
 
     public boolean onDoubleTapAction(MotionEvent e) {
         EditGraphLayout parentView = ((EditGraphLayout) getParent());
-        int mode = parentView.getMode();
+        if (selectBlue) {
+            parentView.setOnStateSelected(false);
+            parentView.setStateSelect(null);
+            onSelectBlue();
+        }
+        parentView.removeVertexView(gridPoint);
+        /*int mode = parentView.getMode();
         if (mode == EditGraphLayout.CREATION_MODE) {
             parentView.removeVertexView(gridPoint);
         } else if (mode == EditGraphLayout.EDITION_MODE) {
@@ -454,7 +607,7 @@ public class VertexView extends EditText {
                 Log.d(label + " - onCursor", label + " - onCursor" + " (" + e.getX() + ", " +
                         e.getY() + ")");
             }
-        }
+        }*/
 
         Log.d(label + " - Double Tap", "Tapped at: (" + e.getX() + "," + e.getY() + ")");
 
@@ -465,18 +618,23 @@ public class VertexView extends EditText {
     private class GestureListener extends GestureDetector.SimpleOnGestureListener {
 
         @Override
-        public boolean onDown(MotionEvent e) {
+        public boolean onSingleTapConfirmed(MotionEvent e) {
             return onDownAction(e);
         }
 
-
-
         @Override
-        public boolean onContextClick(MotionEvent e) {
-            Log.d(label + " - onContextClick", label + " - onContextClick" +
-                    " (" + e.getX() + ", " + e.getY() + ")");
+        public boolean onDown(MotionEvent e) {
             return true;
         }
+
+
+
+//        @Override
+//        public boolean onContextClick(MotionEvent e) {
+//            Log.d(label + " - onContextClick", label + " - onContextClick" +
+//                    " (" + e.getX() + ", " + e.getY() + ")");
+//            return true;
+//        }
 
         @Override
         public void onLongPress(MotionEvent e) {

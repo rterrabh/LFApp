@@ -2,7 +2,6 @@ package com.ufla.lfapp.activities.graph.views;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.View;
 
@@ -11,25 +10,27 @@ import android.view.View;
  */
 public class SpaceWithBorder extends View {
 
-    public static Paint mBorderPaint;
-
-    static {
-        mBorderPaint = new Paint();
-        mBorderPaint.setAntiAlias(true);
-        mBorderPaint.setStyle(Paint.Style.STROKE);
-        mBorderPaint.setStrokeWidth(0.5f);
-        mBorderPaint.setColor(Color.parseColor("#60000000"));
-    }
+    private Paint mBorderPaint;
+    private int squareDimension;
 
     public SpaceWithBorder(Context context) {
         super(context);
     }
 
+    public void setmBorderPaint(Paint mBorderPaint) {
+        this.mBorderPaint = mBorderPaint;
+    }
+
+    public void setSquareDimension(int squareDimension) {
+        this.squareDimension = squareDimension;
+    }
+
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-        canvas.drawRect(0, 0, VertexView.squareDimension(), VertexView.squareDimension(),
-                SpaceWithBorder.mBorderPaint);
+        if (mBorderPaint != null) {
+            canvas.drawRect(0, 0, squareDimension, squareDimension, mBorderPaint);
+        }
     }
 
     /**
@@ -40,6 +41,16 @@ public class SpaceWithBorder extends View {
      */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        setMeasuredDimension(VertexView.squareDimension(), VertexView.squareDimension());
+        setMeasuredDimension(squareDimension, squareDimension);
+    }
+
+    public static SpaceWithBorder getSpaceWithBorder(Context context, Paint mBorderPaint,
+                                                     int squareDimension) {
+        SpaceWithBorder spaceWithBorder = new SpaceWithBorder(context);
+        spaceWithBorder.mBorderPaint = mBorderPaint;
+        spaceWithBorder.squareDimension = squareDimension;
+        spaceWithBorder.setMinimumHeight(squareDimension);
+        spaceWithBorder.setMinimumWidth(squareDimension);
+        return spaceWithBorder;
     }
 }

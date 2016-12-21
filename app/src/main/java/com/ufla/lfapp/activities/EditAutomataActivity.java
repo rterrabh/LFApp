@@ -26,10 +26,9 @@ import android.widget.Toast;
 import com.ufla.lfapp.R;
 import com.ufla.lfapp.activities.graph.layout.EditGraphLayout;
 import com.ufla.lfapp.persistence.DbAcess;
-import com.ufla.lfapp.vo.Automaton;
-import com.ufla.lfapp.vo.AutomatonDAO;
-import com.ufla.lfapp.vo.AutomatonGUI;
-import com.ufla.lfapp.vo.TransitionFunction;
+import com.ufla.lfapp.vo.machine.Automaton;
+import com.ufla.lfapp.vo.machine.AutomatonGUI;
+import com.ufla.lfapp.vo.machine.TransitionFunction;
 
 import java.util.Map;
 import java.util.Set;
@@ -48,16 +47,6 @@ public class EditAutomataActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         editMachineLayout = new EditGraphLayout(this);
-//        for (int i = 0; i < 15; i += 5) {
-//            for (int j = 0; j < 15; j += 5) {
-//                automataView.addVertexView(new Point(i, j));
-//            }
-//        }
-//        Point p1 = new Point(3, 1);
-//        Point p2 = new Point(1, 3);
-//        automataView.addVertexView(p1);
-//        automataView.addVertexView(p2);
-        //automataView.addEdgeView(automataView.getVertexView(p1), automataView.getVertexView(p2));
         myDragListener = new MyDragListener();
         setContentView(editMachineLayout.getRootView());
         Intent intent = getIntent();
@@ -71,7 +60,10 @@ public class EditAutomataActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        new DbAcess(this).putAutomaton(new AutomatonDAO(editMachineLayout.getAutomaton()));
+        AutomatonGUI automatonGUI = editMachineLayout.getAutomatonGUI();
+        if (automatonGUI.getStates().size() > 0) {
+            new DbAcess(this).putAutomatonGUI(automatonGUI);
+        }
 //        SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
 //        editor.putString("inputGrammar", inputGrammar.getText().toString());
 //        editor.putString("inputWord", inputWord.getText().toString());
@@ -80,6 +72,10 @@ public class EditAutomataActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        AutomatonGUI automatonGUI = editMachineLayout.getAutomatonGUI();
+        if (automatonGUI.getStates().size() > 0) {
+            new DbAcess(this).putAutomatonGUI(automatonGUI);
+        }
         super.onDestroy();
 
     }
@@ -102,8 +98,10 @@ public class EditAutomataActivity extends AppCompatActivity {
             editMachineLayout.addEdgeView(statesPoints.get(entry.getKey().first),
                     statesPoints.get(entry.getKey().second), sb.toString());
         }
-        editMachineLayout.setVertexViewAsInitial(statesPoints.get(
-                automaton.getInitialState()));
+        if (automaton.getInitialState() != null) {
+            editMachineLayout.setVertexViewAsInitial(statesPoints.get(
+                    automaton.getInitialState()));
+        }
         for (String state : automaton.getFinalStates()) {
             editMachineLayout.setVertexViewAsFinal(statesPoints.get(
                     state));
@@ -129,18 +127,8 @@ public class EditAutomataActivity extends AppCompatActivity {
                 onBackPressed();
                 //NavUtils.navigateUpFromSameTask(this);
                 return true;
-            case R.id.creationMode:
-                editMachineLayout.setMode(EditGraphLayout.CREATION_MODE);
-                Toast.makeText(this, "Modo de criação selecionado!", Toast.LENGTH_SHORT)
-                        .show();
-                return true;
-            case R.id.editionMode:
-                editMachineLayout.setMode(EditGraphLayout.EDITION_MODE);
-                Toast.makeText(this, "Modo de edição selecionado!", Toast.LENGTH_SHORT)
-                        .show();
-                return true;
             case R.id.completeAutomaton:
-                Automaton automaton = editMachineLayout.getAutomaton();
+                Automaton automaton = editMachineLayout.getCompleteAutomatonGUI();
                 if (automaton != null) {
                     Log.d("automato", automaton.toString());
                     Set<TransitionFunction> transitionFunctionsToComplAuto =
@@ -151,20 +139,15 @@ public class EditAutomataActivity extends AppCompatActivity {
                     } else {
                         editMachineLayout.selectErrorState(automaton.getStateError(),
                                 transitionFunctionsToComplAuto);
-                        Toast.makeText(this, "Selecione a posição para inserir o estado de erro!",
+                        Toast.makeText(this, "Indique a posição para inserir o estado de erro!",
                                 Toast.LENGTH_SHORT)
                                 .show();
                     }
 
                 }
                 return true;
-            case R.id.defineInitialState:
-                editMachineLayout.defineInitialStateMode();
-                Toast.makeText(this, "Selecione o estado inicial!", Toast.LENGTH_SHORT)
-                        .show();
-                return true;
             case R.id.verifyEntry:
-                final Automaton automatonB = editMachineLayout.getAutomaton();
+                final Automaton automatonB = editMachineLayout.getCompleteAutomatonGUI();
                 if (automatonB != null) {
                     Log.d("automato", automatonB.toString());
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -208,13 +191,13 @@ public class EditAutomataActivity extends AppCompatActivity {
                 }
                 return true;
             case R.id.transformAFNDInAFD:
-                Automaton automatonC = editMachineLayout.getAutomaton();
-                editMachineLayout.clear();
+                Automaton automatonC = editMachineLayout.getCompleteAutomatonGUI();
                 if (automatonC != null) {
                     if (automatonC.isAFD()) {
                         Toast.makeText(this, "Autômato já é um AFD!", Toast.LENGTH_LONG)
                                 .show();
                     } else {
+                        editMachineLayout.clear();
                         Automaton automatonAFD = automatonC.AFNDLambdaToAFD();
                         Automaton automatonAFDSimplify =
                                 automatonAFD.getAutomatonWithStatesNameSimplify();
@@ -247,6 +230,20 @@ public class EditAutomataActivity extends AppCompatActivity {
                 }
                 return true;
             case R.id.minimizeAFD:
+                Automaton automatonD = editMachineLayout.getCompleteAutomatonGUI();
+                if (automatonD != null) {
+                    if (!automatonD.isAFD()) {
+                        Toast.makeText(this, "Autômato não é um AFD!", Toast.LENGTH_LONG)
+                                .show();
+                    } else {
+                        Automaton automatonMinimize = automatonD.getMinimizeAutomaton();
+                        Log.d("AutomatonMinimize", automatonMinimize.toString());
+                        AutomatonGUI automatonMinimizeGUI = new AutomatonGUI(automatonMinimize,
+                                automatonMinimize.getStatesPointsFake());
+                        editMachineLayout.clear();
+                        editMachineLayout.drawAutomaton(automatonMinimizeGUI);
+                    }
+                }
                 return true;
             case R.id.history:
                 Intent intent = new Intent(this, HistoricalAutomataActivity.class);

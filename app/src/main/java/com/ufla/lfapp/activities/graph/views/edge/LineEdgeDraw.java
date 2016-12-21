@@ -5,34 +5,36 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.support.v4.util.Pair;
 
+import com.ufla.lfapp.activities.graph.layout.EditGraphLayout;
 import com.ufla.lfapp.activities.graph.views.EdgeView;
 import com.ufla.lfapp.activities.graph.views.PointUtils;
-import com.ufla.lfapp.activities.graph.views.VertexView;
 
 /**
  * Created by carlos on 17/10/16.
  */
 public class LineEdgeDraw extends AbstractEdgeDraw {
 
-    private static final float ERROR_RECT_F_LABEL = VertexView.stateRadius * 0.60f;
+    private float ERROR_RECT_F_LABEL;
 
-    public LineEdgeDraw(Pair<Point, Point> gridPoint) {
-        super(gridPoint);
+    public LineEdgeDraw(Pair<Point, Point> gridPoint, EditGraphLayout editGraphLayout) {
+        super(gridPoint, editGraphLayout);
     }
 
     @Override
     protected void setCircPointsOnCircumference() {
         //Setando o primeiro ponto na circunferência
-        float angle = (float) Math.atan2((circPoints.second.y - circPoints.first.y),
-                (circPoints.second.x - circPoints.first.x));
-        circPoints.first.x += VertexView.stateRadius * Math.cos(angle);
-        circPoints.first.y += VertexView.stateRadius * Math.sin(angle);
+        float angle = PointUtils.angleFromP1ToP2(circPoints.first, circPoints.second);
+//        float angle = (float) Math.atan2((circPoints.second.y - circPoints.first.y),
+//                (circPoints.second.x - circPoints.first.x));
+        circPoints.first.x += vertexRadius * Math.cos(angle);
+        circPoints.first.y += vertexRadius * Math.sin(angle);
 
         //Setando o segundo ponto na circunferência
-        angle = (float) Math.atan2((circPoints.first.y - circPoints.second.y),
-                (circPoints.first.x - circPoints.second.x));
-        circPoints.second.x += VertexView.stateRadius * Math.cos(angle);
-        circPoints.second.y += VertexView.stateRadius * Math.sin(angle);
+        angle = PointUtils.angleFromP1ToP2(circPoints.second, circPoints.first);
+//        angle = (float) Math.atan2((circPoints.first.y - circPoints.second.y),
+//                (circPoints.first.x - circPoints.second.x));
+        circPoints.second.x += vertexRadius * Math.cos(angle);
+        circPoints.second.y += vertexRadius * Math.sin(angle);
     }
 
     /**
@@ -41,14 +43,16 @@ public class LineEdgeDraw extends AbstractEdgeDraw {
      */
     @Override
     protected void setPointControl() {
+        ERROR_RECT_F_LABEL = vertexRadius * 0.60f;
         return;
     }
 
     @Override
     protected Pair<PointF, PointF> getPointsControlInteractArea() {
         PointF middlePoint = PointUtils.getMiddlePoint(circPoints);
-        float angle = (float) Math.atan2((circPoints.second.y - middlePoint.y),
-                (circPoints.second.x - middlePoint.x));
+        float angle = PointUtils.angleFromP1ToP2(middlePoint, circPoints.second);
+//        float angle = (float) Math.atan2((circPoints.second.y - middlePoint.y),
+//                (circPoints.second.x - middlePoint.x));
         PointF pointControl1 = new PointF();
         PointF pointControl2 = new PointF();
         pointControl1.x = (float) (middlePoint.x + ERROR_RECT_F_LABEL *
@@ -81,16 +85,17 @@ public class LineEdgeDraw extends AbstractEdgeDraw {
     @Override
     public Path getArrowHead() {
         Path path = new Path();
-        float angle = (float) Math.atan2((circPoints.first
-                .y - circPoints.second.y), (circPoints.first.x -
-                circPoints.second.x));
-        float arrowHeady1 = (float) (circPoints.second.y + EdgeView.getArrowHeadLenght() *
+        float angle = PointUtils.angleFromP1ToP2(circPoints.second, circPoints.first);
+//        float angle = (float) Math.atan2((circPoints.first
+//                .y - circPoints.second.y), (circPoints.first.x -
+//                circPoints.second.x));
+        float arrowHeady1 = (float) (circPoints.second.y + arrowHeadLenght *
                 Math.sin(angle - EdgeView.getArrowAngle()));
-        float arrowHeadx1 = (float) (circPoints.second.x + EdgeView.getArrowHeadLenght() *
+        float arrowHeadx1 = (float) (circPoints.second.x + arrowHeadLenght *
                 Math.cos(angle - EdgeView.getArrowAngle()));
-        float arrowHeady2 = (float) (circPoints.second.y + EdgeView.getArrowHeadLenght() *
+        float arrowHeady2 = (float) (circPoints.second.y + arrowHeadLenght *
                 Math.sin(angle + EdgeView.getArrowAngle()));
-        float arrowHeadx2 = (float) (circPoints.second.x + EdgeView.getArrowHeadLenght() *
+        float arrowHeadx2 = (float) (circPoints.second.x + arrowHeadLenght *
                 Math.cos(angle + EdgeView.getArrowAngle()));
         path.moveTo(circPoints.second.x, circPoints.second.y);
         path.lineTo(arrowHeadx1, arrowHeady1);

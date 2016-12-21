@@ -9,9 +9,9 @@ import android.widget.TextView;
 
 import com.ufla.lfapp.R;
 import com.ufla.lfapp.activities.HeaderGrammarActivity;
-import com.ufla.lfapp.vo.AcademicSupport;
-import com.ufla.lfapp.vo.Grammar;
-import com.ufla.lfapp.vo.Rule;
+import com.ufla.lfapp.vo.grammar.AcademicSupport;
+import com.ufla.lfapp.vo.grammar.Grammar;
+import com.ufla.lfapp.vo.grammar.Rule;
 
 import java.util.ArrayList;
 import java.util.Collections;

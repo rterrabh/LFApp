@@ -4,7 +4,7 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.support.v4.util.Pair;
 
-import com.ufla.lfapp.activities.graph.views.VertexView;
+import com.ufla.lfapp.activities.graph.layout.EditGraphLayout;
 
 /**
  * Created by carlos on 18/10/16.
@@ -13,19 +13,21 @@ public class ReflexiveUpEdgeDraw extends AbstractReflexiveEdgeDraw {
 
     private PointF up;
 
-    public ReflexiveUpEdgeDraw(Pair<Point, Point> gridPoints) {
-        super(gridPoints);
+    public ReflexiveUpEdgeDraw(Pair<Point, Point> gridPoints, EditGraphLayout editGraphLayout) {
+        super(gridPoints, editGraphLayout);
     }
 
     @Override
     protected void setCircPointsOnCircumference() {
-        circPoints.first.y += VertexView.squareDimension();
-        circPoints.second.y += VertexView.squareDimension();
+        circPoints.first.y += vertexSquareDimension;
+        circPoints.second.y += vertexSquareDimension;
         super.setCircPointsOnCircumference();
     }
 
     @Override
     protected void setPointControl() {
+        LENGHT = vertexRadius * 2.2f;
+        ERROR_RECT_F_LABEL = LENGHT * 0.40f;
         pointControl = new PointF();
         pointControl.x = up.x;
         pointControl.y = up.y - LENGHT;
@@ -45,7 +47,7 @@ public class ReflexiveUpEdgeDraw extends AbstractReflexiveEdgeDraw {
     protected void setExtremePoint() {
         up = new PointF();
         up.x = circPoints.first.x;
-        up.y = circPoints.first.y - VertexView.stateRadius;
+        up.y = circPoints.first.y - vertexRadius;
     }
 
     protected PointF getExtremePoint() {

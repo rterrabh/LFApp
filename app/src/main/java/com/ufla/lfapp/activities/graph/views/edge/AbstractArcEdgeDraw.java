@@ -4,8 +4,11 @@ import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.support.v4.util.Pair;
+import android.util.Log;
 
+import com.ufla.lfapp.activities.graph.layout.EditGraphLayout;
 import com.ufla.lfapp.activities.graph.views.EdgeView;
+import com.ufla.lfapp.activities.graph.views.PointUtils;
 
 /**
  * Created by carlos on 11/17/16.
@@ -15,8 +18,8 @@ public abstract class AbstractArcEdgeDraw extends AbstractEdgeDraw {
 
     protected PointF pointControl;
 
-    public AbstractArcEdgeDraw(Pair<Point, Point> gridPoints) {
-        super(gridPoints);
+    public AbstractArcEdgeDraw(Pair<Point, Point> gridPoints, EditGraphLayout editGraphLayout) {
+        super(gridPoints, editGraphLayout);
     }
 
     @Override
@@ -24,6 +27,9 @@ public abstract class AbstractArcEdgeDraw extends AbstractEdgeDraw {
         Path edge = new Path();
         edge.moveTo(circPoints.first.x, circPoints.first.y);
         edge.quadTo(pointControl.x, pointControl.y, circPoints.second.x, circPoints.second.y);
+        Log.d("Edge Arc", "circPointFirst("+circPoints.first.x+","+circPoints.first.y+"), pointControl(" +
+                pointControl.x+","+pointControl.y+"), circPointSecond("+circPoints.second.x+","+
+                circPoints.second.y+")");
         return edge;
     }
 
@@ -38,18 +44,17 @@ public abstract class AbstractArcEdgeDraw extends AbstractEdgeDraw {
     @Override
     public Path getArrowHead() {
         Path arrowHead = new Path();
-        float angle = (float) Math.atan2((pointControl.y - circPoints.second
-                .y), (pointControl.x - circPoints.second.x));
+        float angle = PointUtils.angleFromP1ToP2(circPoints.second, pointControl);
         PointF pointArrowHead = new PointF();
-        pointArrowHead.x = (float) (circPoints.second.x + EdgeView.getArrowHeadLenght() *
+        pointArrowHead.x = (float) (circPoints.second.x + arrowHeadLenght *
                 Math.cos(angle + EdgeView.getArrowAngle()));
-        pointArrowHead.y = (float) (circPoints.second.y + EdgeView.getArrowHeadLenght() *
+        pointArrowHead.y = (float) (circPoints.second.y + arrowHeadLenght *
                 Math.sin(angle + EdgeView.getArrowAngle()));
         arrowHead.moveTo(circPoints.second.x, circPoints.second.y);
         arrowHead.lineTo(pointArrowHead.x, pointArrowHead.y);
-        pointArrowHead.x = (float) (circPoints.second.x + EdgeView.getArrowHeadLenght() *
+        pointArrowHead.x = (float) (circPoints.second.x + arrowHeadLenght *
                 Math.cos(angle - EdgeView.getArrowAngle()));
-        pointArrowHead.y = (float) (circPoints.second.y + EdgeView.getArrowHeadLenght() *
+        pointArrowHead.y = (float) (circPoints.second.y + arrowHeadLenght *
                 Math.sin(angle - EdgeView.getArrowAngle()));
         arrowHead.moveTo(circPoints.second.x, circPoints.second.y);
         arrowHead.lineTo(pointArrowHead.x, pointArrowHead.y);
