@@ -20,6 +20,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
+import com.ufla.lfapp.activities.graph.views.BorderVertex;
 import com.ufla.lfapp.activities.graph.views.EdgeView;
 import com.ufla.lfapp.activities.graph.views.SpaceWithBorder;
 import com.ufla.lfapp.activities.graph.views.VertexView;
@@ -241,6 +242,10 @@ public class EditGraphLayout extends GridLayout {
     }
 
     public void removeSpaces() {
+        removeSpaces( 0, 0 );
+    }
+
+    public void removeSpaces(int minWidth, int minHeight) {
         Point minPoint = new Point();
         minPoint.y = viewsOnGrid.length;
         minPoint.x = viewsOnGrid[0].length;
@@ -265,6 +270,31 @@ public class EditGraphLayout extends GridLayout {
                 }
             }
         }
+        for (EdgeView reflexiveView : edgeReflexiveViews) {
+            if (reflexiveView.isReflexiveUp() &&
+                    reflexiveView.getGridPoints().first.y == minPoint.y) {
+                minPoint.y--;
+            }
+            if (!reflexiveView.isReflexiveUp() &&
+                    reflexiveView.getGridPoints().first.y == maxPoint.y) {
+                maxPoint.y++;
+            }
+        }
+        int squareDimension = getVertexSquareDimension();
+        int minHeightSquares = minHeight / squareDimension;
+        if ( (maxPoint.y - minPoint.y + 1) < minHeightSquares ) {
+            maxPoint.y = minHeightSquares + minPoint.y - 1;
+            if (maxPoint.y > viewsOnGrid.length - 1) {
+                growRows(maxPoint.y - (viewsOnGrid.length - 1));
+            }
+        }
+        int minWidthSquares = minWidth / squareDimension;
+        if ( (maxPoint.x - minPoint.x + 1) < minWidthSquares ) {
+            maxPoint.x = minWidthSquares + minPoint.x - 1;
+            if (maxPoint.x > viewsOnGrid[0].length - 1) {
+                growColumns(maxPoint.x - (viewsOnGrid[0].length - 1));
+            }
+        }
         for (int i = 0; i < viewsOnGrid.length; i++) {
             for (int j = 0; j < viewsOnGrid[i].length; j++) {
                 if (j == minPoint.x && i >= minPoint.y && i <= maxPoint.y) {
@@ -274,19 +304,19 @@ public class EditGraphLayout extends GridLayout {
                 }
             }
         }
-        maxPoint.x = maxPoint.x + 1;
-        maxPoint.y = maxPoint.y + 1;
+        maxPoint.x++;
+        maxPoint.y++;
         actualNumColumns = maxPoint.x - minPoint.x;
         actualNumRows = maxPoint.y - minPoint.y;
         View newViewsOnGrid[][] = new View[actualNumRows][actualNumColumns];
-        for (int i = minPoint.y; i <maxPoint.y; i++) {
+        for (int i = minPoint.y; i < maxPoint.y; i++) {
             for (int j = minPoint.x; j < maxPoint.x; j++) {
                 newViewsOnGrid[i-minPoint.y][j-minPoint.x] = viewsOnGrid[i][j];
             }
         }
         viewsOnGrid = newViewsOnGrid;
         Set<EdgeView> newEdgesOnGrid[][] = new HashSet[actualNumRows][actualNumColumns];
-        for (int i = minPoint.y; i <maxPoint.y; i++) {
+        for (int i = minPoint.y; i < maxPoint.y; i++) {
             for (int j = minPoint.x; j < maxPoint.x; j++) {
                 newEdgesOnGrid[i-minPoint.y][j-minPoint.x] = edgesOnGrid[i][j];
             }
@@ -327,7 +357,7 @@ public class EditGraphLayout extends GridLayout {
                         .append(',');
             }
             sb.deleteCharAt(sb.length() - 1);
-            Log.d("AUTOMATON10", entry.getKey().first + "," + entry.getKey().second);
+            //Log.d("AUTOMATON10", entry.getKey().first + "," + entry.getKey().second);
             addEdgeView(automatonGUI.getGridPosition(entry.getKey().first),
                     automatonGUI.getGridPosition(entry.getKey().second), sb.toString());
         }
@@ -450,6 +480,9 @@ public class EditGraphLayout extends GridLayout {
     public void setInitialState(VertexView vertexView) {
         Point point = vertexView.getGridPoint();
         point.x--;
+        if ( point.x == 0 ) {
+            vertexView.setLeft( true );
+        }
         if (initialState != null) {
             removeInitialState();
         }
@@ -470,15 +503,26 @@ public class EditGraphLayout extends GridLayout {
         defineInitialState = false;
     }
 
+    private SpaceWithBorder getSpaceWithBorder(Point gridPoint) {
+        SpaceWithBorder space = SpaceWithBorder.getSpaceWithBorder(this,
+                new BorderVertex( gridPoint.x == 0,
+                        gridPoint.y == 0,
+                        gridPoint.x == actualNumColumns - 1,
+                        gridPoint.y == actualNumRows - 1));
+        return space;
+    }
+
     public void removeInitialState() {
         removeView(initialState);
         initialState.setInitialState(false);
         Point gridPoint = initialState.getGridPoint();
+        if (gridPoint.x - 1 == 0) {
+            initialState.setLeft(false);
+        }
         addView(initialState, new LayoutParams(GridLayout.spec(gridPoint.y),
                 GridLayout.spec(gridPoint.x)));
         initialState.setStyle();
-        SpaceWithBorder space = SpaceWithBorder.getSpaceWithBorder(getContext(), mVertexBorderPaint,
-                getVertexSquareDimension());
+        SpaceWithBorder space = getSpaceWithBorder(new Point(gridPoint.x - 1, gridPoint.y));
         viewsOnGrid[gridPoint.y][gridPoint.x - 1] = space;
         addView(space, new LayoutParams(GridLayout.spec(gridPoint.y),
                 GridLayout.spec(gridPoint.x - 1)));
@@ -545,15 +589,33 @@ public class EditGraphLayout extends GridLayout {
         }
     }
 
+    private void growColumns() {
+        growColumns( INITIAL_NUM_COLUMNS );
+    }
+
     /**
      * Realiza o crescimento do <i>grid</i> em termos de colunas. Aumenta a quantidade de colunas
      * em 1.5 vezes do tamanho atual.
      */
-    private void growColumns() {
+    private void growColumns( int newColumns ) {
+        if ( newColumns < 1) {
+            return;
+        }
+        for (int i = 0; i < viewsOnGrid.length; i++)
+        {
+            if (viewsOnGrid[i][actualNumColumns - 1] instanceof VertexView)
+            {
+                ( (VertexView) viewsOnGrid[actualNumColumns - 1][i] ).setRight( false );
+            }
+            if (viewsOnGrid[actualNumColumns - 1][i] instanceof SpaceWithBorder)
+            {
+                ( (SpaceWithBorder) viewsOnGrid[actualNumColumns - 1][i] ).setRight( false );
+            }
+        }
         View viewsOnGridOld[][] = viewsOnGrid;
         Set<EdgeView> edgesOnGridOld[][] = edgesOnGrid;
         int oldNumColumns = actualNumColumns;
-        actualNumColumns += INITIAL_NUM_COLUMNS;
+        actualNumColumns += newColumns;
         viewsOnGrid = new View[actualNumRows][actualNumColumns];
         edgesOnGrid = new Set[actualNumRows][actualNumColumns];
         for (int i = 0; i < viewsOnGridOld.length; i++) {
@@ -566,8 +628,7 @@ public class EditGraphLayout extends GridLayout {
         invalidate();
         for (int i = 0; i < actualNumRows; i++) {
             for (int j = oldNumColumns; j < actualNumColumns; j++) {
-                SpaceWithBorder space = SpaceWithBorder.getSpaceWithBorder(getContext(), mVertexBorderPaint,
-                        getVertexSquareDimension());
+                SpaceWithBorder space = getSpaceWithBorder(new Point(j, i));
 
                 viewsOnGrid[i][j] = space;
                 addView(space, new LayoutParams(GridLayout.spec(i), GridLayout.spec(j)));
@@ -576,15 +637,33 @@ public class EditGraphLayout extends GridLayout {
         invalidate();
     }
 
+    private void growRows() {
+        growRows( INITIAL_NUM_ROWS );
+    }
+
     /**
      * Realiza o crescimento do <i>grid</i> em termos de linhas. Aumenta a quantidade de linhas
      * em 1.5 vezes do tamanho atual.
      */
-    private void growRows() {
+    private void growRows( int newRows ) {
+        if ( newRows < 1) {
+            return;
+        }
+        for (int i = 0; i < viewsOnGrid[actualNumRows - 1].length; i++)
+        {
+            if (viewsOnGrid[actualNumRows - 1][i] instanceof VertexView)
+            {
+                ( (VertexView) viewsOnGrid[actualNumRows - 1][i] ).setBottom( false );
+            }
+            if (viewsOnGrid[actualNumRows - 1][i] instanceof SpaceWithBorder)
+            {
+                ( (SpaceWithBorder) viewsOnGrid[actualNumRows - 1][i] ).setBottom( false );
+            }
+        }
         View viewsOnGridOld[][] = viewsOnGrid;
         Set<EdgeView> edgesOnGridOld[][] = edgesOnGrid;
         int oldNumRows = actualNumRows;
-        actualNumRows += INITIAL_NUM_ROWS;
+        actualNumRows += newRows;
         viewsOnGrid = new View[actualNumRows][actualNumColumns];
         edgesOnGrid = new Set[actualNumRows][actualNumColumns];
         for (int i = 0; i < viewsOnGridOld.length; i++) {
@@ -597,8 +676,7 @@ public class EditGraphLayout extends GridLayout {
         invalidate();
         for (int i = oldNumRows; i < actualNumRows; i++) {
             for (int j = 0; j < actualNumColumns; j++) {
-                SpaceWithBorder space = SpaceWithBorder.getSpaceWithBorder(getContext(), mVertexBorderPaint,
-                        getVertexSquareDimension());
+                SpaceWithBorder space = getSpaceWithBorder(new Point(j, i));
 
                 viewsOnGrid[i][j] = space;
                 addView(space, new LayoutParams(GridLayout.spec(i), GridLayout.spec(j)));
@@ -640,6 +718,13 @@ public class EditGraphLayout extends GridLayout {
         }
     }
 
+    private BorderVertex getBorderVertex(final Point gridPoint) {
+        return new BorderVertex(gridPoint.x == 0,
+                gridPoint.y == 0,
+                gridPoint.x == actualNumColumns - 1,
+                gridPoint.y == actualNumRows - 1);
+    }
+
     /**
      * Adiciona um estado nas coordenadas informadas por parâmetros.
      *
@@ -648,6 +733,7 @@ public class EditGraphLayout extends GridLayout {
     public VertexView addVertexView(final Point gridPoint) {
         validatePoint(gridPoint);
         final VertexView vertexView = new VertexView(getContext());
+        vertexView.setBorderVertex(getBorderVertex(gridPoint));
         vertexView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
         vertexView.setGridPoint(gridPoint);
@@ -684,7 +770,6 @@ public class EditGraphLayout extends GridLayout {
             {
                 case DragEvent.ACTION_DRAG_STARTED:
                     Log.d(msg, "Action is DragEvent.ACTION_DRAG_STARTED");
-                    System.out.println("COMECOU");
                     // Do nothing
                     break;
 
@@ -696,7 +781,6 @@ public class EditGraphLayout extends GridLayout {
 
                 case DragEvent.ACTION_DRAG_EXITED :
                     Log.d(msg, "Action is DragEvent.ACTION_DRAG_EXITED");
-                    System.out.println("SAIU");
                     x_cord = (int) event.getX();
                     y_cord = (int) event.getY();
                     Point gridPoint = new Point();
@@ -733,7 +817,6 @@ public class EditGraphLayout extends GridLayout {
 
                 case DragEvent.ACTION_DROP:
                     Log.d(msg, "ACTION_DROP event");
-                    System.out.println("DROP");
                     x_cord = (int) event.getX();
                     y_cord = (int) event.getY();
                     Point gridPointA = new Point();
@@ -771,8 +854,7 @@ public class EditGraphLayout extends GridLayout {
             removeInitialState();
         }
         removeView(vertexView);
-        SpaceWithBorder space = SpaceWithBorder.getSpaceWithBorder(getContext(), mVertexBorderPaint,
-                getVertexSquareDimension());
+        SpaceWithBorder space = getSpaceWithBorder(gridPoint);
         for (EdgeView edgeView : vertexView.getEdgeDependencies()) {
             nullableEdgesOnView(edgeView);
             removeView(edgeView);
@@ -854,25 +936,21 @@ public class EditGraphLayout extends GridLayout {
                 edgesOnGrid[gridPointSourceVertex.y+1][gridPointSourceVertex.x].add(edgeView);
             }
             columnSpec = GridLayout.spec(gridPointSourceVertex.x);
-            System.out.println("1");
         } else if (gridPointSourceVertex.x == gridPointTargetVertex.x) {
             rowSpec = GridLayout.spec(Math.min(gridPointSourceVertex.y,
                     gridPointTargetVertex.y), Math.abs(gridPointSourceVertex.y -
                     gridPointTargetVertex.y) + 1);
             columnSpec = GridLayout.spec(gridPointSourceVertex.x);
-            System.out.println("2");
         } else if (gridPointSourceVertex.y == gridPointTargetVertex.y) {
             rowSpec = GridLayout.spec(gridPointSourceVertex.y);
             columnSpec = GridLayout.spec(Math.min(gridPointSourceVertex.x, gridPointTargetVertex.x),
                     Math.abs(gridPointSourceVertex.x - gridPointTargetVertex.x) + 1);
-            System.out.println("3");
         } else {
             rowSpec = GridLayout.spec(Math.min(gridPointSourceVertex.y,
                     gridPointTargetVertex.y), Math.abs(gridPointSourceVertex.y -
                     gridPointTargetVertex.y) + 1);
             columnSpec = GridLayout.spec(Math.min(gridPointSourceVertex.x, gridPointTargetVertex.x),
                     Math.abs(gridPointSourceVertex.x - gridPointTargetVertex.x) + 1);
-            System.out.println("4");
         }
         edgeView.setVertices(Pair.create(sourceVertex, targetVertex));
 
@@ -893,7 +971,6 @@ public class EditGraphLayout extends GridLayout {
         sourceVertex.addEdgeDependencies(edgeView);
         targetVertex.addEdgeDependencies(edgeView);
         edgeViews.add(edgeView);
-        System.out.println(gridPointSourceVertex + " " + gridPointTargetVertex);
         setEdgesOnView(edgeView, gridPointSourceVertex, gridPointTargetVertex);
         addView(edgeView, new GridLayout.LayoutParams(rowSpec, columnSpec));
         edgeView.setStyle();
@@ -1002,11 +1079,9 @@ public class EditGraphLayout extends GridLayout {
      * leve que representa espa&ccedil;os em branco.
      */
     private void fillSpace() {
-        System.out.println(actualNumColumns + ";" + actualNumRows);
         for (int i = 0; i < actualNumColumns; i++) {
             for (int j = 0; j < actualNumRows; j++) {
-                SpaceWithBorder space = SpaceWithBorder.getSpaceWithBorder(getContext(), mVertexBorderPaint,
-                        getVertexSquareDimension());
+                SpaceWithBorder space = getSpaceWithBorder(new Point(i, j));
 
                 viewsOnGrid[j][i] = space;
                 addView(space, new LayoutParams(GridLayout.spec(j), GridLayout.spec(i)));

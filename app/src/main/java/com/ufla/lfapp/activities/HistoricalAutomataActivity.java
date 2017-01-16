@@ -111,14 +111,6 @@ public class HistoricalAutomataActivity extends AppCompatActivity {
                 onBackPressed();
                 //NavUtils.navigateUpFromSameTask(this);
                 return true;
-            case R.id.fixer:
-                ArrayAdapterAutomata.GRAPH_STYLE = ArrayAdapterAutomata.GRAPH_STYLE_FIXER;
-                findViewById(R.id.automatons).invalidate();
-                return true;
-            case R.id.scroll:
-                ArrayAdapterAutomata.GRAPH_STYLE = ArrayAdapterAutomata.GRAPH_STYLE_SCROLLABLE;
-                findViewById(R.id.automatons).invalidate();
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

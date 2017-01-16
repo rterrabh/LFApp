@@ -57,6 +57,9 @@ public class VertexView extends View {
     private int cursorInd;
     private boolean finalState;
     private boolean initialState;
+    private int borderSpace = 5;
+
+    private BorderVertex borderVertex;
     private GestureDetector gestureDetector;
     private Set<EdgeView> edgeDependencies;
     private static int ANGLE_INITIAL_STATE = 30;
@@ -72,6 +75,26 @@ public class VertexView extends View {
     public void setLabel(String label) {
         this.label = label;
         invalidate();
+    }
+
+    public void setTop(boolean top) {
+        borderVertex.setTop(top);
+    }
+
+    public void setBottom(boolean bottom) {
+        borderVertex.setBottom(bottom);
+    }
+
+    public void setLeft(boolean left) {
+        borderVertex.setLeft(left);
+    }
+
+    public void setRight(boolean right) {
+        borderVertex.setRight(right);
+    }
+
+    public void setBorderVertex(BorderVertex borderVertex) {
+        this.borderVertex = borderVertex;
     }
 
     public EditGraphLayout getParentEditGraphLayout() {
@@ -259,10 +282,23 @@ public class VertexView extends View {
         setSelection(cursorInd, cursorInd);
         setSelection(cursorInd);
         // Borda*/
-        canvas.drawRect(0, 0, vertexSquareDimension, vertexSquareDimension, mVertexBorderPaint);
         if (initialState) {
-            canvas.drawRect(vertexSquareDimension, 0, vertexSquareDimension * 2,
-                    vertexSquareDimension, mVertexBorderPaint);
+            canvas.drawRect(borderVertex.isLeft() ? borderSpace : 0,
+                    borderVertex.isTop() ? borderSpace : 0,
+                    borderVertex.isRight() ? vertexSquareDimension * 2 - borderSpace : vertexSquareDimension * 2,
+                    borderVertex.isBottom() ? vertexSquareDimension - borderSpace : vertexSquareDimension,
+                    mVertexBorderPaint);
+            canvas.drawLine(vertexSquareDimension,
+                    borderVertex.isTop() ? borderSpace : 0,
+                    vertexSquareDimension,
+                    borderVertex.isBottom() ? vertexSquareDimension - borderSpace : vertexSquareDimension,
+                    mVertexBorderPaint);
+        } else {
+            canvas.drawRect( borderVertex.isLeft() ? borderSpace : 0,
+                    borderVertex.isTop() ? borderSpace : 0,
+                    borderVertex.isRight() ? vertexSquareDimension - borderSpace : vertexSquareDimension,
+                    borderVertex.isBottom() ? vertexSquareDimension - borderSpace : vertexSquareDimension,
+                    mVertexBorderPaint );
         }
         if (select) {
             mStateInternPaint.setColor(mStateInternColorSelect);

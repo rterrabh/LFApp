@@ -35,10 +35,7 @@ import java.util.List;
 public class ArrayAdapterAutomata extends ArrayAdapter<AutomatonGUI> {
 
     private static String CLEAN_BUTTON = "clean";
-    public static final int GRAPH_STYLE_FIXER = 0;
-    public static final int GRAPH_STYLE_SCROLLABLE = 1;
-    public static int GRAPH_STYLE = GRAPH_STYLE_SCROLLABLE;
-    private static float sizeReferenceMin = 0.65f;
+    private static float sizeReferenceMin = 0.45f;
 
     public ArrayAdapterAutomata(Context context, List<AutomatonGUI> automatonGUIs) {
         super(context, R.layout.automaton_item_view_text, automatonGUIs);
@@ -162,37 +159,24 @@ public class ArrayAdapterAutomata extends ArrayAdapter<AutomatonGUI> {
                 new SimpleDateFormat("dd/MM/yyyy").format(singleAutomatonItem.getCreationDate()));
         LinearLayout layoutForGraph = (LinearLayout) view.findViewById(R.id.layoutForGraph);
         EditGraphLayout editGraphLayout = null;
-        if (GRAPH_STYLE == GRAPH_STYLE_FIXER) {
-            Display display = ((Activity) getContext()).getWindowManager().getDefaultDisplay();
-            Point size = new Point();
-            display.getSize(size);
-            int width = size.x;
-            int height = size.y / 2;
-            editGraphLayout = new EditGraphLayout(getContext());
-            editGraphLayout.drawAutomaton(singleAutomatonItem);
-            editGraphLayout.removeSpaces();
-            int widthOfLayout = editGraphLayout.getWidthLayout();
-            int heightOfLayout = editGraphLayout.getHeightLayout();
-            float sizeReference = Math.min((float) width / widthOfLayout,
-                    (float) height / heightOfLayout);
-            sizeReference = Math.min(sizeReferenceMin, sizeReference);
-            editGraphLayout = new EditGraphLayout(getContext(), sizeReference) {
-                @Override
-                public boolean onTouchEvent(MotionEvent e) {
-                    return false;
-                }
-            };
-        } else if (GRAPH_STYLE == GRAPH_STYLE_SCROLLABLE) {
-            editGraphLayout = new EditGraphLayout(getContext(), sizeReferenceMin) {
-                @Override
-                public boolean onTouchEvent(MotionEvent e) {
-                    return false;
-                }
-            };
-        }
+        Display display = ((Activity) getContext()).getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int minWidth = size.x;
+        int minHeight = size.y / 3;
+        editGraphLayout = new EditGraphLayout(getContext(), sizeReferenceMin) {
+            @Override
+            public boolean onTouchEvent(MotionEvent e) {
+                return false;
+            }
+        };
         editGraphLayout.drawAutomaton(singleAutomatonItem);
-        editGraphLayout.removeSpaces();
+        editGraphLayout.removeSpaces(minWidth, minHeight);
         layoutForGraph.addView(editGraphLayout.getRootView());
+        View rootView = editGraphLayout.getRootView();
+        LayoutParams params = rootView.getLayoutParams();
+        params.height = minHeight;
+        rootView.setLayoutParams(params);
         return view;
     }
 

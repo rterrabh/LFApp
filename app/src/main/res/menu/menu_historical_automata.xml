@@ -6,16 +6,4 @@
     tools:context=".activities.GrammarActivity">
 
 
-    <item
-        android:id="@+id/fixer"
-        android:title="Fixo"
-        android:orderInCategory="100"
-        app:showAsAction="collapseActionView"/>
-
-    <item
-        android:id="@+id/scroll"
-        android:title="Scroll"
-        android:orderInCategory="100"
-        app:showAsAction="collapseActionView"/>
-
 </menu>
