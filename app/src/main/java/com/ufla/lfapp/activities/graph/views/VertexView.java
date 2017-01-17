@@ -583,14 +583,22 @@ public class VertexView extends View {
                             VertexView.this.setFinalState(false);
                         }
                         if (checkBoxMove.isChecked()) {
-                            if (parentView.isOnMove()) {
-                                parentView.onMove.onSelect();
+                            if (parentView.isOnSelectErrorState()) {
+                                Toast.makeText(getContext(), "Erro!\n" +
+                                        "Indique onde deve criar o estado de erro, antes de mover um estado.",
+                                        Toast.LENGTH_LONG)
+                                        .show();
+                                VertexView.this.onSelect();
+                            } else {
+                                if (parentView.isOnMove()) {
+                                    parentView.onMove.onSelect();
+                                }
+                                parentView.setOnMove(VertexView.this);
+                                Toast.makeText(getContext(), "Indique para onde " +
+                                                VertexView.this.label + " deve ser movido.",
+                                        Toast.LENGTH_LONG)
+                                        .show();
                             }
-                            parentView.setOnMove(VertexView.this);
-                            Toast.makeText(getContext(), "Indique para onde " +
-                                    VertexView.this.label + " deve ser movido.",
-                                    Toast.LENGTH_LONG)
-                                    .show();
                         } else {
                             VertexView.this.onSelect();
                         }

@@ -128,6 +128,13 @@ public class EditAutomataActivity extends AppCompatActivity {
                 //NavUtils.navigateUpFromSameTask(this);
                 return true;
             case R.id.completeAutomaton:
+                if (editMachineLayout.isOnMove()) {
+                    Toast.makeText(this, "Erro!\n" +
+                        "Indique para onde deve mover o estado selecionado, antes de gerar o " +
+                            "autômato completo.", Toast.LENGTH_LONG)
+                            .show();
+                    return true;
+                }
                 Automaton automaton = editMachineLayout.getCompleteAutomatonGUI();
                 if (automaton != null) {
                     Log.d("automato", automaton.toString());

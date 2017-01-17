@@ -433,7 +433,7 @@ public class EditGraphLayout extends GridLayout {
         return defineInitialState;
     }
 
-    public boolean onSelectErrorState() {
+    public boolean isOnSelectErrorState() {
         return errorStateLabel != null;
     }
 
@@ -1175,7 +1175,9 @@ public class EditGraphLayout extends GridLayout {
         while (edgeViewIterator.hasNext()) {
             EdgeView edgeView = edgeViewIterator.next();
             Pair<VertexView, VertexView> vertices = edgeView.getVertices();
-            if (vertices.first.equals(onMoveCp)) {
+            if (vertices.first.equals(onMoveCp) && vertices.second.equals(onMoveCp)) {
+                addEdgeView(newOnMove, newOnMove, edgeView.getLabel());
+            } else if (vertices.first.equals(onMoveCp)) {
                 addEdgeView(newOnMove, vertices.second, edgeView.getLabel());
             } else {
                 addEdgeView(vertices.first, newOnMove, edgeView.getLabel());
@@ -1322,6 +1324,40 @@ public class EditGraphLayout extends GridLayout {
         public boolean onSingleTapConfirmed(MotionEvent e) {
             Point gridPoint = gridPoint(e.getX(), e.getY());
             View view = viewsOnGrid[gridPoint.y][gridPoint.x];
+            if (isOnSelectErrorState()) {
+                if (view instanceof VertexView) {
+                    Toast.makeText(getContext(), "Erro!\n" +
+                                    "Não pode criar o estado de erro onde já existe outro estado!\n" +
+                                    "Indique outra posição para criar o estado de erro.",
+                            Toast.LENGTH_LONG)
+                            .show();
+                    return true;
+                }
+                VertexView errorState = addVertexView(gridPoint);
+                errorState.setLabel(errorStateLabel);
+                Map<String, VertexView> vertexViewByLabel = getVertexViewByLabel();
+                vertexViewByLabel.put(errorStateLabel, errorState);
+                for (TransitionFunction transitionFunction : transitionFunctionsToCompAuto) {
+                    addEdgeView(vertexViewByLabel.get(transitionFunction.getCurrentState()),
+                            vertexViewByLabel.get(transitionFunction.getFutureState()),
+                            transitionFunction.getSymbol());
+                }
+                transitionFunctionsToCompAuto = null;
+                errorStateLabel = null;
+                return true;
+            }
+            if (isOnMove()) {
+                if (view instanceof VertexView) {
+                    Toast.makeText(getContext(), "Erro!\n" +
+                            "Não pode mover um estado para onde já existe outro!\n" +
+                            "Indique outra posição para mover o estado.",
+                            Toast.LENGTH_LONG)
+                            .show();
+                    return true;
+                }
+                moveVertexView(gridPoint);
+                return true;
+            }
             if (view instanceof VertexView) {
                 if (view == initialState &&
                         viewsOnGrid[gridPoint.y][gridPoint.x + 1] == initialState) {
@@ -1341,24 +1377,6 @@ public class EditGraphLayout extends GridLayout {
                                 edgeView.getGridBeginHeight(), edgeView.getGridBeginWidth()));
                     }
                 }
-            }
-            if (errorStateLabel != null) {
-                VertexView errorState = addVertexView(gridPoint);
-                errorState.setLabel(errorStateLabel);
-                Map<String, VertexView> vertexViewByLabel = getVertexViewByLabel();
-                vertexViewByLabel.put(errorStateLabel, errorState);
-                for (TransitionFunction transitionFunction : transitionFunctionsToCompAuto) {
-                    addEdgeView(vertexViewByLabel.get(transitionFunction.getCurrentState()),
-                            vertexViewByLabel.get(transitionFunction.getFutureState()),
-                            transitionFunction.getSymbol());
-                }
-                transitionFunctionsToCompAuto = null;
-                errorStateLabel = null;
-                return true;
-            }
-            if (isOnMove()) {
-                moveVertexView(gridPoint);
-                return true;
             }
             addVertexView(gridPoint);
             Log.d("Layout - onDown", "Layout - onDown");
@@ -1440,69 +1458,31 @@ public class EditGraphLayout extends GridLayout {
         }
 
         public boolean onDoubleTapAction(MotionEvent e) {
-//            if (threadControl.isAlive()) {
-//                threadControl.interrupt();
-//            }
-            boolean ret = true;
             Point gridPoint = gridPoint(e.getX(), e.getY());
             View view = viewsOnGrid[gridPoint.y][gridPoint.x];
             if (view instanceof  VertexView) {
                 if (view == initialState &&
                         viewsOnGrid[gridPoint.y][gridPoint.x + 1] == initialState) {
-                    ret =  true;
-                } else {
-                    ret = ((VertexView) view).onDoubleTapAction(getMotionEventForVertexView(e));
+                    return  true;
                 }
-            } else {
-                Set<EdgeView> edgeOnGridPoint = edgesOnGrid[gridPoint.y][gridPoint.x];
-                PointF pointF = new PointF();
-                if (edgeOnGridPoint != null) {
-                    for (EdgeView edgeView : edgeOnGridPoint) {
-                        pointF.x = e.getX() - (getVertexSquareDimension() * edgeView.getGridBeginWidth());
-                        pointF.y = e.getY() - (getVertexSquareDimension() * edgeView.getGridBeginHeight());
-                        if (edgeView.isOnInteractArea(pointF)) {
-//                            if (threadControl.isAlive()) {
-//                                threadControl.interrupt();
-//                            }
-                            ret = edgeView.onDoubleTapAction(getMotionEventForEdgeView(e,
-                                    edgeView.getGridBeginHeight(), edgeView.getGridBeginWidth()));
-                        }
+                return ((VertexView) view).onDoubleTapAction(getMotionEventForVertexView(e));
+            }
+            Set<EdgeView> edgeOnGridPoint = edgesOnGrid[gridPoint.y][gridPoint.x];
+            PointF pointF = new PointF();
+            if (edgeOnGridPoint != null) {
+                Iterator<EdgeView> edgeViewIterator = edgeOnGridPoint.iterator();
+                while (edgeViewIterator.hasNext()) {
+                    EdgeView edgeView = edgeViewIterator.next();
+                    pointF.x = e.getX() - (getVertexSquareDimension() * edgeView.getGridBeginWidth());
+                    pointF.y = e.getY() - (getVertexSquareDimension() * edgeView.getGridBeginHeight());
+                    if (edgeView.isOnInteractArea(pointF)) {
+                        return edgeView.onDoubleTapAction(getMotionEventForEdgeView(e,
+                                edgeView.getGridBeginHeight(), edgeView.getGridBeginWidth()));
                     }
                 }
             }
-            /*if (errorStateLabel != null) {
-                VertexView errorState = addVertexView(gridPoint);
-                errorState.setLabel(errorStateLabel);
-                Map<String, VertexView> vertexViewByLabel = getVertexViewByLabel();
-                vertexViewByLabel.put(errorStateLabel, errorState);
-                for (TransitionFunction transitionFunction : transitionFunctionsToCompAuto) {
-                    addEdgeView(vertexViewByLabel.get(transitionFunction.getCurrentState()),
-                            vertexViewByLabel.get(transitionFunction.getFutureState()),
-                            transitionFunction.getSymbol());
-                }
-                transitionFunctionsToCompAuto = null;
-                errorStateLabel = null;
-            }
-            if (mode == CREATION_MODE) {
-                addVertexView(gridPoint);
-            }*/
             Log.d("Layout - Double Tap", "Layout - Tapped at: (" + e.getX() + "," + e.getY() + ")");
-
-//            new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    try {
-//                        Thread.sleep(50);
-//                        if (threadControl.isAlive()) {
-//                            threadControl.interrupt();
-//                        }
-//                    } catch (InterruptedException e1) {
-//
-//                    }
-//                }
-//            }).start();
-
-            return ret;
+            return true;
         }
 
         @Override
