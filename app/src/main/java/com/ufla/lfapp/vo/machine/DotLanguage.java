@@ -3,7 +3,6 @@ package com.ufla.lfapp.vo.machine;
 import android.graphics.Point;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -58,6 +57,14 @@ public class DotLanguage implements Serializable {
         this.creationDate = creationDate;
     }
 
+    public DotLanguage(String graph) {
+        this.id = -1;
+        this.graph = graph;
+        this.label = null;
+        this.contUses = -1;
+        this.creationDate = null;
+    }
+
     /**
      * Converte as transições de um autômato, do domínio da aplicação LFApp, para arestas
      * de um grafo na linguagem dot.
@@ -89,9 +96,9 @@ public class DotLanguage implements Serializable {
      */
     private static String parseDotLanguageVertex(AutomatonGUI automatonGUI) {
         StringBuilder graphSb = new StringBuilder();
-        for (String state : automatonGUI.states) {
+        for (State state : automatonGUI.states) {
             Point pos = automatonGUI.getGridPosition(state);
-            graphSb.append(TAB).append(state).append(" [").append(POS_ATTR).append(EQUALS)
+            graphSb.append(TAB).append(state.getName()).append(" [").append(POS_ATTR).append(EQUALS)
                     .append(pos.x).append(COMMA).append(pos.y).append("]");
             if (automatonGUI.isInitialState(state) && automatonGUI.isFinalState(state)) {
                 graphSb.append(" [").append(STYLE_ATTR).append(EQUALS)
@@ -156,17 +163,15 @@ public class DotLanguage implements Serializable {
         ind++;
         String posAttr = "[" + POS_ATTR + EQUALS;
         while (ind < length && !lines[ind].contains(EDGE)) {
-            System.out.println(lines[ind]);
             aux = lines[ind].split("[ \\t]");
-            System.out.println(Arrays.toString(aux));
             int auxLenght = aux.length;
             int auxInd = 0;
-            String state = "";
+            String stateStr = "";
             while (!aux[auxInd].contains(posAttr)) {
-                state += aux[auxInd] + " ";
+                stateStr += aux[auxInd] + " ";
                 auxInd++;
             }
-            state = state.trim();
+            stateStr = stateStr.trim();
             int initialInd = aux[auxInd].indexOf(EQUALS) + 1;
             int commaInd = aux[auxInd].indexOf(',');
             int finalInd = aux[auxInd].length() - 1;
@@ -177,6 +182,7 @@ public class DotLanguage implements Serializable {
             statePosition.x = Integer.parseInt(aux[auxInd].substring(initialInd, commaInd));
             statePosition.y = Integer.parseInt(aux[auxInd].substring(commaInd + 1, finalInd));
             auxInd++;
+            State state = new State(stateStr);
             automatonGUIBuilder.addOrChangeStatePosition(state, statePosition);
             if (auxInd < auxLenght) {
                 initialInd = aux[auxInd].indexOf(EQUALS) + 1;
@@ -196,20 +202,18 @@ public class DotLanguage implements Serializable {
         String labelAttr = "[" + LABEL_ATTR + EQUALS;
         String edgeTrim = EDGE.trim();
         while (ind < length) {
-            System.out.println(lines[ind]);
             aux = lines[ind].split("[ \\t]");
-            System.out.println(Arrays.toString(aux));
             int auxLenght = aux.length;
             int auxInd = 0;
             String currentState = "";
-            while (!aux[auxInd].contains(edgeTrim)) {
+            while (auxInd < auxLenght && !aux[auxInd].contains(edgeTrim)) {
                 currentState += aux[auxInd] + " ";
                 auxInd++;
             }
             auxInd++;
             currentState = currentState.trim();
             String futureState = "";
-            while (!aux[auxInd].contains(labelAttr)) {
+            while (auxInd < auxLenght && !aux[auxInd].contains(labelAttr)) {
                 futureState += aux[auxInd] + " ";
                 auxInd++;
             }
@@ -218,7 +222,7 @@ public class DotLanguage implements Serializable {
             String symbol = "";
             if (auxInd == auxLenght - 1) {
                 symbol = aux[auxInd].substring(initialInd, aux[auxInd].length() - 2);
-            } else {
+            } else if (auxInd < auxLenght) {
                 symbol = aux[auxInd].substring(initialInd, aux[auxInd].length());
                 while (auxInd < auxLenght - 1) {
                     symbol += " " + aux[auxInd];
@@ -226,7 +230,13 @@ public class DotLanguage implements Serializable {
                 }
                 symbol += " " + aux[auxInd].substring(0, aux[auxInd].length());
             }
-            automatonGUIBuilder.addTransition(currentState, symbol, futureState);
+            State currentStateSt = automatonGUIBuilder.getState(currentState);
+            State futureStateSt = automatonGUIBuilder.getState(futureState);
+            if (currentStateSt == null || symbol == null || futureStateSt == null) {
+                ind++;
+                continue;
+            }
+            automatonGUIBuilder.addTransition(currentStateSt, symbol, futureStateSt);
             ind++;
         }
         automatonGUIBuilder.setLabel(label)

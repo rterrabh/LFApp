@@ -5,14 +5,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.SortedSet;
-import java.util.TreeMap;
-import java.util.TreeSet;
 import java.util.Set;
 
 public class Grammar implements Cloneable {
@@ -21,26 +18,25 @@ public class Grammar implements Cloneable {
     //public static final String RULE_SEPARATOR = "|";
     //public static final String RULE_PRODUCTION = "->";
     public static final String CHOMSKY_PREFIX = "T";
-    public static final String RECURSIVE_REMOVAL_PREFIX = "Z";
+    public static final String RECURSIVE_REMOVAL_PREFIX = "R";
 
     // attributes
-    private SortedSet<String> variables;
-    private SortedSet<String> terminals;
+    private Set<String> variables;
+    private Set<String> terminals;
     private String initialSymbol;
-    private SortedSet<Rule> rules;
+    private Set<Rule> rules;
 
 
     protected Grammar() {
         super();
-        this.variables = new TreeSet<>();
-        this.terminals = new TreeSet<>();
-        this.initialSymbol = "";
-        this.rules = new TreeSet<>();
+        this.variables = new LinkedHashSet<>();
+        this.terminals = new LinkedHashSet<>();
+        this.rules = new LinkedHashSet<>();
     }
 
     //Construtor base
-    public Grammar(SortedSet<String> variables, SortedSet<String> terminals, String initialSymbol,
-                   SortedSet<Rule> rules) {
+    public Grammar(Set<String> variables, Set<String> terminals, String initialSymbol,
+                   Set<Rule> rules) {
         super();
         setVariables(variables);
         setTerminals(terminals);
@@ -50,9 +46,9 @@ public class Grammar implements Cloneable {
 
     public Grammar(String[] variables, String[] terminals,
                    String initialSymbol, String[] rules) {
-        this(new TreeSet<>(Arrays.asList(variables)),
-                new TreeSet<>(Arrays.asList(terminals)),
-                initialSymbol, new TreeSet<Rule>());
+        this(new LinkedHashSet<>(Arrays.asList(variables)),
+                new LinkedHashSet<>(Arrays.asList(terminals)),
+                initialSymbol, new LinkedHashSet<Rule>());
         Rule r = new Rule();
         String[] auxRule;
         for (String x : rules) {
@@ -73,45 +69,40 @@ public class Grammar implements Cloneable {
         this.variables = GrammarParser.extractVariablesFromFull(txt);
         this.terminals = GrammarParser.extractTerminalsFromFull(txt);
         this.rules = GrammarParser.extractRulesFromFull(txt);
-        this.initialSymbol = GrammarParser.extractInitialSymbolFromFull(txt);
+        setInitialSymbol(GrammarParser.extractInitialSymbolFromFull(txt));
     }
 
     // methods
-    public SortedSet<String> getVariables() {
-        return new TreeSet(variables);
+    public Set<String> getVariables() {
+        return new LinkedHashSet(variables);
     }
 
-    public SortedSet<String> getTerminals() {
-        return  new TreeSet(terminals);
+    public Set<String> getTerminals() {
+        return  new LinkedHashSet(terminals);
     }
 
     public String getInitialSymbol() {
         return initialSymbol;
     }
 
-    public SortedSet<Rule> getRules() {
-        return new TreeSet(rules);
+    public Set<Rule> getRules() {
+        return new LinkedHashSet(rules);
     }
 
-    public void setVariables(SortedSet<String> set) {
-        this.variables = new TreeSet<>(set);
+    public void setVariables(Set<String> set) {
+        this.variables = new LinkedHashSet<>(set);
     }
 
-    public void setTerminals(SortedSet<String> set) {
-        this.terminals = new TreeSet<>(set);
+    public void setTerminals(Set<String> set) {
+        this.terminals = new LinkedHashSet<>(set);
     }
 
     public void setInitialSymbol(String string) {
         this.initialSymbol = string;
-        SortedSet<Rule> sortedRules = new TreeSet<>(new RuleComparator((this.initialSymbol)));
-        if (this.rules != null) {
-            sortedRules.addAll(rules);
-        }
-        this.rules = sortedRules;
     }
 
-    public void setRules(SortedSet<Rule> set) {
-        this.rules = new TreeSet<>(new RuleComparator(this.initialSymbol));
+    public void setRules(Set<Rule> set) {
+        this.rules = new LinkedHashSet<>();
         for (Rule r : set) {
             this.rules.add((Rule) r.clone());
         }
@@ -184,7 +175,7 @@ public class Grammar implements Cloneable {
      * @return true se a gramática possui recursão no símbolo inicial, caso contrário, false.
      */
     public Set<Rule> getRulesWithRecursiveOnInitialSymbol() {
-        Set<Rule> rules = new HashSet<>();
+        Set<Rule> rules = new LinkedHashSet<>();
         for (Rule rule : getRules()) {
             if (rule.getRightSide().contains(initialSymbol)) {
                 rules.add((Rule) rule.clone());
@@ -205,7 +196,7 @@ public class Grammar implements Cloneable {
                 "limitar a iniciar derivações, não podendo ser uma variável " +
                 "recursiva. Logo, não deve ser possível ter derivações do " +
                 "tipo " + gc.getInitialSymbol() + " ⇒<sup>∗</sup> αSβ.<br><br>";
-        Map<Integer, String> problems = new HashMap<>();
+        Map<Integer, String> problems = new LinkedHashMap<>();
         String initialSymbol = gc.getInitialSymbol();
         boolean insert = false;
         int counter = 1;
@@ -254,13 +245,13 @@ public class Grammar implements Cloneable {
     public Grammar getGrammarEssentiallyNoncontracting(final Grammar g,
                                                        final AcademicSupport academicSupport) {
         Grammar gc = (Grammar) g.clone();
-        Set<String> nullable = new HashSet<>();
-        Set<String> prev = new HashSet<>();
-        Set<Rule> setOfRules = new HashSet<>();
+        Set<String> nullable = new LinkedHashSet<>();
+        Set<String> prev = new LinkedHashSet<>();
+        Set<Rule> setOfRules = new LinkedHashSet<>();
         boolean nullableVars = false;
 
         // nullable = nullable U A -> . | A E V
-        Map<Integer, String> foundProblems = new HashMap<>();
+        Map<Integer, String> foundProblems = new LinkedHashMap<>();
         int counter = 1;
         for (Rule element : gc.getRules()) {
             if (element.getRightSide().equals(LAMBDA)) {
@@ -290,7 +281,7 @@ public class Grammar implements Cloneable {
             academicSupport.insertOnSecondSet(prev, "Lambda");
         } while (!prev.equals(nullable));
 
-        SortedSet<Rule> newSetOfRules = new TreeSet<>();
+        Set<Rule> newSetOfRules = new LinkedHashSet<>();
         for (Rule element : setOfRules) {
             String aux = GrammarParser.combination(element.getRightSide(), nullable);
             aux = aux.substring(0, aux.length() - 3);
@@ -331,11 +322,11 @@ public class Grammar implements Cloneable {
         Grammar gc = (Grammar) g.clone();
 
         // primeiramente, deve-se construir os subconjuntos
-        Map<String, Set<String>> setOfChains = new HashMap<>();
+        Map<String, Set<String>> setOfChains = new LinkedHashMap<>();
         for (String variable : gc.getVariables()) {
             // conjunto que representa o chain de determinada variável
-            Set<String> chain = new HashSet<>();
-            Set<String> prev = new HashSet<>();
+            Set<String> chain = new LinkedHashSet<>();
+            Set<String> prev = new LinkedHashSet<>();
             Set<String> newSet;
             chain.add(variable);
             do {
@@ -352,14 +343,14 @@ public class Grammar implements Cloneable {
                 }
             } while (!chain.equals(prev));
             setOfChains.put(variable, chain);
-            Set<String> setOfVariables = new HashSet<>();
+            Set<String> setOfVariables = new LinkedHashSet<>();
             setOfVariables.add(variable);
             academicSupport.insertOnFirstSet(setOfVariables, "Chain");
             academicSupport.insertOnSecondSet(chain, "Chain");
         }
 
         // iterações sobre os conjuntos de chains
-        SortedSet<Rule> newSetOfRules = new TreeSet<>();
+        Set<Rule> newSetOfRules = new LinkedHashSet<>();
         for (String variable : gc.getVariables()) {
             Set<String> chainsOfVariable = setOfChains.get(variable);
             for (String variableChain : chainsOfVariable) {
@@ -387,8 +378,8 @@ public class Grammar implements Cloneable {
      * @return : gramática livre de contexto sem símbolos não terminais
      */
     public Grammar getGrammarWithoutNoTerm(final Grammar g, final AcademicSupport academicSupport) {
-        SortedSet<String> term = new TreeSet<>();
-        SortedSet<String> prev = new TreeSet<>();
+        Set<String> term = new LinkedHashSet<>();
+        Set<String> prev = new LinkedHashSet<>();
         Grammar gc = (Grammar) g.clone();
 
         // preenche conjunto term com as variáveis que são terminais
@@ -451,9 +442,9 @@ public class Grammar implements Cloneable {
      * @return : gramática livre de contexto sem símbolos não alcançáveis
      */
     public Grammar getGrammarWithoutNoReach(final Grammar g, final AcademicSupport academicSupport) {
-        Set<String> reach = new HashSet<>();
-        SortedSet<String> prev = new TreeSet<>();
-        Set<String> newSet = new HashSet<>();
+        Set<String> reach = new LinkedHashSet<>();
+        Set<String> prev = new LinkedHashSet<>();
+        Set<String> newSet = new LinkedHashSet<>();
         Grammar gc = (Grammar) g.clone();
         reach.add(gc.getInitialSymbol());
         newSet.add(gc.getInitialSymbol());
@@ -489,7 +480,7 @@ public class Grammar implements Cloneable {
 
 
     public Map<String, Rule> rulesProducesOnlyOneTerminal() {
-        Map<String, Rule> rulesProdOOneTerm = new HashMap<>();
+        Map<String, Rule> rulesProdOOneTerm = new LinkedHashMap<>();
         Map<String, Set<String>> rulesMapLeftToRight = getRulesMapLeftToRight();
         for (Rule rule : rules) {
             if (rule.producesOnlyOneTerminal() &&
@@ -501,7 +492,7 @@ public class Grammar implements Cloneable {
     }
 
     public Map<String, Rule> rulesProducesOnlyOneBinaryRightSide() {
-        Map<String, Rule> rulesProdOOneBRightSide = new HashMap<>();
+        Map<String, Rule> rulesProdOOneBRightSide = new LinkedHashMap<>();
         Map<String, Set<String>> rulesMapLeftToRight = getRulesMapLeftToRight();
         for (Rule rule : rules) {
             List<String> rightSides = new ArrayList<>(rulesMapLeftToRight.get(rule.getLeftSide()));
@@ -514,7 +505,7 @@ public class Grammar implements Cloneable {
     }
 
     public Map<String, Integer> getRulesMapLeftToCont() {
-        Map<String, Integer> rulesMapLeftToCont = new HashMap<>();
+        Map<String, Integer> rulesMapLeftToCont = new LinkedHashMap<>();
         for (Rule rule : rules) {
             if (rulesMapLeftToCont.containsKey(rule.getLeftSide())) {
                 rulesMapLeftToCont.put(rule.getLeftSide(),
@@ -535,6 +526,24 @@ public class Grammar implements Cloneable {
         return true;
     }
 
+    public Set<Rule> getRulesWithInitialSymbolFirst() {
+        Set<Rule> rulesInit = new LinkedHashSet<>();
+        if (initialSymbol == null) {
+            return rules;
+        }
+        for (Rule rule : getRules()) {
+            if (rule.getLeftSide().equals(initialSymbol)) {
+                rulesInit.add(rule);
+            }
+        }
+        for (Rule rule : getRules()) {
+            if (!rule.getLeftSide().equals(initialSymbol)) {
+                rulesInit.add(rule);
+            }
+        }
+        return rulesInit;
+    }
+
 
     /**
      * @param g gramática livre de contexto
@@ -550,8 +559,8 @@ public class Grammar implements Cloneable {
             gc = getGrammarWithoutNoReach(gc, new AcademicSupport());
             academic.setSituation(true);
 
-            Set<Rule> newSetOfRules = new HashSet<>();
-            Set<Rule> deleteRules = new HashSet<>();
+            Set<Rule> newSetOfRules = new LinkedHashSet<>();
+            Set<Rule> deleteRules = new LinkedHashSet<>();
             int contChomskyVariables = 1;
             Map<String, Rule> rulesProdOOneTerm = gc.rulesProducesOnlyOneTerminal();
             for (Rule rule : gc.rules) {
@@ -592,14 +601,12 @@ public class Grammar implements Cloneable {
                     academic.insertNewRule(newRule);
                 }
             }
-            gc.rules.removeAll(deleteRules);;
+            gc.rules.removeAll(deleteRules);
             gc.rules.addAll(newSetOfRules);
             deleteRules.clear();
             newSetOfRules.clear();
             Map<String, Rule> rulesProdOOneRightSide = gc.rulesProducesOnlyOneBinaryRightSide();
-            SortedSet<Rule> rulesSorted = new TreeSet<>(new RuleComparator(gc.initialSymbol));
-            rulesSorted.addAll(gc.rules);
-            for (Rule rule : rulesSorted) {
+            for (Rule rule : getRulesWithInitialSymbolFirst()) {
                 if (rule.getNumberOfSymbolsInRightSide() > 2) {
                     deleteRules.add(rule);
                     academic.insertIrregularRule(rule);
@@ -681,9 +688,9 @@ public class Grammar implements Cloneable {
         if (haveImmediateLeftRecursion()) {
             academic.setSituation(true);
             int numberOfVariablesForRemovingLeftRecursion = 1;
-            Set<Rule> rulesWithLeftRecursion = new HashSet<>();
-            Set<Rule> rulesWithoutLeftRecursion = new HashSet<>();
-            SortedSet<Rule> newSetOfRules;
+            Set<Rule> rulesWithLeftRecursion = new LinkedHashSet<>();
+            Set<Rule> rulesWithoutLeftRecursion = new LinkedHashSet<>();
+            Set<Rule> newSetOfRules;
             List<String> variablesAux = new ArrayList<>(gc.getVariables());
             variablesAux.remove(gc.getInitialSymbol());
             variablesAux.add(0, gc.getInitialSymbol());
@@ -700,7 +707,7 @@ public class Grammar implements Cloneable {
                 }
                 //BEGIN - remoção da recursão à esquerda direta
                 if (!rulesWithLeftRecursion.isEmpty()) {
-                    newSetOfRules = new TreeSet<>();
+                    newSetOfRules = new LinkedHashSet<>();
                     String leftSide = RECURSIVE_REMOVAL_PREFIX +
                             String.valueOf(numberOfVariablesForRemovingLeftRecursion);
                     for (Rule element : rulesWithLeftRecursion) {
@@ -750,7 +757,7 @@ public class Grammar implements Cloneable {
         return false;
     }
 
-    public boolean haveCyclesIgnoringLambdaProductions() {
+    public boolean haveCyclesWithoutLambdaProductions() {
         for (String variable : getVariables()) {
             for (Rule rule : getRules(variable)) {
                 if (rule.isChainRule()) {
@@ -792,24 +799,23 @@ public class Grammar implements Cloneable {
 
     private List<String> getOrderVariablesForRemoveLeftRecursion() {
         List<String> variablesAux = new ArrayList<>(variables);
-        Collections.sort(variablesAux);
-        variablesAux.remove(getInitialSymbol());
-        variablesAux.add(0, getInitialSymbol());
-        int indicePrioridade = 1;
-        boolean recursion;
-        for (int i = 1; i < variablesAux.size(); i++) {
-            recursion = false;
-            for (Rule rule : getRules(variablesAux.get(i))) {
-                if (rule.existsLeftRecursion()) {
-                    recursion = true;
-                    break;
-                }
-            }
-            if (!recursion) {
-                Collections.swap(variablesAux, i, indicePrioridade);
-                indicePrioridade++;
-            }
-        }
+        variablesAux.remove(initialSymbol);
+        variablesAux.add(0, initialSymbol);
+//        int indicePrioridade = 1;
+//        boolean recursion;
+//        for (int i = 1; i < variablesAux.size(); i++) {
+//            recursion = false;
+//            for (Rule rule : getRules(variablesAux.get(i))) {
+//                if (rule.existsLeftRecursion()) {
+//                    recursion = true;
+//                    break;
+//                }
+//            }
+//            if (!recursion) {
+//                Collections.swap(variablesAux, i, indicePrioridade);
+//                indicePrioridade++;
+//            }
+//        }
         return variablesAux;
     }
 
@@ -822,10 +828,10 @@ public class Grammar implements Cloneable {
         if (GrammarParser.checksGrammar(gc, academic)) {
             int order = 1;
             int numberOfVariablesForRemovingLeftRecursing = 1;
-            Set<Rule> rulesWithLeftRecursion = new HashSet<>();
-            Set<Rule> rulesWithoutLeftRecursion = new HashSet<>();
-            SortedSet<Rule> newSetOfRules;
-            Set<Rule> removalRules = new HashSet<>();
+            Set<Rule> rulesWithLeftRecursion = new LinkedHashSet<>();
+            Set<Rule> rulesWithoutLeftRecursion = new LinkedHashSet<>();
+            Set<Rule> newSetOfRules;
+            Set<Rule> removalRules = new LinkedHashSet<>();
             Deque<String> variableOrder = new LinkedList<>();
             List<String> variablesAux = getOrderVariablesForRemoveLeftRecursion();
             academicLR.setOrderVariables(new ArrayList<>(variablesAux));
@@ -842,7 +848,7 @@ public class Grammar implements Cloneable {
                 }
                 //BEGIN - remoção da recursão à esquerda direta
                 if (!rulesWithLeftRecursion.isEmpty()) {
-                    newSetOfRules = new TreeSet<>();
+                    newSetOfRules = new LinkedHashSet<>();
                     String leftSide = RECURSIVE_REMOVAL_PREFIX +
                             String.valueOf(numberOfVariablesForRemovingLeftRecursing);
                     variableOrder.offer(leftSide);
@@ -864,9 +870,11 @@ public class Grammar implements Cloneable {
                     }
                     academicLR.addGrammarTransformationStage1(
                             rulesWithLeftRecursion, newSetOfRules, true);
-                    newSetOfRules.addAll(gc.rules);
-                    newSetOfRules.removeAll(rulesWithLeftRecursion);
-                    gc.rules = newSetOfRules;
+//                    newSetOfRules.addAll(gc.rules);
+//                    newSetOfRules.removeAll(rulesWithLeftRecursion);
+//                    gc.rules = newSetOfRules;
+                    gc.rules.addAll(newSetOfRules);
+                    gc.rules.removeAll(rulesWithLeftRecursion);
                     numberOfVariablesForRemovingLeftRecursing++;
                 }
                 rulesWithLeftRecursion.clear();
@@ -882,7 +890,7 @@ public class Grammar implements Cloneable {
                         orderAux--;
                         continue;
                     }
-                    newSetOfRules = new TreeSet<>();
+                    newSetOfRules = new LinkedHashSet<>();
                     for (Rule element : gc.getRules(variableAux)) {
                         if (element.getFirstVariableOfRightSide() != null &&
                                 element.getFirstVariableOfRightSide().equals(variable)) {
@@ -900,9 +908,11 @@ public class Grammar implements Cloneable {
                     if (!newSetOfRules.isEmpty()) {
                         academicLR.addGrammarTransformationStage1(
                                 removalRules, newSetOfRules, false);
-                        newSetOfRules.addAll(gc.rules);
-                        newSetOfRules.removeAll(removalRules);
-                        gc.rules = newSetOfRules;
+//                        newSetOfRules.addAll(gc.rules);
+//                        newSetOfRules.removeAll(removalRules);
+//                        gc.rules = newSetOfRules;
+                        gc.rules.addAll(newSetOfRules);
+                        gc.rules.removeAll(removalRules);
                         removalRules.clear();
                     }
                 }
@@ -937,7 +947,7 @@ public class Grammar implements Cloneable {
     }
 
     public Set<Rule> getRules(String variable) {
-        Set<Rule> rulesOfVariable = new HashSet<>();
+        Set<Rule> rulesOfVariable = new LinkedHashSet<>();
         for (Rule rule : rules) {
             if (rule.getLeftSide().equals(variable)) {
                 rulesOfVariable.add(rule);
@@ -947,7 +957,7 @@ public class Grammar implements Cloneable {
     }
 
     public Set<Rule> getRulesExcept(String variable) {
-        Set<Rule> rulesOfVariable = new HashSet<>();
+        Set<Rule> rulesOfVariable = new LinkedHashSet<>();
         for (Rule rule : rules) {
             if (!rule.getLeftSide().equals(variable)) {
                 rulesOfVariable.add(rule);
@@ -958,7 +968,7 @@ public class Grammar implements Cloneable {
 
 
     public Set<Rule> getRulesThatProduces(String rightSide) {
-        Set<Rule> rulesOfVariable = new HashSet<>();
+        Set<Rule> rulesOfVariable = new LinkedHashSet<>();
         for (Rule rule : rules) {
             if (rule.getRightSide().contains(rightSide)) {
                 rulesOfVariable.add(rule);
@@ -967,8 +977,8 @@ public class Grammar implements Cloneable {
         return rulesOfVariable;
     }
 
-    public SortedSet<String> getLeftSidesThatProduces(String rightSide) {
-        SortedSet<String> lefSides = new TreeSet<>();
+    public Set<String> getLeftSidesThatProduces(String rightSide) {
+        Set<String> lefSides = new LinkedHashSet<>();
         for (Rule rule : rules) {
             if (rule.getRightSide().equals(rightSide)) {
                 lefSides.add(rule.getLeftSide());
@@ -1006,7 +1016,7 @@ public class Grammar implements Cloneable {
     public Map<String, List<String>> getVariablesMapToIndirectLeftRecursion
             (List<String> variables, List<String> variablesWithLeftRecursion) {
         Map<String, List<String>> variablesMapToIndirectLeftRecursion = new
-                HashMap<>();
+                LinkedHashMap<>();
         for (String varible : variables) {
             variablesMapToIndirectLeftRecursion.put(varible,
                     getIndirectLeftRecursionOfVariable(varible,
@@ -1100,7 +1110,7 @@ public class Grammar implements Cloneable {
         }
 //		academicSupportFng.addListVariables(orderVariables);
         //List<String> orderVariablesAux = new ArrayList<>();
-        Map<String, List<String>> indirectLeftRecursion = new HashMap<>();
+        Map<String, List<String>> indirectLeftRecursion = new LinkedHashMap<>();
         for (String variable : variablesWithLeftRecursion) {
             //indirectLeftRecursion.put(variable,
             //indirectLeftRecursionOfVariable(variable,
@@ -1124,54 +1134,57 @@ public class Grammar implements Cloneable {
         AcademicSupportForRemoveLeftRecursion academicSupportRLF =
                 new AcademicSupportForRemoveLeftRecursion();
         Grammar gc = removingLeftRecursion(g, new AcademicSupport(),
-                new HashMap<String, String>(), academicSupportRLF);
+                new LinkedHashMap<String, String>(), academicSupportRLF);
         academicSupportFNG.setOriginalGrammar((Grammar) gc.clone());
         academicSupportRLF.getGrammarTransformationsStage1();
-        SortedSet<Rule> newSetOfRules;
-        Set<Rule> removalRules = new HashSet<>();
+        Set<Rule> newSetOfRules;
+        Set<Rule> removalRules = new LinkedHashSet<>();
         Deque<String> variableOrder = academicSupportRLF.getOrderVariablesFNG();
         academicSupportFNG.setOrderVariables(academicSupportRLF.getOrderVariables());
-        if (!gc.isFNG()) {
-            //BEGIN - Propagação volta - remoção da recursão à esquerda indireta
-            String variable;
-            while (variableOrder.peek() != null) {
-                variable = variableOrder.pop();
-                newSetOfRules = new TreeSet<>();
-                for (String variableAux : gc.getVariables()) {
-                    for (Rule element : gc.getRules(variable)) {
-                        if (element.getFirstVariableOfRightSide() != null &&
-                                element.getFirstVariableOfRightSide().equals(variableAux)) {
-                            removalRules.add(element);
-                            academic.insertIrregularRule(element);
-                            for (Rule elementAux : gc.getRules(variableAux)) {
-                                Rule r = new Rule(element.getLeftSide(),
-                                        elementAux.getRightSide() +
-                                                element.getRightSide().substring(variableAux.length()));
-                                academic.insertNewRule(r);
-                                newSetOfRules.add(r);
-                            }
+        if (gc.isFNG()) {
+            return gc;
+        }
+        //BEGIN - Propagação volta - remoção da recursão à esquerda indireta
+        String variable;
+        while (variableOrder.peek() != null) {
+            variable = variableOrder.pop();
+            newSetOfRules = new LinkedHashSet<>();
+            for (String variableAux : gc.getVariables()) {
+                for (Rule element : gc.getRules(variable)) {
+                    if (element.getFirstVariableOfRightSide() != null &&
+                            element.getFirstVariableOfRightSide().equals(variableAux)) {
+                        removalRules.add(element);
+                        academic.insertIrregularRule(element);
+                        for (Rule elementAux : gc.getRules(variableAux)) {
+                            Rule r = new Rule(element.getLeftSide(),
+                                    elementAux.getRightSide() +
+                                            element.getRightSide().substring(variableAux.length()));
+                            academic.insertNewRule(r);
+                            newSetOfRules.add(r);
                         }
                     }
                 }
-                if (!newSetOfRules.isEmpty()) {
-                    if (variable.startsWith(RECURSIVE_REMOVAL_PREFIX) &&
-                            variable.length() > 1) {
-                        academicSupportFNG.addGrammarTransformationStage3(
-                                removalRules, newSetOfRules);
-                    } else {
-                        academicSupportFNG.addGrammarTransformationStage2(
-                                removalRules, newSetOfRules);
-                    }
-                    newSetOfRules.addAll(gc.rules);
-                    newSetOfRules.removeAll(removalRules);
-                    gc.rules = newSetOfRules;
-                    removalRules.clear();
+            }
+            if (!newSetOfRules.isEmpty()) {
+                if (variable.startsWith(RECURSIVE_REMOVAL_PREFIX) &&
+                        variable.length() > 1) {
+                    academicSupportFNG.addGrammarTransformationStage3(
+                            removalRules, newSetOfRules);
+                } else {
+                    academicSupportFNG.addGrammarTransformationStage2(
+                            removalRules, newSetOfRules);
                 }
+//                    newSetOfRules.addAll(gc.rules);
+//                    newSetOfRules.removeAll(removalRules);
+//                    gc.rules = newSetOfRules;
+                gc.rules.addAll(newSetOfRules);
+                gc.rules.removeAll(removalRules);
+                removalRules.clear();
             }
-            //END - Propagação volta - remoção da recursão à esquerda indireta
-            if (!academic.getIrregularRules().isEmpty()) {
-                academic.setSituation(true);
-            }
+        }
+        //END - Propagação volta - remoção da recursão à esquerda indireta
+        if (!academic.getIrregularRules().isEmpty()) {
+            academic.setSituation(true);
         }
 
         return gc;
@@ -1183,10 +1196,10 @@ public class Grammar implements Cloneable {
         // inicializando a tabela
         g = g.FNC(g, new AcademicSupport());
 
-        SortedSet<String>[][] X = new TreeSet[word.length() + 1][word.length()];
+        Set<String>[][] X = new LinkedHashSet[word.length() + 1][word.length()];
         for (int i = 0; i < word.length() + 1; i++) {
             for (int j = 0; j < word.length(); j++) {
-                X[i][j] = new TreeSet<>();
+                X[i][j] = new LinkedHashSet<>();
             }
         }
 
@@ -1217,24 +1230,23 @@ public class Grammar implements Cloneable {
     }
 
     public Map<String, Set<String>> getRulesMapLeftToRight() {
-        Map<String, Set<String>> rulesMapLeftToRight = new TreeMap<>();
-        Set<String> rightSide;
+        Map<String, Set<String>> rulesMapLeftToRight = new LinkedHashMap<>();
+        for (String variable: getVariables()) {
+            rulesMapLeftToRight.put(variable, new LinkedHashSet<String>());
+        }
         for (Rule rule : rules) {
-            if (rulesMapLeftToRight.containsKey(rule.getLeftSide())) {
-                rightSide = rulesMapLeftToRight.get(rule.getLeftSide());
-                rightSide.add(rule.getRightSide());
-                rulesMapLeftToRight.put(rule.getLeftSide(), rightSide);
-            } else {
-                rightSide = new TreeSet<>();
-                rightSide.add(rule.getRightSide());
-                rulesMapLeftToRight.put(rule.getLeftSide(), rightSide);
+            Set<String> rightSideSet = rulesMapLeftToRight.get(rule.getLeftSide());
+            if (rightSideSet == null) {
+                rightSideSet = new LinkedHashSet<>();
+                rulesMapLeftToRight.put(rule.getLeftSide(), rightSideSet);
             }
+            rightSideSet.add(rule.getRightSide());
         }
         return rulesMapLeftToRight;
     }
 
     public Map<String, Set<Rule>> getRulesMapLeftToRule() {
-        Map<String, Set<Rule>> rulesMapLeftToRule = new TreeMap<>();
+        Map<String, Set<Rule>> rulesMapLeftToRule = new LinkedHashMap<>();
         Set<Rule> rightSide;
         for (Rule rule : rules) {
             if (rulesMapLeftToRule.containsKey(rule.getLeftSide())) {
@@ -1242,7 +1254,7 @@ public class Grammar implements Cloneable {
                 rightSide.add(rule);
                 rulesMapLeftToRule.put(rule.getLeftSide(), rightSide);
             } else {
-                rightSide = new HashSet<>();
+                rightSide = new LinkedHashSet<>();
                 rightSide.add(rule);
                 rulesMapLeftToRule.put(rule.getLeftSide(), rightSide);
             }
@@ -1264,7 +1276,7 @@ public class Grammar implements Cloneable {
     }
 
     public Map<String, Set<String>> getRulesMapRightToLeft() {
-        Map<String, Set<String>> rulesMapRightToLeft = new TreeMap<>();
+        Map<String, Set<String>> rulesMapRightToLeft = new LinkedHashMap<>();
         Set<String> leftSide;
         for (Rule rule : rules) {
             if (rulesMapRightToLeft.containsKey(rule.getRightSide())) {
@@ -1272,7 +1284,7 @@ public class Grammar implements Cloneable {
                 leftSide.add(rule.getLeftSide());
                 rulesMapRightToLeft.put(rule.getRightSide(), leftSide);
             } else {
-                leftSide = new TreeSet<>();
+                leftSide = new LinkedHashSet<>();
                 leftSide.add(rule.getLeftSide());
                 rulesMapRightToLeft.put(rule.getRightSide(), leftSide);
             }

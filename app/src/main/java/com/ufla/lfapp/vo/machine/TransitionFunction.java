@@ -4,16 +4,35 @@ import java.io.Serializable;
 
 public class TransitionFunction implements Serializable, Comparable<TransitionFunction> {
 	
-	protected String currentState;
+	protected State currentState;
 	protected String symbol;
-	protected String futureState;
+	protected State futureState;
 	
 	
-	public TransitionFunction() {
-		this("", "", "");
+//	public TransitionFunction() {
+//		this("", "", "");
+//	}
+	
+//	public TransitionFunction(String currentState, String symbol, String futureState) {
+//		super();
+//		this.currentState = currentState;
+//		this.symbol = symbol;
+//		this.futureState = futureState;
+//	}
+
+	public boolean isCurrentState(State currentState) {
+		return this.currentState.equals(currentState);
 	}
-	
-	public TransitionFunction(String currentState, String symbol, String futureState) {
+
+	public boolean isSymbol(String symbol) {
+		return this.symbol.equals(symbol);
+	}
+
+	public boolean isFutureState(State futureState) {
+		return this.futureState.equals(futureState);
+	}
+
+	public TransitionFunction(State currentState, String symbol, State futureState) {
 		super();
 		this.currentState = currentState;
 		this.symbol = symbol;
@@ -21,23 +40,20 @@ public class TransitionFunction implements Serializable, Comparable<TransitionFu
 	}
 	
 	public TransitionFunction(TransitionFunction transitionFunction) {
-		this(transitionFunction.getCurrentState(), transitionFunction.getSymbol(),
-				transitionFunction.getFutureState());
+		this(new State(transitionFunction.currentState.getName()), transitionFunction.symbol,
+				new State(transitionFunction.futureState.getName()));
 	}
 
 	public TransitionFunction copy() {
-		TransitionFunction t = new TransitionFunction();
-		t.currentState = currentState;
-		t.symbol = symbol;
-		t.futureState = futureState;
-		return t;
+		return new TransitionFunction(new State(currentState.getName()), symbol,
+				new State(futureState.getName()));
 	}
 
-	public String getCurrentState() {
+	public State getCurrentState() {
 		return currentState;
 	}
 
-	public void setCurrentState(String currentState) {
+	public void setCurrentState(State currentState) {
 		this.currentState = currentState;
 	}
 
@@ -49,11 +65,11 @@ public class TransitionFunction implements Serializable, Comparable<TransitionFu
 		this.symbol = symbol;
 	}
 
-	public String getFutureState() {
+	public State getFutureState() {
 		return futureState;
 	}
 
-	public void setFutureState(String futureState) {
+	public void setFutureState(State futureState) {
 		this.futureState = futureState;
 	}
 

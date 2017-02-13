@@ -14,15 +14,15 @@ public abstract class MachineBuilder {
     /**
      * Conjunto dos estados da máquina.
      */
-    protected SortedSet<String> states;
+    protected SortedSet<State> states;
     /**
      * Estado inicial da máquina.
      */
-    protected String initialState;
+    protected State initialState;
     /**
      * Conjunto dos estados finais da máquina.
      */
-    protected SortedSet<String> finalStates;
+    protected SortedSet<State> finalStates;
 
 
     /**
@@ -44,13 +44,26 @@ public abstract class MachineBuilder {
         this.finalStates = machine.getFinalStates();
     }
 
+    public State getState(String stateName) {
+        for (State state: states) {
+            if (state.getName().equals(stateName)) {
+                return state;
+            }
+        }
+        return null;
+    }
+
+    public void renameState(String oldName, String newName) {
+        getState(oldName).setName(newName);
+    }
+
     /**
      * Define o estado inicial da máquina.
      *
      * @param initialState estado inicial da máquina
      * @return próprio construtor de máquina
      */
-    public MachineBuilder withInitialState(String initialState) {
+    public MachineBuilder withInitialState(State initialState) {
         addState(initialState);
         this.initialState = initialState;
         return this;
@@ -62,7 +75,7 @@ public abstract class MachineBuilder {
      * @param state estado adicionado na máquina
      * @return próprio construtor de máquina
      */
-    public MachineBuilder addState(String state) {
+    public MachineBuilder addState(State state) {
         states.add(state);
         return this;
     }
@@ -73,8 +86,8 @@ public abstract class MachineBuilder {
      * @param states coleção de estados adicionados na máquina
      * @return próprio construtor de máquina
      */
-    public MachineBuilder addStates(Collection<String> states) {
-        for (String state : states) {
+    public MachineBuilder addStates(Collection<State> states) {
+        for (State state : states) {
             addState(state);
         }
         return this;
@@ -86,7 +99,7 @@ public abstract class MachineBuilder {
      * @param state estado removido da máquina
      * @return próprio construtor de máquina
      */
-    public MachineBuilder removeState(String state) {
+    public MachineBuilder removeState(State state) {
         if (state.equals(initialState)) {
             initialState = null;
         }
@@ -101,8 +114,8 @@ public abstract class MachineBuilder {
      * @param states coleção de estados removidas da máquina
      * @return próprio construtor de máquina
      */
-    public MachineBuilder removeStates(Collection<String> states) {
-        for (String state : states) {
+    public MachineBuilder removeStates(Collection<State> states) {
+        for (State state : states) {
             removeState(state);
         }
         return this;
@@ -115,7 +128,7 @@ public abstract class MachineBuilder {
      * @param finalState estado final da máquina
      * @return próprio construtor de máquina
      */
-    public MachineBuilder defineFinalState(String finalState) {
+    public MachineBuilder defineFinalState(State finalState) {
         addState(finalState);
         finalStates.add(finalState);
         return this;
@@ -129,8 +142,8 @@ public abstract class MachineBuilder {
      * @param finalStates coleção de estados finais adicionados na máquina
      * @return próprio construtor de máquina
      */
-    public MachineBuilder addFinalStates(Collection<String> finalStates) {
-        for (String finalState : finalStates) {
+    public MachineBuilder addFinalStates(Collection<State> finalStates) {
+        for (State finalState : finalStates) {
             defineFinalState(finalState);
         }
         return this;
@@ -142,7 +155,7 @@ public abstract class MachineBuilder {
      * @param finalState estado final a ser removido do conjunto dos estados finais da máquina
      * @return próprio construtor de máquina
      */
-    public MachineBuilder removeFinalState(String finalState) {
+    public MachineBuilder removeFinalState(State finalState) {
         finalStates.remove(finalState);
         return this;
     }
@@ -154,8 +167,8 @@ public abstract class MachineBuilder {
      *                    da máquina
      * @return próprio construtor de máquina
      */
-    public MachineBuilder removeFinalStates(Collection<String> finalStates) {
-        for (String finalState : finalStates) {
+    public MachineBuilder removeFinalStates(Collection<State> finalStates) {
+        for (State finalState : finalStates) {
             removeFinalState(finalState);
         }
         return this;

@@ -3,8 +3,8 @@ package com.ufla.lfapp.vo.machine;
 import android.graphics.Point;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * Responsável por construir um autômato que deve ser exibido de forma gráfica.
@@ -18,14 +18,14 @@ public class AutomatonGUIBuilder extends AutomatonBuilder {
     protected String label;
     protected int contUses = 1;
     protected Date creationDate;
-    protected Map<String, Point> stateGridPositions;
+    protected SortedMap<State, Point> stateGridPositions;
 
     /**
      * Constrói um autômato vazio.
      */
     public AutomatonGUIBuilder() {
         super();
-        stateGridPositions = new HashMap<>();
+        stateGridPositions = new TreeMap<>();
         id = -1l;
     }
 
@@ -44,13 +44,13 @@ public class AutomatonGUIBuilder extends AutomatonBuilder {
     }
 
 
-    public AutomatonGUIBuilder addOrChangeStatePosition(String state, Point gridPosition) {
+    public AutomatonGUIBuilder addOrChangeStatePosition(State state, Point gridPosition) {
         super.addState(state);
         stateGridPositions.put(state, gridPosition);
         return this;
     }
 
-    public AutomatonGUIBuilder removeState(String state) {
+    public AutomatonGUIBuilder removeState(State state) {
         super.removeState(state);
         stateGridPositions.remove(state);
         return this;

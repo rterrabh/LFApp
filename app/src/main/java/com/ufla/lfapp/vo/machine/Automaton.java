@@ -30,12 +30,35 @@ public class Automaton extends Machine implements Serializable {
 
     public static final String STATE_ERROR = "err";
     protected SortedSet<TransitionFunction> transitionFunctions;
-    protected String stateError;
-    protected static String LAMBDA = ".";
-    protected static String FECHO_LAMBDA = "*";
+    protected State stateError;
+    public static String LAMBDA = "λ";
+    public static String FECHO_LAMBDA = "*";
     protected static final int MAX_PROCESS = 100000;
-    protected Set<String> initialStatesFromAFNDLambdaToAFD;
+    protected SortedSet<State> initialStatesFromAFNDLambdaToAFD;
 
+    public SortedSet<State> getInitialStatesFromAFNDLambdaToAFD() {
+        if (initialStatesFromAFNDLambdaToAFD == null ||
+                initialStatesFromAFNDLambdaToAFD.isEmpty()) {
+            initialStatesFromAFNDLambdaToAFD = new TreeSet<>();
+            initialStatesFromAFNDLambdaToAFD.add(initialState);
+        }
+        return initialStatesFromAFNDLambdaToAFD;
+    }
+    public void setInitialStatesFromAFNDLambdaToAFD(SortedSet<State> initialStates) {
+        initialStatesFromAFNDLambdaToAFD = initialStates;
+    }
+
+    public boolean isComplete() {
+        SortedSet<String> alphabet = getAlphabet();
+        for (State state : states) {
+            for (String symbol : alphabet) {
+                if (getFutureStateOfTransition(state, symbol) == null) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
     public SortedSet<String> getAlphabet() {
         SortedSet<String> alphabet = new TreeSet<>();
@@ -45,57 +68,86 @@ public class Automaton extends Machine implements Serializable {
         return alphabet;
     }
 
-
-    public Automaton(SortedSet<String> states,
-                   String initialState, SortedSet<String> finalStates,
+    public Automaton(SortedSet<State> states,
+                     State initialState, SortedSet<State> finalStates,
                      SortedSet<TransitionFunction> transitionFunctions) {
         super(states, initialState, finalStates);
-        this.transitionFunctions = transitionFunctions;
+        if (transitionFunctions == null) {
+            return;
+        }
+        this.transitionFunctions = new TreeSet<>();
+        for (TransitionFunction transitionFunction : transitionFunctions) {
+            State currentState = getState(transitionFunction.getCurrentState().getName());
+            State futureState = getState(transitionFunction.getFutureState().getName());
+            this.transitionFunctions.add(new TransitionFunction(currentState,
+                    transitionFunction.getSymbol(), futureState));
+        }
+    }
+
+    public static SortedSet<TransitionFunction> copyTransictionFunctions(
+            Set<TransitionFunction> transitionFunctions) {
+        SortedSet<TransitionFunction> copyTransictionFunctions = new TreeSet<>();
+        if (transitionFunctions == null) {
+            return copyTransictionFunctions;
+        }
+        for (TransitionFunction transitionFunction : transitionFunctions) {
+            copyTransictionFunctions.add(transitionFunction.copy());
+        }
+        return copyTransictionFunctions;
     }
 
     public Automaton(Automaton automaton) {
         super(automaton);
-        transitionFunctions = (automaton.transitionFunctions == null) ?
-                new TreeSet<TransitionFunction>() : new TreeSet<>(automaton.transitionFunctions);
+        if (automaton == null || automaton.transitionFunctions == null) {
+            return;
+        }
+        transitionFunctions = new TreeSet<>();
+        for (TransitionFunction transitionFunction : automaton.transitionFunctions) {
+            State currentState = getState(transitionFunction.getCurrentState().getName());
+            State futureState = getState(transitionFunction.getFutureState().getName());
+            transitionFunctions.add(new TransitionFunction(currentState,
+                    transitionFunction.getSymbol(), futureState));
+        }
     }
 
     protected Automaton() {
         states = new TreeSet<>();
         finalStates = new TreeSet<>();
         transitionFunctions = new TreeSet<>();
-        initialStatesFromAFNDLambdaToAFD = new HashSet<>();
+        initialStatesFromAFNDLambdaToAFD = new TreeSet<>();
     }
 
-    public Set<String> statesWithout(String state) {
-        Set<String> statesWithout = new HashSet<>(states);
+    public Set<State> statesNamesWithout(State state) {
+        Set<State> statesWithout = new HashSet<>(states);
         statesWithout.remove(state);
         return statesWithout;
     }
 
-    public Map<String, String> getStatesMapSimplify() {
+    public Map<State, State> getStatesMapSimplify() {
         int contStates = 0;
-        Map<String, String> statesMap = new HashMap<>();
-        statesMap.put(initialState, "q" + contStates);
+        Map<State, State> statesMap = new HashMap<>();
+        statesMap.put(initialState, new State("q" + contStates));
         contStates++;
-        for (String state : statesWithout(initialState)) {
-            statesMap.put(state, "q" + contStates);
+        for (State state : statesNamesWithout(initialState)) {
+            statesMap.put(state, new State("q" + contStates));
             contStates++;
         }
         return statesMap;
     }
 
+
     private class DFAMinimizationTableRow {
 
-        Pair<String, String> statePair;
+        Pair<State, State> statePair;
         boolean statePairDistinct;
-        Set<Pair<String, String>> distinctPairPropagation;
+        Set<Pair<State, State>> distinctPairPropagation;
         String reason;
 
         public boolean isDistinct() {
             return statePairDistinct;
         }
 
-        public DFAMinimizationTableRow(Pair<String, String> statePair) {
+        public DFAMinimizationTableRow(Pair<State, State> statePair) {
             this.statePair = statePair;
             statePairDistinct = false;
             distinctPairPropagation = new HashSet<>();
@@ -111,7 +163,7 @@ public class Automaton extends Machine implements Serializable {
                     .append("]\t")
                     .append(statePairDistinct)
                     .append("\t{");
-            for (Pair<String, String> pair :  distinctPairPropagation) {
+            for (Pair<State, State> pair :  distinctPairPropagation) {
                 sb.append('[')
                         .append(pair.first)
                         .append(',')
@@ -152,14 +204,14 @@ public class Automaton extends Machine implements Serializable {
 //        }
         DFAMinimizationTableRow dfaMinimizationTableRows[] =
                 new DFAMinimizationTableRow[minimizationTableSize];
-        Map<Pair<String, String>, DFAMinimizationTableRow> statePairToMinimizationTable =
+        Map<Pair<State, State>, DFAMinimizationTableRow> statePairToMinimizationTable =
                 new HashMap<>();
-        String statesArray[] = states.toArray(new String[states.size()]);
+        State statesArray[] = states.toArray(new State[states.size()]);
         int max = statesArray.length - 1;
         int contRows = 0;
         for (int i = 0; i < max; i++) {
             for (int j = i + 1; j < statesArray.length; j++) {
-                Pair<String, String> statePair = Pair.create(statesArray[i], statesArray[j]);
+                Pair<State, State> statePair = Pair.create(statesArray[i], statesArray[j]);
                 dfaMinimizationTableRows[contRows] = new DFAMinimizationTableRow(statePair);
                 statePairToMinimizationTable.put(statePair, dfaMinimizationTableRows[contRows]);
                 if ((isFinalState(dfaMinimizationTableRows[contRows].statePair.first) &&
@@ -187,7 +239,7 @@ public class Automaton extends Machine implements Serializable {
                 continue;
             }
             for (String symbol : alphabet) {
-                Pair<String, String> futureStatePair = Pair.create(
+                Pair<State, State> futureStatePair = Pair.create(
                         getFutureStateOfTransition(dfaMinimizationTableRow.statePair.first,
                                 symbol),
                         getFutureStateOfTransition(dfaMinimizationTableRow.statePair.second,
@@ -226,7 +278,7 @@ public class Automaton extends Machine implements Serializable {
                 while (!dfaMinimizationTableRowsPropagation.isEmpty()) {
                     DFAMinimizationTableRow dfaMinimizationTableRowPropActual =
                             dfaMinimizationTableRowsPropagation.pop();
-                    for (Pair<String, String> statePairPropagation :
+                    for (Pair<State, State> statePairPropagation :
                             dfaMinimizationTableRowPropActual.distinctPairPropagation) {
                         DFAMinimizationTableRow dfaMinimizationTableRowPropagation =
                                 statePairToMinimizationTable.get(statePairPropagation);
@@ -247,10 +299,10 @@ public class Automaton extends Machine implements Serializable {
             System.out.println(dfaMinimizationTableRow);
         }
         System.out.println("END_TABLE");
-        SortedSet<Pair<String, String>> statePairEquals = new TreeSet<>(
-                new Comparator<Pair<String, String>>() {
+        SortedSet<Pair<State, State>> statePairEquals = new TreeSet<>(
+                new Comparator<Pair<State, State>>() {
             @Override
-            public int compare(Pair<String, String> lhs, Pair<String, String> rhs) {
+            public int compare(Pair<State, State> lhs, Pair<State, State> rhs) {
                 return (lhs.first.equals(rhs.first)) ? lhs.second.compareTo(rhs.second) :
                         lhs.first.compareTo(rhs.second);
             }
@@ -260,11 +312,11 @@ public class Automaton extends Machine implements Serializable {
                 statePairEquals.add(dfaMinimizationTableRow.statePair);
             }
         }
-        Set<Set<String>> setOfStateEquals = new HashSet<>();
+        Set<Set<State>> setOfStateEquals = new HashSet<>();
         while (!statePairEquals.isEmpty()) {
-            Set<String> stateEquals = new HashSet<>();
-            Iterator<Pair<String, String>> iterator = statePairEquals.iterator();
-            Pair<String, String> statePair = iterator.next();
+            Set<State> stateEquals = new HashSet<>();
+            Iterator<Pair<State, State>> iterator = statePairEquals.iterator();
+            Pair<State, State> statePair = iterator.next();
             stateEquals.add(statePair.first);
             stateEquals.add(statePair.second);
             iterator.remove();
@@ -278,19 +330,19 @@ public class Automaton extends Machine implements Serializable {
             }
             setOfStateEquals.add(stateEquals);
         }
-        for (Set<String> setStates : setOfStateEquals) {
+        for (Set<State> setStates : setOfStateEquals) {
             Log.d("setStates", collectionToString(setStates));
         }
         Automaton automaton = new Automaton(this);
         int contNewStates = 0;
-        for (Set<String> stateEquals : setOfStateEquals) {
-            while (automaton.states.contains("qc" + contNewStates)) {
+        for (Set<State> stateEquals : setOfStateEquals) {
+            while (automaton.states.contains(new State("qc" + contNewStates))) {
                 contNewStates++;
             }
-            String newState = "qc" + contNewStates;
+            State newState = new State("qc" + contNewStates);
             automaton.states.add(newState);
             contNewStates++;
-            for (String state : stateEquals) {
+            for (State state : stateEquals) {
                 automaton.states.remove(state);
                 if (automaton.finalStates.contains(state)) {
                     automaton.finalStates.remove(state);
@@ -300,7 +352,7 @@ public class Automaton extends Machine implements Serializable {
                         automaton.initialState.equals(state)) {
                     automaton.initialState = newState;
                 }
-                Log.d("state", state);
+                Log.d("state", state.getName());
                 for (TransitionFunction transitionFunction : automaton.getTransitionsFrom(state)) {
                     Log.d("TRANSITIONFUNCT", "TESTE1");
                     automaton.transitionFunctions.add(new TransitionFunction(newState,
@@ -324,28 +376,37 @@ public class Automaton extends Machine implements Serializable {
     }
 
     public Automaton getAutomatonWithStatesNameSimplify() {
-        Automaton automaton = new Automaton();
-        Map<String, String> statesMap = getStatesMapSimplify();
-        automaton.initialState = "q0";
-        automaton.states = new TreeSet<>(statesMap.values());
-        automaton.finalStates = new TreeSet<>();
-        for (String state : finalStates) {
-            automaton.finalStates.add(statesMap.get(state));
+        Automaton automaton = new Automaton(this);
+//        Map<State, State> statesMap = getStatesMapSimplify();
+        int contStates = 1;
+        automaton.renameState(automaton.initialState.getName(), "q0");
+        for (State state : automaton.statesNamesWithout(automaton.initialState)) {
+            automaton.renameState(state.getName(), "q" + contStates);
+            contStates++;
         }
-        automaton.transitionFunctions = new TreeSet<>();
-        for (TransitionFunction t : transitionFunctions) {
-            automaton.transitionFunctions.add(new TransitionFunction(
-                    statesMap.get(t.getCurrentState()),
-                    t.getSymbol(), statesMap.get(t.getFutureState())));
-        }
+//        automaton.initialState = new State("q0");
+//        automaton.states = new TreeSet<>();
+//        for (State state : statesMap.values()) {
+//            states.add(state);
+//        }
+//        automaton.finalStates = new TreeSet<>();
+//        for (State state : finalStates) {
+//            automaton.finalStates.add(statesMap.get(state));
+//        }
+//        automaton.transitionFunctions = new TreeSet<>();
+//        for (TransitionFunction t : transitionFunctions) {
+//            automaton.transitionFunctions.add(new TransitionFunction(
+//                    statesMap.get(t.getCurrentState()),
+//                    t.getSymbol(), statesMap.get(t.getFutureState())));
+//        }
         return automaton;
     }
 
-    public SortedMap<String, Point> getStatesPointsFake() {
-        SortedMap<String, Point> statesPoints = new TreeMap<>();
+    public SortedMap<State, Point> getStatesPointsFake() {
+        SortedMap<State, Point> statesPoints = new TreeMap<>();
         int qtdMaxPoint = (int) Math.ceil(Math.sqrt(states.size()));
         int cont=0, x=2, y=2;
-        for (String state : states) {
+        for (State state : states) {
             statesPoints.put(state, new Point(x, y));
             x += 3;
             cont++;
@@ -371,9 +432,9 @@ public class Automaton extends Machine implements Serializable {
     }
 
     public boolean isAFD() {
-        Set<Pair<String, String>> setOfStatesAndSymbols = new HashSet<>();
+        Set<Pair<State, String>> setOfStatesAndSymbols = new HashSet<>();
         for (TransitionFunction t : transitionFunctions) {
-            Pair<String, String> stateAndSymbol = Pair.create(t.currentState, t.symbol);
+            Pair<State, String> stateAndSymbol = Pair.create(t.currentState, t.symbol);
             if (setOfStatesAndSymbols.contains(stateAndSymbol) || t.symbol.equals(LAMBDA)) {
                 return false;
             }
@@ -382,16 +443,16 @@ public class Automaton extends Machine implements Serializable {
         return true;
     }
 
-    public void insertFechoLambda(SortedMap<Pair<String, String>, SortedSet<String>> transitionTable) {
-        for (String state : states) {
-            SortedSet<String> fechoLambda = new TreeSet<>();
-            Set<String> statesVisited = new HashSet<>();
-            Deque<String> statesToVisited = new ArrayDeque<>();
+    public void insertFechoLambda(SortedMap<Pair<State, String>, SortedSet<State>> transitionTable) {
+        for (State state : states) {
+            SortedSet<State> fechoLambda = new TreeSet<>();
+            Set<State> statesVisited = new HashSet<>();
+            Deque<State> statesToVisited = new ArrayDeque<>();
             statesToVisited.push(state);
             statesVisited.add(state);
             fechoLambda.add(state);
             while (!statesToVisited.isEmpty()) {
-                for (String stateForVisite : transitionTable.get(
+                for (State stateForVisite : transitionTable.get(
                         Pair.create(statesToVisited.pop(), LAMBDA))) {
                     if (!statesVisited.contains(stateForVisite)) {
                         statesToVisited.push(stateForVisite);
@@ -416,23 +477,72 @@ public class Automaton extends Machine implements Serializable {
         return automaton;
     }
 
+    /**
+     * Encontra o conjunto de estados alcançáveis partindo de um determinado estado e consumindo
+     * um determinado símbolo.
+     * @param fromState estado de partida para os estados alcançáveis
+     * @param symbol símbolo de leitura para os estados alcançáveis
+     * @return retorna conjunto de estados alcançáveis
+     */
+    public SortedSet<State> getStatesReachWithSymbol(State fromState, String symbol) {
+        SortedSet<State> states = new TreeSet<>();
+        
+        for (TransitionFunction transitionFunction : transitionFunctions) {
+            if (transitionFunction.isCurrentState(fromState) &&
+                    transitionFunction.isSymbol(symbol)) {
+                states.add(transitionFunction.futureState);
+            }
+        }
+
+        return states;
+    }
+
+    /**
+     * Encontra o fecho-lambda de um estado. O fecho-lambda de um estado é um conjunto de estados
+     * em que se pode alcançar consumindo apenas lambda. O fecho-lambda de um estado no mínimo
+     * possui o próprio estado.
+     *
+     * @param state estado a ser encontrado seu fecho-lambda
+     * @return fecho-lambda do estado
+     */
+    public SortedSet<State> getLambdaClosure(State state) {
+        SortedSet<State> states = new TreeSet<>();
+        SortedSet<State> statesNotVerify = new TreeSet<>();
+        SortedSet<State> newStates = new TreeSet<>();
+
+        statesNotVerify.add(state);
+        while (!statesNotVerify.isEmpty()) {
+            for (State stateForVerify : statesNotVerify) {
+                newStates.addAll(getStatesReachWithSymbol(state, LAMBDA));
+                states.add(stateForVerify);
+            }
+            newStates.removeAll(states);
+            statesNotVerify.clear();
+            statesNotVerify.addAll(newStates);
+            states.addAll(newStates);
+            newStates.clear();
+        }
+
+        return states;
+    }
+
     public Automaton AFNDLambdaToAFND() {
         if (!isAFNDLambda()) {
             return copy();
         }
         Automaton automatonAFND = new Automaton();
-        SortedMap<Pair<String, String>, SortedSet<String>> transitionTable = getTransitionTableAFND();
+        SortedMap<Pair<State, String>, SortedSet<State>> transitionTable = getTransitionTableAFND();
         automatonAFND.transitionFunctions = new TreeSet<>();
         insertFechoLambda(transitionTable);
-        for (SortedMap.Entry<Pair<String, String>, SortedSet<String>> entry :
+        for (SortedMap.Entry<Pair<State, String>, SortedSet<State>> entry :
                 transitionTable.entrySet()) {
             if (entry.getKey().second.equals(LAMBDA) || entry.getKey().second.equals(FECHO_LAMBDA)) {
                 continue;
             }
             // Adicionando transições através do fecho-lambda mais uma leitura
-            for (String fechoLambda : transitionTable.get(Pair.create(entry.getKey().first,
+            for (State fechoLambda : transitionTable.get(Pair.create(entry.getKey().first,
                     FECHO_LAMBDA))) {
-                for (String futureState : transitionTable.get(Pair.create(fechoLambda,
+                for (State futureState : transitionTable.get(Pair.create(fechoLambda,
                         entry.getKey().second))) {
                     automatonAFND.transitionFunctions.add(new TransitionFunction(entry.getKey().first,
                             entry.getKey().second, futureState));
@@ -440,10 +550,10 @@ public class Automaton extends Machine implements Serializable {
             }
             // Adicionando transições através de uma leitura e também do fecho-lambda após essa
             // leitura
-            for (String futureState : entry.getValue()) {
+            for (State futureState : entry.getValue()) {
                 automatonAFND.transitionFunctions.add(new TransitionFunction(entry.getKey().first,
                         entry.getKey().second, futureState));
-                for (String futureStateB : transitionTable.get(Pair.create(futureState,
+                for (State futureStateB : transitionTable.get(Pair.create(futureState,
                         FECHO_LAMBDA))) {
                     automatonAFND.transitionFunctions.add(new TransitionFunction(entry.getKey().first,
                             entry.getKey().second, futureStateB));
@@ -454,11 +564,11 @@ public class Automaton extends Machine implements Serializable {
                 Pair.create(initialState, FECHO_LAMBDA));
         automatonAFND.initialState = initialState;
         automatonAFND.finalStates = new TreeSet<>(finalStates);
-        for (String state : states) {
+        for (State state : states) {
             if (finalStates.contains(state)) {
                 continue;
             }
-            for (String finalState : finalStates) {
+            for (State finalState : finalStates) {
                 if (transitionTable.get(Pair.create(state,
                         FECHO_LAMBDA)).contains(finalState)) {
                     automatonAFND.finalStates.add(state);
@@ -473,7 +583,7 @@ public class Automaton extends Machine implements Serializable {
         return automatonAFND;
     }
 
-    public SortedSet<String> getSymbols(String currentState, String futureState) {
+    public SortedSet<String> getSymbols(State currentState, State futureState) {
         SortedSet<String> symbols = new TreeSet<>();
         for (TransitionFunction t : transitionFunctions) {
             if (t.currentState.equals(currentState) && t.futureState.equals(futureState))  {
@@ -490,11 +600,11 @@ public class Automaton extends Machine implements Serializable {
         Automaton automatonAFD = new Automaton();
         boolean isFinalState = false;
         StringBuilder sbInitialState = new StringBuilder();
-        SortedSet<String> initialStateSet = new TreeSet<>();
+        SortedSet<State> initialStateSet = new TreeSet<>();
         if (initialStatesFromAFNDLambdaToAFD != null && !initialStatesFromAFNDLambdaToAFD.isEmpty()) {
             initialStateSet = new TreeSet<>(initialStatesFromAFNDLambdaToAFD);
             sbInitialState.append('<');
-            for (String state: initialStatesFromAFNDLambdaToAFD) {
+            for (State state: initialStatesFromAFNDLambdaToAFD) {
                 if (finalStates.contains(state)) {
                     isFinalState = true;
                 }
@@ -512,7 +622,7 @@ public class Automaton extends Machine implements Serializable {
                     .append(initialState)
                     .append('>');
         }
-        automatonAFD.initialState = sbInitialState.toString();
+        automatonAFD.initialState = new State(sbInitialState.toString());
         automatonAFD.states = new TreeSet<>();
         automatonAFD.finalStates = new TreeSet<>();
         automatonAFD.states.add(automatonAFD.initialState);
@@ -520,20 +630,20 @@ public class Automaton extends Machine implements Serializable {
             automatonAFD.finalStates.add(automatonAFD.initialState);
         }
         automatonAFD.transitionFunctions = new TreeSet<>();
-        SortedMap<Pair<String, String>, SortedSet<String>> transitionTable = getTransitionTableAFND();
-        Deque<Pair<String, SortedSet<String>>> newStatesQueue = new ArrayDeque<>();
+        SortedMap<Pair<State, String>, SortedSet<State>> transitionTable = getTransitionTableAFND();
+        Deque<Pair<State, SortedSet<State>>> newStatesQueue = new ArrayDeque<>();
         newStatesQueue.offer(Pair.create(automatonAFD.initialState, initialStateSet));
         while (!newStatesQueue.isEmpty()) {
-            Pair<String, SortedSet<String>> currentState = newStatesQueue.poll();
-            for (String currentStatePartial : currentState.second) {
+            Pair<State, SortedSet<State>> currentState = newStatesQueue.poll();
+            for (State currentStatePartial : currentState.second) {
                 for (String symbol : getAlphabet()) {
-                    SortedSet<String> futureStateSet = transitionTable.get(
+                    SortedSet<State> futureStateSet = transitionTable.get(
                             Pair.create(currentStatePartial, symbol));
                     if (!futureStateSet.isEmpty()) {
                         isFinalState = false;
                         StringBuilder futureStateSb = new StringBuilder();
                         futureStateSb.append('<');
-                        for (String fState : futureStateSet) {
+                        for (State fState : futureStateSet) {
                             futureStateSb.append(fState)
                                     .append(',');
                             if (finalStates.contains(fState)) {
@@ -542,7 +652,7 @@ public class Automaton extends Machine implements Serializable {
                         }
                         futureStateSb.deleteCharAt(futureStateSb.length() - 1);
                         futureStateSb.append('>');
-                        String futureState = futureStateSb.toString();
+                        State futureState = new State(futureStateSb.toString());
                         automatonAFD.transitionFunctions.add(new TransitionFunction(currentState.first,
                                 symbol, futureState));
                         if (!automatonAFD.states.contains(futureState)) {
@@ -587,9 +697,9 @@ public class Automaton extends Machine implements Serializable {
 
     private class Process {
         int position;
-        String actualState;
+        State actualState;
 
-        Process (int position, String actualState) {
+        Process (int position, State actualState) {
             this.position = position;
             this.actualState = actualState;
         }
@@ -639,11 +749,11 @@ public class Automaton extends Machine implements Serializable {
         return false;
     }
 
-    public String getStateError() {
+    public State getStateError() {
         return stateError;
     }
 
-    public Set<TransitionFunction> getTransitions(String fromState, String symbol) {
+    public Set<TransitionFunction> getTransitions(State fromState, String symbol) {
         Set<TransitionFunction> transitions = new HashSet<>();
         for (TransitionFunction t : transitionFunctions) {
             if (t.currentState.equals(fromState) && t.symbol.equals(symbol)) {
@@ -654,16 +764,16 @@ public class Automaton extends Machine implements Serializable {
     }
 
     public Set<TransitionFunction> getTransitionFunctionsToCompleteAutomaton() {
-        if (states.contains(STATE_ERROR)) {
+        if (states.contains(new State(STATE_ERROR))) {
             int cont = 0;
-            while (states.contains(STATE_ERROR + cont)) {
+            while (states.contains(new State(STATE_ERROR + cont))) {
                 cont++;
             }
-            stateError = STATE_ERROR + cont;
+            stateError = new State(STATE_ERROR + cont);
         } else {
-            stateError = STATE_ERROR;
+            stateError = new State(STATE_ERROR);
         }
-        String states[] = this.states.toArray(new String[this.states.size()]);
+        State states[] = this.states.toArray(new State[this.states.size()]);
         SortedSet<String> alphabetSet = getAlphabet();
         String alphabet[] = alphabetSet.toArray(new String[alphabetSet.size()]);
         Set<TransitionFunction> transitionFunctionsToComplAuto = new HashSet<>();
@@ -685,20 +795,20 @@ public class Automaton extends Machine implements Serializable {
     }
 
     public Automaton getCompleteAutomaton() {
-        if (states.contains(STATE_ERROR)) {
+        if (states.contains(new State(STATE_ERROR))) {
             int cont = 0;
-            while (states.contains(STATE_ERROR + cont)) {
+            while (states.contains(new State(STATE_ERROR + cont))) {
                 cont++;
             }
-            stateError = STATE_ERROR + cont;
+            stateError = new State(STATE_ERROR + cont);
         } else {
-            stateError = STATE_ERROR;
+            stateError = new State(STATE_ERROR);
         }
         Automaton automaton = new Automaton();
         automaton.initialState = initialState;
         automaton.states = new TreeSet<>(states);
         automaton.finalStates = new TreeSet<>(finalStates);
-        String states[] = this.states.toArray(new String[this.states.size()]);
+        State states[] = this.states.toArray(new State[this.states.size()]);
         SortedSet<String> alphabetSet = getAlphabet();
         String alphabet[] = alphabetSet.toArray(new String[alphabetSet.size()]);
         for (int i = 0; i < states.length; i++) {
@@ -706,14 +816,15 @@ public class Automaton extends Machine implements Serializable {
                 if (getTransition(states[i], alphabet[j]) == null) {
                     automaton.states.add(stateError);
                     automaton.transitionFunctions.add(new TransitionFunction(states[i], alphabet[j],
-                            STATE_ERROR));
+                            stateError));
                 }
             }
         }
         return automaton;
     }
 
-    public String getFutureStateOfTransition(String fromState, String symbol) {
+
+    public State getFutureStateOfTransition(State fromState, String symbol) {
         TransitionFunction t = getTransition(fromState, symbol);
         if (t != null) {
             return t.futureState;
@@ -721,7 +832,7 @@ public class Automaton extends Machine implements Serializable {
         return null;
     }
 
-    public Set<TransitionFunction> getTransitionsFrom(String state) {
+    public Set<TransitionFunction> getTransitionsFrom(State state) {
         Set<TransitionFunction> transitionFunctions = new HashSet<>();
         for (TransitionFunction t : this.transitionFunctions) {
             if (t.currentState.equals(state)) {
@@ -731,7 +842,7 @@ public class Automaton extends Machine implements Serializable {
         return transitionFunctions;
     }
 
-    public Set<TransitionFunction> getTransitionsTo(String state) {
+    public Set<TransitionFunction> getTransitionsTo(State state) {
         Set<TransitionFunction> transitionFunctions = new HashSet<>();
         for (TransitionFunction t : this.transitionFunctions) {
             if (t.futureState.equals(state)) {
@@ -741,7 +852,7 @@ public class Automaton extends Machine implements Serializable {
         return transitionFunctions;
     }
 
-    public TransitionFunction getTransition(String fromState, String symbol) {
+    public TransitionFunction getTransition(State fromState, String symbol) {
         for (TransitionFunction t : transitionFunctions) {
             if (t.currentState.equals(fromState) && t.symbol.equals(symbol)) {
                 return t;
@@ -750,9 +861,18 @@ public class Automaton extends Machine implements Serializable {
         return null;
     }
 
+    public TransitionFunction getTransitionWithStates(State fromState, State toState) {
+        for (TransitionFunction t : transitionFunctions) {
+            if (t.currentState.equals(fromState) && t.futureState.equals(toState)) {
+                return t;
+            }
+        }
+        return null;
+    }
 
-    public SortedSet<String> getFutureStates(String currentState, String symbol) {
-        SortedSet<String> futureState = new TreeSet<>();
+
+    public SortedSet<State> getFutureStates(State currentState, String symbol) {
+        SortedSet<State> futureState = new TreeSet<>();
         for (TransitionFunction t : transitionFunctions) {
             if (t.currentState.equals(currentState) && t.symbol.equals(symbol)) {
                 futureState.add(t.futureState);
@@ -761,10 +881,10 @@ public class Automaton extends Machine implements Serializable {
         return futureState;
     }
 
-    public Map<Pair<String, String>, SortedSet<String>> getTransitionsAFD() {
-        Map<Pair<String, String>, SortedSet<String>> transitionsAFD = new HashMap<>();
+    public Map<Pair<State, State>, SortedSet<String>> getTransitionsAFD() {
+        Map<Pair<State, State>, SortedSet<String>> transitionsAFD = new HashMap<>();
         for (TransitionFunction t : transitionFunctions) {
-            Pair<String, String> states = Pair.create(t.getCurrentState(), t.getFutureState());
+            Pair<State, State> states = Pair.create(t.getCurrentState(), t.getFutureState());
             if (!transitionsAFD.containsKey(states)) {
                 transitionsAFD.put(states, new TreeSet<String>());
             }
@@ -773,18 +893,18 @@ public class Automaton extends Machine implements Serializable {
         return transitionsAFD;
     }
 
-    public SortedMap<Pair<String, String>, SortedSet<String>> getTransitionTableAFND() {
-        SortedMap<Pair<String, String>, SortedSet<String>> transitionTableAFND =
-                new TreeMap<>(new Comparator<Pair<String, String>>() {
+    public SortedMap<Pair<State, String>, SortedSet<State>> getTransitionTableAFND() {
+        SortedMap<Pair<State, String>, SortedSet<State>> transitionTableAFND =
+                new TreeMap<>(new Comparator<Pair<State, String>>() {
                     @Override
-                    public int compare(Pair<String, String> lhs, Pair<String, String> rhs) {
+                    public int compare(Pair<State, String> lhs, Pair<State, String> rhs) {
                         if (lhs.first.equals(rhs.first)) {
                             return lhs.second.compareTo(rhs.second);
                         }
                         return lhs.first.compareTo(rhs.first);
                     }
                 });
-        for (String state : states) {
+        for (State state : states) {
             for (String symbol : getAlphabet()) {
                 transitionTableAFND.put(Pair.create(state, symbol), getFutureStates(state, symbol));
             }
@@ -796,7 +916,7 @@ public class Automaton extends Machine implements Serializable {
         SortedSet<String> alphabetSet = getAlphabet();
         TransitionFunction[][] transitionTable =
                 new TransitionFunction[states.size()][alphabetSet.size()];
-        String states[] = this.states.toArray(new String[this.states.size()]);
+        State states[] = this.states.toArray(new State[this.states.size()]);
         String alphabet[] = alphabetSet.toArray(new String[alphabetSet.size()]);
         for (int i = 0; i < states.length; i++) {
                 for (int j = 0; j < alphabet.length; j++) {

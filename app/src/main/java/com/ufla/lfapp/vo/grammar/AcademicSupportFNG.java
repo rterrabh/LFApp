@@ -1,7 +1,7 @@
 package com.ufla.lfapp.vo.grammar;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -73,13 +73,13 @@ public class AcademicSupportFNG extends AcademicSupportRemoveLeftRecursiveAbstra
     }
 
     public void addGrammarTransformationStage2(Set<Rule> ruleWithProblems, Set<Rule> newRules) {
-        deleteRulesStage2.add(new HashSet<>(ruleWithProblems));
-        newRulesStage2.add(new HashSet<>(newRules));
+        deleteRulesStage2.add(new LinkedHashSet<>(ruleWithProblems));
+        newRulesStage2.add(new LinkedHashSet<>(newRules));
     }
 
     public void addGrammarTransformationStage3(Set<Rule> ruleWithProblems, Set<Rule> newRules) {
-        deleteRulesStage3.add(new HashSet<>(ruleWithProblems));
-        newRulesStage3.add(new HashSet<>(newRules));
+        deleteRulesStage3.add(new LinkedHashSet<>(ruleWithProblems));
+        newRulesStage3.add(new LinkedHashSet<>(newRules));
     }
 
 

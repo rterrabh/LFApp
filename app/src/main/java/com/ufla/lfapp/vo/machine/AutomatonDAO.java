@@ -15,7 +15,7 @@ import java.util.Map;
 public class AutomatonDAO extends AutomatonGUI implements Serializable {
 
     private Map<Point, Long> gridPositionsId;
-    private Map<String, Long>  statesId;
+    private Map<State, Long>  statesId;
     private Map<String, Long>  symbolsId;
     private Map<TransitionFunction, Long>  transitionsId;
 
@@ -39,11 +39,11 @@ public class AutomatonDAO extends AutomatonGUI implements Serializable {
         return gridPositionsId.get(point);
     }
 
-    public void putStateId(String state, Long stateId) {
+    public void putStateId(State state, Long stateId) {
         statesId.put(state, stateId);
     }
 
-    public Long getStateId(String state) {
+    public Long getStateId(State state) {
         return statesId.get(state);
     }
 

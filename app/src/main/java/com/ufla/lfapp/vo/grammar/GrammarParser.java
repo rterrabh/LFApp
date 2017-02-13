@@ -1,16 +1,12 @@
 package com.ufla.lfapp.vo.grammar;
 
-import com.ufla.lfapp.vo.machine.PushdownAutomaton;
-import com.ufla.lfapp.vo.machine.TransitionFunctionPA;
-
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedSet;
 import java.util.StringTokenizer;
-import java.util.TreeSet;
 
 
 public class GrammarParser {
@@ -39,8 +35,8 @@ public class GrammarParser {
      * @param txt : gramática informada
      * @return : variáveis extraídas
      */
-    public static SortedSet<String> extractVariablesFromFull(String txt) {
-        SortedSet<String> variables = new TreeSet<>();
+    public static Set<String> extractVariablesFromFull(String txt) {
+        Set<String> variables = new LinkedHashSet<>();
         for (int i = 0; i < txt.length(); ) {
             if (Character.isUpperCase(txt.charAt(i))) {
                 int k = i+1;
@@ -63,8 +59,8 @@ public class GrammarParser {
      * @param txt : gramática informada
      * @return : terminais extraídos
      */
-    public static SortedSet<String> extractTerminalsFromFull(String txt) {
-        SortedSet<String> terminals = new TreeSet<>();
+    public static Set<String> extractTerminalsFromFull(String txt) {
+        Set<String> terminals = new LinkedHashSet<>();
         for (int i = 0; i < txt.length(); i++) {
             if (Character.isLowerCase(txt.charAt(i))) {
                 terminals.add(Character.toString(txt.charAt(i)));
@@ -79,8 +75,8 @@ public class GrammarParser {
      * @param txt : gramática informada
      * @return : regras extraídas
      */
-    public static SortedSet<Rule> extractRulesFromFull(String txt) {
-        SortedSet<Rule> rules = new TreeSet<>(new RuleComparator(extractInitialSymbolFromFull(txt)));
+    public static Set<Rule> extractRulesFromFull(String txt) {
+        Set<Rule> rules = new LinkedHashSet<>();
         Rule rule = new Rule();
         String[] auxRule;
         for (String x : txt.trim().split("\n")) {
@@ -403,9 +399,9 @@ public class GrammarParser {
      * @param g
      * @return
      */
-    public static SortedSet<Rule> updateRules(SortedSet<String> prev, Grammar g,
+    public static Set<Rule> updateRules(Set<String> prev, Grammar g,
                                               final AcademicSupport academic) {
-        SortedSet<Rule> newRules = new TreeSet<>();
+        Set<Rule> newRules = new LinkedHashSet<>();
         for (Rule element : g.getRules()) {
             if (prev.contains(element.getLeftSide())) {
                 String newRule = "";
@@ -446,8 +442,8 @@ public class GrammarParser {
      * @param g
      * @return
      */
-    public static SortedSet<String> updateTerminals(Grammar g) {
-        SortedSet<String> newTerminals = new TreeSet<>();
+    public static Set<String> updateTerminals(Grammar g) {
+        Set<String> newTerminals = new LinkedHashSet<>();
         for (Rule element : g.getRules()) {
             for (int i = 0; i < element.getRightSide().length(); i++) {
                 if (Character.isLowerCase(element.getRightSide().charAt(i))) {
@@ -492,22 +488,6 @@ public class GrammarParser {
     }
 
     /**
-     * Verifica a existência de regras de cadeia.
-     *
-     * @param element
-     * @return
-     */
-    public static boolean verifyChains(Rule element) {
-        boolean chain = true;
-        for (int i = 0; i < element.getRightSide().length() && chain == true; i++) {
-            if (!element.getLeftSide().equals(Character.toString(element.getRightSide().charAt(i)))) {
-                chain = false;
-            }
-        }
-        return chain;
-    }
-
-    /**
      * verifica se gramática é não contrátil ou essencialmente não contrátil e se possui recursão no símbolo inicial
      *
      * @param g
@@ -527,13 +507,6 @@ public class GrammarParser {
             if (element.getLeftSide().equals(g.getInitialSymbol()) && element.getRightSide().contains(g.getInitialSymbol())) {
                 grammarTest = false;
                 academicSupport.setSolutionDescription("A gramática inserida possui recursão no símbolo inicial.");
-            }
-        }
-        //verifica se as produções possuem ciclos
-        for (Rule element : g.getRules()) {
-            if (verifyChains(element)) {
-                grammarTest = false;
-                academicSupport.setSolutionDescription("A gramática inserida possui ciclos.\nA regra " + element + " é um ciclo.");
             }
         }
         return grammarTest;
@@ -581,17 +554,16 @@ public class GrammarParser {
      * @param
      */
     static boolean existsDirectRecursion(Grammar g) {
-        boolean recursion = false;
         for (String variable : g.getVariables()) {
             for (Rule element : g.getRules()) {
                 if (variable.equals(element.getLeftSide())) {
                     if (variable.equals(Character.toString(element.getRightSide().charAt(0)))) {
-                        recursion = true;
+                        return true;
                     }
                 }
             }
         }
-        return recursion;
+        return false;
     }
 
     /**
@@ -600,7 +572,6 @@ public class GrammarParser {
      * @param olderVariables
      */
     static boolean existsRecursion(final Grammar g, Map<String, String> variablesInOrder, Set<String> olderVariables) {
-        boolean recursion = false;
         for (String variable : g.getVariables()) {
             if (olderVariables.contains(variable)) {
                 for (Rule element : g.getRules()) {
@@ -609,13 +580,13 @@ public class GrammarParser {
                         String rightSide = getsFirstCharacter(element.getRightSide());
                         int v = Integer.parseInt(variablesInOrder.get(rightSide));
                         if (u >= v) {
-                            recursion = true;
+                            return true;
                         }
                     }
                 }
             }
         }
-        return recursion;
+        return false;
     }
 
     /**
@@ -634,84 +605,67 @@ public class GrammarParser {
         return newRightSide;
     }
 
-
-    /**
-     * Verifica se a gramática possui ciclos.
-     *
-     * @param g
-     * @return
-     */
-    static boolean grammarWithCycles(final Grammar g) {
-        boolean cycle = true;
-        for (Rule element : g.getRules()) {
-            if (verifyChains(element)) {
-                cycle = false;
-            }
-        }
-        return cycle;
-    }
-
-    /**
-     * @param g: gramática livre de contexto
-     * @return automaton: gramática livre de contexto convertida em autômato de pilha
-     */
-    public static PushdownAutomaton turnsGrammarToPushdownAutomata(final Grammar g) {
-        Grammar gc = (Grammar) g.clone();
-        AcademicSupport academic = new AcademicSupport();
-
-        if (!gc.isFNG()) {
-            gc = g.FNG(gc, academic);
-        }
-
-        PushdownAutomaton automaton = new PushdownAutomaton();
-
-        if (gc.isFNG()) {
-            //inicializando o automato
-            //adiciona estado final
-            SortedSet<String> finalStates = new TreeSet<>();
-            finalStates.add("q1");
-            //automaton.setFinalStates(finalStates);
-
-            //adiciona estado inicial
-            //automaton.setInitialState("q0");
-
-            //adiciona os estados que serão utilizados
-            SortedSet<String> states = new TreeSet<>();
-            states.add("q0");
-            states.add("q1");
-           // automaton.setStates(states);
-
-            //adiciona alfabeto da pilha
-            automaton.setStackAlphabet(gc.getVariables());
-
-            //adiciona alfabeto
-            //automaton.setAlphabet(gc.getTerminals());
-
-            //adicionando função de transição
-            Set<TransitionFunctionPA> transitionTable = new HashSet<>();
-            for (Rule element : gc.getRules()) {
-                TransitionFunctionPA transitionFunction = new TransitionFunctionPA();
-                if (element.getLeftSide().equals(gc.getInitialSymbol())) {
-                    transitionFunction.setCurrentState("q0");
-                    transitionFunction.setFutureState("q1");
-                    transitionFunction.setPops(".");
-                    transitionFunction.setSymbol(Character.toString(element.getRightSide().charAt(0)));
-                    String stacking = ("." .equals(element.getRightSide()) ? (element.getRightSide()) : (element.getRightSide().substring(1)));
-                    transitionFunction.setStacking(stacking);
-                } else {
-                    transitionFunction.setCurrentState("q1");
-                    transitionFunction.setFutureState("q1");
-                    transitionFunction.setPops(element.getLeftSide());
-                    transitionFunction.setSymbol(Character.toString(element.getRightSide().charAt(0)));
-                    transitionFunction.setStacking(element.getRightSide().substring(1));
-                }
-                transitionTable.add(transitionFunction);
-            }
-            automaton.setTransictionFunction(transitionTable);
-        }
-
-        return automaton;
-    }
+//    /**
+//     * @param g: gramática livre de contexto
+//     * @return automaton: gramática livre de contexto convertida em autômato de pilha
+//     */
+//    public static PushdownAutomaton turnsGrammarToPushdownAutomata(final Grammar g) {
+//        Grammar gc = (Grammar) g.clone();
+//        AcademicSupport academic = new AcademicSupport();
+//
+//        if (!gc.isFNG()) {
+//            gc = g.FNG(gc, academic);
+//        }
+//
+//        PushdownAutomaton automaton = new PushdownAutomaton();
+//
+//        if (gc.isFNG()) {
+//            //inicializando o automato
+//            //adiciona estado final
+//            Set<String> finalStates = new LinkedHashSet<>();
+//            finalStates.add("q1");
+//            //automaton.setFinalStates(finalStates);
+//
+//            //adiciona estado inicial
+//            //automaton.setInitialState("q0");
+//
+//            //adiciona os estados que serão utilizados
+//            Set<String> states = new LinkedHashSet<>();
+//            states.add("q0");
+//            states.add("q1");
+//           // automaton.setStates(states);
+//
+//            //adiciona alfabeto da pilha
+//            automaton.setStackAlphabet(gc.getVariables());
+//
+//            //adiciona alfabeto
+//            //automaton.setAlphabet(gc.getTerminals());
+//
+//            //adicionando função de transição
+//            Set<TransitionFunctionPA> transitionTable = new HashSet<>();
+//            for (Rule element : gc.getRules()) {
+//                TransitionFunctionPA transitionFunction = new TransitionFunctionPA();
+//                if (element.getLeftSide().equals(gc.getInitialSymbol())) {
+//                    transitionFunction.setCurrentState("q0");
+//                    transitionFunction.setFutureState("q1");
+//                    transitionFunction.setPops(".");
+//                    transitionFunction.setSymbol(Character.toString(element.getRightSide().charAt(0)));
+//                    String stacking = ("." .equals(element.getRightSide()) ? (element.getRightSide()) : (element.getRightSide().substring(1)));
+//                    transitionFunction.setStacking(stacking);
+//                } else {
+//                    transitionFunction.setCurrentState("q1");
+//                    transitionFunction.setFutureState("q1");
+//                    transitionFunction.setPops(element.getLeftSide());
+//                    transitionFunction.setSymbol(Character.toString(element.getRightSide().charAt(0)));
+//                    transitionFunction.setStacking(element.getRightSide().substring(1));
+//                }
+//                transitionTable.add(transitionFunction);
+//            }
+//            automaton.setTransictionFunction(transitionTable);
+//        }
+//
+//        return automaton;
+//    }
 
     public static String[][] turnsTreesetOnArray(Set<String>[][] CYK, String word) {
         String[][] cykOut = new String[word.length() + 1][word.length()];

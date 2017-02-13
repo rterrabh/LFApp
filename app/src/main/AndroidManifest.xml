@@ -1,164 +1,177 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.ufla.lfapp">
+    package="com.ufla.lfapp">
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/lfapp_icon"
         android:label="LFApp"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.EditAutomataActivity">
-
-        </activity>
+        <activity android:name=".activities.automata.EditAutomataActivity" />
         <activity
-            android:name=".activities.GrammarActivity"
+            android:name=".activities.grammar.GrammarActivity"
             android:label="LFApp"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateVisible|adjustResize">
-        </activity>
+            android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
             android:name=".activities.InfoActivity"
-            android:label="LFApp"/>
+            android:label="LFApp" />
         <activity
             android:name=".activities.AboutActivity"
             android:label="LFApp - Sobre"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.GrammarActivity"/>
+                android:value=".activities.grammar.GrammarActivity" />
         </activity>
         <activity
-            android:name=".activities.menu.MenuActivity"
+            android:name=".activities.grammar.menu.MenuActivity"
             android:label="LFApp - Menu">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.GrammarActivity"/>
+                android:value=".activities.grammar.GrammarActivity" />
         </activity>
         <activity
-            android:name=".activities.algorithms.IdGrammarActivity"
+            android:name=".activities.grammar.algorithms.IdGrammarActivity"
             android:label="LFApp">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.menu.MenuActivity"/>
+                android:value=".activities.grammar.menu.MenuActivity" />
         </activity>
         <activity
-            android:name=".activities.algorithms.DerivationMoreLeftActivity"
+            android:name=".activities.grammar.algorithms.DerivationMoreLeftActivity"
             android:label="LFApp">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.menu.MenuActivity"/>
+                android:value=".activities.grammar.menu.MenuActivity" />
         </activity>
         <activity
-            android:name=".activities.algorithms.RemoveInitialSymbolRecursiveActivity"
+            android:name=".activities.grammar.algorithms.RemoveInitialSymbolRecursiveActivity"
             android:label="LFApp">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.menu.MenuActivity"/>
+                android:value=".activities.grammar.menu.MenuActivity" />
         </activity>
         <activity
-            android:name=".activities.algorithms.EmptyProductionActivity"
+            android:name=".activities.grammar.algorithms.EmptyProductionActivity"
             android:label="LFApp">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.menu.MenuActivity"/>
+                android:value=".activities.grammar.menu.MenuActivity" />
         </activity>
         <activity
-            android:name=".activities.algorithms.ChainRulesActivity"
+            android:name=".activities.grammar.algorithms.ChainRulesActivity"
             android:label="LFApp">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.menu.MenuActivity"/>
+                android:value=".activities.grammar.menu.MenuActivity" />
         </activity>
         <activity
-            android:name=".activities.algorithms.NoTermSymbolsActivity"
+            android:name=".activities.grammar.algorithms.NoTermSymbolsActivity"
             android:label="LFApp">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.menu.MenuActivity"/>
+                android:value=".activities.grammar.menu.MenuActivity" />
         </activity>
         <activity
-            android:name=".activities.algorithms.NoReachSymbolsActivity"
+            android:name=".activities.grammar.algorithms.NoReachSymbolsActivity"
             android:label="LFApp">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.menu.MenuActivity"/>
+                android:value=".activities.grammar.menu.MenuActivity" />
         </activity>
         <activity
-            android:name=".activities.algorithms.ChomskyNormalFormActivity"
+            android:name=".activities.grammar.algorithms.ChomskyNormalFormActivity"
             android:label="LFApp">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.menu.MenuActivity"/>
+                android:value=".activities.grammar.menu.MenuActivity" />
         </activity>
         <activity
-            android:name=".activities.menu.ChomskyNormalFormMenuActivity"
+            android:name=".activities.grammar.menu.ChomskyNormalFormMenuActivity"
             android:label="LFApp - FNC">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.menu.MenuActivity"/>
+                android:value=".activities.grammar.menu.MenuActivity" />
         </activity>
         <activity
-            android:name=".activities.algorithms.RemoveLeftDirectRecursionActivity"
+            android:name=".activities.grammar.algorithms.RemoveLeftDirectRecursionActivity"
             android:label="LFApp">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.menu.MenuActivity"/>
+                android:value=".activities.grammar.menu.MenuActivity" />
         </activity>
         <activity
-            android:name=".activities.algorithms.RemoveLeftRecursionActivity"
+            android:name=".activities.grammar.algorithms.RemoveLeftRecursionActivity"
             android:label="LFApp">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.menu.MenuActivity"/>
+                android:value=".activities.grammar.menu.MenuActivity" />
         </activity>
         <activity
-            android:name=".activities.menu.GreibachNormalFormMenuActivity"
+            android:name=".activities.grammar.menu.RemoveLeftRecursionMenuActivity"
+            android:label="LFApp - Recursão à Esq">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.grammar.menu.MenuActivity" />
+        </activity>
+        <activity
+            android:name=".activities.grammar.menu.GreibachNormalFormMenuActivity"
             android:label="LFApp - FNG">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.menu.MenuActivity"/>
+                android:value=".activities.grammar.menu.MenuActivity" />
         </activity>
         <activity
-            android:name=".activities.algorithms.CYKActivity"
+            android:name=".activities.grammar.algorithms.CYKActivity"
             android:label="LFApp">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.menu.MenuActivity"/>
+                android:value=".activities.grammar.menu.MenuActivity" />
         </activity>
         <activity
-            android:name=".activities.algorithms.GreibachNormalFormActivity"
+            android:name=".activities.grammar.algorithms.GreibachNormalFormActivity"
             android:label="LFApp - FNG - 8/8">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.menu.MenuActivity"/>
+                android:value=".activities.grammar.menu.MenuActivity" />
         </activity>
         <activity
-            android:name=".activities.HistoricalGrammarsActivity"
+            android:name=".activities.grammar.HistoricalGrammarsActivity"
             android:label="LFApp - Histórico">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.GrammarActivity"/>
+                android:value=".activities.grammar.GrammarActivity" />
         </activity>
-
         <activity
-            android:name=".activities.HistoricalAutomataActivity"
+            android:name=".activities.automata.HistoricalAutomataActivity"
             android:label="LFApp - Histórico">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.EditAutomataActivity"/>
+                android:value=".activities.automata.EditAutomataActivity" />
         </activity>
 
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version"/>
+            android:value="@integer/google_play_services_version" />
 
         <activity android:name=".activities.Home">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activities.automata.RegexToAutomataActivity"
+            android:label="@string/title_activity_regex_to_automata"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activities.automata.ConvertAFNDInAFDActivity" />
+        <activity
+            android:name=".activities.automata.AutomatonMinimizationActivity"
+            android:label="@string/title_activity_automaton_minimization"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activities.automata.ItemAutomatonActivity"></activity>
     </application>
 
 </manifest>

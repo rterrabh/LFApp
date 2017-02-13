@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".activities.GrammarActivity">
+    tools:context=".activities.grammar.GrammarActivity">
 
     <!--<item-->
         <!--android:id="@+id/editionMode"-->
@@ -42,8 +42,26 @@
         app:showAsAction="collapseActionView"/>
 
     <item
+        android:id="@+id/transformAFNDInAFDStepByStep"
+        android:title="Transformar AFND em AFD passo a passo"
+        android:orderInCategory="100"
+        app:showAsAction="collapseActionView"/>
+
+    <item
         android:id="@+id/minimizeAFD"
         android:title="Minimizar AFD"
+        android:orderInCategory="100"
+        app:showAsAction="collapseActionView"/>
+
+    <item
+        android:id="@+id/minimizeAFDStepByStep"
+        android:title="Minimizar AFD passo a passo"
+        android:orderInCategory="100"
+        app:showAsAction="collapseActionView"/>
+
+    <item
+        android:id="@+id/regexToAFND"
+        android:title="Criar AFND com Expressão Regular"
         android:orderInCategory="100"
         app:showAsAction="collapseActionView"/>
 

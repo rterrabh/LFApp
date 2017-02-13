@@ -3,6 +3,7 @@ package com.ufla.lfapp.vo.grammar;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
@@ -120,6 +121,46 @@ public class Grammar01Test {
     @Test
     public void testFNG() {
         Grammar newG = g.FNG(g, new AcademicSupport());
+        boolean fng = true;
+        for (Rule element : newG.getRules()) {
+            int counter = 0;
+            if (!element.getLeftSide().equals(newG.getInitialSymbol()) &&
+                    element.getRightSide().equals("")) {
+                fng = false;
+            } else {
+                for (int i = 0; i < element.getRightSide().length() && fng; i++) {
+                    if (Character.isLowerCase(element.getRightSide().charAt(i))) {
+                        counter++;
+                    }
+                }
+                if (counter > 1) {
+                    fng = false;
+                }
+            }
+        }
+
+        assertEquals(true, fng);
+        assertTrue(newG.isFNG());
+    }
+
+    @Test
+    public void testFNG2() {
+        String variables[] = new String[]{"S", "A", "B", "C"};
+        String terminals[] = new String[]{"a", "b", "c"};
+        String initialSymbol = "S";
+        String rules[] = new String[]{
+                "S -> AB | BA | a",
+                "A -> AB | b | c",
+                "B -> AB | CB | b",
+                "C -> CC | c | BC" };
+        Grammar grammar = new Grammar(variables, terminals, initialSymbol, rules);
+        Grammar newG = g.FNG(grammar, new AcademicSupport());
+        System.out.println(newG.toString());
+        String str[] = new String[] {"c", "bBC", "cBC", "bR1BC", "cR1BC", "CBC", "bC", "cR2",
+                "bBCR2", "cBCR2", "bR1BCR2", "cR1BCR2", "CBCR2", "bCR2"};
+        Arrays.sort(str);
+
+        System.out.println(Arrays.toString(str).replace(",", " |"));
         boolean fng = true;
         for (Rule element : newG.getRules()) {
             int counter = 0;

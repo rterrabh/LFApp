@@ -3,10 +3,11 @@ package com.ufla.lfapp.vo.grammar;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.HashSet;
 
 /**
  * Created by juventino on 26/08/15.
@@ -253,12 +254,12 @@ public class AcademicSupport {
         if (decision.equals("Lambda") || decision.equals("TERM")
                 || decision.equals("REACH")) {
             if (!verifySet(firstSet, currentSet)) {
-                Set<String> aux = new HashSet<>();
+                Set<String> aux = new LinkedHashSet<>();
                 aux.addAll(currentSet);
                 firstSet.add(aux);
             }
         } else if (decision.equals("Chain")) {
-            Set<String> aux = new HashSet<>();
+            Set<String> aux = new LinkedHashSet<>();
             aux.addAll(currentSet);
            firstSet.add(aux);
         }
@@ -268,12 +269,12 @@ public class AcademicSupport {
         if (decision.equals("Lambda") || decision.equals("TERM")
                 || decision.equals("REACH")) {
             if (!verifySet(secondSet, currentSet)) {
-                Set<String> aux = new HashSet<>();
+                Set<String> aux = new LinkedHashSet<>();
                 aux.addAll(currentSet);
                 secondSet.add(aux);
             }
         } else if (decision.equals("Chain")) {
-            Set<String> aux = new HashSet<>();
+            Set<String> aux = new LinkedHashSet<>();
             aux.addAll(currentSet);
             secondSet.add(aux);
         }
@@ -283,12 +284,12 @@ public class AcademicSupport {
         if (decision.equals("Lambda") || decision.equals("TERM")
                 || decision.equals("REACH")) {
             if (!verifySet(thirdSet, currentSet)) {
-                Set<String> aux = new HashSet<>();
+                Set<String> aux = new LinkedHashSet<>();
                 aux.addAll(currentSet);
                 thirdSet.add(aux);
             }
         } else if (decision.equals("Chain")) {
-            Set<String> aux = new HashSet<>();
+            Set<String> aux = new LinkedHashSet<>();
             aux.addAll(currentSet);
             thirdSet.add(aux);
         }

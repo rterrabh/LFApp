@@ -55,7 +55,7 @@ public class AutomatonBuilder extends MachineBuilder {
      * @param futureState estado futuro da função de transição
      * @return próprio construtor de autômato
      */
-    public AutomatonBuilder addTransition(String currentState, String symbol, String futureState) {
+    public AutomatonBuilder addTransition(State currentState, String symbol, State futureState) {
         return addTransition(new TransitionFunction(currentState, symbol, futureState));
     }
 
@@ -85,7 +85,7 @@ public class AutomatonBuilder extends MachineBuilder {
      * com o valor dos atributos
      */
     public AutomatonBuilder removeTransitionsWhere(TransitionAtt transitionAtt[],
-                                                  String transitionAttValue[]) {
+                                                  State transitionAttValue[]) {
         if (transitionAtt.length != transitionAttValue.length) {
             throw new RuntimeException("Transitions args array lenght diferrent of types!");
         }
@@ -119,11 +119,11 @@ public class AutomatonBuilder extends MachineBuilder {
      * @return próprio construtor de autômato
      */
     @Override
-    public AutomatonBuilder removeState(String state) {
+    public AutomatonBuilder removeState(State state) {
         removeTransitionsWhere(new TransitionAtt[] { TransitionAtt.CURRENT_STATE },
-                new String[] { state });
+                new State[] { state });
         removeTransitionsWhere(new TransitionAtt[] { TransitionAtt.FUTURE_STATE },
-                new String[] { state });
+                new State[] { state });
         super.removeState(state);
         return this;
     }
@@ -135,8 +135,8 @@ public class AutomatonBuilder extends MachineBuilder {
      * @return próprio construtor de autômato
      */
     @Override
-    public AutomatonBuilder removeStates(Collection<String> states) {
-        for (String state : states) {
+    public AutomatonBuilder removeStates(Collection<State> states) {
+        for (State state : states) {
             removeState(state);
         }
         return this;

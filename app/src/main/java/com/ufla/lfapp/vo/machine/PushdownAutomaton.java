@@ -31,11 +31,11 @@ public class PushdownAutomaton extends Machine {
 		this.transitionFunction = transitionFunction;
 	}
 
-	public PushdownAutomaton(PushdownAutomaton automaton) {
-		this(automaton.getStates(),
-				automaton.getInitialState(), automaton.getFinalStates(),
-				automaton.getStackAlphabet(), automaton.getTransictionFunction());
-	}
+//	public PushdownAutomaton(PushdownAutomaton automaton) {
+//		this(automaton.getStates(),
+//				automaton.getInitialState(), automaton.getFinalStates(),
+//				automaton.getStackAlphabet(), automaton.getTransictionFunction());
+//	}
 
 	public Set<String> getStackAlphabet() {
 		return stackAlphabet;

@@ -2,7 +2,7 @@ package com.ufla.lfapp.vo.grammar;
 
 import java.util.ArrayList;
 import java.util.Deque;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -62,8 +62,8 @@ public class AcademicSupportForRemoveLeftRecursion
     //add methods
     public void addGrammarTransformationStage1(Set<Rule> ruleWithProblems, Set<Rule> newRules,
                                                boolean imediateLeftRecursive) {
-        deleteRulesStage1.add(new HashSet<>(ruleWithProblems));
-        newRulesStage1.add(new HashSet<>(newRules));
+        deleteRulesStage1.add(new LinkedHashSet<>(ruleWithProblems));
+        newRulesStage1.add(new LinkedHashSet<>(newRules));
         isImediateLeftRecursiveStage1.add(imediateLeftRecursive);
     }
 

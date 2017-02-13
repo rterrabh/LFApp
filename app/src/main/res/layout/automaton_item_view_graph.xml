@@ -7,32 +7,35 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/Black"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:id="@+id/creationDate"
-        android:inputType="text"/>
+        android:inputType="text"
+        android:layout_marginBottom="-15dp" />
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="-5dp" >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/Black"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:id="@+id/label"
             android:text="Máquina: "
-            android:inputType="text"/>
+            android:inputType="text"
+            android:layout_marginBottom="-10dp" />
 
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/Black"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:id="@+id/editTextLabel"
-            android:inputType="text"/>
+            android:inputType="text" />
 
     </LinearLayout>
 

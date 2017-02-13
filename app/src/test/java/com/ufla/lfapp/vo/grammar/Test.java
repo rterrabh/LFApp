@@ -1,11 +1,9 @@
 package com.ufla.lfapp.vo.grammar;
 
 import android.graphics.PointF;
-import android.provider.Settings;
 import android.support.v4.util.Pair;
-import android.util.Log;
 
-import com.ufla.lfapp.activities.graph.views.PointUtils;
+import com.ufla.lfapp.activities.automata.graph.views.PointUtils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;

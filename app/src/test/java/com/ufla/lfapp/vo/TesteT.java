@@ -2,6 +2,9 @@ package com.ufla.lfapp.vo;
 
 import org.junit.Test;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by carlos on 12/14/16.
  */
@@ -9,27 +12,14 @@ import org.junit.Test;
 public class TesteT {
 
     @Test
-    public void test() throws InterruptedException {
-        try {
-            Teste teste = new Teste();
-            teste.onDown();
-            Thread.sleep(300);
-            System.out.println(teste.t.isAlive());
-            teste.onDown();
-            teste.onDown();
-            Thread.sleep(100);
-            teste.onDown();
-            Thread.sleep(300);
-            teste.onDown();
-            teste.onDown();
-            Thread.sleep(300);
-            teste.onDown();
-            Thread.sleep(300);
-            teste.onDown();
-            Thread.sleep(300);
-            System.out.println(teste.onOneClickCount + "," + teste.onDoubleTapCount);
-        } catch (InterruptedException e) {
+    public void test() {
+        //System.out.println(format.format(data));
+        Date data = new Date();
 
-        }
+        SimpleDateFormat format = new SimpleDateFormat("dd");
+        int ano = Integer.parseInt(format.format(data));
+        System.out.println("ano " + ano);
+
+
     }
 }

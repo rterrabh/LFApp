@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">LFApp_01</string>
 
-    <string name="hello_world"/>
+    <string name="hello_world" />
     <string name="action_settings">Settings</string>
     <string name="type">Tipo</string>
     <string name="leftSide">u</string>
@@ -138,4 +138,7 @@
     <string name="clean_historical_grammar">Limpar histórico</string>
     <string name="m_quina_de_estados">Máquina de Estados</string>
     <string name="hist_rico">Histórico</string>
+    <string name="title_activity_regex_to_automata">RegexToAutomataActivity</string>
+    <string name="title_activity_automaton_minimization">AutomatonMinimizationActivity</string>
+    <string name="automaton_minimization_algol"><![CDATA[Algoritmo\n Entrada: AFD M = (Q, Σ, δ, q0 , F)\n *1 Para todos os pares de estados qi e qj , i < j, faça:\n \t*1.1 D[i, j] = 0\n \t*1.2 S[i, j] = ∅\n *2 Para cada par [i, j], i < j, se um é estado final e o outro não, faça D[i, j] = 1\n *3 Para cada par [i, j], i < j e D[i, j] = 0, faça:\n \t*3.1 se existe um a ∈ Σ tal que δ(qi, a) = qm e δ(qj , a) = qn e (D[m, n] = 1 ou D[n, m] = 1) então:\n \tDIST (i, j) //altera D[i, j] = 1 e propaga a distinção aos elementos de S[i, j]\n \t*3.2 para cada a ∈ Σ tal que (qi , a) = qm e (qj , a) = qn\n \t*se m < n e [i, j] ≠ [m, n], então adicione [i, j] à S[m, n]\n \t*se m > n e [i, j] ≠ [n, m], então adicione [i, j] à S[n, m]\n *4 Para cada D[i, j] = 0, os estados i e j podem ser fundidos\n]]></string>
 </resources>

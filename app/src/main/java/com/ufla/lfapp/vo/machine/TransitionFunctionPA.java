@@ -8,11 +8,11 @@ public class TransitionFunctionPA extends TransitionFunction implements Serializ
 	private String pops;
 	
 	
-	public TransitionFunctionPA() {
-		this("", "", "", "", "");
-	}
+//	public TransitionFunctionPA() {
+//		this("", "", "", "", "");
+//	}
 	
-	public TransitionFunctionPA(String currentState, String symbol,	String futureState,
+	public TransitionFunctionPA(State currentState, String symbol,	State futureState,
 								String stacking, String pops) {
 		super(currentState, symbol, futureState);
 		this.stacking = stacking;
@@ -23,7 +23,7 @@ public class TransitionFunctionPA extends TransitionFunction implements Serializ
 		this(transitionFunctionPA.getCurrentState(), transitionFunctionPA.getSymbol(),
 				transitionFunctionPA.getFutureState(), transitionFunctionPA.getStacking(),
 				transitionFunctionPA.getPops());
-	}	
+	}
 
 	public String getStacking() {
 		return stacking;

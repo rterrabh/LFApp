@@ -15,6 +15,11 @@ public class MyPoint implements Serializable {
 
     }
 
+    public MyPoint(MyPoint myPoint) {
+        x = myPoint.x;
+        y = myPoint.y;
+    }
+
     public MyPoint(int x, int y) {
         this.x = x;
         this.y = y;
@@ -32,4 +37,29 @@ public class MyPoint implements Serializable {
     public Point toPoint() {
         return new Point(x, y);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MyPoint myPoint = (MyPoint) o;
+
+        if (x != myPoint.x) return false;
+        return y == myPoint.y;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = x;
+        result = 31 * result + y;
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "(" + x + ", " + y + ")";
+    }
+
 }

@@ -12,15 +12,16 @@ public abstract class Machine implements Serializable {
 	/**
 	 * Conjunto dos estados da máquina.
 	 */
-	protected SortedSet<String> states;
+	protected SortedSet<State> states;
+
 	/**
 	 * Estado inicial da máquina.
 	 */
-	protected String initialState;
+	protected State initialState;
 	/**
 	 * Conjunto dos estados finais da máquina.
 	 */
-	protected SortedSet<String> finalStates;
+	protected SortedSet<State> finalStates;
 
 
 	/**
@@ -28,10 +29,19 @@ public abstract class Machine implements Serializable {
 	 * definido como <code>null</code>.
 	 */
 	public Machine() {
-		this(new TreeSet<String>(), null, new TreeSet<String>());
+		this(new TreeSet<State>(), null, new TreeSet<State>());
 	}
 
-
+	protected static SortedSet<State> copyStates(SortedSet<State> states) {
+		SortedSet<State> copyStates = new TreeSet<>();
+		if (states == null) {
+			return copyStates;
+		}
+		for (State state: states) {
+			copyStates.add(state.copy());
+		}
+		return copyStates;
+	}
 	/**
 	 * Construtor base de máquina. Constrói uma máquina com seus 3 atributos. Se algum
 	 * dos atributos agregados forem passados sem nenhum valor, null, será instanciado um objeto
@@ -42,12 +52,68 @@ public abstract class Machine implements Serializable {
 	 * @param finalStates conjunto dos estados finais da máquina
      */
 	public Machine(SortedSet<String> states, String initialState, SortedSet<String> finalStates) {
-		this.states = (states == null) ? new TreeSet<String>() : new TreeSet<>(states);
-		this.initialState = initialState;
-		this.finalStates = (finalStates == null) ? new TreeSet<String>() :
-				new TreeSet<>(finalStates);
+		this.states = new TreeSet<>();
+		if (states != null) {
+			for (String state : states) {
+				this.states.add(new State(state));
+			}
+		}
+		this.initialState = new State(initialState);
+		this.finalStates = new TreeSet<>();
+		if (finalStates != null) {
+			for (String state : finalStates) {
+				this.finalStates.add(new State(state));
+			}
+		}
 	}
 
+	public State getState(String stateName) {
+		for (State state: states) {
+			if (state.getName().equals(stateName)) {
+				return state;
+			}
+		}
+		return null;
+	}
+
+	public void renameState(String oldName, String newName) {
+		getState(oldName).setName(newName);
+	}
+
+	private void initFinalStates(SortedSet<State> finalStates) {
+		this.finalStates = new TreeSet<>();
+		if (finalStates == null) {
+			return;
+		}
+		for (State state: finalStates) {
+			this.finalStates.add(getState(state.getName()));
+		}
+	}
+
+	private void initStates(SortedSet<State> states) {
+		this.states = new TreeSet<>();
+		if (states == null) {
+			return;
+		}
+		for (State state: states) {
+			if (state == null) {
+				continue;
+			}
+			this.states.add(new State(state.getName()));
+		}
+	}
+
+	private void initInitialState(State initialState) {
+		if (initialState != null) {
+			this.initialState = getState(initialState.getName());
+		}
+	}
+
+	public Machine(SortedSet<State> states, State initialState, SortedSet<State> finalStates) {
+		initStates(states);
+		initInitialState(initialState);
+		initFinalStates(finalStates);
+	}
 
 	/**
 	 * Constrói uma cópia da máquina passada por parâmetro.
@@ -67,6 +133,10 @@ public abstract class Machine implements Serializable {
 	 * caso contrário <code>false</code>
      */
 	public boolean isInitialState(String state) {
+		return isInitialState(new State(state));
+	}
+
+	public boolean isInitialState(State state) {
 		return (state == null) ? false : state.equals(initialState);
 	}
 
@@ -79,20 +149,24 @@ public abstract class Machine implements Serializable {
 	 * finais da máquina, caso contrário <code>false</code>
 	 */
 	public boolean isFinalState(String state) {
+		return isFinalState(new State(state));
+	}
+
+	public boolean isFinalState(State state) {
 		return (state == null) ? false : finalStates.contains(state);
 	}
 
 	// MÉTODOS ACESSORES
-	public SortedSet<String> getStates() {
-		return new TreeSet<>(states);
+	public SortedSet<State> getStates() {
+		return states;
 	}
 
-	public String getInitialState() {
+	public State getInitialState() {
 		return initialState;
 	}
 
-	public SortedSet<String> getFinalStates() {
-		return new TreeSet<>(finalStates);
+	public SortedSet<State> getFinalStates() {
+		return finalStates;
 	}
 
 
