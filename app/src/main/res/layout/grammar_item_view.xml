@@ -10,15 +10,13 @@
         android:layout_height="wrap_content"
         android:textColor="@color/Black"
         android:textSize="16sp"
-        android:id="@+id/grammar"
-        android:inputType="textMultiLine"/>
+        android:id="@+id/grammar"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/id"
-        android:visibility="gone"
-        android:inputType="number"/>
+        android:visibility="gone"/>
 
     <RelativeLayout
         android:layout_width="match_parent"

@@ -14,7 +14,7 @@ import com.ufla.lfapp.activities.grammar.algorithms.NoReachSymbolsActivity;
 import com.ufla.lfapp.activities.grammar.algorithms.NoTermSymbolsActivity;
 import com.ufla.lfapp.activities.grammar.algorithms.RemoveInitialSymbolRecursiveActivity;
 import com.ufla.lfapp.activities.grammar.algorithms.RemoveLeftRecursionActivity;
-import com.ufla.lfapp.activities.utils.Algorithm;
+import com.ufla.lfapp.utils.Algorithm;
 
 /**
  * Created by root on 25/07/16.
@@ -44,9 +44,9 @@ public class GreibachNormalFormMenuActivity extends HeaderGrammarActivity {
         findViewById(idView).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Bundle params = new Bundle();
-                params.putString("grammar", grammar);
-                params.putString("word", word);
-                params.putInt("algorithm", Algorithm.GREIBACH_NORMAL_FORM.getValue());
+                params.putString(GRAMMAR_EXTRA, grammar);
+                params.putString(WORD_EXTRA, word);
+                params.putInt(ALGORITHM_EXTRA, Algorithm.GREIBACH_NORMAL_FORM.getValue());
                 Intent intent = new Intent(GreibachNormalFormMenuActivity.this, clazz);
                 intent.putExtras(params);
                 startActivity(intent);

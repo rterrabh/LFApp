@@ -1,0 +1,22 @@
+digraph pda_02 {
+
+	dpi = 480;
+	rankdir=LR;
+
+	"startRes" [shape=point, style="invis"];
+	node [shape = doublecircle, color="#968D8D", fontcolor=black, fillcolor="#FFCCCC", style="filled"];
+	"q1";
+
+	node [shape = circle];
+
+	"q0" [label=<q<sub>0</sub>>, pos="2,3!"];
+	"q1" [label=<q<sub>1</sub>>, pos="5,3!"];
+
+	"startRes" -> "q0";
+
+	"q0" -> "q0" [label="a λ/A\nb λ/B"];
+	"q0" -> "q1" [label="a λ/λ\nb λ/λ\n λ λ/λ"];
+	"q1" -> "q1" [label="a A/λ\nb B/λ"];
+
+
+}

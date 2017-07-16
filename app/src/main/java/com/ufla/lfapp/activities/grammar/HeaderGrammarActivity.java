@@ -13,15 +13,20 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ufla.lfapp.R;
-import com.ufla.lfapp.activities.utils.Algorithm;
-import com.ufla.lfapp.vo.grammar.AcademicSupport;
-import com.ufla.lfapp.vo.grammar.Grammar;
+import com.ufla.lfapp.activities.AppCompatActivityContext;
+import com.ufla.lfapp.utils.Algorithm;
+import com.ufla.lfapp.core.grammar.AcademicSupport;
+import com.ufla.lfapp.core.grammar.Grammar;
 
 /**
  * Created by carlos on 20/07/16.
  */
-public abstract class HeaderGrammarActivity extends AppCompatActivity {
+public abstract class HeaderGrammarActivity extends AppCompatActivityContext {
 
+
+    protected static final String GRAMMAR_EXTRA = "grammar";
+    protected static final String WORD_EXTRA = "word";
+    protected static final String ALGORITHM_EXTRA = "algorithm";
 
     protected String grammar;
     protected String word;
@@ -42,19 +47,27 @@ public abstract class HeaderGrammarActivity extends AppCompatActivity {
         }
     }
 
+    public String getWord() {
+        return word;
+    }
+
     protected Grammar getGrammar() {
         return new Grammar(grammar);
+    }
+
+    public String getGrammarString() {
+        return grammar;
     }
 
     private void setGrammar() {
         Intent intent = getIntent();
         if (intent != null
                 && intent.getExtras() != null
-                && intent.getExtras().getString("grammar") != null) {
+                && intent.getExtras().getString(GRAMMAR_EXTRA) != null) {
             Bundle dados = intent.getExtras();
-            grammar = dados.getString("grammar");
-            word = dados.getString("word");
-            algorithm = Algorithm.getAlgorithm(dados.getInt("algorithm"));
+            grammar = dados.getString(GRAMMAR_EXTRA);
+            word = dados.getString(WORD_EXTRA);
+            algorithm = Algorithm.getAlgorithm(dados.getInt(ALGORITHM_EXTRA));
             Grammar g = getGrammar();
             if (grammar != null) {
                 TextView inputGrammar = (TextView) findViewById(R.id.inputGrammar);
@@ -75,9 +88,9 @@ public abstract class HeaderGrammarActivity extends AppCompatActivity {
 
     protected void changeActivity(Context context, Class<?> cls) {
         Bundle params = new Bundle();
-        params.putString("grammar", grammar);
-        params.putString("word", word);
-        params.putInt("algorithm", algorithm.getValue());
+        params.putString(GRAMMAR_EXTRA, grammar);
+        params.putString(WORD_EXTRA, word);
+        params.putInt(ALGORITHM_EXTRA, algorithm.getValue());
         Intent intent = new Intent(context, cls);
         intent.putExtras(params);
         startActivity(intent);

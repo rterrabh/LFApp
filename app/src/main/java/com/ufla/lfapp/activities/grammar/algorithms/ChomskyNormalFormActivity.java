@@ -8,9 +8,9 @@ import android.widget.TextView;
 
 import com.ufla.lfapp.R;
 import com.ufla.lfapp.activities.grammar.HeaderGrammarActivity;
-import com.ufla.lfapp.activities.utils.UtilActivities;
-import com.ufla.lfapp.vo.grammar.AcademicSupport;
-import com.ufla.lfapp.vo.grammar.Grammar;
+import com.ufla.lfapp.utils.UtilActivities;
+import com.ufla.lfapp.core.grammar.AcademicSupport;
+import com.ufla.lfapp.core.grammar.Grammar;
 
 /**
  * Created by root on 25/07/16.
@@ -28,13 +28,16 @@ public class ChomskyNormalFormActivity extends HeaderGrammarActivity {
     private void setTitle() {
         switch(algorithm) {
             case CHOMSKY_NORMAL_FORM:
-                setTitle("LFApp - FNC - 6/6");
+                setTitle(getResources().getString(R.string.lfapp_cnf_title)
+                        + " - 6/6");
                 break;
             case GREIBACH_NORMAL_FORM:
-                setTitle("LFApp - FNG - 6/8");
+                setTitle(getResources().getString(R.string.lfapp_gnf_title)
+                        + " - 6/8");
                 break;
             case REMOVE_LEFT_RECURSION:
-                setTitle("LFApp - Recursão à Esq - 6/7");
+                setTitle(getResources().getString(R.string.lfapp_left_recursion_title)
+                        + " - 6/7");
                 break;
         }
     }
@@ -82,10 +85,7 @@ public class ChomskyNormalFormActivity extends HeaderGrammarActivity {
         StringBuilder comments = new StringBuilder();
 
         //Realiza comentários sobre o processo
-        comments.append("\t\tUma GLC G = (V,Σ,P,S) está na Forma Normal de Chomsky se suas regras tem uma das seguintes formas:\n" +
-                "\t\t- A -> BC\t onde B, C ∈ V − {S}\n" +
-                "\t\t- A -> a\t onde a ∈ Σ\n" +
-                "\t\t- S → λ");
+        comments.append(getResources().getString(R.string.chomsky_normal_form_algol_comments));
 
         //Coloca resultado de FNC na tela
         TextView chomskyResult = (TextView) findViewById(R.id.FNCResultado);
@@ -99,20 +99,20 @@ public class ChomskyNormalFormActivity extends HeaderGrammarActivity {
 
             //Realiza segundo passo do processo (Mostra gramática com destaques e sem estar em FNC)
             TextView step1FNC = (TextView) findViewById(R.id.Passo2FNC);
-            step1FNC.setText("(1) Identificar as regras que não estão na Forma Normal de Chomsky.");
+            step1FNC.setText(R.string.chomsky_normal_form_step_1);
             TableLayout redGrammar = (TableLayout) findViewById(R.id.Passo2FNC_Resultado);
             UtilActivities.printGrammarWithoutOldRules(gAux, redGrammar,
                     academic, this);
 
             //Realiza o terceiro passo do processo (Mostra gramática com destaques em FNC)
             TextView step2FNC = (TextView) findViewById(R.id.Passo3FNC);
-            step2FNC.setText("(2) Transformar tais regras em um dos formatos válidos.");
+            step2FNC.setText(R.string.chomsky_normal_form_step_2);
             TableLayout blueGrammar  = (TableLayout) findViewById(R.id.Passo3FNC_Resultado);
             UtilActivities.printGrammarWithNewRules(gc, blueGrammar,
                     academic, this);
         } else {
             TextView commentsOfFNC = (TextView) findViewById(R.id.ComentariosFNC6);
-            commentsOfFNC.setText("A gramática inserida já está na Forma Normal de Chomsky.");
+            commentsOfFNC.setText(R.string.chomsky_normal_form_already_cnf);
         }
     }
 

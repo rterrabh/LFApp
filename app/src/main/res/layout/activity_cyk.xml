@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.ufla.lfapp.activities.utils.AutoResizeTextView
+            <com.ufla.lfapp.utils.AutoResizeTextView
                 android:text="@string/cyk"
                 style="@style/TitleSingleLine" />
 
@@ -39,7 +39,7 @@
                     <TextView
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/resultado"
+                        android:text="@string/result"
                         android:textColor="#acff000a"
                         android:textStyle="bold"/>
 
@@ -60,7 +60,7 @@
                         android:id="@+id/TituloAlgoritomCYK"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/algoritmo"
+                        android:text="@string/algorithm"
                         android:textColor="#acff000a"
                         android:textStyle="bold"/>
 

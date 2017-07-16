@@ -10,7 +10,7 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:text="Estado: "
+            android:text="@string/state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textView" />
@@ -32,19 +32,19 @@
             android:id="@+id/chkInitial"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Inicial" />
+            android:text="@string/initial_state" />
 
         <CheckBox
             android:id="@+id/chkFinal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Final" />
+            android:text="@string/final_state" />
 
         <CheckBox
             android:id="@+id/chkMove"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Mover" />
+            android:text="@string/move_state" />
 
     </LinearLayout>
 

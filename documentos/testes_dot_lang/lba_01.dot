@@ -1,0 +1,39 @@
+digraph lba_01 {
+
+	dpi = 480;
+	rankdir=LR;
+
+	"startRes" [shape=point, style="invis"];
+	node [shape = doublecircle, color="#968D8D", fontcolor=black, fillcolor="#FFCCCC", style="filled"];
+	"q7";
+
+	node [shape = circle];
+
+	"q0" [label=<q<sub>0</sub>>, pos="3,3!"];
+	"q1" [label=<q<sub>1</sub>>, pos="6,3!"];
+	"q2" [label=<q<sub>2</sub>>, pos="9,3!"];
+	"q3" [label=<q<sub>3</sub>>, pos="12,3!"];
+	"q4" [label=<q<sub>4</sub>>, pos="15,3!"];
+	"q5" [label=<q<sub>5</sub>>, pos="18,3!"];
+	"q6" [label=<q<sub>6</sub>>, pos="6,6!"];
+	"q7" [label=<q<sub>7</sub>>, pos="9,6!"];
+
+	"startRes" -> "q0";
+
+	"q0" -> "q1" [label="</< D"];
+	"q1" -> "q2" [label="a/X D"];
+	"q1" -> "q6" [label="Y/Y D"];
+	"q2" -> "q2" [label="Y/Y D\na/a D"];
+	"q2" -> "q3" [label="b/Y D"];
+	"q3" -> "q3" [label="Z/Z D\nb/b D"];
+	"q3" -> "q4" [label="c/Z D"];
+	"q4" -> "q4" [label="c/c D"];
+	"q4" -> "q5" [label=">/> E"];
+	"q5" -> "q5" [label="c/c E\nZ/Z E\n b/b E\nY/Y E\na/a E"];
+	"q5" -> "q1" [label="X/X D"];
+	"q6" -> "q6" [label="Y/Y D\nZ/Z D"];
+	"q6" -> "q7" [label=">/> E"];
+	"q7" -> "q7" [label="Z/Z E\nY/Y E\nX/X E"];
+
+
+}

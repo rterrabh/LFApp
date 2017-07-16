@@ -8,11 +8,11 @@ import android.widget.TextView;
 
 import com.ufla.lfapp.R;
 import com.ufla.lfapp.activities.grammar.HeaderGrammarActivity;
-import com.ufla.lfapp.activities.utils.UtilActivities;
-import com.ufla.lfapp.vo.grammar.AcademicSupport;
-import com.ufla.lfapp.vo.grammar.Grammar;
-import com.ufla.lfapp.vo.grammar.GrammarParser;
-import com.ufla.lfapp.vo.grammar.Rule;
+import com.ufla.lfapp.utils.UtilActivities;
+import com.ufla.lfapp.core.grammar.AcademicSupport;
+import com.ufla.lfapp.core.grammar.Grammar;
+import com.ufla.lfapp.core.grammar.GrammarParser;
+import com.ufla.lfapp.core.grammar.Rule;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -40,8 +40,7 @@ public class CYKActivity extends HeaderGrammarActivity {
         TableLayout cykTableResult =  (TableLayout) findViewById(R.id.CYKTabelaResultado);
         cykTableResult.setShrinkAllColumns(true);
         if (!gc.isFNC()) {
-            comments.append("\t\tA gramática inserida não está na Forma Normal de Chomsky." +
-                    " Logo, uma transformação foi necessária.\n");
+            comments.append(getString(R.string.cyk_comments));
 
             //Parser da gramática inserida em FNC
             gc = gc.getGrammarWithInitialSymbolNotRecursive(gc, academic);
@@ -68,9 +67,7 @@ public class CYKActivity extends HeaderGrammarActivity {
         TextView explanationTextView = new TextView(this);
         TableRow explanationTableRow = new TableRow(this);
 
-        explanationTextView.setText("(1) O primeiro passo do algoritmo é" +
-                " adicionar à tabela as \nvariáveis que produzem os " +
-                "respectivos terminais \n diretamente.");
+        explanationTextView.setText(R.string.cyk_step_1);
         explanationTableRow.addView(explanationTextView);
         explanationTable.addView(explanationTableRow);
 
@@ -82,11 +79,17 @@ public class CYKActivity extends HeaderGrammarActivity {
             explanationTextView = new TextView(this);
             explanationTableRow = new TableRow(this);
             aux = new StringBuilder();
-            explanationTextView.append("Há alguma regra que gere " +
-                    firstCell[0] + " diretamente? ");
+            explanationTextView.append(
+                    getResources().getString(R.string.cyk_there_any_rule)+
+                    firstCell[0] + " " +
+                            getResources().getString(R.string.directly)
+                            + "? ");
             explanationTextView.append((checkRules(gc, firstCell[0],
-                    aux)) ? ("Sim.") : ("Não."));
-            explanationTextView.append("\n" + aux.toString());
+                    aux))
+                    ? getResources().getString(R.string.yes)
+                    : getResources().getString(R.string.no)
+            );
+            explanationTextView.append(".\n" + aux.toString());
             explanationTableRow.addView(explanationTextView);
             explanationTable.addView(explanationTableRow);
         }
@@ -120,8 +123,7 @@ public class CYKActivity extends HeaderGrammarActivity {
         row = new TableRow(this);
         explanationTextView = new TextView(this);
         explanationTableRow = new TableRow(this);
-        explanationTextView.setText("(2) O segundo passo do algoritmo é adicionar à tabela as " +
-                "\nvariáveis que produzem as sentenças de tamanho dois.");
+        explanationTextView.setText(R.string.cyk_step_2);
         explanationTableRow.addView(explanationTextView);
         explanationTable.addView(explanationTableRow);
 
@@ -133,11 +135,15 @@ public class CYKActivity extends HeaderGrammarActivity {
             firstCell = cykOut[word.length() - 1][0].split(" ");
             secondCell = cykOut[word.length() - 1][1].split(" ");
             aux = new StringBuilder();
-            explanationTextView.append(Html.fromHtml("Há alguma regra que gere " +
+            explanationTextView.append(Html.fromHtml(
+                    getResources().getString(R.string.cyk_there_any_rule) +
                     permutationOfVariables(firstCell, secondCell) + "? "));
             explanationTextView.append(Html.fromHtml((checkRules(g, firstCell, secondCell,
-                    aux)) ? ("Sim.") : ("Não.")));
-            explanationTextView.append(Html.fromHtml("<br>" + aux.toString()));
+                    aux))
+                    ? getResources().getString(R.string.yes)
+                    : getResources().getString(R.string.no)
+            ));
+            explanationTextView.append(Html.fromHtml(".<br>" + aux.toString()));
             explanationTableRow.addView(explanationTextView);
             explanationTable.addView(explanationTableRow);
         }
@@ -173,8 +179,7 @@ public class CYKActivity extends HeaderGrammarActivity {
         row = new TableRow(this);
         explanationTextView = new TextView(this);
         explanationTableRow = new TableRow(this);
-        explanationTextView.setText("(3) O terceiro passo do algoritmo é adicionar à tabela as " +
-                "\nvariáveis que produzem as sentenças de tamanho três.");
+        explanationTextView.setText(R.string.cyk_step_3);
         explanationTableRow.addView(explanationTextView);
         explanationTable.addView(explanationTableRow);
 
@@ -188,12 +193,16 @@ public class CYKActivity extends HeaderGrammarActivity {
             String[] thirdCell = cykOut[word.length() - 2][0].split(" ");
             String[] fourthCell = cykOut[word.length() - 1][2].split(" ");
             aux = new StringBuilder();
-            explanationTextView.append(Html.fromHtml("Há alguma regra que gere " +
+            explanationTextView.append(Html.fromHtml(
+                    getResources().getString(R.string.cyk_there_any_rule) +
                     permutationOfVariables(firstCell, secondCell) + ", " +
                     permutationOfVariables(thirdCell, fourthCell) + "? "));
             explanationTextView.append(Html.fromHtml((checkRules(g, firstCell, secondCell, aux) |
-                    (checkRules(g, thirdCell, fourthCell, aux))) ? ("Sim.") : ("Não.")));
-            explanationTextView.append(Html.fromHtml("<br>" + aux.toString()));
+                    (checkRules(g, thirdCell, fourthCell, aux)))
+                    ? getResources().getString(R.string.yes)
+                    : getResources().getString(R.string.no)
+            ));
+            explanationTextView.append(Html.fromHtml(".<br>" + aux.toString()));
             explanationTableRow.addView(explanationTextView);
             explanationTable.addView(explanationTableRow);
         }
@@ -229,7 +238,7 @@ public class CYKActivity extends HeaderGrammarActivity {
         explanationTableRow = new TableRow(this);
 
         if (word.length() >= 4) {
-            explanationTextView.setText("E assim por diante.");
+            explanationTextView.setText(R.string.cyk_and_so_on);
             explanationTableRow.addView(explanationTextView);
             explanationTable.addView(explanationTableRow);
         }

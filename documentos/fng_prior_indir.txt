@@ -1,0 +1,86 @@
+###GRAMÁTICA###
+S -> AB | λ
+A -> AB | CB | a
+B -> AB | b
+C -> AC | c
+
+###ORDENAR VARIÁVEIS###
+(S, 1)
+(A, 2)
+(B, 3)
+(C, 4)
+
+# Caso tivéssemos uma recursão à esquerda em C, o algoritmo entraria em loop. 
+# Portanto, para remover a recursão indireta primeiro deve verificar se não há recursão direta na variável.
+###REC INDIR do C no A###
+S -> AB | λ
+A -> AB | a | ACB | cB
+B -> AB | b
+C -> AC | c
+
+###REC DIR em A###
+S -> AB | λ
+A -> a | cB | aR1 | cBR1
+B -> AB | b
+C -> AC | c
+R1 -> B | CB | BR1 | CBR1
+
+###REC IND do A no B###
+S -> AB | λ
+A -> a | cB | aR1 | cBR1
+B -> aB | cBB | aR1B | cBR1B | b
+C -> AC | c
+R1 -> B | CB | BR1 | CBR1
+
+###REC IND do A no C###
+S -> AB | λ
+A -> a | cB | aR1 | cBR1
+B -> aB | cBB | aR1B | cBR1B | b
+C -> aC | cBC | aR1C | cBR1C | c
+R1 -> B | CB | BR1 | CBR1
+
+
+###SÍMBOLO INICIAL###
+
+
+###REC INDIR do A no S###
+S -> aB  | cBB | aR1B | cBR1B | λ
+A -> a  | cB | aR1 | cBR1
+B -> aB  | cBB | aR1B | cBR1B | b
+C -> aC  | cBC | aR1C | cBR1C | c
+R1 -> B | CB | BR1 | CBR1
+
+
+###VARIÁVEIS CRIADAS NO PROCESSO####
+
+
+###REC INDIR do C no R1###
+S -> aB  | cBB | aR1B | cBR1B | λ
+A -> a  | cB | aR1 | cBR1
+B -> aB  | cBB | aR1B | cBR1B | b
+C -> aC  | cBC | aR1C | cBR1C | c
+R1 -> B | CB
+	| aCB  | cBCB | aR1CB | cBR1CB | cB
+	| aCBR1  | cBCBR1 | aR1CBR1 | cBR1CBR1 | cBR1
+
+###REC INDIR do B no R1###
+S -> aB  | cBB | aR1B | cBR1B | λ
+A -> a  | cB | aR1 | cBR1
+B -> aB  | cBB | aR1B | cBR1B | b
+C -> aC  | cBC | aR1C | cBR1C | c
+R1 -> aB  | cBB | aR1B | cBR1B | b
+	| aBR1  | cBBR1 | aR1BR1 | cBR1BR1 | bR1
+	| aCB  | cBCB | aR1CB | cBR1CB | cB
+	| aCBR1  | cBCBR1 | aR1CBR1 | cBR1CBR1 | cBR1
+
+
+
+###FORMA NORMAL DE GREIBACH###
+S -> aB | cBB | aR1B | cBR1B | λ
+A -> a | cB | aR1 | cBR1
+B -> aBB | cBBB | aR1BB | cBR1BB | aCBb | cBCBb | aR1CBb | cBR1CBb | cBb
+C -> aC | cBC | aR1C | cBR1C | c
+R1 -> aBB | cBBB | aR1BB | cBR1BB | aCBb | cBCBb | aR1CBb | cBR1CBb | cBb
+	| aBBR1 | cBBBR1 | aR1BBR1 | cBR1BBR1 | aCBbR1 | cBCBbR1 | aR1CBbR1 | cBR1CBbR1 | cBb
+	| aCB | cBCB | aR1CB | cBR1CB | cB
+	| aCBR1 | cBCBR1 | aR1CBR1 | cBR1CBR1 | cBR1

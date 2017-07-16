@@ -8,9 +8,9 @@ import android.widget.TextView;
 
 import com.ufla.lfapp.R;
 import com.ufla.lfapp.activities.grammar.HeaderGrammarActivity;
-import com.ufla.lfapp.activities.utils.UtilActivities;
-import com.ufla.lfapp.vo.grammar.AcademicSupport;
-import com.ufla.lfapp.vo.grammar.Grammar;
+import com.ufla.lfapp.utils.UtilActivities;
+import com.ufla.lfapp.core.grammar.AcademicSupport;
+import com.ufla.lfapp.core.grammar.Grammar;
 
 import java.util.List;
 
@@ -30,13 +30,16 @@ public class NoTermSymbolsActivity extends HeaderGrammarActivity {
     private void setTitle() {
         switch(algorithm) {
             case CHOMSKY_NORMAL_FORM:
-                setTitle("LFApp - FNC - 4/6");
+                setTitle(getResources().getString(R.string.lfapp_cnf_title)
+                        + " - 4/6");
                 break;
             case GREIBACH_NORMAL_FORM:
-                setTitle("LFApp - FNG - 4/8");
+                setTitle(getResources().getString(R.string.lfapp_gnf_title)
+                        + " - 4/8");
                 break;
             case REMOVE_LEFT_RECURSION:
-                setTitle("LFApp - Recursão à Esq - 4/7");
+                setTitle(getResources().getString(R.string.lfapp_left_recursion_title)
+                        + " - 4/7");
                 break;
         }
     }
@@ -73,7 +76,7 @@ public class NoTermSymbolsActivity extends HeaderGrammarActivity {
 
         //Realiza comentários sobre o processo
         StringBuilder comments = new StringBuilder();
-        comments.append("\t\tRemove as regras que não geram terminais. Consiste de dois passos: ");
+        comments.append(getString(R.string.term_cnf_comments));
 
         //Configura a gramática de resultado
         TextView resultGrammar = (TextView) findViewById(R.id.ResultNoTerm);
@@ -87,7 +90,7 @@ public class NoTermSymbolsActivity extends HeaderGrammarActivity {
 
             //Configura o primeiro passo (Montar conjuntos)
             TextView creatingSetOfChains = (TextView) findViewById(R.id.NoTermStep1);
-            creatingSetOfChains.setText("(1) Determinar quais variáveis geram terminais direta e indiretamente.");
+            creatingSetOfChains.setText(R.string.term_cnf_step_1);
             TextView pseudo = (TextView) findViewById(R.id.PseudoTermAlgorithm);
             pseudo.setText(Html.fromHtml(getTermAlgorithm()));
             TableLayout tableOfSets = (TableLayout) findViewById(R.id.TableOfSetsNoTerm);
@@ -104,13 +107,13 @@ public class NoTermSymbolsActivity extends HeaderGrammarActivity {
             variables = variables.replace("]", "}");
             String othersVariables = UtilActivities.selectOthersVariables(g,
                     academicSupport.getFirstSet().get(academicSupport.getFirstSet().size() - 1));
-            eliminatingNoTermRules.setText("(2) Remover as variáveis que não estão em " + variables +", \n i.e., "+ othersVariables +".");
+            eliminatingNoTermRules.setText(getString(R.string.term_cnf_step_2) + variables +", \n i.e., "+ othersVariables +".");
             TableLayout grammarWithoutOldRules = (TableLayout) findViewById(R.id.GrammarWithNoTerm);
             UtilActivities.printOldGrammarOfTermAndReach(g,
                     grammarWithoutOldRules, academicSupport, this);
         } else {
             TextView result = (TextView) findViewById(R.id.CommentsNoTerms);
-            result.setText("Todas variáveis da gramática geram terminais.");
+            result.setText(R.string.term_cnf_result);
         }
     }
 
@@ -119,16 +122,6 @@ public class NoTermSymbolsActivity extends HeaderGrammarActivity {
      * @return
      */
     public String getTermAlgorithm() {
-        StringBuilder algol = new StringBuilder();
-        StringBuilder a = new StringBuilder();
-        a.append("TERM = {A | existe uma regra A → w ∈ P, com w ∈ Σ<sup>∗</sup> }<br>");
-        algol.append("TERM = {A | existe uma regra A → w ∈ P, com w ∈ Σ<sup>∗</sup> }<br>");
-        algol.append("<b>repita</b><br>");
-        algol.append("&nbsp;&nbsp;PREV = TERM<br>");
-        algol.append("&nbsp;&nbsp;<b>para cada</b> A ∈ V <b>faça</b><br>");
-        algol.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>se</b> A → w ∈ P e w ∈ (PREV ∪ Σ)<sup>∗</sup> <b>então</b><br>");
-        algol.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TERM = TERM ∪ {A}<br>");
-        algol.append("<b>até</b> PREV == TERM");
-        return algol.toString();
+        return getString(R.string.term_cnf_algol);
     }
 }

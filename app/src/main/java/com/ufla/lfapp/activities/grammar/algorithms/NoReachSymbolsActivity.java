@@ -9,10 +9,10 @@ import android.widget.TextView;
 
 import com.ufla.lfapp.R;
 import com.ufla.lfapp.activities.grammar.HeaderGrammarActivity;
-import com.ufla.lfapp.activities.utils.UtilActivities;
-import com.ufla.lfapp.vo.grammar.AcademicSupport;
-import com.ufla.lfapp.vo.grammar.Grammar;
-import com.ufla.lfapp.vo.grammar.Rule;
+import com.ufla.lfapp.utils.UtilActivities;
+import com.ufla.lfapp.core.grammar.AcademicSupport;
+import com.ufla.lfapp.core.grammar.Grammar;
+import com.ufla.lfapp.core.grammar.Rule;
 
 import java.util.Iterator;
 import java.util.List;
@@ -34,13 +34,16 @@ public class NoReachSymbolsActivity extends HeaderGrammarActivity {
     private void setTitle() {
         switch(algorithm) {
             case CHOMSKY_NORMAL_FORM:
-                setTitle("LFApp - FNC - 5/6");
+                setTitle(getResources().getString(R.string.lfapp_cnf_title)
+                        + " - 5/6");
                 break;
             case GREIBACH_NORMAL_FORM:
-                setTitle("LFApp - FNG - 5/8");
+                setTitle(getResources().getString(R.string.lfapp_gnf_title)
+                        + " - 5/8");
                 break;
             case REMOVE_LEFT_RECURSION:
-                setTitle("LFApp - Remover Recursão à Esquerda - 5/7");
+                setTitle(getResources().getString(R.string.lfapp_left_recursion_title)
+                        + " - 5/7");
                 break;
         }
     }
@@ -80,7 +83,7 @@ public class NoReachSymbolsActivity extends HeaderGrammarActivity {
         academic.setResult(gc);
 
         //Realiza comentários sobre o processo
-        comments.append("\t\tRemover as variáveis não alcançáveis no processo de derivação de uma palavra.\n");
+        comments.append(getString(R.string.reach_cnf_comments));
 
         //Mostra o resultado do processo
         TextView tableOfResult = (TextView) findViewById(R.id.ResultNoReach);
@@ -94,8 +97,8 @@ public class NoReachSymbolsActivity extends HeaderGrammarActivity {
 
             //Primeiro passo do processo (Construção dos Conjuntos)
             TextView step1 = (TextView) findViewById(R.id.NoReachStep1);
-            step1.setText("(1) Determinar quais variáveis são alcançáveis a partir do símbolo " +
-                    "inicial " + gc.getInitialSymbol() + ".");
+            step1.setText(getString(R.string.reach_cnf_step_1)
+                    + gc.getInitialSymbol() + ".");
             TextView pseudo = (TextView) findViewById(R.id.PseudoReachAlgorithm);
             pseudo.setText(Html.fromHtml(getReachAlgorithm()));
             TableLayout tableOfSets = (TableLayout) findViewById(R.id.tableOfSetsNoReach);
@@ -113,18 +116,18 @@ public class NoReachSymbolsActivity extends HeaderGrammarActivity {
                 variables = variables.replace("[", "{");
                 variables = variables.replace("]", "}");
                 String othersVariables = UtilActivities.selectOthersVariables(g, academic.getFirstSet().get(academic.getFirstSet().size() - 1));
-                step2.setText("(2) Remover as variáveis que não estão em " + variables + ", i.e., " + othersVariables +".");
+                step2.setText(getString(R.string.reach_cnf_step_2) + variables + ", i.e., " + othersVariables +".");
                 TableLayout tableResult = (TableLayout) findViewById(R.id.tableOfIrregularRulesReach);
                 UtilActivities.printOldGrammarOfTermAndReach(g, tableResult,
                         academic, this);
             } else {
                 TextView step2 = (TextView) findViewById(R.id.NoReachStep2);
-                step2.setText("(2) Todos os símbolos são alcançáveis.");
+                step2.setText(R.string.reach_cnf_step_2_1);
             }
 
         } else {
             TextView commentsOfNoReach = (TextView) findViewById(R.id.CommentsNoReach);
-            commentsOfNoReach.setText("\t\tNão há símbolos alcançáveis na gramática inserida.");
+            commentsOfNoReach.setText(R.string.reach_cnf_step_comments_2);
         }
 
     }
@@ -135,16 +138,7 @@ public class NoReachSymbolsActivity extends HeaderGrammarActivity {
      */
     public String getReachAlgorithm() {
         StringBuilder algol = new StringBuilder();
-        algol.append("REACH = {S}<br>");
-        algol.append("PREV = ∅<br>");
-        algol.append("<b>repita</b><br>");
-        algol.append("&nbsp;&nbsp;&nbsp;NEW = REACH − PREV<br>");
-        algol.append("&nbsp;&nbsp;&nbsp;PREV = REACH<br>");
-        algol.append("&nbsp;&nbsp;&nbsp;<b>para cada</b> A ∈ NEW <b>faça</b><br>");
-        algol.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>para cada</b> A → w <b>faça</b><br>");
-        algol.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;adicione as variáveis de w em REACH" +
-                "<br>");
-        algol.append("<b>até</b> REACH == PREV");
+        algol.append(getString(R.string.reach_cnf_algol));
         return algol.toString();
     }
 

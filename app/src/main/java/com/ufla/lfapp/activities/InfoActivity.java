@@ -14,7 +14,7 @@ import com.ufla.lfapp.activities.grammar.GrammarActivity;
 /**
  * Created by juventino on 21/03/16.
  */
-public class InfoActivity extends AppCompatActivity {
+public class InfoActivity extends AppCompatActivityContext {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

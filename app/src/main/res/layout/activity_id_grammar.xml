@@ -22,8 +22,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.ufla.lfapp.activities.utils.AutoResizeTextView
-                android:text="@string/idGrammar"
+            <com.ufla.lfapp.utils.AutoResizeTextView
+                android:text="@string/grammar_identification"
                 style="@style/TitleSingleLine" />
 
             <LinearLayout

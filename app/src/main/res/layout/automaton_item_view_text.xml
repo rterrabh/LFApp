@@ -8,8 +8,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/Black"
         android:textSize="16sp"
-        android:id="@+id/creationDate"
-        android:inputType="text"/>
+        android:id="@+id/creationDate" />
 
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -23,8 +22,7 @@
             android:textColor="@color/Black"
             android:textSize="16sp"
             android:id="@+id/label"
-            android:text="Máquina: "
-            android:inputType="text"/>
+            android:text="@string/machine" />
 
         <EditText
             android:layout_width="wrap_content"
@@ -42,32 +40,28 @@
         android:layout_height="wrap_content"
         android:textColor="@color/Black"
         android:textSize="16sp"
-        android:id="@+id/states"
-        android:inputType="text"/>
+        android:id="@+id/states" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/Black"
         android:textSize="16sp"
-        android:id="@+id/alphabet"
-        android:inputType="text"/>
+        android:id="@+id/alphabet" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/Black"
         android:textSize="16sp"
-        android:id="@+id/initialState"
-        android:inputType="text"/>
+        android:id="@+id/initialState" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/Black"
         android:textSize="16sp"
-        android:id="@+id/finalStates"
-        android:inputType="text"/>
+        android:id="@+id/finalStates" />
 
 
     <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -85,7 +79,7 @@
             android:layout_width="80dp"
             android:layout_height="48dp"
             android:layout_alignParentLeft="true"
-            android:text="Copiar" />
+            android:text="@string/copy" />
 
         <ImageButton
             android:id="@+id/deleteAutomaton"
@@ -93,7 +87,7 @@
             android:layout_height="48dp"
             android:layout_alignParentRight="true"
             android:src="@drawable/ic_delete_forever_black_24dp"
-            android:contentDescription="Excluir autômato" />
+            android:contentDescription="@string/delete_automaton" />
 
     </RelativeLayout>
 

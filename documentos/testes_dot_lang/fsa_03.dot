@@ -1,0 +1,24 @@
+digraph fsa_03 {
+
+	dpi = 480;
+	rankdir=LR;
+
+	"startRes" [shape=point, style="invis"];
+	node [shape = doublecircle, color="#968D8D", fontcolor=black, fillcolor="#FFCCCC", style="filled"];
+	"q3";
+
+	node [shape = circle];
+
+	"q0" [label=<q<sub>0</sub>>, pos="2,3!"];
+	"q1" [label=<q<sub>1</sub>>, pos="5,3!"];
+	"q3" [label=<q<sub>3</sub>>, pos="8,3!"];
+
+	"startRes" -> "q0";
+
+	"q0" -> "q1" [label="a\nb"];
+	"q0" -> "q3" [label="λ"];
+	"q1" -> "q3" [label="a\nb"];
+	"q3" -> "q0" [label="λ"];
+
+
+}

@@ -4,13 +4,11 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:text="Etapa de transformação de AFND-λ para AFND realizada com sucesso!
-        \nDeseja ir para a transformação de AFND para AFD?\n"
+        android:text="@string/conf_afnd_lambda_to_afd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:lineSpacingMultiplier="1.5"
         android:textSize="14sp"
-        android:singleLine="false"
         android:textColor="@color/Black"
         android:id="@+id/textView" />
 

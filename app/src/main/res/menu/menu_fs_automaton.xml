@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!--<item-->
+        <!--android:id="@+id/editionMode"-->
+        <!--android:title="Modo Edição"-->
+        <!--android:orderInCategory="100"-->
+        <!--app:showAsAction="always"/>-->
+
+    <!--<item-->
+        <!--android:id="@+id/creationMode"-->
+        <!--android:title="Modo Criação"-->
+        <!--android:orderInCategory="100"-->
+        <!--app:showAsAction="always"/>-->
+
+    <!--<item-->
+        <!--android:id="@+id/defineInitialState"-->
+        <!--android:title="Definir estado inicial"-->
+        <!--android:orderInCategory="100"-->
+        <!--app:showAsAction="collapseActionView"/>-->
+
+    <item
+        android:id="@+id/clear"
+        android:title="Clear"
+        android:orderInCategory="100"
+        app:showAsAction="collapseActionView"/>
+
+    <item
+        android:id="@+id/completeAutomaton"
+        android:title="@string/compl_automaton"
+        android:orderInCategory="100"
+        app:showAsAction="collapseActionView"/>
+
+    <item
+        android:id="@+id/verifyEntry"
+        android:title="@string/processar_palavra"
+        android:orderInCategory="100"
+        app:showAsAction="collapseActionView"/>
+
+    <!--<item-->
+        <!--android:id="@+id/transformAFNDInAFD"-->
+        <!--android:title="@string/convert_fsand_fsad"-->
+        <!--android:orderInCategory="100"-->
+        <!--app:showAsAction="collapseActionView"/>-->
+
+    <item
+        android:id="@+id/transformAFNDInAFDStepByStep"
+        android:title="@string/convert_fsand_fsad_step_by_step"
+        android:orderInCategory="100"
+        app:showAsAction="collapseActionView"/>
+
+    <!--<item-->
+        <!--android:id="@+id/minimizeAFD"-->
+        <!--android:title="@string/min_fsa"-->
+        <!--android:orderInCategory="100"-->
+        <!--app:showAsAction="collapseActionView"/>-->
+
+    <item
+        android:id="@+id/minimizeAFDStepByStep"
+        android:title="@string/min_fsa_step_by_step"
+        android:orderInCategory="100"
+        app:showAsAction="collapseActionView"/>
+
+    <item
+        android:id="@+id/regexToAFND"
+        android:title="@string/min_fsand_regular_expression"
+        android:orderInCategory="100"
+        app:showAsAction="collapseActionView"/>
+
+    <item
+        android:id="@+id/history"
+        android:title="@string/history"
+        android:orderInCategory="100"
+        app:showAsAction="collapseActionView"/>
+
+</menu>

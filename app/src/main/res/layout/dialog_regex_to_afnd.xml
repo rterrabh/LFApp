@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:text="Expressão regular:\nOBS: utilize o caractere '/' para o operador união (ou)."
+        android:text="@string/regular_expression"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textView" />

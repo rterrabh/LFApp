@@ -1,9 +1,12 @@
 package com.ufla.lfapp.activities;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -11,15 +14,47 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.ufla.lfapp.R;
-import com.ufla.lfapp.activities.automata.EditAutomataActivity;
+import com.ufla.lfapp.activities.machine.pda.EditPushdownAutomatonActivity;
+import com.ufla.lfapp.activities.machine.tm.EditTMEnumActivity;
+import com.ufla.lfapp.activities.machine.tm.EditTMMultiTapesActivity;
+import com.ufla.lfapp.activities.machine.tm.EditTMMultiTracksActivity;
+import com.ufla.lfapp.activities.machine.tm.EditTuringMachineActivity;
+import com.ufla.lfapp.activities.machine.fsa.EditFiniteStateAutomatonActivity;
 import com.ufla.lfapp.activities.grammar.GrammarActivity;
 
-public class Home extends AppCompatActivity {
+import java.util.Map;
+
+public class Home extends AppCompatActivityContext {
+
+    public static boolean CLEAR_PREFERENCES = true;
+
+    public void clearPreferences(Context context) {
+        String[] preferencesFiles = new String[] {
+                "activities.machine.pda.EditPushdownAutomatonActivity",
+                "activities.machine.tm.EditTMEnumActivity",
+                "activities.machine.tm.EditTMMultiTapesActivity",
+                "activities.machine.tm.EditTMMultiTracksActivity",
+                "activities.machine.tm.EditTuringMachineActivity",
+                "activities.machine.tm.EditTuringMachineActivity",
+                "activities.machine.tm.EditTuringMachineActivity",
+                "activities.machine.fsa.EditFiniteStateAutomatonActivity",
+                "activities.grammar.g.GrammarActivity"
+        };
+        for (String prefFile : preferencesFiles) {
+            context.getSharedPreferences(
+                    prefFile, MODE_PRIVATE).edit().clear().apply();
+        }
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        if (CLEAR_PREFERENCES) {
+            clearPreferences(this);
+            CLEAR_PREFERENCES = false;
+        }
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         int heighLfappLogo = (int) (metrics.heightPixels * 0.35f);
         ImageView lfappLogoView = (ImageView) findViewById(R.id.imageViewLFAppLogo);
@@ -35,13 +70,38 @@ public class Home extends AppCompatActivity {
     }
 
 
-    public void goToStateMachineActivity(View view) {
-        Intent intent = new Intent(this, EditAutomataActivity.class);
+    public void goToFSAActivity(View view) {
+        Intent intent = new Intent(this, EditFiniteStateAutomatonActivity.class);
+        startActivity(intent);
+    }
+
+    public void goToPDAActivity(View view) {
+        Intent intent = new Intent(this, EditPushdownAutomatonActivity.class);
         startActivity(intent);
     }
 
     public void goToGrammarActivity(View view) {
         Intent intent = new Intent(this, GrammarActivity.class);
+        startActivity(intent);
+    }
+
+    public void goToTuringMachineActivity(View view) {
+        Intent intent = new Intent(this, EditTuringMachineActivity.class);
+        startActivity(intent);
+    }
+
+    public void goToTuringMachineMultiTrackActivity(View view) {
+        Intent intent = new Intent(this, EditTMMultiTracksActivity.class);
+        startActivity(intent);
+    }
+
+    public void goToTuringMachineMultiTapeActivity(View view) {
+        Intent intent = new Intent(this, EditTMMultiTapesActivity.class);
+        startActivity(intent);
+    }
+
+    public void goToTuringMachineEnumActivity(View view) {
+        Intent intent = new Intent(this, EditTMEnumActivity.class);
         startActivity(intent);
     }
 
@@ -64,10 +124,10 @@ public class Home extends AppCompatActivity {
         };
         //Solicita confirmação de saída do lfapp
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Sair");
-        builder.setMessage("Sair do LFApp?");
-        builder.setPositiveButton("Sim", dialogClickListener);
-        builder.setNegativeButton("Não", dialogClickListener);
+        builder.setTitle(R.string.exit);
+        builder.setMessage(R.string.exit_lfapp);
+        builder.setPositiveButton(R.string.yes, dialogClickListener);
+        builder.setNegativeButton(R.string.no, dialogClickListener);
         builder.show();
         //}
     }

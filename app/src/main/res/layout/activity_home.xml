@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,10 +12,14 @@
     tools:context=".activities.Home">
 
     <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <android.support.constraint.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:id="@+id/logoLFAppLayout"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/buttonsLayout"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent">
@@ -30,59 +34,132 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
+                android:id="@+id/imageViewLFAppLogo"
                 android:layout_width="match_parent"
                 android:layout_height="190dp"
-                android:id="@+id/imageViewLFAppLogo"
-                android:src="@drawable/lfapp_feature_graphic"
-                android:scaleType="fitXY"
+                android:layout_marginBottom="-10dp"
                 android:contentDescription="@string/lfapp_icon"
                 android:paddingBottom="0dp"
-                android:layout_marginBottom="-10dp" />
+                android:scaleType="fitXY"
+                android:src="@drawable/lfapp_feature_graphic" />
 
             <Button
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/m_quina_de_estados"
-                android:id="@+id/button"
-                android:onClick="goToStateMachineActivity"
+                android:text="@string/finite_state_automaton"
+                android:id="@+id/buttonFSA2"
+                android:onClick="goToFSAActivity"
                 android:paddingTop="0dp"
-                android:layout_marginTop="-10dp" />
+                android:layout_marginTop="-10dp"
+                android:layout_width="match_parent" />
 
         </LinearLayout>
 
     </android.support.constraint.ConstraintLayout>
 
     <android.support.constraint.ConstraintLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
         android:id="@+id/buttonsLayout"
-        app:layout_constraintTop_toBottomOf="@+id/logoLFAppLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/logoUFLALayout"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent">
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logoLFAppLayout">
 
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Gramática"
-                android:id="@+id/button2"
-                android:onClick="goToGrammarActivity"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+
+        <!--<ScrollView-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--app:layout_constraintLeft_toLeftOf="parent"-->
+            <!--app:layout_constraintRight_toRightOf="parent"-->
+            <!--app:layout_constraintTop_toTopOf="parent">-->
+
+
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="vertical">-->
+
+                <Button
+                    android:id="@+id/buttonPDA"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:onClick="goToPDAActivity"
+                    android:text="@string/pushdown_automaton"
+                    app:layout_constraintBottom_toTopOf="@+id/buttonTM"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/buttonTM"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:onClick="goToTuringMachineActivity"
+                    android:text="@string/turing_machine"
+                    app:layout_constraintBottom_toTopOf="@+id/buttonTMMultiTrack"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/buttonPDA" />
+
+                <Button
+                    android:id="@+id/buttonTMMultiTrack"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:onClick="goToTuringMachineMultiTrackActivity"
+                    android:text="@string/multi_track_tm"
+                    app:layout_constraintBottom_toTopOf="@+id/buttonTMMultiTape"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/buttonTM" />
+
+                <Button
+                    android:id="@+id/buttonTMMultiTape"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:onClick="goToTuringMachineMultiTapeActivity"
+                    android:text="@string/multi_tape_tm"
+                    app:layout_constraintBottom_toTopOf="@+id/buttonTMEnum"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/buttonTMMultiTrack" />
+
+                <Button
+                    android:id="@+id/buttonTMEnum"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:onClick="goToTuringMachineEnumActivity"
+                    android:text="@string/enumerator_tm"
+                    app:layout_constraintBottom_toTopOf="@+id/buttonGrammar"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/buttonTMMultiTape" />
+
+                <Button
+                    android:id="@+id/buttonGrammar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:onClick="goToGrammarActivity"
+                    android:text="@string/grammar"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/buttonTMEnum" />
+
+            <!--</LinearLayout>-->
+
+        <!--</ScrollView>-->
 
     </android.support.constraint.ConstraintLayout>
 
 
     <android.support.constraint.ConstraintLayout
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/logoUFLALayout"
-        app:layout_constraintTop_toBottomOf="@+id/buttonsLayout"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent">
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonsLayout">
 
         <ImageView
             android:layout_width="190dp"
@@ -102,4 +179,7 @@
     </android.support.constraint.ConstraintLayout>
 
 
-</android.support.constraint.ConstraintLayout>
+    </android.support.constraint.ConstraintLayout>
+
+
+</ScrollView>

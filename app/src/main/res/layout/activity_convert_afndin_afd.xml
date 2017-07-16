@@ -15,7 +15,7 @@
         app:layout_constraintLeft_toLeftOf="parent">
 
         <TextView
-            android:text="Entrada:"
+            android:text="@string/input"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textColor="@color/Black"
@@ -27,7 +27,7 @@
             app:layout_constraintLeft_toLeftOf="parent"/>
 
         <TextView
-            android:text="Saída:"
+            android:text="@string/output"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textColor="@color/Black"
@@ -77,7 +77,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="12sp"
-            android:text="Algol"
+            android:text="@string/algorithm_abr"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -88,7 +88,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="12sp"
-            android:text="Copiar"
+            android:text="@string/copy"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/algol"
@@ -99,18 +99,18 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="12sp"
-            android:text="Fim"
+            android:text="@string/end"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/copyAutomaton"
-            app:layout_constraintRight_toLeftOf="@+id/back" />
+            app:layout_constraintRight_toLeftOf="@+id/previous" />
 
         <Button
-            android:id="@+id/back"
+            android:id="@+id/previous"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="12sp"
-            android:text="Anterior"
+            android:text="@string/previous"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/end"
@@ -121,10 +121,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="12sp"
-            android:text="Próximo"
+            android:text="@string/next"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/back"
+            app:layout_constraintLeft_toRightOf="@+id/previous"
             app:layout_constraintRight_toRightOf="parent" />
 
     </android.support.constraint.ConstraintLayout>

@@ -8,9 +8,9 @@ import android.widget.TextView;
 
 import com.ufla.lfapp.R;
 import com.ufla.lfapp.activities.grammar.HeaderGrammarActivity;
-import com.ufla.lfapp.vo.grammar.AcademicSupport;
-import com.ufla.lfapp.vo.grammar.Grammar;
-import com.ufla.lfapp.vo.grammar.GrammarParser;
+import com.ufla.lfapp.core.grammar.AcademicSupport;
+import com.ufla.lfapp.core.grammar.Grammar;
+import com.ufla.lfapp.core.grammar.GrammarParser;
 
 /**
  * Created by root on 18/07/16.
@@ -39,7 +39,7 @@ public class IdGrammarActivity extends HeaderGrammarActivity {
         //LINHA 1
         TableRow row0 = new TableRow(this);
         TextView tv0_0 = new TextView(this);
-        tv0_0.setText("(3) GR");
+        tv0_0.setText("(3) " + getString(R.string.regular_grammar_abr));
         TextView tv0_1 = new TextView(this);
         tv0_1.setText("u ∈ V");
         TextView tv0_2 = new TextView(this);
@@ -53,7 +53,7 @@ public class IdGrammarActivity extends HeaderGrammarActivity {
         //LINHA 2
         TableRow row1 = new TableRow(this);
         TextView tv1_0 = new TextView(this);
-        tv1_0.setText("(2) GLC");
+        tv1_0.setText("(2) " + getString(R.string.context_free_grammar_abr));
         TextView tv1_1 = new TextView(this);
         tv1_1.setText("u ∈ V");
         TextView tv1_2 = new TextView(this);
@@ -67,7 +67,7 @@ public class IdGrammarActivity extends HeaderGrammarActivity {
         //LINHA 3
         TableRow row2 = new TableRow(this);
         TextView tv2_0 = new TextView(this);
-        tv2_0.setText("(1) GSC");
+        tv2_0.setText("(1) " + getString(R.string.context_sensible_grammar_abr));
         TextView tv2_1 = new TextView(this);
         tv2_1.setText(Html.fromHtml("u ∈ (V U Σ)<sup>+</sup>"));
         TextView tv2_2 = new TextView(this);
@@ -81,7 +81,7 @@ public class IdGrammarActivity extends HeaderGrammarActivity {
         //LINHA 4
         TableRow row3 = new TableRow(this);
         TextView tv3_0 = new TextView(this);
-        tv3_0.setText("(0) GI");
+        tv3_0.setText("(0) " + getString(R.string.unrestricted_grammar_abr));
         TextView tv3_1 = new TextView(this);
         tv3_1.setText(Html.fromHtml("u ∈ (V U Σ)<sup>+</sup>"));
         TextView tv3_2 = new TextView(this);
@@ -99,7 +99,7 @@ public class IdGrammarActivity extends HeaderGrammarActivity {
 
         TextView commentsOfSolution = (TextView) findViewById(R.id.comments);
         if(commentsOfSolution != null) {
-            commentsOfSolution.setText(Html.fromHtml("<b><font color=red>Resultado:</b><br>"
+            commentsOfSolution.setText(Html.fromHtml(getString(R.string.result_red)
                     + comments + "<br>" + academic.getSolutionDescription()));
         }
     }

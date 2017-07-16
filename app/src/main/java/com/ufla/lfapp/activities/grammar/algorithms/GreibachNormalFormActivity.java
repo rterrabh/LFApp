@@ -9,10 +9,10 @@ import android.widget.TextView;
 
 import com.ufla.lfapp.R;
 import com.ufla.lfapp.activities.grammar.HeaderGrammarActivity;
-import com.ufla.lfapp.vo.grammar.AcademicSupport;
-import com.ufla.lfapp.vo.grammar.AcademicSupportFNG;
-import com.ufla.lfapp.vo.grammar.AcademicSupportForRemoveLeftRecursion;
-import com.ufla.lfapp.vo.grammar.Grammar;
+import com.ufla.lfapp.core.grammar.AcademicSupport;
+import com.ufla.lfapp.core.grammar.AcademicSupportFNG;
+import com.ufla.lfapp.core.grammar.AcademicSupportForRemoveLeftRecursion;
+import com.ufla.lfapp.core.grammar.Grammar;
 
 import java.util.HashMap;
 
@@ -72,15 +72,8 @@ public class GreibachNormalFormActivity extends HeaderGrammarActivity {
         if (academic.getSituation()) {
             //Insere os comentários na tela
             TextView commentsOfFNG = (TextView) findViewById(R.id.FNGComentarios2);
-            commentsOfFNG.append("Uma GLC G = (V , Σ, P, S) está na FN de Greibach se suas " +
-                    "regras têm uma das seguintes formas:\n");
-            commentsOfFNG.append(Html.fromHtml("- A -> aA<sub><small>1</small></sub>A<sub>" +
-                    "<small>2</small></sub>A<sub><small>3</small></sub>...A<sub><small>n" +
-                    "</small></sub>"));
-            commentsOfFNG.append(Html.fromHtml("\t\t onde a ∈ Σ e A<sub><small>1</small>" +
-                    "</sub>... A<sub><small>n</small></sub> ∈ V − {S}<br>"));
-            commentsOfFNG.append("- A -> a\t\t onde a ∈ Σ\n");
-            commentsOfFNG.append("- A -> λ");
+            commentsOfFNG.append(Html
+                    .fromHtml(getString(R.string.greibach_normal_formal_comments)));
             ((TextView) findViewById(R.id.step1GreibachNormalForm)).setText(Html
                     .fromHtml(getResources().getString(R.string.removing_left_recursive_algol_p2)));
             for(String transformation : academicSupportFNG
@@ -108,8 +101,7 @@ public class GreibachNormalFormActivity extends HeaderGrammarActivity {
                         .addView(tableRow);
             }
         } else {
-            ((TextView) findViewById(R.id.FNGComentarios2)).setText("A gramática inserida já " +
-                    "está na Forma Normal de Greibach.");
+            ((TextView) findViewById(R.id.FNGComentarios2)).setText(R.string.greibach_normal_formal_already);
         }
     }
 

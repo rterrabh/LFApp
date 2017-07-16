@@ -1,24 +1,24 @@
 <resources>
-    <string name="app_name">LFApp_01</string>
+    <string name="app_name">LFApp</string>
 
     <string name="hello_world" />
     <string name="action_settings">Settings</string>
-    <string name="type">Tipo</string>
-    <string name="leftSide">u</string>
-    <string name="rightSide">v</string>
-    <string name="gr">Gramática Regular</string>
-    <string name="gr_u">u ∈ V</string>
-    <string name="gr_v">v ∈ λ | Σ | ΣV</string>
-    <string name="glc">Gramática Livre de Contexto</string>
-    <string name="glc_u">u ∈ V</string>
-    <string name="glc_v">v ∈ (V ∪ Σ)∗</string>
-    <string name="gsc">Gramática Sensível ao Contexto</string>
-    <string name="gsc_u">u ∈ (V ∪ Σ)+</string>
-    <string name="gsc_v">v ∈ (V ∪ Σ)+</string>
-    <string name="gsc_condition">|u| ≤ |v|</string>
-    <string name="gi">Gramática Irrestrita</string>
-    <string name="gi_u">u ∈ (V ∪ Σ)+</string>
-    <string name="gi_v">v ∈ (V ∪ Σ)*</string>
+    <string name="type">Type</string>
+    <string name="rule_left_side">u</string>
+    <string name="rule_right_side">v</string>
+    <string name="regular_grammar">Regular grammar</string>
+    <string name="rg_u">u ∈ V</string>
+    <string name="rg_v">v ∈ λ | Σ | ΣV</string>
+    <string name="context_free_grammar">Context-Free Grammar</string>
+    <string name="cfg_u">u ∈ V</string>
+    <string name="cfg_v">v ∈ (V ∪ Σ)∗</string>
+    <string name="context_sensitive_grammar">Context-Sensitive Grammar</string>
+    <string name="csg_u">u ∈ (V ∪ Σ)+</string>
+    <string name="csg_v">v ∈ (V ∪ Σ)+</string>
+    <string name="csg_condition">|u| ≤ |v|</string>
+    <string name="unrestricted_grammar">Unrestricted Grammar</string>
+    <string name="ug_u">u ∈ (V ∪ Σ)+</string>
+    <string name="ug_v">v ∈ (V ∪ Σ)*</string>
     <string name="logo_ufla">Logo UFLA</string>
     <string name="team">
         Carlos Pereira\n
@@ -29,116 +29,679 @@
         terra (at) dcc.ufla.br
     </string>
     <string name="team_html">
-        &lt;font size="18"&gt;&lt;b&gt;Carlos Pereira&lt;/b&gt;&lt;/font&gt;&lt;br /&gt;
-        &lt;font size="15"&gt;carloshpereira27 (at) gmail.com&lt;/font&gt;&lt;br /&gt;&lt;br /&gt;
-        &lt;b&gt;&lt;font size="18"&gt;Juventino Neto&lt;/font&gt;&lt;/b&gt;&lt;br /&gt;
-        &lt;font size="15"&gt;jneto (at) computacao.ufla.br&lt;/font&gt;&lt;br /&gt;&lt;br /&gt;
-        &lt;b&gt;&lt;font size="18"&gt;Ricardo Terra&lt;/font&gt;&lt;/b&gt;&lt;br /&gt;
-        &lt;font size="15"&gt;terra (at) dcc.ufla.br&lt;/font&gt;
+        <![CDATA[
+        <font size="18"><b>Carlos Pereira</b></font><br />
+        <font size="15">carloshpereira27 (at) gmail.com</font><br /><br />
+        <b><font size="18">Juventino Neto</font></b><br />
+        <font size="15">jneto (at) computacao.ufla.br</font><br /><br />
+        <b><font size="18">Ricardo Terra</font></b><br />
+        <font size="15">terra (at) dcc.ufla.br</font>
+         ]]>
     </string>
     <string name="lfapp_icon">LFApp Icon</string>
     <string name="close">Close</string>
-    <string name="gramatica">Gramática:</string>
-    <string name="palavra_para_cyk_e_deriva_o">Palavra (caso se queira verificar aceitações e derivações):</string>
+    <string name="grammar_td">Grammar:</string>
+    <string name="word_description_grammar">
+        Word (if you want to verify acceptances and derivations):
+    </string>
     <string name="lambda">λ</string>
-    <string name="arrow"><![CDATA[->]]></string>
+    <string name="arrow"><![CDATA[→]]></string>
     <string name="pipe">|</string>
     <string name="ok">OK</string>
-    <string name="about_button">About button.</string>
+    <string name="about_button">About</string>
     <string name="removing_left_recursive_algol_p1">
-        (2) Remover as recursões em ordem:&lt;br/&gt;
-        &lt;b&gt;ALGORITMO&lt;/b&gt;&lt;br/&gt;
-        &lt;b&gt;para&lt;/b&gt; i = 1 até n &lt;b&gt;faça&lt;/b&gt;&lt;br/&gt;
-        \u00A0\u00A0\u00A0 &lt;b&gt;se&lt;/b&gt; A&lt;sub&gt;&lt;small&gt;i&lt;/sub&gt;&lt;/small&gt; possui recursão direta à esquerda &lt;b&gt;então&lt;/b&gt;&lt;br/&gt;
-        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 elimine a recursão em A&lt;sub&gt;&lt;small&gt;i&lt;/sub&gt;&lt;/small&gt;&lt;br/&gt;
-        \u00A0\u00A0\u00A0 &lt;b&gt;fim&lt;/b&gt;&lt;br/&gt;
-        \u00A0\u00A0\u00A0 &lt;b&gt;para&lt;/b&gt; j = i+1 até n &lt;b&gt;faça&lt;/b&gt;&lt;br/&gt;
-        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 &lt;b&gt;para&lt;/b&gt; cada produção em A&lt;sub&gt;&lt;small&gt;j&lt;/sub&gt;&lt;/small&gt; &lt;b&gt;faça&lt;/b&gt;&lt;br/&gt;
-        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 &lt;b&gt;se&lt;/b&gt; A&lt;sub&gt;&lt;small&gt;j&lt;/sub&gt;&lt;/small&gt; -&gt; A&lt;sub&gt;&lt;small&gt;i&lt;/sub&gt;&lt;/small&gt;&#947; &lt;b&gt;então&lt;/b&gt;&lt;br/&gt;
-        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 substitua A&lt;sub&gt;&lt;small&gt;j&lt;/sub&gt;&lt;/small&gt; -&gt; A&lt;sub&gt;&lt;small&gt;i&lt;/sub&gt;&lt;/small&gt;&#947;&lt;br/&gt;
-        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 por A&lt;sub&gt;&lt;small&gt;j&lt;/sub&gt;&lt;/small&gt; -&gt; &#948;&lt;sub&gt;&lt;small&gt;1&lt;/sub&gt;&lt;/small&gt;&#947; | &#948;&lt;sub&gt;&lt;small&gt;2&lt;/sub&gt;&lt;/small&gt;&#947; | ... | &#948;&lt;sub&gt;&lt;small&gt;k&lt;/sub&gt;&lt;/small&gt;&#947;&lt;br/&gt;
-        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 onde A&lt;sub&gt;&lt;small&gt;i&lt;/sub&gt;&lt;/small&gt; -&gt; &#948;&lt;sub&gt;&lt;small&gt;1&lt;/sub&gt;&lt;/small&gt; | &#948;&lt;sub&gt;&lt;small&gt;2&lt;/sub&gt;&lt;/small&gt; | ... | &#948;&lt;sub&gt;&lt;small&gt;k&lt;/sub&gt;&lt;/small&gt;&lt;br/&gt;
-        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 são todas as produções atuais de A&lt;sub&gt;&lt;small&gt;i&lt;/sub&gt;&lt;/small&gt;&lt;br/&gt;
-        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 &lt;b&gt;fim&lt;/b&gt;&lt;br/&gt;
-        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 &lt;b&gt;fim&lt;/b&gt;&lt;br/&gt;
-        \u00A0\u00A0\u00A0 &lt;b&gt;fim&lt;/b&gt;&lt;br/&gt;
-        &lt;b&gt;fim&lt;/b&gt;&lt;br/&gt;
+        <![CDATA[
+        (2) Remove recursions in order:<br/>
+        <b>PSEUDOCODE</b><br/>
+        <b>for</b> i = 1 to n <b>do</b><br/>
+            &nbsp;&nbsp;&nbsp;
+            <b>if</b> A<sub><small>i</sub></small> has direct left recursion <b>then</b><br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                eliminate recursion in A<sub><small>i</sub></small><br/>
+            &nbsp;&nbsp;&nbsp;
+            <b>end</b><br/>
+            &nbsp;&nbsp;&nbsp;
+            <b>for</b> j = i+1 to n <b>do</b><br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b>for</b> each production in A<sub><small>j</sub></small> <b>do</b><br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <b>if</b> A<sub><small>j</sub></small> → A<sub><small>i</sub></small>&#947; <b>then</b><br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        replace A<sub><small>j</sub></small> → A<sub><small>i</sub></small>&#947;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        with A<sub><small>j</sub></small> → &#948;<sub><small>1</sub></small>&#947; | &#948;<sub><small>2</sub></small>&#947; | … | &#948;<sub><small>k</sub></small>&#947;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        where A<sub><small>i</sub></small> → &#948;<sub><small>1</sub></small> | &#948;<sub><small>2</sub></small> | … | &#948;<sub><small>k</sub></small><br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        are all current productions of A<sub><small>i</sub></small><br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <b>end</b><br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b>end</b><br/>
+            &nbsp;&nbsp;&nbsp;
+            <b>end</b><br/>
+        <b>end</b><br/>
+        ]]>
     </string>
     <string name="removing_left_recursive_algol_p2">
-        (1) Remover regras do tipo
-        A&lt;sub&gt;&lt;small&gt;j&lt;/sub&gt;&lt;/small&gt; -&gt; A&lt;sub&gt;&lt;small&gt;i&lt;/sub&gt;&lt;/small&gt;&#947;,
-        na ordem inversa da utilizada para remover recursão à esquerda:&lt;br/&gt;
-        &lt;b&gt;ALGORITMO&lt;/b&gt;&lt;br/&gt;
-        &lt;b&gt;para&lt;/b&gt; i = n até 1 &lt;b&gt;faça&lt;/b&gt;&lt;br/&gt;
-        \u00A0\u00A0\u00A0 &lt;b&gt;para&lt;/b&gt; j = i-1 até 1 &lt;b&gt;faça&lt;/b&gt;&lt;br/&gt;
-        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 &lt;b&gt;para&lt;/b&gt; cada produção em A&lt;sub&gt;&lt;small&gt;j&lt;/sub&gt;&lt;/small&gt; &lt;b&gt;faça&lt;/b&gt;&lt;br/&gt;
-        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 &lt;b&gt;se&lt;/b&gt; A&lt;sub&gt;&lt;small&gt;j&lt;/sub&gt;&lt;/small&gt; -&gt; A&lt;sub&gt;&lt;small&gt;i&lt;/sub&gt;&lt;/small&gt;&#947; &lt;b&gt;então&lt;/b&gt;&lt;br/&gt;
-        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 substitua A&lt;sub&gt;&lt;small&gt;j&lt;/sub&gt;&lt;/small&gt; -&gt; A&lt;sub&gt;&lt;small&gt;i&lt;/sub&gt;&lt;/small&gt;&#947;&lt;br/&gt;
-        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 por A&lt;sub&gt;&lt;small&gt;j&lt;/sub&gt;&lt;/small&gt; -&gt; &#948;&lt;sub&gt;&lt;small&gt;1&lt;/sub&gt;&lt;/small&gt;&#947; | &#948;&lt;sub&gt;&lt;small&gt;2&lt;/sub&gt;&lt;/small&gt;&#947; | ... | &#948;&lt;sub&gt;&lt;small&gt;k&lt;/sub&gt;&lt;/small&gt;&#947;&lt;br/&gt;
-        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 onde A&lt;sub&gt;&lt;small&gt;i&lt;/sub&gt;&lt;/small&gt; -&gt; &#948;&lt;sub&gt;&lt;small&gt;1&lt;/sub&gt;&lt;/small&gt; | &#948;&lt;sub&gt;&lt;small&gt;2&lt;/sub&gt;&lt;/small&gt; | ... | &#948;&lt;sub&gt;&lt;small&gt;k&lt;/sub&gt;&lt;/small&gt;&lt;br/&gt;
-        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 são todas as produções atuais de A&lt;sub&gt;&lt;small&gt;i&lt;/sub&gt;&lt;/small&gt;&lt;br/&gt;
-        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 &lt;b&gt;fim&lt;/b&gt;&lt;br/&gt;
-        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 &lt;b&gt;fim&lt;/b&gt;&lt;br/&gt;
-        \u00A0\u00A0\u00A0 &lt;b&gt;fim&lt;/b&gt;&lt;br/&gt;
-        &lt;b&gt;fim&lt;/b&gt;&lt;br/&gt;
+        <![CDATA[
+        (1) Remove rules of type A<sub><small>j</sub></small> → A<sub><small>i</sub></small>&#947;, in the reverse order of that used to remove left recursion:<br/>
+        <b>PSEUDOCODE</b><br/>
+        <b>for</b> i = n to 1 <b>do</b><br/>
+            &nbsp;&nbsp;&nbsp;
+            <b>for</b> j = i-1 to 1 <b>do</b><br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b>for</b> each production in A<sub><small>j</sub></small> <b>do</b><br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <b>if</b> A<sub><small>j</sub></small> → A<sub><small>i</sub></small>&#947; <b>then</b><br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        replace A<sub><small>j</sub></small> → A<sub><small>i</sub></small>&#947;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        with A<sub><small>j</sub></small> → &#948;<sub><small>1</sub></small>&#947; | &#948;<sub><small>2</sub></small>&#947; | … | &#948;<sub><small>k</sub></small>&#947;<br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        where A<sub><small>i</sub></small> → &#948;<sub><small>1</sub></small> | &#948;<sub><small>2</sub></small> | … | &#948;<sub><small>k</sub></small><br/>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        are all current productions of A<sub><small>i</sub></small><br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <b>end</b><br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b>end</b><br/>
+            &nbsp;&nbsp;&nbsp;
+            <b>end</b><br/>
+        <b>end</b><br/>
+        ]]>
     </string>
     <string name="removing_left_recursive_algol_p3">
-        (2) Remover regras do tipo Z&lt;sub&gt;&lt;small&gt;i&lt;/sub&gt;&lt;/small&gt; -&gt; V&#947; nas variáveis criadas pelo algoritmo de remoção de recursão à esquerda, em
-        ordem:&lt;br/&gt;
-        &lt;b&gt;ALGORITMO&lt;/b&gt;&lt;br/&gt;
-        &lt;b&gt;para&lt;/b&gt; i = 1 até n &lt;b&gt;faça&lt;/b&gt;&lt;br/&gt;
-        \u00A0\u00A0\u00A0 &lt;b&gt;para&lt;/b&gt; cada produção em Z&lt;sub&gt;&lt;small&gt;i&lt;/sub&gt;&lt;/small&gt; &lt;b&gt;faça&lt;/b&gt;&lt;br/&gt;
-        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 &lt;b&gt;se&lt;/b&gt; Z&lt;sub&gt;&lt;small&gt;i&lt;/sub&gt;&lt;/small&gt; -&gt; V&#947; &lt;b&gt;então&lt;/b&gt;&lt;br/&gt;
-        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 substitua Z&lt;sub&gt;&lt;small&gt;i&lt;/sub&gt;&lt;/small&gt; -&gt; V&#947;&lt;br/&gt;
-        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 por Z&lt;sub&gt;&lt;small&gt;i&lt;/sub&gt;&lt;/small&gt; -&gt; &#948;&lt;sub&gt;&lt;small&gt;1&lt;/sub&gt;&lt;/small&gt;&#947; | &#948;&lt;sub&gt;&lt;small&gt;2&lt;/sub&gt;&lt;/small&gt;&#947; | ... | &#948;&lt;sub&gt;&lt;small&gt;k&lt;/sub&gt;&lt;/small&gt;&#947;&lt;br/&gt;
-        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 onde V -&gt; &#948;&lt;sub&gt;&lt;small&gt;1&lt;/sub&gt;&lt;/small&gt; | &#948;&lt;sub&gt;&lt;small&gt;2&lt;/sub&gt;&lt;/small&gt; | ... | &#948;&lt;sub&gt;&lt;small&gt;k&lt;/sub&gt;&lt;/small&gt;&lt;br/&gt;
-        \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 &lt;b&gt;fim&lt;/b&gt;&lt;br/&gt;
-        \u00A0\u00A0\u00A0 &lt;b&gt;fim&lt;/b&gt;&lt;br/&gt;
-        &lt;b&gt;fim&lt;/b&gt;&lt;br/&gt;
+        <![CDATA[
+        (2) Remove rules of type Z<sub><small>i</sub></small> → V&#947; in the variables created by the left recursion removal algorithm, in order:<br/>
+        <b>PSEUDOCODE</b><br/>
+        <b>for</b> i = 1 to n <b>do</b><br/>
+            &nbsp;&nbsp;&nbsp;
+            <b>for</b> each production in Z<sub><small>i</sub></small> <b>do</b><br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b>if</b> Z<sub><small>i</sub></small> → V&#947; <b>then</b><br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    replace Z<sub><small>i</sub></small> → V&#947;<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    with Z<sub><small>i</sub></small> → &#948;<sub><small>1</sub></small>&#947; | &#948;<sub><small>2</sub></small>&#947; | … | &#948;<sub><small>k</sub></small>&#947;<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    where V → &#948;<sub><small>1</sub></small> | &#948;<sub><small>2</sub></small> | … | &#948;<sub><small>k</sub></small><br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b>end</b><br/>
+            &nbsp;&nbsp;&nbsp;
+            <b>end</b><br/>
+        <b>end</b><br/>
+        ]]>
     </string>
     <string name="lfapp">LFApp:</string>
-    <string name="o_lfapp_um_aplicativo_m_vel_para_auxiliar_o_ensino_e_aprendizagem_de_lfa">
-        O LFApp é um aplicativo móvel para auxiliar o ensino e aprendizagem de LFA.
+    <string name="lfapp_description">
+        LFApp is a mobile application to assist the teaching and learning of Formal Languages and Automata (FLA).
     </string>
-    <string name="gram_tica">Gramática:</string>
-    <string name="o_usu_rio_deve_inserir_uma_gram_tica_com_as_seguintes_configura">
-        O usuário deve inserir uma gramática com as seguintes configurações: - Deve iniciar com uma letra maiúscula - O primeiro símbolo será o símbolo inicial - Letras maiúsculas são consideradas variáveis - Letras minúsculas são consideradas terminais
+    <string name="user_help_grammar">
+        The user should enter a grammar with the following settings: - Must start with a capital letter - The first symbol will be the start symbol - Capital letters are considered variables - Lowercase letters are considered terminals.
     </string>
-    <string name="voltar">Voltar</string>
-    <string name="desenvolvido_por_juventino_neto_sob_orienta_o_de_ricardo_terra">
+    <string name="develop_juv">
         Desenvolvido por Juventino Neto sob orientação de Ricardo Terra.
     </string>
 
     <string name="title_activity_fullscreen">FullscreenActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
-    <string name="gram_tica_de_entrada">Gramática de entrada:</string>
-    <string name="idGrammar">Identificação da Gramática</string>
-    <string name="derivationMostLeft">Derivação Mais à Esquerda</string>
-    <string name="removeRecursiveInitialSymbol">Remoção da Recursão no Símbolo Inicial</string>
-    <string name="removeEmptyProduction">Remoção de Produções Vazias</string>
-    <string name="removeChainRule">Remoção de Regras de Cadeia</string>
-    <string name="term">Remoção de Variáveis que Não Geram Terminais</string>
-    <string name="reach">Remoção de Símbolos Não Alcançáveis</string>
-    <string name="chomskyNormalForm">Forma Normal de Chomsky</string>
-    <string name="removeRecursionDirectleft">Remoção de Recursão Direta à Esquerda</string>
-    <string name="removeRecursionLeft">Remoção de Recursão Direta e Indireta à Esquerda</string>
-    <string name="greibachNormalForm">Forma Normal de Greibach</string>
+    <string name="input_grammar">Input grammar:</string>
+    <string name="grammar_identification">Grammar Identification</string>
+    <string name="leftmost_derivation">Leftmost Derivation</string>
+    <string name="elimination_recursion_start_symbol">Elimination of the Recursion of the Start Symbol</string>
+    <string name="elimination_empty_productions">Elimination of Lambda Rules</string>
+    <string name="elimination_chain_rules">Elimination of Chain Rules</string>
+    <string name="term">Remove Variables That Do Not Generate Terminal Strings</string>
+    <string name="reach">Remove Unreachable Symbols</string>
+    <string name="chomsky_normal_form">Chomsky Normal Form</string>
+    <string name="removal_direct_left_recursion">Removal of Direct Left Recursion</string>
+    <string name="removal_left_recursion">Removal of Direct and Indirect Left Recursion</string>
+    <string name="greibach_normal_form">Greibach Normal Form</string>
     <string name="cyk">CYK</string>
-    <string name="explanation_grammar_type">A classificação de uma gramática é feita pelo tipo de suas regras (u → v). A tabela abaixo mostra o formato de regras características de cada nível: \n</string>
-    <string name="pendente">Pendente.</string>
-    <string name="resultado">Resultado:</string>
-    <string name="algoritmo">Algoritmo:</string>
-    <string name="properties_chomsky_normal_form">Aplicar Propriedades da Forma Normal de Chomsky</string>
-    <string name="propertiesGreibachNormalForm">Aplicar Propriedades da Forma Normal de Greibach</string>
+    <string name="explanation_grammar_type">
+        The classification of a grammar is made by the type of its rules (u → v). The table below shows the format of rules characteristic of each level: \n</string>
+    <string name="pending">Pending.</string>
+    <string name="result">Result:</string>
+    <string name="algorithm">Algorithm:</string>
+    <string name="properties_chomsky_normal_form">Chomsky Normal Form</string>
+    <string name="properties_greibach_normal_form">Greibach Normal Form</string>
     <string name="back">Back</string>
     <string name="next">Next</string>
-    <string name="copy">Copiar</string>
+    <string name="copy">Copy</string>
     <string name="delete_grammar">Delete grammar.</string>
-    <string name="clean_historical_grammar">Limpar histórico</string>
-    <string name="m_quina_de_estados">Máquina de Estados</string>
-    <string name="hist_rico">Histórico</string>
+    <string name="clean_history">Clean history</string>
+    <string name="state_machine">State Machine</string>
+    <string name="history">History</string>
     <string name="title_activity_regex_to_automata">RegexToAutomataActivity</string>
     <string name="title_activity_automaton_minimization">AutomatonMinimizationActivity</string>
-    <string name="automaton_minimization_algol"><![CDATA[Algoritmo\n Entrada: AFD M = (Q, Σ, δ, q0 , F)\n *1 Para todos os pares de estados qi e qj , i < j, faça:\n \t*1.1 D[i, j] = 0\n \t*1.2 S[i, j] = ∅\n *2 Para cada par [i, j], i < j, se um é estado final e o outro não, faça D[i, j] = 1\n *3 Para cada par [i, j], i < j e D[i, j] = 0, faça:\n \t*3.1 se existe um a ∈ Σ tal que δ(qi, a) = qm e δ(qj , a) = qn e (D[m, n] = 1 ou D[n, m] = 1) então:\n \tDIST (i, j) //altera D[i, j] = 1 e propaga a distinção aos elementos de S[i, j]\n \t*3.2 para cada a ∈ Σ tal que (qi , a) = qm e (qj , a) = qn\n \t*se m < n e [i, j] ≠ [m, n], então adicione [i, j] à S[m, n]\n \t*se m > n e [i, j] ≠ [n, m], então adicione [i, j] à S[n, m]\n *4 Para cada D[i, j] = 0, os estados i e j podem ser fundidos\n]]></string>
+
+    <string name="algol_automaton_minimization">
+        <![CDATA[
+        <b>Input:</b> AFD M = <i>(Q, Σ, δ, q<sub><small>0</small></sub>, F)</i><br>
+        <b>1</b> For all pairs of states <i>q<sub><small>i</small></sub></i> and <i>q<sub><small>j</small></sub></i> , <i>i</i> < <i>j</i>, do:<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <b>1.1</b> <i>D</i>[<i>i</i>, <i>j</i>] = 0<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <b>1.2</b> <i>S</i>[<i>i</i>, <i>j</i>] = ∅<br>
+        <b>2</b> For each pair [<i>i</i>, <i>j</i>], <i>i</i> < <i>j</i>, if one is final state and the other isn\'t, do <i>D</i>[<i>i</i>, <i>j</i>] = 1<br>
+        <b>3</b> For each pair [<i>i</i>, <i>j</i>], <i>i</i> < <i>j</i> and <i>D</i>[<i>i</i>, <i>j</i>] = 0, do:<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <b>3.1</b> if there is a ∈ Σ such that δ(<i>q<sub><small>i</small></sub></i>, <i>a</i>) = <i>q<sub><small>n</small></sub></i> and δ(<i>q<sub><small>j</small></sub></i> , <i>a</i>) = <i>q<sub><small>n</small></sub></i> and (<i>D</i>[<i>m</i>, n] = 1 or <i>D</i>[n, <i>m</i>] = 1) then:<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b>•</b> DIST (<i>i</i>, <i>j</i>) //change <i>D</i>[<i>i</i>, <i>j</i>] = 1 and propagate the distinction to the elements of <i>S</i>[<i>i</i>, <i>j</i>]<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <b>3.2</b> for each <i>a</i> ∈ Σ such that (q<sub><small>i</small></sub> , <i>a</i>) = q<sub><small>m</small></sub> and (q<sub><small>j</small></sub> , <i>a</i>) = q<sub><small>n</small></sub><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b>•</b> if <i>m</i> < n and [<i>i</i>, <i>j</i>] ≠ [<i>m</i>, n], then add [<i>i</i>, <i>j</i>] to <i>S</i>[<i>m</i>, n]<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b>•</b> if <i>m</i> > n and [<i>i</i>, <i>j</i>] ≠ [n, <i>m</i>], then add [<i>i</i>, <i>j</i>] to <i>S</i>[n, <i>m</i>]<br>
+        <b>4</b> For each <i>D</i>[<i>i</i>, <i>j</i>] = 0, the <states></states> <i>i</i> and <i>j</i> can be merged
+        ]]>
+    </string>
+
+    <string name="ambiguity_check">
+        Ambiguity check
+    </string>
+
+    <string name="title_activity_cfgto_pdastage1">
+        CFGToPDAStage1Activity
+    </string>
+
+    <string name="title_activity_cfgto_pdastage2">
+        CFGToPDAStage2Activity
+    </string>
+
+    <string name="title_activity_cfgto_pdastage3">
+        CFGToPDAStage3Activity
+    </string>
+
+    <string name="cfgToPDAStage1Descr">
+        <![CDATA[
+        Greibach Normal Form:<br>
+        A → aA<sub><small>1</small></sub>A<sub><small>2</small></sub>A<sub><small>3</small></sub> … A<sub><small>n</small></sub> where a ∈ Σ and A<sub><small>1..n</small></sub> ∈ V - {S}<br>
+        A → a<br>
+        S → λ
+        ]]>
+    </string>
+
+    <string name="cfgToPDAStage2Descr">
+        <![CDATA[
+        Create an PDA extended M = (Q, Σ, Γ, δ, q0, F): <sub><small>(start state q0)</small></sub><br>
+        Q<sub><small>M</small></sub> = {q0, q1}, Σ<sub><small>M</small></sub> = Σ<sub><small>G</small></sub>, Γ<sub><small>M</small></sub> = V<sub><small>G</small></sub> - {S}, F<sub><small>M</small></sub>={q1}
+        ]]>
+    </string>
+
+    <string name="cfgToPDAStage3Descr">
+        <![CDATA[
+        If S → λ ∈ P then δ(q<sub><small>0</small></sub>,λ,λ)=[q<sub><small>1</small></sub>,λ]<br>
+        If S → aw ∈ P then δ(q<sub><small>0</small></sub>,a,λ)=[q<sub><small>1</small></sub>,w]
+        ]]>
+    </string>
+
+    <string name="cfgToPDAStage4Descr">
+        <![CDATA[
+        If A → aw ∈ P e A ∈ V - {S} then δ(q<sub><small>0</small></sub>,a,A)=[q<sub><small>1</small></sub>,w]
+        ]]>
+    </string>
+    <string name="algolPDAToCFGStage4">
+        <![CDATA[
+        For all q<sub><small>k</small></sub> ∈ Q<br>
+         <b>•&nbsp;</b><q<sub><small>k</small></sub>, λ, q<sub><small>k</small></sub>> &rarr; λ
+        ]]>
+    </string>
+    <string name="algolPDAToCFGStage1">
+        <![CDATA[
+        <b>•&nbsp;</b>All language accepted by an PDA is an CFL<br>
+        <b>•&nbsp;</b>Given an AP, generate an PDA extend M\' where <i>δ\'</i> inherits all transitions from <i>δ</i> and adds two <under>new<under> transitions:<br>
+            &nbsp;&nbsp;&nbsp;
+            <b>•&nbsp;</b>If q<sub><small>j</small></sub>, λ] ∈ <i>δ</i> (q<sub><small>i</small></sub>, u, λ) then<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b>•&nbsp;</b>[q<sub><small>j</small></sub>, A] ∈ <i>δ\'</i> (q<sub><small>i</small></sub>, u, A), for all A ∈ Γ<br>
+            &nbsp;&nbsp;&nbsp;
+            <b>•&nbsp;</b>If [q<sub><small>j</small></sub>, B] ∈ <i>δ</i>(q<sub><small>i</small></sub>, u, λ) then<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b>•&nbsp;</b>[q<sub><small>j</small></sub>, BA] ∈ <i>δ\'</i> (q<sub><small>i</small></sub>, u, A), for all A ∈ Γ<br>
+        <b>•&nbsp;</b>Interpretation for new transitions:<br>
+            &nbsp;&nbsp;&nbsp;
+            <b>•&nbsp;</b>All transitions that do not pop, are now push and pop the same symbol<br>
+            &nbsp;&nbsp;&nbsp;
+            <b>•&nbsp;</b>See that is for all A ∈ Γ<sub><small>M</small></sub> (whatever it is the top)<br>
+        <b>•&nbsp;</b>Clearly, L(M) = L(M\')<br>
+        <b>•&nbsp;</b>Variables will not be uppercase, but tuples of the form <q<sub><small>i</small></sub>, A, q<sub><small>j</small></sub>><br>
+        <b>•&nbsp;</b>I\'m in <b>q<sub><small>i</small></sub></b>,<br>
+        <b>•&nbsp;</b>I want to go to <b>q<sub><small>j</small></sub></b> and<br>
+        <b>•&nbsp;</b>exist <b>A</b> at the top of the stack<br>
+        ]]>
+    </string>
+    <string name="algolPDAToCFG">
+        <![CDATA[
+        <b>•&nbsp;</b>Rules of G:
+            &nbsp;&nbsp;&nbsp;
+            <b><font color="blue">#1</font></b> S &rarr; <q<sub><small>0</small></sub>, λ, q<sub><small>j</small></sub>>, for all q<sub><small>j</small></sub> ∈ F
+        &nbsp;&nbsp;&nbsp;
+        ]]>
+    </string>
+    <string name="algolPDAToCFGStage2">
+        <![CDATA[
+        <b>#1&nbsp;</b>S → <q<sub><small>0</small></sub>, λ, q<sub><small>j</small></sub>>, for all q<sub><small>j</small></sub> ∈ F
+        ]]>
+    </string>
+    <string name="algolPDATOCFGRule2">
+         <![CDATA[
+            <b>#2</b> If [q<sub><small>j</small></sub>, B] ∈ <i>δ\'</i>(q<sub><small>i</small></sub>, x, A), then\t(A and B ∈ Γ U {λ})\n
+                \t<b>•</b> <q<sub><small>i</small></sub>, A, <cb:#786DBE>q<sub><small>k</small></sub></cb>> → x<q<sub><small>j</small></sub>, B, <cb:#786DBE>q<sub><small>k</small></sub></cb>>, for all <cb:#786DBE>q<sub><small>k</small></sub></cb> ∈ Q\n
+         ]]>
+    </string>
+    <string name="algolPDATOCFGRule3">
+         <![CDATA[
+            <b>#3</b> If [q<sub><small>j</small></sub>, BA] ∈ <i>δ\'</i>(q<sub><small>i</small></sub>, x, A), then\t(A e B ∈ Γ)\n
+                \t<b>•</b> <q<sub><small>i</small></sub>, A, <cb:#786DBE>q<sub><small>k</small></sub></cb>> → x<q<sub><small>j</small></sub>, B, q<sub><small>n</small></sub>><<cb:#8FD45A>q<sub><small>n</small></sub></cb>, A, <cb:#786DBE>q<sub><small>k</small></sub></cb>>, <cb:#786DBE>q<sub><small>k</small></sub></cb>, <cb:#8FD45A>q<sub><small>n</small></sub></cb> ∈ Q\n
+        ]]>
+    </string>
+    <string name="algolPDAToCFGStage3">
+        <![CDATA[
+        <b>#2</b> If [q<sub><small>j</small></sub>, B] ∈ <i>δ\'</i>(q<sub><small>i</small></sub>, x, A), then\t(A e B ∈ Γ U {λ})\n
+            \t<b>•</b> <q<sub><small>i</small></sub>, A, <cb:#786DBE>q<sub><small>k</small></sub></cb>> → x<q<sub><small>j</small></sub>, B, <cb:#786DBE>q<sub><small>k</small></sub></cb>>, para todo <cb:#786DBE>q<sub><small>k</small></sub></cb> ∈ Q\n
+        <b>#3</b> If [q<sub><small>j</small></sub>, BA] ∈ <i>δ\'</i>(q<sub><small>i</small></sub>, x, A), then\t(A e B ∈ Γ)\n
+            \t<b>•</b> <q<sub><small>i</small></sub>, A, <cb:#786DBE>q<sub><small>k</small></sub></cb>> → x<q<sub><small>j</small></sub>, B, q<sub><small>n</small></sub>><<cb:#8FD45A>q<sub><small>n</small></sub></cb>, A, <cb:#786DBE>q<sub><small>k</small></sub></cb>>, <cb:#786DBE>q<sub><small>k</small></sub></cb>, <cb:#8FD45A>q<sub><small>n</small></sub></cb> ∈ Q\n
+        ]]>
+    </string>
+    <string name="input">Input:</string>
+    <string name="output">Output:</string>
+    <string name="end">End</string>
+    <string name="previous">Previous</string>
+    <string name="algorithm_abr">Algol</string>
+    <string name="cancel">Cancel</string>
+    <string name="convert_gnf_title">Convert grammar into Greibach Normal Form</string>
+    <string name="create_pda_extended">Create an PDA Extended</string>
+    <string name="transitions_using_initial_symbol">Transitions using start symbol</string>
+    <string name="transitions_using_not_initial_symbol">Transitions using non start symbol</string>
+    <string name="finite_state_automaton">Finite-state automaton</string>
+    <string name="pushdown_automaton">Pushdown Automaton</string>
+    <string name="turing_machine">Turing Machine / Linear Bounded Automaton</string>
+    <string name="multi_track_tm">Multi-track TM</string>
+    <string name="multi_tape_tm">Multi-tape TM</string>
+    <string name="enumerator_tm">Enumerator TM</string>
+    <string name="grammar">Grammar</string>
+    <string name="convert_cfg_into_pda">Convert CFG into pushdown automaton</string>
+    <string name="input_pda">Input pushdown automaton:</string>
+    <string name="generate_pda_extend">Generate pushdown automaton extend</string>
+    <string name="new_transitions">New transitions:</string>
+    <string name="pda_extend">Pushdown automaton extend:</string>
+    <string name="generate_rules_initial_symbol">Generate rules with the start symbol</string>
+    <string name="new_rules">New rules:</string>
+    <string name="generate_rules_automaton_transitions">Generate rules with automaton transitions</string>
+    <string name="current_grammar">Current grammar:</string>
+    <string name="generate_lambda_rules">Generate lambda rules</string>
+    <string name="rename_variables">Rename variables</string>
+    <string name="new_variables">New variables:</string>
+    <string name="linear_bounded_automaton">Linear Bounded Automaton:</string>
+    <string name="word">Word:</string>
+    <string name="configurations">Configurations:</string>
+    <string name="words">Words:</string>
+    <string name="save">Save</string>
+    <string name="machine">Machine: </string>
+    <string name="delete_automaton">Delete automaton</string>
+    <string name="transition">Transition:</string>
+    <string name="transition_pda">Transition - Pushdown Automaton</string>
+    <string name="pop">Pop:</string>
+    <string name="symbol">Symbol:</string>
+    <string name="push">Push:</string>
+    <string name="transition_tm">Transition - Turing Machine</string>
+    <string name="symbol_read">Symbol (read):</string>
+    <string name="symbol_write">Symbol (write):</string>
+    <string name="direction">Direction:</string>
+    <string name="direction_right">R</string>
+    <string name="direction_left">L</string>
+    <string name="direction_static">S</string>
+    <string name="transition_pda2">Transitions - Pushdown Automaton</string>
+    <string name="num_tapes">Number of tapes:</string>
+    <string name="num_tracks">Number of tracks:</string>
+    <string name="regular_expression">
+        Regular expression: OBS: use the character \'/\' for the union operator.
+    </string>
+    <string name="state">State:</string>
+    <string name="initial_state">Start</string>
+    <string name="final_state">Final</string>
+    <string name="move_state">Move</string>
+    <string name="algol_afnd_lambda_to_afd">
+        i. Are start states: closure-λ(q0)\n
+            \t·If an start state reaches a final state, such start state will be final\n
+        ii. For the other states qi:\n
+            \t·considers every state in closure-λ(qi)\n
+            \t·consumes, stops in a state qj and then adds the closure-λ(qj)
+    </string>
+    <string name="algol_afnd_to_afd">
+        i. It\'s start: the union of all start states: {q0}\n
+        ii. Each new Q obtains the union of the transitions of its member states\n
+        iii. Are final: states containing at least one final state
+    </string>
+    <string name="conf_afnd_lambda_to_afd">
+        Step from transformation of AFND-λ to AFND successfully performed!\n
+        Do you want to go to the transformation from AFND to AFD?
+    </string>
+
+
+    <string name="exception_symbol_out_alphabet_1">Word contains symbols that are not in the alphabet</string>
+    <string name="exception_symbol_out_alphabet_2">of the automaton. Symbols: </string>
+    <string name="exception_symbol_out_alphabet">Word contains symbols that are not in the alphabet of the automaton. Symbols: </string>
+    <string name="exception_previous_configuration">First configuration. Can not go to previous.</string>
+    <string name="exception_clone">Not possible clone this instance!</string>
+    <string name="exception_inconsistent_interact_quad">Instance of InteractQuadrilateralArea is inconsistent!</string>
+    <string name="exception_edge_draw_type_not_found">Edge draw type don\'t exist!</string>
+    <string name="exception_edge_draw_inconsistent">Instance of EdgeDrawView is inconsistent!</string>
+    <string name="exception_not_find_initial_state">Error! It has no start state!</string>
+    <string name="exception_not_find_final_state">Error! It has no final state!</string>
+    <string name="exception_states_same_name">Error. States with the same name (</string>
+    <string name="error">Error!</string>
+    <string name="exception_edge_draw_not_definied">EdgeDraw not definied!</string>
+    <string name="exception_transition_exists">Transition already exists!</string>
+    <string name="exception_move_state">Could not move this state!</string>
+    <string name="exception_lock_state">
+        Error! You can not create the lock state where another state already exists!
+        Enter another position to create the lock state.
+    </string>
+    <string name="exception_size_reference">The reference size should be positive</string>
+    <string name="exception_vertex_draw_inconsistent">Instance of VertexDrawView is inconsistent!</string>
+    <string name="exception_vertex_draw_type">Vertex draw type don\'t exist!</string>
+    <string name="confirm">Confirm</string>
+    <string name="fast_edition_mode">Quick edit mode!</string>
+    <string name="alphabet_empty">There are no characters in the alphabet!</string>
+    <string name="warning_max_chars_state">Warning! Maximum size for state name are</string>
+    <string name="warning_max_chars_state2">characters!</string>
+    <string name="exception_state_same_name">Error! Machine already has state with this name!</string>
+    <string name="exception_lock_state2">Error! Indicate where you should create the lock state, before moving a state.</string>
+    <string name="move_state1">Indicate where</string>
+    <string name="move_state2">should be moved.</string>
+    <string name="empty_char_tape">B</string>
+    <string name="exception_transition_def">Incorrect transition setting!</string>
+    <string name="initial_label_tm">B/B S</string>
+    <string name="exception_loop_process">Processing will not be completed due to possible loops</string>
+    <string name="transitions">Transitions</string>
+    <string name="exceptions_transition_builder_args">Transitions args array length different of types!</string>
+    <string name="exception_invalid_transition">Invalid transition!</string>
+    <string name="exception_instance_not_found_for">Instance not found for \'</string>
+    <string name="exception_instance_not_found">Instance not found!</string>
+    <string name="machine_to_string_parameters">States, Alphabet, Final states, Start state</string>
+    <string name="no_convert_this_step"><![CDATA[There are no transformations to be made at this stage!<br/>]]></string>
+    <string name="remove_recursion_acd"><![CDATA[Remove direct left recursion:<br/>]]></string>
+    <string name="replace_rues_acd"><![CDATA[Replace rules (A<sub>i</sub> → A<sub>j</sub>&#947;):<br/>]]></string>
+    <string name="new_grammar"><![CDATA[New grammar:<br/>]]></string>
+    <string name="initial_symbol_not_recursive">
+        The start symbol should be limited to start derivations, and can not be a recursive variable.
+        Therefore, it should not be possible to have derivations of type
+    </string>
+    <string name="recursion_found_initial">Recursion found in rule</string>
+    <string name="recursion_initial_symbol_solution_descr_parameters">
+        The grammar # has the start symbol # recursive. Therefore, there is a CFG #
+        such that L(G\') = L(G) and the new start symbol #  is not recursive.
+    </string>
+    <string name="esentially_noncontracting_problems_parameters">
+        - The rule # is an empty production.
+    </string>
+    <string name="grammar_to_string_parameters">
+        Variables: #Terminals: #Start symbol: # Rules:
+    </string>
+    <string name="exception_not_attr_prod_to_var">No productions were attributed to the variable \'</string>
+    <string name="exception_rule_not_in_grammar">- In the reported grammar, the rule</string>
+    <string name="exception_rule_not_regular_2">does not belong to the set of regular grammars.</string>
+    <string name="exception_rule_not_context_free_2">does not belong to the set of context-free grammars.</string>
+    <string name="exception_rule_not_sensitive_free_2">does not belong to the set of context sensitive grammars.</string>
+    <string name="exception_rule_not_unrestricteble_2">does not belong to the set of unrestricted grammars.</string>
+    <string name="is_regular_grammar">Therefore, the inserted grammar is a regular grammar (RG).</string>
+    <string name="is_context_free_grammar">Therefore, the inserted grammar is a context-free grammar (CFG).</string>
+    <string name="is_sensible_context_grammar">Therefore, the inserted grammar is a context sensitive grammar (CSG).</string>
+    <string name="is_unrestricted_grammar">Therefore, the inserted grammar is an unrestricted grammar (UG).</string>
+    <string name="not_class_grammar_found">Informed grammar is non-existent.</string>
+    <string name="grammar_have_empty_production">The inserted grammar has lambda rules.</string>
+    <string name="grammar_have_recursion_initial_symbol">The inserted grammar has recursion in the start symbol.</string>
+    <string name="exit">Exit</string>
+    <string name="exit_lfapp">Exit LFApp??</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="exception_derivation_tree_not_found">Error! Parse tree not found!</string>
+    <string name="accept">Accepts</string>
+    <string name="reject">Rejects</string>
+    <string name="simplify_vars">Simplify variables</string>
+    <string name="copy_grammar">Copy grammar</string>
+    <string name="need_simplify_vars">First it is necessary to simplify the variables.</string>
+    <string name="pda_to_cfg_stage3_parameters">
+        As#then#New rules
+    </string>
+    <string name="array_adapter_automata_parameters">
+        Created on: #MM/dd/yyyy#Set of states: #Alphabet: #Start state: #Set of final states:
+    </string>
+    <string name="exception_automaton_not_found">Error! Automaton was not found!</string>
+    <string name="exception_not_previous_op">You can not go back to the previous step!</string>
+    <string name="minim_fsa_title">Deterministic finite automaton minimization algorithm</string>
+    <string name="mim_fsa_compl">Minimized automaton!</string>
+    <string name="min_fsa_step_1_compl">End of verification stage of final and non-final states!</string>
+    <string name="min_fsa_not_previous_step">There is no previous step!</string>
+    <string name="min_fsa_table_header">
+        Index#D[i, j] =#S[i, j] =#Reason
+    </string>
+    <string name="convert_compl">Conversion made</string>
+    <string name="not_previous_acess">Can not go back.</string>
+    <string name="convert_fsand_in_fsad_parameters">
+        NDFA#DFA#ND#D#closure
+    </string>
+    <string name="exception_invalid_regex">Invalid Regex!</string>
+    <string name="exception_fsa_not_completed">Automaton is not a complete DFA!</string>
+    <string name="exception_fsa_not_deterministic">Automaton is not a DFA!</string>
+    <string name="exception_fsa_already_deterministic">Automaton is already a DFA!</string>
+    <string name="exception_fsa_already_completed">Automaton is already complete!</string>
+    <string name="set_lock_state_position">Enter a position to insert the lock state!</string>
+    <string name="exception_select_lock_state_position">
+        Error! Indicate where to move the selected state before generating the complete automaton.
+    </string>
+    <string name="warning">Warning</string>
+    <string name="exception_invalid_grammar">Invalid grammar.</string>
+    <string name="exception_pda_not_found">Error! Pushdown automaton not found!</string>
+    <string name="grammar_in_gnf">Grammar in the Greibach Normal Form:</string>
+    <string name="new_transitions_2">New transitions:</string>
+    <string name="not_find_ambiguity">No ambiguity was found in the tests performed.</string>
+    <string name="find_ambiguity">Ambiguity was found for the word(s) below.</string>
+    <string name="lfapp_cnf_title">LFApp - CNF</string>
+    <string name="lfapp_gnf_title">LFApp - GNF</string>
+    <string name="lfapp_left_recursion_title">LFApp - Left Recursion</string>
+    <string name="chain_rules_algol_comment">
+        The removal of chain rules consist in replaces the occurrences of a chain rule directly by the rules of chain variable.
+    </string>
+    <string name="algol_chain_rule_grammar_step_1">(1) The first step of the algorithm is to construct the set CHAIN of each variable.</string>
+    <string name="algol_chain_rule_grammar_step_2">(2) Highlight the chain rules found.</string>
+    <string name="algol_chain_rule_grammar_step_2_1">
+        (2) In the inserted grammar, there are auto chain rules.
+        This rule type should also be removed.
+    </string>
+    <string name="algol_chain_rule_grammar_step_2_2">(2) There are no chain rules in the inserted grammar.</string>
+    <string name="algol_chain_rule_grammar_step_3">(3) Replace chains found.</string>
+    <string name="algol_chain_rule_grammar_step_3_1">
+        (3) In the inserted grammar, there are auto chain rules.
+        This rule type should also be removed.
+    </string>
+    <string name="algol_chain_rule_grammar_step_3_2">(3) There are no chain rules in the inserted grammar.</string>
+    <string name="chain_rules_table_header">
+        Variable#Chain
+    </string>
+    <string name="chain_rule_algol">
+        <![CDATA[
+        CHAIN(A) = {A}<br>
+        PREV = ∅<br>
+        <b>repeat</b><br>
+            &nbsp;&nbsp;
+            NEW = CHAIN(A) − PREV<br>
+            &nbsp;&nbsp;
+            PREV = CHAIN(A)<br>
+            &nbsp;&nbsp;
+            <b>for each</b> B ∈ NEW <b>do</b><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b>for each</b> B → C <b>do</b><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    CHAIN(A) = CHAIN(A) ∪ {C}<br>
+                    <b>until</b> CHAIN(A) == PREV
+        ]]>
+    </string>
+    <string name="chomsky_normal_form_algol_comments">
+        <![CDATA[
+        A CFG G = (V, Σ, P, S) is in the Chomsky Normal Form if its rules have one of the following forms:
+         \ni)   A → BC
+         \nii)  A → a
+         \niii) S → λ
+         \nwhere B, C ∈ V − {S} and a ∈ Σ
+        ]]>
+    </string>
+    <string name="chomsky_normal_form_step_1">(1) Identify rules that are not in Chomsky Normal Form.</string>
+    <string name="chomsky_normal_form_step_2">(2) Convert these rules into one of the valid formats.</string>
+    <string name="chomsky_normal_form_already_cnf">The inserted grammar is already in Chomsky Normal Form.</string>
+    <string name="cyk_and_so_on">And so on.</string>
+    <string name="cyk_there_any_rule">Are there any rules that produce</string>
+    <string name="cyk_step_3">(3) The third step of the algorithm is add to the table the variables that produce strings of size three.</string>
+    <string name="cyk_step_2">(2) The second step of the algorithm is add to the table the variables that produce strings of size two.</string>
+    <string name="directly">directly</string>
+    <string name="cyk_step_1">(1) The first step of the algorithm is add to the table the variables that produce the respective terminals directly.</string>
+    <string name="cyk_comments">The grammar inserted is not in Chomsky Normal Form. Therefore, a transformation was necessary.</string>
+    <string name="no_derivation_for_the_word">No derivations were found for the word.</string>
+    <string name="derivation">Derivation:</string>
+    <string name="two_derivations_1">Two derivations were found for the word, so this grammar is ambiguous. Derivation 1:</string>
+    <string name="two_derivations_2">Derivation 2:</string>
+    <string name="nullable_algol">
+        <![CDATA[
+        NULL = {A | {A → λ} ∈ P}<br>
+        <b>repeat</b><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            PREV = NULL<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <b>for each</b> A ∈ V <b>do</b><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b>if</b> A → w e w ∈ PREV<sup>∗</sup> <b>do</b><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    NULL = NULL ∪ {A}<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    NULL = NULL ∪ {A}<br>
+                    <b>until</b> NULL == PREV
+        ]]>
+    </string>
+    <string name="removal_empty_prod_comments">
+        <![CDATA[
+        <p align=justify>The algorithm for removing lambda rules consists of 3 steps:
+        ]]>
+    </string>
+    <string name="removal_empty_prod_step_1">
+        <![CDATA[
+        (1) Determine the set of nullable variables.</p>
+        ]]>
+    </string>
+    <string name="removal_empty_prod_step_2">
+        <![CDATA[
+        (2) Add rules in which occurrences of null variables are omitted.
+        For example, assume rule A → BABa and B is a nullable variable.
+        Therefore, the following rules are inserted: A → ABa, A → BAa and A → Aa.
+        ]]>
+    </string>
+    <string name="removal_empty_prod_step_2_1">(2) There are no rules to be inserted.</string>
+    <string name="removal_empty_prod_step_3">(3) Remove the lambda rules. NOTE: if start symbol produces λ, do not remove this rule.</string>
+    <string name="removal_empty_prod_step_3_1">(3) There are no rules to remove.</string>
+    <string name="no_empty_prod">The inserted grammar does not have lambda rules.</string>
+    <string name="greibach_normal_formal_comments">
+        <![CDATA[
+        A CFG G = (V, Σ, P, S) is in the Greibach Normal Form if its rules have one of the following forms:<br>
+        - A → aA<sub><small>1</small></sub>A<sub><small>2</small></sub>A<sub><small>3</small></sub>…A<sub><small>n</small></sub>&nbsp&nbsp&nbsp&nbsp where a ∈ Σ e A<sub><small>1</small></sub>… A<sub><small>n</small></sub> ∈ V − {S}<br>
+        - A → a&nbsp&nbsp&nbsp&nbsp where a ∈ Σ<br>
+        - A → λ
+        ]]>
+    </string>
+    <string name="greibach_normal_formal_already">The inserted grammar is already in the Greibach Normal Form.</string>
+    <string name="regular_grammar_abr">RG</string>
+    <string name="context_free_grammar_abr">CFG</string>
+    <string name="context_sensible_grammar_abr">CSG</string>
+    <string name="unrestricted_grammar_abr">UG</string>
+    <string name="result_red"><![CDATA[<b><font color=red>Result:</b><br>]]></string>
+    <string name="reach_cnf_comments">Remove unreachable variables is the process of remove all variables that not be derivable from the start symbol.</string>
+    <string name="reach_cnf_step_1">(1) Determine which variables are reachable from the start symbol </string>
+    <string name="reach_cnf_step_2">(2) Remove variables that are not in</string>
+    <string name="reach_cnf_step_2_1">(2) All symbols are reachable.</string>
+    <string name="reach_cnf_step_comments_2">There are no reachable symbols in the inserted grammar.</string>
+    <string name="reach_cnf_algol">
+        <![CDATA[
+        REACH = {S}<br>
+        PREV = ∅<br>
+        <b>repeat</b><br>
+            &nbsp;&nbsp;&nbsp;
+            NEW = REACH − PREV<br>
+            &nbsp;&nbsp;&nbsp;
+            PREV = REACH<br>
+            &nbsp;&nbsp;&nbsp;
+            <b>for each</b> A ∈ NEW <b>do</b><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b>for each</b> A → w <b>do</b><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    add the variables of w in REACH<br><b>until</b> REACH == PREV
+        ]]>
+    </string>
+    <string name="term_cnf_comments">Removes rules that do not produce terminals:</string>
+    <string name="term_cnf_step_1">(1) Determine which variables produce terminals directly and indirectly.</string>
+    <string name="term_cnf_step_2">(2) Remove variables that are not in</string>
+    <string name="term_cnf_result">All grammar variables generate terminal strings.</string>
+    <string name="term_cnf_algol">
+        <![CDATA[
+        TERM = {A | there is a rule A → w ∈ P, com w ∈ Σ<sup>∗</sup> }<br>
+        <b>repeat</b><br>
+            &nbsp;&nbsp;
+            PREV = TERM<br>
+            &nbsp;&nbsp;
+            <b>for each</b> A ∈ V <b>do</b><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b>if</b> A → w ∈ P e w ∈ (PREV ∪ Σ)<sup>∗</sup> <b>then</b><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    TERM = TERM ∪ {A}<br><b>until</b> PREV == TERM
+        ]]>
+    </string>
+    <string name="rem_initial_rec_step_1_1">The inserted grammar does not have rules of the type </string>
+    <string name="rem_initial_rec_step_1_2">Therefore, no changes were made.</string>
+    <string name="rem_left_direct_recursion_comments">Direct left recursion can produce loops in top-down parsers.</string>
+    <string name="rem_left_direct_recursion_step_1">(1) The first step is to identify recursion.</string>
+    <string name="rem_left_direct_recursion_algol_not_used">
+        <![CDATA[
+        for i = 1 to n do     if A<sub><small>i</sub></small> has direct left recursion then         eliminate recursion in A<sub><small>i</sub></small>     for j = i+1 to n do         for each production in A<sub><small>j</sub></small> do             if A<sub><small>j</sub></small> → <sub><small>i</sub></small>Y then                 replace A<sub><small>j</sub></small> → <sub><small>i</sub></small>Y with A<sub><small>j</sub></small> → T<sub><small>1</sub></small>Y | T<sub><small>2</sub></small>Y | … | T<sub><small>k</sub></small>Y, where A<sub><small>i</sub></small> → T<sub><small>1</sub> | T<sub><small>2</sub> | … | T<sub><small>k</sub> are all current productions of A<sub><small>i</sub></small>
+        ]]>
+    </string>
+    <string name="rem_left_direct_recursion_step_2">(2) The second step is to solve the recursion.</string>
+    <string name="rem_left_direct_recursion_comments_2">The inserted grammar does not have direct left recursion.</string>
+    <string name="rem_left_direct_recursion_algol">
+        <![CDATA[
+        Suppose the generic rule directly left recursive:<br>
+        A → Aμ<sub><small>1</small></sub> | Aμ<sub><small>2</small></sub> | … | Aμ<sub><small>m</small></sub> | ν<sub><small>1</small></sub> | ν<sub><small>2</small></sub> | … | ν<sub><small>n</small></sub><br><br>
+        Equivalent rule without left recursion:<br>
+        A → ν<sub><small>1</small></sub> | ν<sub><small>2</small></sub> | … | ν<sub><small>n</small></sub> | ν<sub><small>1</small></sub>Z | ν<sub><small>2</small></sub>Z | … | ν<sub><small>n</small></sub>Z<br>Z → μ<sub><small>1</small></sub>Z | μ<sub><small>2</small></sub>Z | … | μ<sub><small>m</small></sub>Z | μ<sub><small>1</small></sub> | μ<sub><small>2</small></sub> | … | μ<sub><small>m</small></sub><br><br>
+        ]]>
+    </string>
+    <string name="remove_left_recursion_comments">Removal left recursion consists of sorting the grammar variables and organizing the rules so that the left-hand variable always has a lower value than the right-hand variable.</string>
+    <string name="remove_left_recursion_step_1">(1) Sort the grammar variables.</string>
+    <string name="remove_left_recursion_table_header">Variable#Value</string>
+    <string name="remove_left_recursion_dont_have">The inserted grammar has no left recursion.</string>
+    <string name="lfapp_about">LFApp - About</string>
+    <string name="lfapp_menu">LFApp - Menu</string>
+    <string name="lfapp_cnf">LFApp - CNF</string>
+    <string name="lfapp_left_recursion">LFApp - Left Recursion</string>
+    <string name="lfapp_gnf">LFApp - GNF</string>
+    <string name="lfapp_gnf_8_8">LFApp - GNF - 8/8</string>
+    <string name="lfapp_history">LFApp - History</string>
+    <string name="compl_automaton">Complete Automaton</string>
+    <string name="processar_palavra">word_process</string>
+    <string name="convert_fsand_fsad">Convert NDFA into DFA</string>
+    <string name="convert_fsand_fsad_step_by_step">Convert NDFA into DFA step by step</string>
+    <string name="min_fsa">Minimize DFA</string>
+    <string name="min_fsa_step_by_step">Minimize DFA step by step</string>
+    <string name="min_fsand_regular_expression">Create NDFA with Regular Expression</string>
+    <string name="pda_to_grammar">Convert automaton into grammar</string>
+    <string name="pda_to_grammar_step_by_step">Convert automaton into grammar step by step</string>
+    <string name="word_process_pda">Word processing</string>
+    <string name="word_process_enumerator_tm">Word Process as Turing Machine Enumerator</string>
+    <string name="word_process_multi_tape_tm">Word Process as Turing Machine Multi-tapes</string>
+    <string name="word_process_multi_track_tm">Word Process as Turing Machine Multi-tracks</string>
+    <string name="word_process_turing_machine">Word Process as Turing Machine</string>
+    <string name="word_process_linear_bounded_automaton">Word Process as Linear bounded automaton</string>
+
 </resources>

@@ -8,10 +8,10 @@ import android.widget.TextView;
 
 import com.ufla.lfapp.R;
 import com.ufla.lfapp.activities.grammar.HeaderGrammarActivity;
-import com.ufla.lfapp.activities.utils.UtilActivities;
-import com.ufla.lfapp.vo.grammar.AcademicSupport;
-import com.ufla.lfapp.vo.grammar.Grammar;
-import com.ufla.lfapp.vo.grammar.Rule;
+import com.ufla.lfapp.utils.UtilActivities;
+import com.ufla.lfapp.core.grammar.AcademicSupport;
+import com.ufla.lfapp.core.grammar.Grammar;
+import com.ufla.lfapp.core.grammar.Rule;
 
 /**
  * Created by root on 21/07/16.
@@ -30,13 +30,16 @@ public class EmptyProductionActivity extends HeaderGrammarActivity {
     private void setTitle() {
         switch(algorithm) {
             case CHOMSKY_NORMAL_FORM:
-                setTitle("LFApp - FNC - 2/6");
+                setTitle(getResources().getString(R.string.lfapp_cnf_title)
+                        + " - 2/6");
                 break;
             case GREIBACH_NORMAL_FORM:
-                setTitle("LFApp - FNG - 2/8");
+                setTitle(getResources().getString(R.string.lfapp_gnf_title)
+                        + " - 1/8");
                 break;
             case REMOVE_LEFT_RECURSION:
-                setTitle("LFApp - Recursão à Esq - 2/7");
+                setTitle(getResources().getString(R.string.lfapp_left_recursion_title)
+                        + " - 2/7");
                 break;
         }
     }
@@ -102,16 +105,7 @@ public class EmptyProductionActivity extends HeaderGrammarActivity {
      * @return
      */
     public String getNullableAlgorith() {
-        StringBuilder algol = new StringBuilder();
-        algol.append("NULL = {A | {A -> λ} ∈ P}<br>");
-        algol.append("<b>repita</b><br>");
-        algol.append("&nbsp;&nbsp;&nbsp;&nbsp;PREV = NULL<br>");
-        algol.append("&nbsp;&nbsp;&nbsp;&nbsp;<b>para cada</b> A ∈ V <b>faça</b><br>");
-        algol.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>se</b> A → w e w ∈ PREV<sup>∗</sup> <b>faça</b><br>");
-        algol.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NULL = NULL ∪ {A}<br>");
-        algol.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NULL = NULL ∪ {A}<br>");
-        algol.append("<b>até</b> NULL == PREV");
-        return algol.toString();
+        return getString(R.string.nullable_algol);
     }
 
     /**
@@ -137,9 +131,7 @@ public class EmptyProductionActivity extends HeaderGrammarActivity {
         StringBuilder academicInfoComments = new StringBuilder();
 
         //Configura comentários sobre o processo
-        String align = "justify";
-        academicInfoComments.append(Html.fromHtml("<p align=" + align +
-                ">O algoritmo para remoção de regras λ consiste em 3 passos:"));
+        academicInfoComments.append(Html.fromHtml(getString(R.string.removal_empty_prod_comments)));
         academicSupport.setComments(academicInfoComments.toString());
 
         //Realiza processo
@@ -158,7 +150,7 @@ public class EmptyProductionActivity extends HeaderGrammarActivity {
 
             //Configuração do passo 1 (Tabela dos conjuntos)
             TextView explanation1 = (TextView) findViewById(R.id.ExplanationEmptyRules1);
-            explanation1.setText(Html.fromHtml("(1) Determinar o conjunto das variáveis anuláveis.</p>"));
+            explanation1.setText(Html.fromHtml(getString(R.string.removal_empty_prod_step_1)));
             TextView pseudo =(TextView) findViewById(R.id.PseudoNullableAlgorith);
             assert pseudo != null;
             pseudo.setText(Html.fromHtml(getNullableAlgorith()));
@@ -171,8 +163,7 @@ public class EmptyProductionActivity extends HeaderGrammarActivity {
             //Configuração do passo 2 (Gramática com as regras criadas no processo)
             if (academicSupport.getInsertedRules().size() != 0) {
                 TextView explanation2 = (TextView) findViewById(R.id.ExplanationEmptyRules2);
-                explanation2.setText("(2) Adicionar regras em que as ocorrências de variáveis nulas são omitidas. Por exemplo, assuma a regra A -> BABa e B" +
-                        " é uma variável anulável. Logo, são inseridas as seguintes regras: A -> ABa, A -> BAa e A -> Aa.");
+                explanation2.setText(R.string.removal_empty_prod_step_2);
                 TableLayout grammarWithNewRules = (TableLayout) findViewById(R.id.AddingRulesTable);
                 Grammar blueGrammar = new Grammar(joinGrammars(gc, g));
                 UtilActivities.printGrammarWithNewRules(blueGrammar,
@@ -180,26 +171,25 @@ public class EmptyProductionActivity extends HeaderGrammarActivity {
                         academicSupport, this);
             } else {
                 TextView explanation2 = (TextView) findViewById(R.id.ExplanationEmptyRules2);
-                explanation2.setText("(2) Não há regras a serem inseridas.");
+                explanation2.setText(R.string.removal_empty_prod_step_2_1);
             }
 
             //Configuração do passo 3 (Gramática com as regras irregulares removida)
             if (academicSupport.getIrregularRules().size() != 0) {
                 TextView explanation3 = (TextView) findViewById(R.id.ExplanationEmptyRules3);
-                explanation3.setText("(3) Remover as regras λ.\n" +
-                        "OBS: se símbolo inicial produz λ, não remover esta regra.");
+                explanation3.setText(R.string.removal_empty_prod_step_3);
                 TableLayout grammarWithoutOldRules = (TableLayout) findViewById(R.id.RemovingRulesTable);
                 Grammar redGrammar = new Grammar(joinGrammars(gc, g));
                 UtilActivities.printGrammarWithoutOldRules(redGrammar,
                         grammarWithoutOldRules, academicSupport, this);
             } else {
                 TextView explanation3 = (TextView) findViewById(R.id.ExplanationEmptyRules3);
-                explanation3.setText("(3) Não há regras a serem removidas.");
+                explanation3.setText(R.string.removal_empty_prod_step_3_1);
             }
 
         } else {
             TextView result = (TextView) findViewById(R.id.AnswerOfEmptyProductions);
-            result.setText("A gramática inserida não possui produções vazias.");
+            result.setText(R.string.no_empty_prod);
         }
     }
 

@@ -1,0 +1,27 @@
+digraph fsa_05 {
+
+	dpi = 480;
+	rankdir=LR;
+
+	"startRes" [shape=point, style="invis"];
+	node [shape = doublecircle, color="#968D8D", fontcolor=black, fillcolor="#FFCCCC", style="filled"];
+
+	node [shape = circle];
+
+	"bb0" [label=<bb/0>, pos="3,6!"];
+	"ba1" [label=<ba/1>, pos="5,3!"];
+	"ab1" [label=<ab/1>, pos="5,9!"];
+	"aa2" [label=<aa/2>, pos="7,6!"];
+
+	"startRes" -> "bb0";
+
+	"bb0" -> "ba1" [label="a"];
+	"bb0" -> "bb0" [label="b"];
+	"ba1" -> "aa2" [label="a"];
+	"ba1" -> "ab1" [label="b"];
+	"ab1" -> "ba1" [label="a"];
+	"ab1" -> "bb0" [label="b"];
+	"aa2" -> "aa2" [label="a"];
+	"aa2" -> "ab1" [label="b"];
+
+}

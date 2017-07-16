@@ -16,6 +16,15 @@
     <color name="Wheat">#F5DEB3 </color>
     <color name="BunkerGrey2">#1e1e1e</color>
     <color name="BunkerGrey">#161616</color>
-    <color name="White">#FFFFFF	</color>
+    <color name="White">#FFFFFF</color>
+    <color name="PaleGreen2">#90EE90</color>
+    <color name="SomeGray1">#968D8D</color>
+    <color name="SomePink1">#FFCCCC</color>
+    <color name="SomeRed1">#FF6666</color>
+    <color name="SomeBlue1">#7f7fff</color>
+    <color name="SomeGreen1">#4FD5D6</color>
+
+
+
 
 </resources>

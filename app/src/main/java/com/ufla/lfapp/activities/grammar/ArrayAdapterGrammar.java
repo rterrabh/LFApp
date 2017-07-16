@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class ArrayAdapterGrammar extends ArrayAdapter<String> {
 
-    private static String CLEAN_BUTTON = "clean";
+    private static final String CLEAN_BUTTON = "clean";
 
     public ArrayAdapterGrammar(Context context, List<String> grammars) {
         super(context, R.layout.grammar_item_view, grammars);

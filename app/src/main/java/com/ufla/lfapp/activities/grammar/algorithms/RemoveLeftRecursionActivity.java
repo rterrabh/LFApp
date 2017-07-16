@@ -12,9 +12,9 @@ import android.widget.TextView;
 
 import com.ufla.lfapp.R;
 import com.ufla.lfapp.activities.grammar.HeaderGrammarActivity;
-import com.ufla.lfapp.vo.grammar.AcademicSupport;
-import com.ufla.lfapp.vo.grammar.AcademicSupportForRemoveLeftRecursion;
-import com.ufla.lfapp.vo.grammar.Grammar;
+import com.ufla.lfapp.core.grammar.AcademicSupport;
+import com.ufla.lfapp.core.grammar.AcademicSupportForRemoveLeftRecursion;
+import com.ufla.lfapp.core.grammar.Grammar;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,10 +35,13 @@ public class RemoveLeftRecursionActivity extends HeaderGrammarActivity {
     private void setTitle() {
         switch(algorithm) {
             case GREIBACH_NORMAL_FORM:
-                setTitle("LFApp - FNG - 7/8");
+                setTitle(getResources().getString(R.string.lfapp_gnf_title)
+                        + " - 7/8");
                 break;
             case REMOVE_LEFT_RECURSION:
-                setTitle("LFApp - Recursão à Esq - 7/7");
+                setTitle(getResources().getString(R.string.lfapp_left_recursion_title)
+                        + " - 7/7");
+                break;
         }
     }
 
@@ -92,17 +95,15 @@ public class RemoveLeftRecursionActivity extends HeaderGrammarActivity {
         if (academicSupport.getSituation()) {
             //Realiza comentários sobre o processo
             TextView text = (TextView) findViewById(R.id.commentsOfRemovalLeftRecursion);
-            text.setText("A remoção de recursão à esquerda consiste em ordenar as variáveis da " +
-                    "gramática e organizar as regras da forma que a variável do lado" +
-                    " esquerdo sempre possua valor menor do que a variável do lado direito.");
+            text.setText(R.string.remove_left_recursion_comments);
             academicSupport.setComments(text.toString());
 
             //Realiza o primeiro passo do processo (Ordenação das variáveis)
-            ((TextView) findViewById(R.id.step1RemovalLeftRecursion)).setText("(1) Ordenar as " +
-                    "variáveis da gramática.");
+            ((TextView) findViewById(R.id.step1RemovalLeftRecursion)).setText(R.string.remove_left_recursion_step_1);
             TableLayout tableOfSortedVariables = (TableLayout) findViewById(R.id.tableOfSortedVariables);
             tableOfSortedVariables.setShrinkAllColumns(true);
-            printMap(tableOfSortedVariables, gc, sortedVariables, "Variável", "Valor");
+            final String[] TABLE_HEADERS = getString(R.string.remove_left_recursion_table_header).split("#");
+            printMap(tableOfSortedVariables, gc, sortedVariables, TABLE_HEADERS[0], TABLE_HEADERS[1]);
 
             //Realiza segundo passo do processo (Destaca recursões encontradas)
             ((TextView) findViewById(R.id.step2RemovalLeftRecursion)).setText(Html
@@ -138,7 +139,7 @@ public class RemoveLeftRecursionActivity extends HeaderGrammarActivity {
         } else {
             TextView text = (TextView) findViewById(R.id.commentsOfRemovalLeftRecursion);
             if (academicSupport.getSolutionDescription().isEmpty()) {
-                text.setText("A gramática inserida não possui recursão à esquerda.");
+                text.setText(R.string.remove_left_recursion_dont_have);
             } else {
                 text.setText(academicSupport.getSolutionDescription());
             }

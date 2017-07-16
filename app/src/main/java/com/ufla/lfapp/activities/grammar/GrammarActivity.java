@@ -20,12 +20,20 @@ import android.widget.Toast;
 
 import com.ufla.lfapp.R;
 import com.ufla.lfapp.activities.AboutActivity;
+import com.ufla.lfapp.activities.AppCompatActivityContext;
 import com.ufla.lfapp.activities.grammar.menu.MenuActivity;
-import com.ufla.lfapp.activities.utils.Algorithm;
+import com.ufla.lfapp.utils.Algorithm;
 import com.ufla.lfapp.persistence.DbAcess;
-import com.ufla.lfapp.vo.grammar.GrammarParser;
+import com.ufla.lfapp.core.grammar.GrammarParser;
+import com.ufla.lfapp.utils.ResourcesContext;
 
-public class GrammarActivity extends AppCompatActivity {
+public class GrammarActivity extends AppCompatActivityContext {
+
+    protected static final String GRAMMAR_EXTRA = "grammar";
+    protected static final String WORD_EXTRA = "word";
+    protected static final String ALGORITHM_EXTRA = "algorithm";
+    protected static final String INPUT_GRAMMAR_PREFERENCES = "inputGrammar";
+    protected static final String INPUT_WORD_PREFERENCES = "inputWord";
 
     private RelativeLayout screenGrammar;
     private LinearLayout form, buttons;
@@ -78,13 +86,13 @@ public class GrammarActivity extends AppCompatActivity {
             }
         });
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
-        inputGrammar.setText(preferences.getString("inputGrammar", ""));
-        inputWord.setText(preferences.getString("inputWord", ""));
+        inputGrammar.setText(preferences.getString(INPUT_GRAMMAR_PREFERENCES, ""));
+        inputWord.setText(preferences.getString(INPUT_WORD_PREFERENCES, ""));
         Intent intent = getIntent();
         if (intent != null
                 && intent.getExtras() != null
-                && intent.getExtras().getString("grammar") != null) {
-            inputGrammar.setText(intent.getExtras().getString("grammar"));
+                && intent.getExtras().getString(GRAMMAR_EXTRA) != null) {
+            inputGrammar.setText(intent.getExtras().getString(GRAMMAR_EXTRA));
         }
     }
 
@@ -92,8 +100,8 @@ public class GrammarActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
-        editor.putString("inputGrammar", inputGrammar.getText().toString());
-        editor.putString("inputWord", inputWord.getText().toString());
+        editor.putString(INPUT_GRAMMAR_PREFERENCES, inputGrammar.getText().toString());
+        editor.putString(INPUT_WORD_PREFERENCES, inputWord.getText().toString());
         editor.apply();
     }
 
@@ -101,8 +109,8 @@ public class GrammarActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
-        editor.putString("inputGrammar", inputGrammar.getText().toString());
-        editor.putString("inputWord", inputWord.getText().toString());
+        editor.putString(INPUT_GRAMMAR_PREFERENCES, inputGrammar.getText().toString());
+        editor.putString(INPUT_WORD_PREFERENCES, inputWord.getText().toString());
         editor.apply();
     }
 
@@ -128,10 +136,14 @@ public class GrammarActivity extends AppCompatActivity {
         inputGrammar.setSelection(selection + 3);
     }
 
+    public void clear(View view) {
+        inputGrammar.getText().clear();
+    }
+
     public void confirmGrammar(View view) {
         String txtGrammar = inputGrammar.getText().toString();
         String word = inputWord.getText().toString();
-        Toast.makeText(this, "oi", Toast.LENGTH_LONG);
+        //Toast.makeText(this, "oi", Toast.LENGTH_LONG);
         if (!txtGrammar.isEmpty()) {
             StringBuilder reason = new StringBuilder();
             Toast.makeText(this, txtGrammar, Toast.LENGTH_LONG);
@@ -139,20 +151,20 @@ public class GrammarActivity extends AppCompatActivity {
                     GrammarParser.inputValidate(txtGrammar, reason)) {
                 new DbAcess(this).putGrammar(txtGrammar);
                 Bundle params = new Bundle();
-                params.putString("grammar", txtGrammar);
-                params.putString("word", word);
-                params.putInt("algorithm", Algorithm.NONE.getValue());
+                params.putString(GRAMMAR_EXTRA, txtGrammar);
+                params.putString(WORD_EXTRA, word);
+                params.putInt(ALGORITHM_EXTRA, Algorithm.NONE.getValue());
                 Intent intent = new Intent(this, MenuActivity.class);
                 intent.putExtras(params);
                 startActivity(intent);
             } else {
                 if (reason.length() == 0) {
-                    reason.append("Gramática inválida.");
+                    reason.append(ResourcesContext.getString(R.string.exception_invalid_grammar));
                 }
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("Aviso");
+                builder.setTitle(R.string.warning);
                 builder.setMessage(reason);
-                builder.setNegativeButton("OK",
+                builder.setNegativeButton(R.string.ok,
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {

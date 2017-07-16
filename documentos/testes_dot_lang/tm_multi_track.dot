@@ -1,0 +1,29 @@
+digraph tm_multi_track_01 {
+
+	dpi = 480;
+	rankdir=LR;
+
+	"startRes" [shape=point, style="invis"];
+	node [shape = doublecircle, color="#968D8D", fontcolor=black, fillcolor="#FFCCCC", style="filled"];
+	"q4";
+
+	node [shape = circle];
+
+	"q0" [label=<q<sub>0</sub>>, pos="3,3!"];
+	"q1" [label=<q<sub>1</sub>>, pos="6,3!"];
+	"q2" [label=<q<sub>2</sub>>, pos="9,3!"];
+	"q3" [label=<q<sub>3</sub>>, pos="12,3!"];
+	"q4" [label=<q<sub>4</sub>>, pos="12,6!"];
+
+	"startRes" -> "q0";
+
+	"q0" -> "q1" [label="[B/B B/B D]"];
+	"q1" -> "q2" [label="[B/# B/B S]"];
+	"q2" -> "q3" [label="[B/# B/X S]"];
+	"q3" -> "q3" [label="[B/a X/X E]"];
+	"q3" -> "q4" [label="[B/B B/B D]"];
+	"q4" -> "q3" [label="[B/# B/X S]"];
+	"q4" -> "q4" [label="[B/b X/X D]"];
+
+
+}

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:text="@string/transition_pda"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:textSize="16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView" />
+
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="@string/symbol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvSymbol" />
+
+        <EditText
+            android:id="@+id/symbol_pda_transition"
+            android:inputType="text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:nextFocusDown="@+id/pop_pda_transition"
+            android:nextFocusForward="@+id/pop_pda_transition"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="@string/pop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvPop" />
+
+        <EditText
+            android:id="@+id/pop_pda_transition"
+            android:inputType="text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:nextFocusDown="@+id/push_pda_transition"
+            android:nextFocusForward="@+id/push_pda_transition"/>
+
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="@string/push"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvPush" />
+
+        <EditText
+            android:id="@+id/push_pda_transition"
+            android:inputType="text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+</LinearLayout>

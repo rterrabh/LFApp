@@ -22,32 +22,32 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.ufla.lfapp.activities.utils.AutoResizeTextView
+            <com.ufla.lfapp.utils.AutoResizeTextView
                 android:id="@+id/removeRecursiveInitialSymbol"
-                android:text="@string/removeRecursiveInitialSymbol"
+                android:text="@string/elimination_recursion_start_symbol"
                 style="@style/ButtonSingleLine" />
 
-            <com.ufla.lfapp.activities.utils.AutoResizeTextView
+            <com.ufla.lfapp.utils.AutoResizeTextView
                 android:id="@+id/removeEmptyProduction"
-                android:text="@string/removeEmptyProduction"
+                android:text="@string/elimination_empty_productions"
                 style="@style/ButtonSingleLine" />
 
-            <com.ufla.lfapp.activities.utils.AutoResizeTextView
+            <com.ufla.lfapp.utils.AutoResizeTextView
                 android:id="@+id/removeChainRule"
-                android:text="@string/removeChainRule"
+                android:text="@string/elimination_chain_rules"
                 style="@style/ButtonSingleLine" />
 
-            <com.ufla.lfapp.activities.utils.AutoResizeTextView
+            <com.ufla.lfapp.utils.AutoResizeTextView
                 android:id="@+id/term"
                 android:text="@string/term"
                 style="@style/ButtonSingleLine" />
 
-            <com.ufla.lfapp.activities.utils.AutoResizeTextView
+            <com.ufla.lfapp.utils.AutoResizeTextView
                 android:id="@+id/reach"
                 android:text="@string/reach"
                 style="@style/ButtonSingleLine" />
 
-            <com.ufla.lfapp.activities.utils.AutoResizeTextView
+            <com.ufla.lfapp.utils.AutoResizeTextView
                 android:id="@+id/chomskyNormalForm"
                 android:text="@string/properties_chomsky_normal_form"
                 style="@style/ButtonSingleLine" />

@@ -8,10 +8,10 @@ import android.widget.TextView;
 
 import com.ufla.lfapp.R;
 import com.ufla.lfapp.activities.grammar.HeaderGrammarActivity;
-import com.ufla.lfapp.activities.utils.UtilActivities;
-import com.ufla.lfapp.vo.grammar.AcademicSupport;
-import com.ufla.lfapp.vo.grammar.Grammar;
-import com.ufla.lfapp.vo.grammar.Rule;
+import com.ufla.lfapp.utils.UtilActivities;
+import com.ufla.lfapp.core.grammar.AcademicSupport;
+import com.ufla.lfapp.core.grammar.Grammar;
+import com.ufla.lfapp.core.grammar.Rule;
 
 import java.util.ArrayList;
 
@@ -34,8 +34,7 @@ public class RemoveLeftDirectRecursionActivity extends HeaderGrammarActivity {
 
         //Realiza comentários sobre o processo
         StringBuilder comments = new StringBuilder();
-        comments.append("\t\tRecursividade direta à esquerda pode produzir “loops infinitos” " +
-                "em analisadores sintáticos descendentes (top-down).");
+        comments.append(getString(R.string.rem_left_direct_recursion_comments));
 
         //Realiza processo
         gc = gc.removingTheImmediateLeftRecursion(gc, academicSupport);
@@ -54,7 +53,7 @@ public class RemoveLeftDirectRecursionActivity extends HeaderGrammarActivity {
 
             //Primeiro passo do processo
             TextView step1 = (TextView) findViewById(R.id.Step1DirectLeftRecursion);
-            step1.setText("(1) O primeiro passo é identificar a recursão.");
+            step1.setText(R.string.rem_left_direct_recursion_step_1);
             TextView pseudo = (TextView) findViewById(R.id.PseudoDirectLeftRecursionAlgorithm);
             pseudo.setText(Html.fromHtml(getLeftRecursionAlgorithm()));
             TableLayout tableOfRecursion = (TableLayout)
@@ -63,31 +62,14 @@ public class RemoveLeftDirectRecursionActivity extends HeaderGrammarActivity {
             printGrammarWithRecursiveRules(g, tableOfRecursion, academicSupport);
 
             //Segundo passo do processo
-            String algoritmo = "para i = 1 até n faça\n    se " +
-                    "A<sub><small>i</sub></small> possui recursão direta à " +
-                    "esquerda então\n        elimine a recursão em " +
-                    "A<sub><small>i</sub></small>\n    para j = i+1 até n " +
-                    "faça\n        para cada produção em " +
-                    "A<sub><small>j</sub></small> faça\n            se " +
-                    "A<sub><small>j</sub></small> -> " +
-                    "<sub><small>i</sub></small>Y então\n                " +
-                    "substitua A<sub><small>j</sub></small> -> " +
-                    "<sub><small>i</sub></small>Y por " +
-                    "A<sub><small>j</sub></small> -> "  +
-                    "                    T<sub><small>1</sub></small>Y | " +
-                    "T<sub><small>2</sub></small>Y | ... | " +
-                    "T<sub><small>k</sub></small>Y, onde " +
-                    "A<sub><small>i</sub></small> -> T<sub><small>1</sub> | " +
-                    "T<sub><small>2</sub> | ... | T<sub><small>k</sub> são " +
-                    "todas as produções atuais de A<sub><small>i</sub></small>";
             TextView step2 = (TextView) findViewById(R.id.Step2DirectLeftRecursion);
-            step2.setText("(2) O segundo passo é resolver a recursão.");
+            step2.setText(R.string.rem_left_direct_recursion_step_2);
             TableLayout tableOfResult = (TableLayout) findViewById(R.id.tableWithoutDirectLeftRecursion);
             UtilActivities.printGrammarWithNewRules(gc, tableOfResult,
                     academicSupport, this);
         } else {
             TextView commentsOfProcess = (TextView) findViewById(R.id.CommentsDirectLeftRecursion);
-            commentsOfProcess.setText("A gramática inserida não possui recursão direta à esquerda.");
+            commentsOfProcess.setText(R.string.rem_left_direct_recursion_comments_2);
         }
 
     }
@@ -97,13 +79,7 @@ public class RemoveLeftDirectRecursionActivity extends HeaderGrammarActivity {
      * @return
      */
     public String getLeftRecursionAlgorithm() {
-        StringBuilder algol = new StringBuilder();
-        algol.append("Suponha a regra genérica diretamente recursiva à esq.:<br>");
-        algol.append("A → Aμ<sub><small>1</small></sub> | Aμ<sub><small>2</small></sub> | ... | Aμ<sub><small>m</small></sub> | ν<sub><small>1</small></sub> | ν<sub><small>2</small></sub> | ... | ν<sub><small>n</small></sub><br><br>");
-        algol.append("Regra equivalente não-recursiva à esquerda:<br>");
-        algol.append("A → ν<sub><small>1</small></sub> | ν<sub><small>2</small></sub> | ... | ν<sub><small>n</small></sub> | ν<sub><small>1</small></sub>Z | ν<sub><small>2</small></sub>Z | ... | ν<sub><small>n</small></sub>Z<br>");
-        algol.append("Z → μ<sub><small>1</small></sub>Z | μ<sub><small>2</small></sub>Z | ... | μ<sub><small>m</small></sub>Z | μ<sub><small>1</small></sub> | μ<sub><small>2</small></sub> | ... | μ<sub><small>m</small></sub><br><br>");
-        return algol.toString();
+        return getString(R.string.rem_left_direct_recursion_algol);
     }
 
     /**

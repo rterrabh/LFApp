@@ -5,8 +5,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Point;
-import android.util.Log;
 
+import com.ufla.lfapp.core.machine.Machine;
+import com.ufla.lfapp.core.machine.MachineType;
+import com.ufla.lfapp.core.machine.dotlang.GraphAdapter;
+import com.ufla.lfapp.core.machine.fsa.FSATransitionFunction;
+import com.ufla.lfapp.core.machine.fsa.FiniteStateAutomaton;
+import com.ufla.lfapp.core.machine.fsa.FiniteStateAutomatonDAO;
+import com.ufla.lfapp.core.machine.fsa.FiniteStateAutomatonGUI;
 import com.ufla.lfapp.persistence.contract.table.GrammarContract;
 import com.ufla.lfapp.persistence.contract.table.GridPositionContract;
 import com.ufla.lfapp.persistence.contract.table.MachineContract;
@@ -21,15 +27,13 @@ import com.ufla.lfapp.persistence.contract.view.MachineAlphabetViewContract;
 import com.ufla.lfapp.persistence.contract.view.MachineFinalStateViewContract;
 import com.ufla.lfapp.persistence.contract.view.MachineStatePositionViewContract;
 import com.ufla.lfapp.persistence.contract.view.MachineTransitionViewContract;
-import com.ufla.lfapp.vo.machine.Automaton;
-import com.ufla.lfapp.vo.machine.AutomatonDAO;
-import com.ufla.lfapp.vo.machine.AutomatonGUI;
-import com.ufla.lfapp.vo.machine.DotLanguage;
-import com.ufla.lfapp.vo.machine.State;
-import com.ufla.lfapp.vo.machine.TransitionFunction;
+import com.ufla.lfapp.core.machine.dotlang.DotLanguage;
+import com.ufla.lfapp.core.machine.State;
 
+import java.sql.Array;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Deque;
 import java.util.LinkedHashMap;
@@ -40,6 +44,8 @@ import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+
+import javax.crypto.Mac;
 
 /**
  * Created by carlos on 03/08/16.
@@ -280,7 +286,7 @@ public class DbAcess {
         return machineTransitionId;
     }
 
-    public void putAutomaton(AutomatonDAO automatonDAO) {
+    public void putAutomaton(FiniteStateAutomatonDAO automatonDAO) {
         for (State state : automatonDAO.getStates()) {
             long stateId = getStateId(state);
             if (stateId == -1) {
@@ -305,18 +311,18 @@ public class DbAcess {
             }
             automatonDAO.putSymbolId(symbol, symbolId);
         }
-        for (Point gridPosition : automatonDAO.getStateGridPositions().values()) {
+        for (Point gridPosition : automatonDAO.getStateGridPoint().values()) {
             long gridPositionId = getGridPositionId(gridPosition.x, gridPosition.y);
             if (gridPositionId == -1) {
                 gridPositionId = putGridPosition(gridPosition);
             }
             automatonDAO.putGridPositionId(gridPosition, gridPositionId);
         }
-        for (Map.Entry<State, Point> entry : automatonDAO.getStateGridPositions().entrySet()) {
+        for (Map.Entry<State, Point> entry : automatonDAO.getStateGridPoint().entrySet()) {
             putMachineStatePosition(machineId, automatonDAO.getStateId(entry.getKey()),
                     automatonDAO.getGridPositionId(entry.getValue()));
         }
-        for (TransitionFunction t : automatonDAO.getTransitionFunctions()) {
+        for (FSATransitionFunction t : automatonDAO.getTransitionFunctions()) {
             long currentState = automatonDAO.getStateId(t.getCurrentState());
             long symbol = automatonDAO.getSymbolId(t.getSymbol());
             long futureState = automatonDAO.getStateId(t.getFutureState());
@@ -420,8 +426,8 @@ public class DbAcess {
         return alphabet;
     }
 
-    private SortedSet<TransitionFunction>  getTransitionFunctions (long machineId) {
-        SortedSet<TransitionFunction> transitionFunctions = new TreeSet<>();
+    private SortedSet<FSATransitionFunction>  getTransitionFunctions (long machineId) {
+        SortedSet<FSATransitionFunction> FSATransitionFunctions = new TreeSet<>();
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
         String[] projection = { MachineTransitionViewContract.Columns.CURRENT_STATE,
                 MachineTransitionViewContract.Columns.SYMBOL,
@@ -440,7 +446,7 @@ public class DbAcess {
         if (c != null) {
             if (c.moveToFirst()) {
                 do {
-                    transitionFunctions.add(new TransitionFunction(
+                    FSATransitionFunctions.add(new FSATransitionFunction(
                             new State(c.getString(c.getColumnIndex(
                                     MachineTransitionViewContract.Columns.CURRENT_STATE))),
                             c.getString(c.getColumnIndex(
@@ -452,7 +458,7 @@ public class DbAcess {
             c.close();
         }
         db.close();
-        return transitionFunctions;
+        return FSATransitionFunctions;
     }
 
     private class MachineTable {
@@ -522,14 +528,14 @@ public class DbAcess {
         return idsLastMachine;
     }
 
-    public AutomatonGUI getAutomaton(long machineId) {
+    public FiniteStateAutomatonGUI getAutomaton(long machineId) {
         SortedMap<State, Point> statesGridPoints = getStatesGridPoints(machineId);
         SortedSet<State> states = new TreeSet<>(statesGridPoints.keySet());
         SortedSet<State> finalStates = getFinalStates(machineId);
-        SortedSet<TransitionFunction> transitionFunctions = getTransitionFunctions(machineId);
+        SortedSet<FSATransitionFunction> FSATransitionFunctions = getTransitionFunctions(machineId);
         MachineTable machineTable = getMachineTable(machineId);
-        AutomatonGUI automatonGUI = new AutomatonGUI(new Automaton(states,
-                new State(machineTable.initialState), finalStates, transitionFunctions), statesGridPoints);
+        FiniteStateAutomatonGUI automatonGUI = new FiniteStateAutomatonGUI(new FiniteStateAutomaton(states,
+                new State(machineTable.initialState), finalStates, FSATransitionFunctions), statesGridPoints);
         automatonGUI.setLabel(machineTable.label);
         automatonGUI.setId(machineTable.id);
         automatonGUI.setContUses(machineTable.contUses);
@@ -537,28 +543,33 @@ public class DbAcess {
         return automatonGUI;
     }
 
-    public List<AutomatonGUI> getAutomatons() {
-        List<AutomatonGUI> automatonGUIs = new ArrayList<>();
+    public List<FiniteStateAutomatonGUI> getAutomatons() {
+        List<FiniteStateAutomatonGUI> automatonGUIs = new ArrayList<>();
         for (Long machineId : getIdsLastMachine()) {
             automatonGUIs.add(getAutomaton(machineId));
         }
         return automatonGUIs;
     }
 
-    public void putAutomatonGUI(AutomatonGUI automatonGUI) {
-        putMachineDotLanguage(DotLanguage.parseDotLanguage(automatonGUI));
+    public void putAutomatonGUI(FiniteStateAutomatonGUI automatonGUI) {
+        putMachineDotLanguage(new DotLanguage(automatonGUI, automatonGUI.getStateGridPositions()));
     }
 
     public void putMachineDotLanguage(DotLanguage dotLanguage) {
+        System.out.println("PUT_DOT_LANG");
         if (existMachineDotLanguage(dotLanguage.getGraph())) {
             return;
         }
+        System.out.println("MACHINE_TYPE -> " + dotLanguage.getMachineType());
+        System.out.println("PUT_DOT_LANG -> " + dotLanguage.getMachineType());
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(MachineDotLanguageContract.Columns.DOT_LANGUAGE, dotLanguage.getGraph());
         values.put(MachineDotLanguageContract.Columns.LABEL, dotLanguage.getLabel());
         values.put(MachineDotLanguageContract.Columns.CREATION_TIME,
                 Long.toString(dotLanguage.getCreationDate().getTime()));
+        values.put(MachineDotLanguageContract.Columns.MACHINE_TYPE,
+                dotLanguage.getMachineType().ordinal());
         db.insert(MachineDotLanguageContract.TABLE_NAME,
                 null,
                 values);
@@ -602,9 +613,9 @@ public class DbAcess {
         }
     }
 
-    public AutomatonGUI getAutomatonGUI(long id) {
+    public FiniteStateAutomatonGUI getAutomatonGUI(long id) {
         DotLanguage dotLanguage = getMachineDotLanguage(id);
-        return (dotLanguage == null) ? null : dotLanguage.toAutomatonGUI();
+        return (dotLanguage == null) ? null : dotLanguage.newToAutomatonGUI();
     }
 
     public DotLanguage getMachineDotLanguage(long id) {
@@ -613,7 +624,8 @@ public class DbAcess {
                 MachineDotLanguageContract.Columns.DOT_LANGUAGE,
                 MachineDotLanguageContract.Columns.LABEL,
                 MachineDotLanguageContract.Columns.CREATION_TIME,
-                MachineDotLanguageContract.Columns.CONT_USES };
+                MachineDotLanguageContract.Columns.CONT_USES,
+                MachineDotLanguageContract.Columns.MACHINE_TYPE };
         String selection = MachineContract.Columns._ID + " = ?";
         String[] selectionArgs = { Long.toString(id) };
         Cursor c = db.query(
@@ -628,6 +640,7 @@ public class DbAcess {
         String graph = null;
         String label = null;
         Date creationDate = null;
+        MachineType machineType = null;
         int contUses = 1;
         if (c != null) {
             if (c.moveToFirst()) {
@@ -639,6 +652,13 @@ public class DbAcess {
                         MachineDotLanguageContract.Columns.CREATION_TIME)));
                 contUses = c.getInt(c.getColumnIndex(
                         MachineDotLanguageContract.Columns.CONT_USES));
+                int indMachineType = c.getInt(c.getColumnIndex(
+                        MachineDotLanguageContract.Columns.MACHINE_TYPE));
+                try {
+                    machineType = MachineType.values()[indMachineType];
+                } catch (Exception e) {
+
+                }
             }
             c.close();
         }
@@ -646,7 +666,7 @@ public class DbAcess {
         if (graph == null) {
             return null;
         }
-        return new DotLanguage(id, graph, label, contUses, creationDate);
+        return new DotLanguage(id, graph, label, contUses, creationDate, machineType);
     }
 
     public boolean existMachineDotLanguage(String graph) {
@@ -674,9 +694,9 @@ public class DbAcess {
         return exist;
     }
 
-    public AutomatonGUI getAutomatonGUIByLabel(String label) {
+    public FiniteStateAutomatonGUI getAutomatonGUIByLabel(String label) {
         DotLanguage dotLanguage = getMachineDotLanguageByLabel(label);
-        return (dotLanguage == null) ? null : dotLanguage.toAutomatonGUI();
+        return (dotLanguage == null) ? null : dotLanguage.newToAutomatonGUI();
     }
 
     public DotLanguage getMachineDotLanguageByLabel(String label) {
@@ -685,7 +705,8 @@ public class DbAcess {
                 MachineDotLanguageContract.Columns.DOT_LANGUAGE,
                 MachineDotLanguageContract.Columns.LABEL,
                 MachineDotLanguageContract.Columns.CREATION_TIME,
-                MachineDotLanguageContract.Columns.CONT_USES };
+                MachineDotLanguageContract.Columns.CONT_USES,
+                MachineDotLanguageContract.Columns.MACHINE_TYPE };
         String selection = MachineDotLanguageContract.Columns.LABEL + " = ?";
         String[] selectionArgs = { label };
         Cursor c = db.query(
@@ -701,6 +722,7 @@ public class DbAcess {
         long id = -1l;
         Date creationDate = null;
         int contUses = 1;
+        MachineType machineType = null;
         if (c != null) {
             if (c.moveToFirst()) {
                 graph = c.getString(c.getColumnIndex(
@@ -711,6 +733,13 @@ public class DbAcess {
                         MachineDotLanguageContract.Columns.CREATION_TIME)));
                 contUses = c.getInt(c.getColumnIndex(
                         MachineDotLanguageContract.Columns.CONT_USES));
+                int indMachineType = c.getInt(c.getColumnIndex(
+                        MachineDotLanguageContract.Columns.MACHINE_TYPE));
+                try {
+                    machineType = MachineType.values()[indMachineType];
+                } catch (Exception e) {
+
+                }
             }
             c.close();
         }
@@ -718,7 +747,7 @@ public class DbAcess {
         if (graph == null) {
             return null;
         }
-        return new DotLanguage(id, graph, label, contUses, creationDate);
+        return new DotLanguage(id, graph, label, contUses, creationDate, machineType);
     }
 
     public List<DotLanguage> getMachineDotLanguages() {
@@ -729,7 +758,8 @@ public class DbAcess {
                 MachineDotLanguageContract.Columns.DOT_LANGUAGE,
                 MachineDotLanguageContract.Columns.LABEL,
                 MachineDotLanguageContract.Columns.CREATION_TIME,
-                MachineDotLanguageContract.Columns.CONT_USES };
+                MachineDotLanguageContract.Columns.CONT_USES,
+                MachineDotLanguageContract.Columns.MACHINE_TYPE  };
 
         Cursor c = db.query(
                 MachineDotLanguageContract.TABLE_NAME,  // The table to query
@@ -753,7 +783,16 @@ public class DbAcess {
                             MachineDotLanguageContract.Columns.CREATION_TIME)));
                     int contUses = c.getInt(c.getColumnIndex(
                             MachineDotLanguageContract.Columns.CONT_USES));
-                    dotLanguages.add(new DotLanguage(id, graph, label, contUses, creationDate));
+                    MachineType machineType = null;
+                    int indMachineType = c.getInt(c.getColumnIndex(
+                            MachineDotLanguageContract.Columns.MACHINE_TYPE));
+                    try {
+                        machineType = MachineType.values()[indMachineType];
+                    } catch (Exception e) {
+
+                    }
+                    dotLanguages.add(new DotLanguage(id, graph, label, contUses, creationDate,
+                            machineType));
                     } while (c.moveToNext());
             }
             c.close();
@@ -762,20 +801,20 @@ public class DbAcess {
         return dotLanguages;
     }
 
-    public List<AutomatonGUI> getAutomatonGUIs() {
+    public List<FiniteStateAutomatonGUI> getAutomatonGUIs() {
         List<DotLanguage> dotLanguages = getMachineDotLanguages();
-        List<AutomatonGUI> automatonGUIs = new ArrayList<>();
+        List<FiniteStateAutomatonGUI> automatonGUIs = new ArrayList<>();
         for (DotLanguage dotLanguage : dotLanguages) {
-            automatonGUIs.add(dotLanguage.toAutomatonGUI());
+            automatonGUIs.add(dotLanguage.newToAutomatonGUI());
         }
         return automatonGUIs;
     }
 
-    public List<AutomatonGUI> getLastAutomatonGUIs() {
+    public List<FiniteStateAutomatonGUI> getLastAutomatonGUIs() {
         List<DotLanguage> dotLanguages = getLastMachineDotLanguages();
-        List<AutomatonGUI> automatonGUIs = new LinkedList<>();
+        List<FiniteStateAutomatonGUI> automatonGUIs = new LinkedList<>();
         for (DotLanguage dotLanguage : dotLanguages) {
-            automatonGUIs.add(dotLanguage.toAutomatonGUI());
+            automatonGUIs.add(dotLanguage.newToAutomatonGUI());
         }
         return automatonGUIs;
     }
@@ -788,7 +827,8 @@ public class DbAcess {
                 MachineDotLanguageContract.Columns.DOT_LANGUAGE,
                 MachineDotLanguageContract.Columns.LABEL,
                 MachineDotLanguageContract.Columns.CREATION_TIME,
-                MachineDotLanguageContract.Columns.CONT_USES };
+                MachineDotLanguageContract.Columns.CONT_USES,
+                MachineDotLanguageContract.Columns.MACHINE_TYPE };
 
         Cursor c = db.query(
                 MachineDotLanguageContract.TABLE_NAME,  // The table to query
@@ -813,7 +853,17 @@ public class DbAcess {
                             MachineDotLanguageContract.Columns.CREATION_TIME)));
                     int contUses = c.getInt(c.getColumnIndex(
                             MachineDotLanguageContract.Columns.CONT_USES));
-                    dotLanguages.addFirst(new DotLanguage(id, graph, label, contUses, creationDate));
+                    System.out.println(Arrays.toString(c.getColumnNames()));
+                    int indMachineType = c.getInt(c.getColumnIndex(
+                            MachineDotLanguageContract.Columns.MACHINE_TYPE));
+                    MachineType machineType = MachineType.PDA;
+                    try {
+                        machineType = MachineType.values()[indMachineType];
+                    } catch (Exception e) {
+
+                    }
+                    dotLanguages.addFirst(new DotLanguage(id, graph, label, contUses, creationDate,
+                            machineType));
                 } while (c.moveToNext());
             }
             c.close();
@@ -822,11 +872,75 @@ public class DbAcess {
         return dotLanguages;
     }
 
-    public List<AutomatonGUI> getAutomatonGUIsOnPage(int page, int pageLength) {
-        List<DotLanguage> dotLanguages = getMachineDotLanguagesOnPage(page, pageLength);
-        List<AutomatonGUI> automatonGUIs = new ArrayList<>();
+    public List<GraphAdapter> getLastGraph(MachineType machineTypeSel) {
+        List<DotLanguage> dotLanguages = getLastMachineDotLanguages(machineTypeSel);
+        List<GraphAdapter> graphAdapters = new ArrayList<>();
         for (DotLanguage dotLanguage : dotLanguages) {
-            automatonGUIs.add(dotLanguage.toAutomatonGUI());
+            graphAdapters.add(dotLanguage.toGraphAdapter());
+        }
+        return graphAdapters;
+    }
+    public List<DotLanguage> getLastMachineDotLanguages(MachineType machineTypeSel) {
+        LinkedList<DotLanguage> dotLanguages = new LinkedList<>();
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        String[] projection = { MachineDotLanguageContract.Columns._ID,
+                MachineDotLanguageContract.Columns.DOT_LANGUAGE,
+                MachineDotLanguageContract.Columns.LABEL,
+                MachineDotLanguageContract.Columns.CREATION_TIME,
+                MachineDotLanguageContract.Columns.CONT_USES,
+                MachineDotLanguageContract.Columns.MACHINE_TYPE };
+
+        String selection = MachineDotLanguageContract.Columns.MACHINE_TYPE + " = ?";
+        String[] selectionArgs = { String.valueOf(machineTypeSel.ordinal()) };
+
+        Cursor c = db.query(
+                MachineDotLanguageContract.TABLE_NAME,  // The table to query
+                projection,                               // The columns to return
+                selection,                                // The columns for the WHERE clause
+                selectionArgs,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                MachineDotLanguageContract.Columns._ID + " ASC",
+                "10"// The sort order
+        );
+        if (c != null ) {
+            if (c.moveToFirst()) {
+                do {
+                    String graph = c.getString(c.getColumnIndex(
+                            MachineDotLanguageContract.Columns.DOT_LANGUAGE));
+                    String label = c.getString(c.getColumnIndex(
+                            MachineDotLanguageContract.Columns.LABEL));
+                    long id = c.getLong(c.getColumnIndex(
+                            MachineDotLanguageContract.Columns._ID));
+                    Date creationDate = new Date(c.getLong(c.getColumnIndex(
+                            MachineDotLanguageContract.Columns.CREATION_TIME)));
+                    int contUses = c.getInt(c.getColumnIndex(
+                            MachineDotLanguageContract.Columns.CONT_USES));
+                    System.out.println(Arrays.toString(c.getColumnNames()));
+                    int indMachineType = c.getInt(c.getColumnIndex(
+                            MachineDotLanguageContract.Columns.MACHINE_TYPE));
+                    MachineType machineType = MachineType.PDA;
+                    try {
+                        machineType = MachineType.values()[indMachineType];
+                    } catch (Exception e) {
+
+                    }
+                    dotLanguages.addFirst(new DotLanguage(id, graph, label, contUses, creationDate,
+                            machineType));
+                } while (c.moveToNext());
+            }
+            c.close();
+        }
+        db.close();
+        return dotLanguages;
+    }
+
+    public List<FiniteStateAutomatonGUI> getAutomatonGUIsOnPage(int page, int pageLength) {
+        List<DotLanguage> dotLanguages = getMachineDotLanguagesOnPage(page, pageLength);
+        List<FiniteStateAutomatonGUI> automatonGUIs = new ArrayList<>();
+        for (DotLanguage dotLanguage : dotLanguages) {
+            automatonGUIs.add(dotLanguage.newToAutomatonGUI());
         }
         return automatonGUIs;
     }
@@ -839,7 +953,8 @@ public class DbAcess {
                 MachineDotLanguageContract.Columns.DOT_LANGUAGE,
                 MachineDotLanguageContract.Columns.LABEL,
                 MachineDotLanguageContract.Columns.CREATION_TIME,
-                MachineDotLanguageContract.Columns.CONT_USES };
+                MachineDotLanguageContract.Columns.CONT_USES,
+                MachineDotLanguageContract.Columns.MACHINE_TYPE };
 
         int offset = page * pageLength;
         Cursor c = db.query(
@@ -866,7 +981,16 @@ public class DbAcess {
                             MachineDotLanguageContract.Columns.CREATION_TIME)));
                     int contUses = c.getInt(c.getColumnIndex(
                             MachineDotLanguageContract.Columns.CONT_USES));
-                    dotLanguages.add(new DotLanguage(id, graph, label, contUses, creationDate));
+                    int indMachineType = c.getInt(c.getColumnIndex(
+                            MachineDotLanguageContract.Columns.MACHINE_TYPE));
+                    MachineType machineType = null;
+                    try {
+                        machineType = MachineType.values()[indMachineType];
+                    } catch (Exception e) {
+
+                    }
+                    dotLanguages.add(new DotLanguage(id, graph, label, contUses, creationDate,
+                            machineType));
                 } while (c.moveToNext());
             }
             c.close();
@@ -946,7 +1070,6 @@ public class DbAcess {
                 null                                     // The sort order
         );
         int n = c.getCount();
-        Log.d("n", "" + n);
         if (n > MAX_SIZE) {
             if (c.moveToFirst()) {
                 int columnIndexGrammar = c.getColumnIndex
@@ -958,7 +1081,6 @@ public class DbAcess {
         }
         db.close();
         if (id != null) {
-            Log.d("deletou", "deletou " + id + "\n" + grammar);
             deleteGrammar(id);
         }
     }
@@ -1039,8 +1161,9 @@ public class DbAcess {
         db.close();
     }
 
-    public boolean updateMachineDotLanguage(AutomatonGUI automatonGUI) {
-        return updateMachineDotLanguage(DotLanguage.parseDotLanguage(automatonGUI));
+    public boolean updateMachineDotLanguage(FiniteStateAutomatonGUI automatonGUI) {
+        return updateMachineDotLanguage(new DotLanguage(automatonGUI,
+                automatonGUI.getStateGridPositions()));
     }
 
     public boolean updateMachineDotLanguage(DotLanguage dotLanguage) {

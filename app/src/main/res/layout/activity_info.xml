@@ -19,26 +19,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="@string/o_lfapp_um_aplicativo_m_vel_para_auxiliar_o_ensino_e_aprendizagem_de_lfa"/>
+            android:text="@string/lfapp_description"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="@string/gram_tica"
+            android:text="@string/grammar_td"
             android:textStyle="bold"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="@string/o_usu_rio_deve_inserir_uma_gram_tica_com_as_seguintes_configura"/>
+            android:text="@string/user_help_grammar"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="240dp"
-            android:text="@string/desenvolvido_por_juventino_neto_sob_orienta_o_de_ricardo_terra"
+            android:text="@string/develop_juv"
             android:textStyle="italic"/>
 
         <Button
@@ -46,7 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/voltar"/>
+            android:text="@string/back"/>
 
     </LinearLayout>
 

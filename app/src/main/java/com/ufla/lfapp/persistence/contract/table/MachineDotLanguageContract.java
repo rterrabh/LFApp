@@ -19,7 +19,8 @@ public class MachineDotLanguageContract {
             DotLanguage TEXT NOT NULL,
             Label TEXT,
             CreationTime TEXT NOT NULL,
-            ContUses INTEGER DEFAULT 1);"
+            ContUses INTEGER DEFAULT 1
+            MachineType INTEGER NOT NULL);"
     */
 
     public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + " ("
@@ -27,7 +28,8 @@ public class MachineDotLanguageContract {
             + MachineDotLanguageContract.Columns.DOT_LANGUAGE + " TEXT NOT NULL, "
             + MachineDotLanguageContract.Columns.LABEL + " TEXT, "
             + MachineDotLanguageContract.Columns.CREATION_TIME + " INTEGER NOT NULL, "
-            + MachineDotLanguageContract.Columns.CONT_USES + " INTEGER DEFAULT 1);";
+            + MachineDotLanguageContract.Columns.CONT_USES + " INTEGER DEFAULT 1, "
+            + MachineDotLanguageContract.Columns.MACHINE_TYPE + " INTEGER NOT NULL);";
 
     public static abstract class Columns implements BaseColumns {
         public static final String _ID = BaseColumns._ID;
@@ -35,5 +37,6 @@ public class MachineDotLanguageContract {
         public static final String LABEL = "Label";
         public static final String CREATION_TIME = "CreationTime";
         public static final String CONT_USES = "ContUses";
+        public static final String MACHINE_TYPE = "MachineType";
     }
 }

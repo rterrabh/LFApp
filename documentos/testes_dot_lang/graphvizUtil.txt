@@ -1,0 +1,5 @@
+dot -Tpng -O new.dot > new.png
+xdg-open new.png
+
+
+{ dot, neato, twopi, circo, fdp, sfdp }

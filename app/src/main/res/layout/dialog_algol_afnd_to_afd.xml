@@ -4,14 +4,11 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:text="i.   É inicial: a união de todos os estados iniciais: {q0}
-        \nii.  Cada novo Q obtém a união das transições dos seus estados integrantes
-        \niii. São finais: os estados que contém pelo menos um estado final\n"
+        android:text="@string/algol_afnd_to_afd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:lineSpacingMultiplier="1.5"
         android:textSize="14sp"
-        android:singleLine="false"
         android:textColor="@color/Black"
         android:id="@+id/textView" />
 

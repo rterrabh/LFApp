@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:id="@+id/cl1"
+        android:background="@drawable/border"
+        app:layout_constraintVertical_bias="0.0">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/Black"
+            android:textSize="16sp"
+            android:text="@string/input_grammar"
+            android:id="@+id/inputGrammarTitle"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/inputGrammar"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/DarkGray"
+            android:textSize="16sp"
+            android:id="@+id/inputGrammar"
+            app:layout_constraintTop_toBottomOf="@+id/inputGrammarTitle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/cl1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:id="@+id/cl2">
+
+        <com.ufla.lfapp.utils.AutoResizeTextView
+            android:text="@string/transitions_using_initial_symbol"
+            style="@style/TitleSingleLine"
+            android:id="@+id/descrTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/descr"
+            app:layout_constraintLeft_toLeftOf="parent" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/DarkGray"
+            android:textSize="16sp"
+            android:id="@+id/descr"
+            android:text="@string/cfgToPDAStage3Descr"
+            app:layout_constraintTop_toBottomOf="@+id/descrTitle"
+            app:layout_constraintBottom_toTopOf="@+id/transitions"
+            app:layout_constraintLeft_toLeftOf="parent" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/DarkGray"
+            android:textSize="16sp"
+            android:id="@+id/transitions"
+            app:layout_constraintTop_toBottomOf="@+id/descr"
+            app:layout_constraintBottom_toTopOf="@+id/pda"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/transitions"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:id="@+id/pda"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <ImageButton
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_arrow_back_black_24dp"
+        android:contentDescription="@string/back"
+        android:onClick="back"
+        app:layout_constraintTop_toBottomOf="@+id/cl2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintVertical_bias="1.0"/>
+
+    <ImageButton
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_arrow_forward_black_24dp"
+        android:contentDescription="@string/next"
+        android:id="@+id/next"
+        android:onClick="next"
+        app:layout_constraintTop_toBottomOf="@+id/cl2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintVertical_bias="1.0"/>
+
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/clear"
+        android:title="Clear"
+        android:orderInCategory="100"
+        app:showAsAction="collapseActionView"/>
+
+    <!--<item-->
+        <!--android:id="@+id/toGrammar"-->
+        <!--android:title="@string/pda_to_grammar"-->
+        <!--android:orderInCategory="100"-->
+        <!--app:showAsAction="collapseActionView"/>-->
+
+    <item
+        android:id="@+id/toGrammarStepByStep"
+        android:title="@string/pda_to_grammar_step_by_step"
+        android:orderInCategory="100"
+        app:showAsAction="collapseActionView"/>
+
+    <item
+        android:id="@+id/verifyEntry"
+        android:title="@string/word_process_pda"
+        android:orderInCategory="100"
+        app:showAsAction="collapseActionView"/>
+
+    <item
+        android:id="@+id/history"
+        android:title="@string/history"
+        android:orderInCategory="100"
+        app:showAsAction="collapseActionView"/>
+
+</menu>

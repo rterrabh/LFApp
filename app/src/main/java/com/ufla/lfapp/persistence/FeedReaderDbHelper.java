@@ -1,9 +1,15 @@
 package com.ufla.lfapp.persistence;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.ufla.lfapp.core.machine.Machine;
+import com.ufla.lfapp.core.machine.MachineType;
+import com.ufla.lfapp.core.machine.dotlang.DotLanguage;
+import com.ufla.lfapp.core.machine.fsa.FiniteStateAutomatonGUI;
 import com.ufla.lfapp.persistence.contract.table.GrammarContract;
 import com.ufla.lfapp.persistence.contract.table.GridPositionContract;
 import com.ufla.lfapp.persistence.contract.table.MachineContract;
@@ -27,7 +33,7 @@ import com.ufla.lfapp.persistence.contract.view.MachineTransitionViewContract;
 public class FeedReaderDbHelper extends SQLiteOpenHelper {
 
     // If you change the database schema, you must increment the database version.
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "LFAppDB.db";
     private static final String TEXT_TYPE = " TEXT";
     private static final String INTEGER_TYPE = " INTEGER";
@@ -70,6 +76,7 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
         db.execSQL(MachineDotLanguageContract.CREATE_TABLE);
     }
 
+
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // This database is only a cache for online data, so its upgrade policy is
         // to simply to discard the data and start over
@@ -77,10 +84,18 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
 //            db.execSQL(sqlDelete);
 //        }
 //        onCreate(db);
+        if (oldVersion == 1 && newVersion == 2) {
+            System.out.println("UPGRADE V1 TO V2");
+            new UpgradeDBV1ToV2(db).upgrade();
+        }
+        System.out.println("-----------------------------------");
+        System.out.println("UPGRADE DATABASE");
+        System.out.println("oldVersion " + oldVersion + "; newVersion " + newVersion);
+        System.out.println("-----------------------------------");
     }
 
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        onUpgrade(db, oldVersion, newVersion);
+        //onUpgrade(db, oldVersion, newVersion);
     }
 
     public void cleanHistory() {

@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.ufla.lfapp.R;
 
-public class AboutActivity extends AppCompatActivity {
+public class AboutActivity extends AppCompatActivityContext {
 
     private GestureDetectorCompat mDetector;
     private boolean back = false;

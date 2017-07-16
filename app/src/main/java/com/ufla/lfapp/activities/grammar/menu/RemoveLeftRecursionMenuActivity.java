@@ -13,7 +13,7 @@ import com.ufla.lfapp.activities.grammar.algorithms.NoReachSymbolsActivity;
 import com.ufla.lfapp.activities.grammar.algorithms.NoTermSymbolsActivity;
 import com.ufla.lfapp.activities.grammar.algorithms.RemoveInitialSymbolRecursiveActivity;
 import com.ufla.lfapp.activities.grammar.algorithms.RemoveLeftRecursionActivity;
-import com.ufla.lfapp.activities.utils.Algorithm;
+import com.ufla.lfapp.utils.Algorithm;
 
 /**
  * Created by carlos on 2/13/17.
@@ -43,9 +43,9 @@ public class RemoveLeftRecursionMenuActivity extends HeaderGrammarActivity {
         findViewById(idView).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Bundle params = new Bundle();
-                params.putString("grammar", grammar);
-                params.putString("word", word);
-                params.putInt("algorithm", Algorithm.REMOVE_LEFT_RECURSION.getValue());
+                params.putString(GRAMMAR_EXTRA, grammar);
+                params.putString(WORD_EXTRA, word);
+                params.putInt(ALGORITHM_EXTRA, Algorithm.REMOVE_LEFT_RECURSION.getValue());
                 Intent intent = new Intent(RemoveLeftRecursionMenuActivity.this, clazz);
                 intent.putExtras(params);
                 startActivity(intent);

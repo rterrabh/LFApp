@@ -11,6 +11,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.ufla.lfapp.R;
+import com.ufla.lfapp.activities.AppCompatActivityContext;
 import com.ufla.lfapp.persistence.DbAcess;
 
 import java.util.ArrayList;
@@ -20,9 +21,12 @@ import java.util.Map;
 /**
  * Created by carlos on 03/08/16.
  */
-public class HistoricalGrammarsActivity extends AppCompatActivity {
+public class HistoricalGrammarsActivity extends AppCompatActivityContext {
 
+    private static final String CLEAN = "clean";
+    private static final String GRAMMAR_EXTRA = "grammar";
     private static Map<String, Integer> grammarsStatic;
+
     private ArrayAdapter listAdapterGrammar;
 
     public static int getGrammarId(String grammar) {
@@ -36,14 +40,14 @@ public class HistoricalGrammarsActivity extends AppCompatActivity {
         Map<String, Integer> grammars = new DbAcess(this).readGrammars();
         grammarsStatic = grammars;
         List<String> grammarsList = new ArrayList<>(grammars.keySet());
-        grammarsList.add("clean");
+        grammarsList.add(CLEAN);
         listAdapterGrammar = new ArrayAdapterGrammar(this, grammarsList);
         ((ListView) findViewById(R.id.grammars)).setAdapter(listAdapterGrammar);
     }
 
     public void copyGrammar(View view) {
         Bundle params = new Bundle();
-        params.putString("grammar", String.valueOf(((TextView)
+        params.putString(GRAMMAR_EXTRA, String.valueOf(((TextView)
                 ((View) (view.getParent().getParent())).findViewById(R.id.grammar)).getText()));
         Intent intent = new Intent(this, GrammarActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

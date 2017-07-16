@@ -29,20 +29,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxWidth="200dp"
-            android:text="@string/palavra_para_cyk_e_deriva_o"/>
+            android:text="@string/word_description_grammar"/>
 
         <EditText
             android:id="@+id/inputWord"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0"
             android:inputType="text"/>
 
         <TextView
             android:id="@+id/labelGrammar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/gramatica"/>
+            android:text="@string/grammar_td"/>
 
         <EditText
             android:id="@+id/inputGrammar"
@@ -109,8 +108,18 @@
             android:layout_weight="1"
             android:layout_marginTop="10dp"
             android:background="@color/DarkGray"
-            android:text="@string/hist_rico"
+            android:text="@string/history"
             android:onClick="startHistoricalGrammarsActivity"/>
+
+        <Button
+            android:id="@+id/clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="10dp"
+            android:background="@color/DarkGray"
+            android:text="Limpar"
+            android:onClick="clear"/>
 
         <ImageButton
             android:id="@+id/about"

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:text="@string/transition_tm"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:textSize="16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView" />
+
+    <EditText
+        android:id="@+id/label_tm_transition"
+        android:inputType="textMultiLine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="@string/symbol_read"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvSymbolRead" />
+
+        <EditText
+            android:id="@+id/symbol_read_tm_transition"
+            android:inputType="text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="@string/symbol_write"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvSymbolWrite" />
+
+        <EditText
+            android:id="@+id/symbol_write_tm_transition"
+            android:inputType="text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="@string/direction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvDirection" />
+
+        <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/direction_tm_transition">
+
+            <RadioButton android:id="@+id/radio_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/direction_right"
+                android:onClick="onRadioButtonClicked"/>
+
+            <RadioButton android:id="@+id/radio_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/direction_left"
+                android:onClick="onRadioButtonClicked"/>
+
+            <RadioButton android:id="@+id/radio_static"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/direction_static"
+                android:onClick="onRadioButtonClicked"/>
+
+        </RadioGroup>
+
+    </LinearLayout>
+
+</LinearLayout>

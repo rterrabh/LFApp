@@ -7,7 +7,7 @@
         android:icon="@drawable/lfapp_icon"
         android:label="LFApp"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.automata.EditAutomataActivity" />
+        <activity android:name=".activities.machine.fsa.EditFiniteStateAutomatonActivity" />
         <activity
             android:name=".activities.grammar.GrammarActivity"
             android:label="LFApp"
@@ -18,7 +18,7 @@
             android:label="LFApp" />
         <activity
             android:name=".activities.AboutActivity"
-            android:label="LFApp - Sobre"
+            android:label="@string/lfapp_about"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -26,7 +26,7 @@
         </activity>
         <activity
             android:name=".activities.grammar.menu.MenuActivity"
-            android:label="LFApp - Menu">
+            android:label="@string/lfapp_menu">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.grammar.GrammarActivity" />
@@ -89,7 +89,7 @@
         </activity>
         <activity
             android:name=".activities.grammar.menu.ChomskyNormalFormMenuActivity"
-            android:label="LFApp - FNC">
+            android:label="@string/lfapp_cnf">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.grammar.menu.MenuActivity" />
@@ -110,14 +110,14 @@
         </activity>
         <activity
             android:name=".activities.grammar.menu.RemoveLeftRecursionMenuActivity"
-            android:label="LFApp - Recursão à Esq">
+            android:label="@string/lfapp_left_recursion">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.grammar.menu.MenuActivity" />
         </activity>
         <activity
             android:name=".activities.grammar.menu.GreibachNormalFormMenuActivity"
-            android:label="LFApp - FNG">
+            android:label="@string/lfapp_gnf">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.grammar.menu.MenuActivity" />
@@ -131,24 +131,31 @@
         </activity>
         <activity
             android:name=".activities.grammar.algorithms.GreibachNormalFormActivity"
-            android:label="LFApp - FNG - 8/8">
+            android:label="@string/lfapp_gnf_8_8">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.grammar.menu.MenuActivity" />
         </activity>
         <activity
             android:name=".activities.grammar.HistoricalGrammarsActivity"
-            android:label="LFApp - Histórico">
+            android:label="@string/lfapp_history">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.grammar.GrammarActivity" />
         </activity>
         <activity
-            android:name=".activities.automata.HistoricalAutomataActivity"
-            android:label="LFApp - Histórico">
+            android:name=".activities.machine.fsa.HistoricalAutomataActivity"
+            android:label="@string/lfapp_history">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.automata.EditAutomataActivity" />
+                android:value=".activities.machine.fsa.EditFiniteStateAutomatonActivity" />
+        </activity>
+        <activity
+            android:name=".activities.machine.HistoricalGraphActivity"
+            android:label="@string/lfapp_history">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.machine.HistoricalGraphActivity" />
         </activity>
 
         <meta-data
@@ -163,15 +170,50 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.automata.RegexToAutomataActivity"
+            android:name=".activities.machine.fsa.RegexToAutomataActivity"
             android:label="@string/title_activity_regex_to_automata"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.automata.ConvertAFNDInAFDActivity" />
+        <activity android:name=".activities.machine.fsa.ConvertAFNDInAFDActivity" />
         <activity
-            android:name=".activities.automata.AutomatonMinimizationActivity"
+            android:name=".activities.machine.fsa.AutomatonMinimizationActivity"
             android:label="@string/title_activity_automaton_minimization"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.automata.ItemAutomatonActivity"></activity>
+        <activity android:name=".activities.machine.fsa.ItemAutomatonActivity" />
+        <activity android:name=".activities.machine.fsa.ItemGraphActivity" />
+        <activity android:name=".activities.machine.ItemDerivationTreeActivity" />
+        <activity android:name=".activities.grammar.algorithms.AmbiguityVerificationActivity" />
+        <activity android:name=".activities.machine.pda.EditPushdownAutomatonActivity" />
+        <activity android:name=".activities.machine.tm.EditTuringMachineActivity" />
+        <activity android:name=".activities.grammar.algorithms.cfgtopda.CFGToPDAActivity" />
+        <activity
+            android:name=".activities.grammar.algorithms.cfgtopda.CFGToPDAStage1Activity"
+            android:label="@string/title_activity_cfgto_pdastage1"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.grammar.algorithms.cfgtopda.CFGToPDAStage2Activity"
+            android:label="@string/title_activity_cfgto_pdastage2"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.grammar.algorithms.cfgtopda.CFGToPDAStage3Activity"
+            android:label="@string/title_activity_cfgto_pdastage3"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activities.grammar.algorithms.cfgtopda.CFGToPDAStage4Activity" />
+        <activity android:name=".activities.machine.pda.pdatocfg.PDAToCFGStage1Activity" />
+        <activity android:name=".activities.machine.pda.pdatocfg.PDAToCFGStage2Activity" />
+        <activity android:name=".activities.machine.pda.pdatocfg.PDAToCFGStage3Activity" />
+        <activity android:name=".activities.machine.pda.pdatocfg.PDAToCFGStage4Activity" />
+        <activity android:name=".activities.machine.pda.pdatocfg.PDAToCFGStage5Activity" />
+        <activity android:name=".activities.machine.fsa.ProcessWordFSAActivity" />
+        <activity android:name=".activities.machine.pda.ProcessWordPDAActivity" />
+        <activity android:name=".activities.machine.tm.ProcessWordALLActivity" />
+        <activity android:name=".activities.machine.tm.ProcessWordTMActivity" />
+        <activity android:name=".activities.machine.tm.EditLinearBoundedAutomatonActivity" />
+        <activity android:name=".activities.machine.tm.EditTMMultiTracksActivity" />
+        <activity android:name=".activities.machine.tm.EditTMMultiTapesActivity" />
+        <activity android:name=".activities.machine.tm.ProcessWordTMMultiTapeActivity" />
+        <activity android:name=".activities.machine.tm.ProcessWordTMMultiTrackActivity" />
+        <activity android:name=".activities.machine.tm.ProcessWordTMEnumActivity" />
+        <activity android:name=".activities.machine.tm.EditTMEnumActivity"></activity>
     </application>
 
 </manifest>

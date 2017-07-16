@@ -9,10 +9,10 @@ import android.widget.TextView;
 
 import com.ufla.lfapp.R;
 import com.ufla.lfapp.activities.grammar.HeaderGrammarActivity;
-import com.ufla.lfapp.activities.utils.UtilActivities;
-import com.ufla.lfapp.vo.grammar.AcademicSupport;
-import com.ufla.lfapp.vo.grammar.Grammar;
-import com.ufla.lfapp.vo.grammar.Rule;
+import com.ufla.lfapp.utils.UtilActivities;
+import com.ufla.lfapp.core.grammar.AcademicSupport;
+import com.ufla.lfapp.core.grammar.Grammar;
+import com.ufla.lfapp.core.grammar.Rule;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -34,13 +34,16 @@ public class ChainRulesActivity extends HeaderGrammarActivity {
     private void setTitle() {
         switch(algorithm) {
             case CHOMSKY_NORMAL_FORM:
-                setTitle("LFApp - FNC - 3/6");
+                setTitle(getResources().getString(R.string.lfapp_cnf_title)
+                        + " - 3/6");
                 break;
             case GREIBACH_NORMAL_FORM:
-                setTitle("LFApp - FNG - 3/8");
+                setTitle(getResources().getString(R.string.lfapp_gnf_title)
+                        + " - 3/8");
                 break;
             case REMOVE_LEFT_RECURSION:
-                setTitle("LFApp - Recursão à Esq - 3/7");
+                setTitle(getResources().getString(R.string.lfapp_left_recursion_title)
+                        + " - 3/7");
                 break;
         }
     }
@@ -73,8 +76,7 @@ public class ChainRulesActivity extends HeaderGrammarActivity {
 
         //Realiza comentários sobre o processo
         StringBuilder comments = new StringBuilder();
-        comments.append("\t\tA remoção de regras de cadeia substitui as ocorrências " +
-                "de uma cadeia diretamente pelas regras da variável renomeada.\n");
+        comments.append(getResources().getString(R.string.chain_rules_algol_comment));
 
         //Realiza processo
         Grammar gc = g.getGrammarWithoutChainRules(g, academic);
@@ -91,41 +93,44 @@ public class ChainRulesActivity extends HeaderGrammarActivity {
 
         //Configura o primeiro passo do processo
         TextView creatingSetOfChains =  (TextView) findViewById(R.id.RemovingChainRulesStep1);
-        creatingSetOfChains.setText("(1) O primeiro passo do algoritmo é montar as cadeias de cada variável.");
+        creatingSetOfChains.setText(R.string.algol_chain_rule_grammar_step_1);
         TextView pseudo =  (TextView) findViewById(R.id.PseudoChainAlgorithm);
         pseudo.setText(Html.fromHtml(getChainAlgorithm()));
         TableLayout tableOfChains = (TableLayout) findViewById(R.id.TableOfChains);
         tableOfChains.setShrinkAllColumns(true);
-        printTableOfChains(tableOfChains, academic, "Variável", "Cadeia");
+        final String[] HEADER_TABLE = getResources().getString(
+                R.string.chain_rules_table_header
+                ).split("#");
+        printTableOfChains(tableOfChains, academic, HEADER_TABLE[0], HEADER_TABLE[1]);
 
         //configura o segundo passo do processo
         if (academic.getInsertedRules().size() != 0) {
             TextView creatingGrammarWithoutChains =  (TextView) findViewById(R.id.RemovingChainRulesStep2);
-            creatingGrammarWithoutChains.setText("(2) Destacar as cadeias encontradas.");
+            creatingGrammarWithoutChains.setText(R.string.algol_chain_rule_grammar_step_2);
             TableLayout tableWithoutChains = (TableLayout) findViewById(R.id.GrammarWithChains);
             UtilActivities.printGrammarWithoutOldRules(g, tableWithoutChains,
                     academic, this);
         } else if (academic.getIrregularRules().size() != 0) {
             TextView creatingGrammarWithoutChains = (TextView) findViewById(R.id.RemovingChainRulesStep2);
-            creatingGrammarWithoutChains.setText("(2) Na gramática inserida, existem auto cadeias. Esse tipo de regra também deve ser removida.");
+            creatingGrammarWithoutChains.setText(R.string.algol_chain_rule_grammar_step_2_1);
         } else {
             TextView creatingGrammarWithoutChains = (TextView) findViewById(R.id.RemovingChainRulesStep2);
-            creatingGrammarWithoutChains.setText("(2) Não há cadeias na gramática inserida.");
+            creatingGrammarWithoutChains.setText(R.string.algol_chain_rule_grammar_step_2_2);
         }
 
         //Configura o terceiro passo do processo
         if (academic.getInsertedRules().size() != 0) {
             TextView creatingGrammarWithoutChains = (TextView) findViewById(R.id.RemovingChainRulesStep3);
-            creatingGrammarWithoutChains.setText("(3) Subistituir as cadeias encontradas.");
+            creatingGrammarWithoutChains.setText(R.string.algol_chain_rule_grammar_step_3);
             TableLayout tableWithoutChains = (TableLayout) findViewById(R.id.GrammarWithoutChains);
             UtilActivities.printGrammarWithNewRules(gc, tableWithoutChains,
                     academic, this);
         } else if (academic.getIrregularRules().size() != 0) {
             TextView creatingGrammarWithoutChains = (TextView) findViewById(R.id.RemovingChainRulesStep3);
-            creatingGrammarWithoutChains.setText("(3) Na gramática inserida, existem auto cadeias. Esse tipo de regra também deve ser removida.");
+            creatingGrammarWithoutChains.setText(R.string.algol_chain_rule_grammar_step_3_1);
         } else {
             TextView creatingGrammarWithoutChains = (TextView) findViewById(R.id.RemovingChainRulesStep3);
-            creatingGrammarWithoutChains.setText("(3) Não há cadeias na gramática inserida.");
+            creatingGrammarWithoutChains.setText(R.string.algol_chain_rule_grammar_step_3_2);
         }
 
     }
@@ -135,17 +140,7 @@ public class ChainRulesActivity extends HeaderGrammarActivity {
      * @return
      */
     public String getChainAlgorithm() {
-        StringBuilder algol = new StringBuilder();
-        algol.append("CHAIN(A) = {A}<br>");
-        algol.append("PREV = ∅<br>");
-        algol.append("<b>repita</b><br>");
-        algol.append("&nbsp;&nbsp;NEW = CHAIN(A) − PREV<br>");
-        algol.append("&nbsp;&nbsp;PREV = CHAIN(A)<br>");
-        algol.append("&nbsp;&nbsp;<b>para cada</b> B ∈ NEW <b>faça</b><br>");
-        algol.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>para cada</b> B → C <b>faça</b><br>");
-        algol.append("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CHAIN(A) = CHAIN(A) ∪ {C}<br>");
-        algol.append("<b>até</b> CHAIN(A) == PREV");
-        return algol.toString();
+        return getResources().getString(R.string.chain_rule_algol);
     }
 
     /**
