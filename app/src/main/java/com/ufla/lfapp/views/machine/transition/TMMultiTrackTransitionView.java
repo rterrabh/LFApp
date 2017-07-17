@@ -123,7 +123,6 @@ public class TMMultiTrackTransitionView extends EdgeView {
                 contEmpty++;
             }
         }
-        System.out.println(Arrays.deepToString(paramsAux));
         if (paramsAux.length != numTapes * 2 + 1 + contEmpty) {
             return null;
         }

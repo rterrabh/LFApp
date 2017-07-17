@@ -87,8 +87,6 @@ public class EditTMMultiTapesActivity extends AppCompatActivityContext {
             String pushdownAutomatonStr = preferences.getString(TURING_MACHINE_MULTI_TAPE, null);
             String labelToPointStr = preferences.getString(TURING_MACHINE_POINTS_MULTI_TAPE, null);
             if (pushdownAutomatonStr != null && labelToPointStr != null) {
-                System.out.println(pushdownAutomatonStr);
-                System.out.println(labelToPointStr);
                 TuringMachineMultiTape turingMachine = (TuringMachineMultiTape)
                         ObjectSerializerHelper
                                 .stringToObject(pushdownAutomatonStr);

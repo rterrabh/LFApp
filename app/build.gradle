@@ -5,7 +5,7 @@ android {
     buildToolsVersion '25.0.0'
 
     defaultConfig {
-        applicationId "com.lfapp.lfapp_01"
+        applicationId "org.ufla.lfapp"
         minSdkVersion 15
         targetSdkVersion 23
         versionCode 7

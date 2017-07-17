@@ -556,12 +556,9 @@ public class DbAcess {
     }
 
     public void putMachineDotLanguage(DotLanguage dotLanguage) {
-        System.out.println("PUT_DOT_LANG");
         if (existMachineDotLanguage(dotLanguage.getGraph())) {
             return;
         }
-        System.out.println("MACHINE_TYPE -> " + dotLanguage.getMachineType());
-        System.out.println("PUT_DOT_LANG -> " + dotLanguage.getMachineType());
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(MachineDotLanguageContract.Columns.DOT_LANGUAGE, dotLanguage.getGraph());
@@ -853,7 +850,6 @@ public class DbAcess {
                             MachineDotLanguageContract.Columns.CREATION_TIME)));
                     int contUses = c.getInt(c.getColumnIndex(
                             MachineDotLanguageContract.Columns.CONT_USES));
-                    System.out.println(Arrays.toString(c.getColumnNames()));
                     int indMachineType = c.getInt(c.getColumnIndex(
                             MachineDotLanguageContract.Columns.MACHINE_TYPE));
                     MachineType machineType = MachineType.PDA;
@@ -917,7 +913,6 @@ public class DbAcess {
                             MachineDotLanguageContract.Columns.CREATION_TIME)));
                     int contUses = c.getInt(c.getColumnIndex(
                             MachineDotLanguageContract.Columns.CONT_USES));
-                    System.out.println(Arrays.toString(c.getColumnNames()));
                     int indMachineType = c.getInt(c.getColumnIndex(
                             MachineDotLanguageContract.Columns.MACHINE_TYPE));
                     MachineType machineType = MachineType.PDA;

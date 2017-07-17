@@ -671,7 +671,6 @@ public class Grammar implements Cloneable {
             gc = getGrammarWithoutNoTerm(gc, new AcademicSupport());
             gc = getGrammarWithoutNoReach(gc, new AcademicSupport());
             if (!gc.getRules().equals(g.getRules())) {
-                System.out.println(gc);
             }
             academic.setSituation(true);
 
@@ -958,52 +957,49 @@ public class Grammar implements Cloneable {
                 }
                 //BEGIN - remoção da recursão à esquerda indireta
                 Set<Rule> indirLeftRec =  new LinkedHashSet<>();
-                do {
-                    indirLeftRec.clear();
-                    for (Rule element : gc.getRules(variable)) {
-                        String firstVar = element.getFirstVariableOfRightSide();
-                        if (firstVar != null) {
-                            boolean hasRecDIr = false;
-                            for (Rule rul : gc.getRules(firstVar)) {
-                                if (rul.existsLeftRecursion()) {
-                                    hasRecDIr = true;
-                                    break;
+                if (!variable.equals(initialSymbol)) {
+                    do {
+                        indirLeftRec.clear();
+                        for (Rule element : gc.getRules(variable)) {
+                            String firstVar = element.getFirstVariableOfRightSide();
+                            if (firstVar != null) {
+                                boolean hasRecDIr = false;
+                                for (Rule rul : gc.getRules(firstVar)) {
+                                    if (rul.existsLeftRecursion()) {
+                                        hasRecDIr = true;
+                                        break;
+                                    }
+                                }
+                                if (!hasRecDIr) {
+                                    indirLeftRec.add(element);
                                 }
                             }
-                            if (!hasRecDIr) {
-                                indirLeftRec.add(element);
-                            }
                         }
-                    }
-                    if (!indirLeftRec.isEmpty()) {
-                        newSetOfRules = new LinkedHashSet<>();
-                        for (Rule element : indirLeftRec) {
-                            boolean hasRecDir = false;
-                            String firstVar = element.getFirstVariableOfRightSide();
-                            academic.insertIrregularRule(element);
-                            System.out.println("FIRST_VAR");
-                            System.out.println(firstVar);
-                            String leftSide = element.getLeftSide();
-                            int begin = firstVar.length();
-                            String finalRightSide = element.getRightSide().substring(begin);
-                            for (Rule rul : gc.getRules(firstVar)) {
-                                String rightSideBegin = rul.getRightSide();
-                                Rule r = new Rule(leftSide, rightSideBegin + finalRightSide);
-                                System.out.println("NEW RULE: " + r);
-                                academic.insertNewRule(r);
-                                newSetOfRules.add(r);
+                        if (!indirLeftRec.isEmpty()) {
+                            newSetOfRules = new LinkedHashSet<>();
+                            for (Rule element : indirLeftRec) {
+//                                System.out.println(indirLeftRec);
+                                String firstVar = element.getFirstVariableOfRightSide();
+                                academic.insertIrregularRule(element);
+                                String leftSide = element.getLeftSide();
+                                int begin = firstVar.length();
+                                String finalRightSide = element.getRightSide().substring(begin);
+                                for (Rule rul : gc.getRules(firstVar)) {
+                                    String rightSideBegin = rul.getRightSide();
+                                    Rule r = new Rule(leftSide, rightSideBegin + finalRightSide);
+//                                    System.out.println("NEW RULE");
+//                                    System.out.println(r);
+                                    academic.insertNewRule(r);
+                                    newSetOfRules.add(r);
+                                }
                             }
+                            academicLR.addGrammarTransformationStage1(
+                                    indirLeftRec, newSetOfRules, false);
+                            gc.rules.addAll(newSetOfRules);
+                            gc.rules.removeAll(indirLeftRec);
                         }
-                        System.out.println("INDIR_RULES");
-                        System.out.println(indirLeftRec);
-                        System.out.println("NEW_RULES");
-                        System.out.println(newSetOfRules);
-                        academicLR.addGrammarTransformationStage1(
-                                indirLeftRec, newSetOfRules, false);
-                        gc.rules.addAll(newSetOfRules);
-                        gc.rules.removeAll(indirLeftRec);
-                    }
-                } while (!indirLeftRec.isEmpty());
+                    } while (!indirLeftRec.isEmpty());
+                }
 
                 //END - remoção da recursão à esquerda indireta
                 for (Rule element : gc.getRules(variable)) {

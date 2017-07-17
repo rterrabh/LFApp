@@ -85,13 +85,8 @@ public class FeedReaderDbHelper extends SQLiteOpenHelper {
 //        }
 //        onCreate(db);
         if (oldVersion == 1 && newVersion == 2) {
-            System.out.println("UPGRADE V1 TO V2");
             new UpgradeDBV1ToV2(db).upgrade();
         }
-        System.out.println("-----------------------------------");
-        System.out.println("UPGRADE DATABASE");
-        System.out.println("oldVersion " + oldVersion + "; newVersion " + newVersion);
-        System.out.println("-----------------------------------");
     }
 
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {

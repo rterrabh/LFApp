@@ -122,23 +122,16 @@ public class PDATransitionView extends EdgeView {
     }
 
     public Set<PDATransitionFunction> getTransitionFuctionsPDA(Machine machine) {
-        System.out.println("VERTICES");
-        System.out.println(vertices.first.getLabel());
-        System.out.println(vertices.second.getLabel());
-        System.out.println(machine.getStates());
         State currentState = machine.getState(vertices.first.getLabel());
         State futureState = machine.getState(vertices.second.getLabel());
         Set<PDATransitionFunction> transitionFunctions = new HashSet<>();
         String[] transitions = PDATransitionView.clearArray
                 (TMMultiTrackTransitionView.arrayTrim(label.split("[,\n]")));
         for (String transition : transitions) {
-            System.out.println(transition);
             String transitionTokens[] = transition.trim().split("[ /]");
-            System.out.println(Arrays.deepToString(transitionTokens));
             transitionFunctions.add(new PDATransitionFunction(currentState, transitionTokens[0],
                     futureState, transitionTokens[2], transitionTokens[1]));
         }
-        System.out.println(transitionFunctions);
         return transitionFunctions;
     }
 

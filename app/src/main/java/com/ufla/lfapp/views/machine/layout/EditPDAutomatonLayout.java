@@ -108,7 +108,6 @@ public class EditPDAutomatonLayout extends EditGraphLayout {
         }
         PushdownAutomaton pda = new PushdownAutomaton(states, initState, finalStates,
                 transitionFunctions);
-        System.out.println(transitionFunctions);
         for (EdgeView edgeView : edgeViews) {
             transitionFunctions.addAll(((PDATransitionView) edgeView).getTransitionFuctionsPDA(pda));
         }
@@ -223,7 +222,6 @@ public class EditPDAutomatonLayout extends EditGraphLayout {
                 sb.append(str)
                         .append(EdgeView.LABEL_ITEM_SEP);
             }
-            System.out.println(sb.toString());
             sb.deleteCharAt(sb.length() - 1);
             addEdgeView(stateGridPositions.get(entry.getKey().first),
                     stateGridPositions.get(entry.getKey().second),

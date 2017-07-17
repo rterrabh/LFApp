@@ -81,12 +81,10 @@ public class GrammarParser {
      * @return : regras extraídas
      */
     public static Set<Rule> extractRulesFromFull(String txt) {
-        System.out.println(txt);
         Set<Rule> rules = new LinkedHashSet<>();
         Rule rule = new Rule();
         String[] auxRule;
         for (String x : txt.trim().split("\n")) {
-            System.out.println(x);
             if (txt.contains("->")) {
                 auxRule = x.split("->");
             } else {

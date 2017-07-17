@@ -85,8 +85,6 @@ public class EditTMMultiTracksActivity extends AppCompatActivityContext {
             String pushdownAutomatonStr = preferences.getString(TURING_MACHINE_MULTI_TRACK, null);
             String labelToPointStr = preferences.getString(TURING_MACHINE_POINTS_MULTI_TRACK, null);
             if (pushdownAutomatonStr != null && labelToPointStr != null) {
-                System.out.println(pushdownAutomatonStr);
-                System.out.println(labelToPointStr);
                 TuringMachineMultiTrack turingMachine = (TuringMachineMultiTrack)
                         ObjectSerializerHelper
                         .stringToObject(pushdownAutomatonStr);

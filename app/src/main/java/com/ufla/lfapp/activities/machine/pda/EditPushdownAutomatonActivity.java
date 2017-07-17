@@ -65,11 +65,6 @@ public class EditPushdownAutomatonActivity extends AppCompatActivityContext {
         setContentView(editPDAutomatonLayout.getRootView());
         SharedPreferences pref = getPreferences(MODE_PRIVATE);
         Map<String, ?> mapPrefs = pref.getAll();
-        System.out.println(getPackageName());
-        System.out.println("\n\nPREFERENCES\n\n");
-        for (Map.Entry<String, ?> entry : mapPrefs.entrySet()) {
-            System.out.println("Key: " + entry.getKey() + "\nValue: " + entry.getValue());
-        }
         Intent intent = getIntent();
         if (intent != null
                 && intent.getSerializableExtra(PUSHDOW_AUTOMATON_EXTEND) != null) {
@@ -113,7 +108,6 @@ public class EditPushdownAutomatonActivity extends AppCompatActivityContext {
         }
         DotLanguage dotLanguage = new DotLanguage(pushdownAutomaton,
                 stateToPoint);
-        System.out.println(dotLanguage.getGraph());
         new DbAcess(this).putMachineDotLanguage(dotLanguage);
         SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
         editor.putString(EDIT_PUSHDOW_AUTOMATON, ObjectSerializerHelper

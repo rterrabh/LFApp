@@ -534,7 +534,6 @@ public class FiniteStateAutomaton
         if (!isAFNDLambda()) {
             return copy();
         }
-        System.out.println("OK\nOK\nOK");
         FiniteStateAutomaton finiteStateAutomatonAFND = new FiniteStateAutomaton();
         SortedMap<Pair<State, String>, SortedSet<State>> transitionTable = getTransitionTableAFND();
         finiteStateAutomatonAFND.FSATransitionFunctions = new TreeSet<>();

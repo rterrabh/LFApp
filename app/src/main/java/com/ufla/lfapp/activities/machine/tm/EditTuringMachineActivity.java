@@ -67,8 +67,6 @@ public class EditTuringMachineActivity extends AppCompatActivityContext {
             String pushdownAutomatonStr = preferences.getString(TURING_MACHINE, null);
             String labelToPointStr = preferences.getString(TURING_MACHINE_POINTS, null);
             if (pushdownAutomatonStr != null && labelToPointStr != null) {
-                System.out.println(pushdownAutomatonStr);
-                System.out.println(labelToPointStr);
                 TuringMachine turingMachine = (TuringMachine) ObjectSerializerHelper
                         .stringToObject(pushdownAutomatonStr);
                 Map<String, MyPoint> labelToPoint = (Map<String, MyPoint>) ObjectSerializerHelper

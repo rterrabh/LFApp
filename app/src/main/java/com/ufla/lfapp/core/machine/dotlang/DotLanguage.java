@@ -315,7 +315,6 @@ public class DotLanguage implements Serializable {
         }
         ind++;
         lines[ind] = lines[ind].trim();
-        System.out.println(lines[ind]);
         if (!lines[ind].isEmpty()) {
             parameters[0] = lines[ind].substring(1, lines[ind].length() - 2).split("\", \"");
         } else {
@@ -520,7 +519,6 @@ public class DotLanguage implements Serializable {
             State current = nameToState.get(param[0]);
             State future = nameToState.get(param[1]);
             String[] transitionsStr = param[2].split("\\\\n");
-            System.out.println(Arrays.toString(transitionsStr));
             for (String transStr : transitionsStr) {
                 String[] transParam = transStr.split("[/ ]");
                 transitionFunctions.add(new TMTransitionFunction(current, transParam[0], future,
@@ -657,11 +655,7 @@ public class DotLanguage implements Serializable {
 
     public SortedSet<State> getFinalStates(String[] names, Map<String, State> nameToState) {
         SortedSet<State> finalStates = new TreeSet<>();
-        System.out.println(nameToState.keySet());
-        System.out.println(nameToState.values());
         for (String name : names) {
-            System.out.println(name);
-
             finalStates.add(nameToState.get(name));
         }
         return finalStates;
@@ -672,14 +666,6 @@ public class DotLanguage implements Serializable {
             throw new IllegalMachineTypeException(machineType, MachineType.FSA);
         }
         String[][] parametersMachine = parametersMachine();
-        System.out.println("PARAMETER 0");
-        System.out.println(Arrays.deepToString(parametersMachine[0]));
-        System.out.println("PARAMETER 1");
-        System.out.println(Arrays.deepToString(parametersMachine[1]));
-        System.out.println("PARAMETER 2");
-        System.out.println(Arrays.deepToString(parametersMachine[2]));
-        System.out.println("PARAMETER 3");
-        System.out.println(Arrays.deepToString(parametersMachine[3]));
         Map<String, State> nameToState = createNameToState(parametersMachine[1]);
         Map<State, MyPoint> stateToPoint = createStateToMyPoint(parametersMachine[1], nameToState);
         SortedSet<State> states = new TreeSet<>(nameToState.values());
@@ -708,10 +694,7 @@ public class DotLanguage implements Serializable {
             Edge edge = new Edge();
             edge.current = nameToState.get(params[0]);
             edge.future = nameToState.get(params[1]);
-            System.out.println("LABEL");
-            System.out.println(params[2]);
             edge.label = params[2].replaceAll("\\\\n", "\n");
-            System.out.println(edge.label);
             graphAdapter.edgeList.add(edge);
         }
         return graphAdapter;
@@ -792,7 +775,6 @@ public class DotLanguage implements Serializable {
     }
 
     public void defineMachine(Machine m) {
-        System.out.println(m);
         m.setContUses(this.contUses);
         m.setId(this.id);
         m.setCreationDate(this.creationDate);

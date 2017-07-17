@@ -41,21 +41,12 @@ public class HistoricalGraphActivity extends AppCompatActivityContext  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_historical_automata);
         Intent intent = getIntent();
-        System.out.println("HISTORICAL_GRAPH");
         if (intent != null
                 && intent.getSerializableExtra(MACHINE_TYPE_SEL) != null) {
             try {
-                System.out.println("MACHINE_TYPE -> " + intent.getSerializableExtra(MACHINE_TYPE_SEL));
                 graphAdapters = new DbAcess(HistoricalGraphActivity.this)
                         .getLastGraph((MachineType)
                                 intent.getSerializableExtra(MACHINE_TYPE_SEL));
-                System.out.println(graphAdapters.size());
-                for (GraphAdapter graphAdapter : graphAdapters) {
-                    System.out.println(graphAdapter.dotLanguage.getGraph());
-                    for (Edge edge : graphAdapter.edgeList) {
-                        System.out.println(edge);
-                    }
-                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

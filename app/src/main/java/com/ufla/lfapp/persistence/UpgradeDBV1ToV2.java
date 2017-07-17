@@ -25,7 +25,6 @@ public class UpgradeDBV1ToV2 {
         String tempMachineDotLang = "TEMP_" + MachineDotLanguageContract.TABLE_NAME;
         db.execSQL(" ALTER TABLE " + MachineDotLanguageContract.TABLE_NAME +
                 " RENAME TO " + tempMachineDotLang + ";");
-        System.out.println(MachineDotLanguageContract.CREATE_TABLE);
         db.execSQL(MachineDotLanguageContract.CREATE_TABLE);
         String[] projection = {
                 MachineDotLanguageContract.Columns._ID,
@@ -83,7 +82,6 @@ public class UpgradeDBV1ToV2 {
             }
             c.close();
         }
-        System.out.println(cont);
         db.execSQL("DROP TABLE " + tempMachineDotLang + ";");
     }
 

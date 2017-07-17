@@ -110,8 +110,6 @@ public class TMMultiTapeTransitionView extends EdgeView {
         int numTapes = getNumTapes();
         int numTransitions = lineLabels.length / numTapes;
         String[] labels = new String[numTransitions];
-        System.out.println(numTapes);
-        System.out.println(Arrays.toString(lineLabels));
         for (int i = 0; i < numTransitions; i++) {
             StringBuilder sb = new StringBuilder();
             for (int j = 0; j < numTapes; j++) {
@@ -260,7 +258,6 @@ public class TMMultiTapeTransitionView extends EdgeView {
             int nParams = params.length;
             params[0] = params[0].substring(1);
             params[nParams-1] = params[nParams-1].substring(0, params[nParams-1].length()-1);
-            System.out.println(params[nParams-1]);
             String[] readSymbols = new String[numTapes];
             String[] writeSymbols = new String[numTapes];
             TMMove[] moves = new TMMove[numTapes];
@@ -269,9 +266,6 @@ public class TMMultiTapeTransitionView extends EdgeView {
                 writeSymbols[j] = params[j*paramsLength+1];
                 moves[j] = TMMove.getInstance(params[j*paramsLength+2]);
             }
-            System.out.println(Arrays.deepToString(readSymbols));
-            System.out.println(Arrays.deepToString(writeSymbols));
-            System.out.println(Arrays.deepToString(moves));
             transitionFunctions.add(
                     new TMMultiTapeTransitionFunction(
                             currentState,

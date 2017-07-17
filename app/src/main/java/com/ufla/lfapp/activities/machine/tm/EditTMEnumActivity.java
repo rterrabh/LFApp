@@ -69,8 +69,6 @@ public class EditTMEnumActivity extends AppCompatActivityContext {
             String pushdownAutomatonStr = preferences.getString(TURING_MACHINE_ENUM, null);
             String labelToPointStr = preferences.getString(TURING_MACHINE_POINTS_ENUM, null);
             if (pushdownAutomatonStr != null && labelToPointStr != null) {
-                System.out.println(pushdownAutomatonStr);
-                System.out.println(labelToPointStr);
                 TuringMachineMultiTape turingMachine = (TuringMachineMultiTape)
                         ObjectSerializerHelper
                                 .stringToObject(pushdownAutomatonStr);

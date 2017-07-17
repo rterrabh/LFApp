@@ -39,7 +39,6 @@ public enum TMMove implements Serializable {
         if (str.toUpperCase().equals(STATIC_STR)) {
             return STATIC;
         }
-        System.out.format("'%s' -> %s", str, RIGHT_STR);
         throw new RuntimeException(
                 ResourcesContext.getString(R.string.exception_instance_not_found_for)
                         + str + "'!");
