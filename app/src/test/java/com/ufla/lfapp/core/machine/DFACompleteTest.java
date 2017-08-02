@@ -105,8 +105,6 @@ public class DFACompleteTest {
 
     @Test
     public void testCompleteDFA() throws Exception {
-        System.out.println(dfa.getCompleteAutomaton().toStringTest());
-        System.out.println("\n\n"+ completeDfa.toStringTest());
         assertEquals(completeDfa, dfa.getCompleteAutomaton());
 //        System.out.println(tmSimulator.processALL());
 //        System.out.println(Arrays.toString(tmSimulator.getTapes()));

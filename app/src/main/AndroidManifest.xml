@@ -137,6 +137,13 @@
                 android:value=".activities.grammar.menu.MenuActivity" />
         </activity>
         <activity
+            android:name=".activities.grammar.algorithms.GreibachNormalFormTerraActivity"
+            android:label="@string/lfapp_gnf_8_8">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.grammar.menu.MenuActivity" />
+        </activity>
+        <activity
             android:name=".activities.grammar.HistoricalGrammarsActivity"
             android:label="@string/lfapp_history">
             <meta-data

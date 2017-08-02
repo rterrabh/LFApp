@@ -14,6 +14,10 @@ public class Symbols {
     public static final String BELONGS_TO = "∈";
     public static final String NOT_BELONGS_TO = "∉";
     public static final String INITIAL_SYMBOL_GRAMMAR = "S";
+    public static final String ARROW = "→";
+    public static final String ARROW_USER = "->";
+    public static final String PIPE = "|";
+
 
     public static String emptyIsLambda(String str) {
         return (str.isEmpty()) ? LAMBDA : str;

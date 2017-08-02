@@ -21,7 +21,7 @@ import java.util.Set;
 
 public class PDASimulator {
 
-    private static final int MAX_DEPTH = 10000;
+    private static final int MAX_DEPTH = 1000;
     private PushdownAutomaton pushdownAutomaton;
     private String word;
     private Deque<String> stacks;
@@ -239,7 +239,7 @@ public class PDASimulator {
                 if (!lastConfiguration.symbol.equals(Symbols.LAMBDA)) {
                     index--;
                 }
-                configurationsSpan.removeLast();
+                //configurationsSpan.removeLast();
                 stacks.removeLast();
             }
             // Run configuration
@@ -255,18 +255,25 @@ public class PDASimulator {
                 index++;
             }
             stacks.addLast(stackToString());
+//            System.out.println("----------------------------");
+//            System.out.println("CONF");
+//            System.out.println(actualConfiguration.getState());
+//            System.out.println(word.substring(actualConfiguration.index));
+//            System.out.println(stackToString());
+//            System.out.println(actualConfiguration);
+//            System.out.println("NEXT_CONF");
             StringBuilder sb = new StringBuilder();
             sb.append(word.substring(0, actualConfiguration.index));
             sb.append(actualConfiguration.state);
             sb.append(word.substring(actualConfiguration.index));
-            SpannableStringBuilder span = new SpannableStringBuilder(sb.toString());
+            //SpannableStringBuilder span = new SpannableStringBuilder(sb.toString());
 //            span.setSpan(new BackgroundColorSpan(ResourcesContext.getColor(R.color.PaleGreen2)),
 //                    actualConfiguration.index,
 //                    actualConfiguration.index + actualConfiguration.state.toString().length(),
 //                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
-            span.append('/')
-                    .append(stackToString());
-            configurationsSpan.addLast(span);
+//            span.append('/')
+//                    .append(stackToString());
+//            configurationsSpan.addLast(span);
             depth++;
             if (index == word.length() &&
                     pushdownAutomaton.isFinalState(actualConfiguration.state)
@@ -284,8 +291,10 @@ public class PDASimulator {
                     generateProcess = true;
                 }
                 for (PDATransitionFunction t : transitions) {
-                    stackConfiguration.push(new Configuration(actualConfiguration.index,
-                            t.getFutureState(), t.getStacking(), t.getPops(), t.getSymbol()));
+                    Configuration configuration = new Configuration(actualConfiguration.index,
+                            t.getFutureState(), t.getStacking(), t.getPops(), t.getSymbol());
+                    //System.out.println(configuration);
+                    stackConfiguration.push(configuration);
                 }
                 transitions = pushdownAutomaton
                         .getTransitions(actualConfiguration.state,
@@ -295,8 +304,25 @@ public class PDASimulator {
                     generateProcess = true;
                 }
                 for (PDATransitionFunction t : transitions) {
-                    stackConfiguration.push(new Configuration(actualConfiguration.index + 1,
-                            t.getFutureState(), t.getStacking(), t.getPops(), t.getSymbol()));
+                    Configuration configuration = new Configuration(actualConfiguration.index + 1,
+                            t.getFutureState(), t.getStacking(), t.getPops(), t.getSymbol());
+                    //System.out.println(configuration);
+                    stackConfiguration.push(configuration);
+                }
+            } else if (actualConfiguration.index == word.length()
+                    && stackActualConfiguration.size() < MAX_DEPTH) {
+                String topStack = (stack.isEmpty()) ? Symbols.LAMBDA : stack.peek();
+                Set<PDATransitionFunction> transitions = pushdownAutomaton
+                        .getTransitions(actualConfiguration.state,
+                                Symbols.LAMBDA, topStack);
+                if (!transitions.isEmpty()) {
+                    generateProcess = true;
+                }
+                for (PDATransitionFunction t : transitions) {
+                    Configuration configuration = new Configuration(actualConfiguration.index,
+                            t.getFutureState(), t.getStacking(), t.getPops(), t.getSymbol());
+                    //System.out.println(configuration);
+                    stackConfiguration.push(configuration);
                 }
             }
         }

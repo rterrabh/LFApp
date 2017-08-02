@@ -1,6 +1,8 @@
 package com.ufla.lfapp.core.grammar;
 
 import com.ufla.lfapp.R;
+import com.ufla.lfapp.utils.HtmlColors;
+import com.ufla.lfapp.utils.HtmlTags;
 import com.ufla.lfapp.utils.ResourcesContext;
 
 import java.util.ArrayList;
@@ -41,18 +43,39 @@ public abstract class AcademicSupportRemoveLeftRecursiveAbstract {
             ruleWithProblems, Set<Rule> newRules, boolean
                                                     imediateLeftRecursive) {
         StringBuilder txtGrammar = new StringBuilder();
-        if(imediateLeftRecursive) {
+        if (imediateLeftRecursive) {
             txtGrammar.append(ResourcesContext.getString(R.string.remove_recursion_acd));
         } else {
             txtGrammar.append(ResourcesContext.getString(R.string.replace_rues_acd));
         }
-        txtGrammar.append(insertGrammarWithModifiedColorRules(grammar,
-                ruleWithProblems, "red"));
+        txtGrammar.append(grammar.toStringHtmlWithColorInSpecialRules(ruleWithProblems,
+                HtmlColors.RED));
         insertVariablesInOrderVariables(newRules);
         txtGrammar.append(ResourcesContext.getString(R.string.new_grammar));
-        txtGrammar.append(insertGrammarWithModifiedColorRules(trasformGrammar
-                (grammar, ruleWithProblems, newRules), newRules, "blue"));
-        txtGrammar.append("<br/>");
+        Grammar newGrammar = trasformGrammar(grammar, ruleWithProblems, newRules);
+        txtGrammar.append(newGrammar.toStringHtmlWithColorInSpecialRules(newRules,
+                HtmlColors.BLUE));
+        txtGrammar.append(HtmlTags.BREAK_LINE);
+        return txtGrammar.toString();
+    }
+
+    String getGrammarTransformationTerra(Grammar grammar, Set<Rule>
+            ruleWithProblems, Set<Rule> newRules, boolean
+                                            imediateLeftRecursive) {
+        StringBuilder txtGrammar = new StringBuilder();
+        if (imediateLeftRecursive) {
+            txtGrammar.append(ResourcesContext.getString(R.string.remove_recursion_acd));
+        } else {
+            txtGrammar.append(ResourcesContext.getString(R.string.remove_indirect_left_recursion_terra));
+        }
+        txtGrammar.append(grammar.toStringHtmlWithColorInSpecialRules(ruleWithProblems,
+                HtmlColors.RED));
+        insertVariablesInOrderVariables(newRules);
+        txtGrammar.append(ResourcesContext.getString(R.string.new_grammar));
+        Grammar newGrammar = trasformGrammar(grammar, ruleWithProblems, newRules);
+        txtGrammar.append(newGrammar.toStringHtmlWithColorInSpecialRules(newRules,
+                HtmlColors.BLUE));
+        txtGrammar.append(HtmlTags.BREAK_LINE);
         return txtGrammar.toString();
     }
 
@@ -73,33 +96,28 @@ public abstract class AcademicSupportRemoveLeftRecursiveAbstract {
         return gc;
     }
 
-    private String insertGrammarWithModifiedColorRules
-            (Grammar grammar, Set<Rule> ruleForModifiedColor, String color) {
-        StringBuilder txtGrammar = new StringBuilder();
-        for (String variable : orderVariables) {
-            if (variable.length() > 1) {
-                txtGrammar.append(variable.charAt(0));
-                txtGrammar.append("<sub>").append(variable.substring(1))
-                        .append("</sub>");
-            } else {
-                txtGrammar.append(variable);
-            }
-            txtGrammar.append(" ->");
-            for(Rule rule : grammar.getRules(variable)) {
-                txtGrammar.append(' ');
-                if(ruleForModifiedColor.contains(rule)) {
-                    txtGrammar.append("<font color=\"").append(color)
-                            .append("\">").append(rule
-                            .getRightSideToHtml()).append("</font>");
-                } else {
-                    txtGrammar.append(rule.getRightSide());
-                }
-                txtGrammar.append(" |");
-            }
-            txtGrammar.deleteCharAt(txtGrammar.length() - 1);
-            txtGrammar.append("<br>");
-        }
-        return txtGrammar.toString();
-
-    }
+//    private String insertGrammarWithModifiedColorRules
+//            (Grammar grammar, Set<Rule> ruleForModifiedColor, String color) {
+//        StringBuilder txtGrammar = new StringBuilder();
+//        for (String variable : orderVariables) {
+//            txtGrammar.append(GrammarParser.varToHtml(variable))
+//                    .append(" →");
+//            for(Rule rule : grammar.getRules(variable)) {
+//                txtGrammar.append(' ');
+//                if(ruleForModifiedColor.contains(rule)) {
+//                    txtGrammar.append("<font color=\"").append(color)
+//                            .append("\">").append(rule
+//                            .getRightSideToHtml()).append("</font>");
+//                } else {
+//                    txtGrammar.append(rule.getRightSideToHtml());
+//                }
+//                txtGrammar.append(" |");
+//            }
+//            txtGrammar.deleteCharAt(txtGrammar.length() - 1);
+//            txtGrammar.deleteCharAt(txtGrammar.length() - 1);
+//            txtGrammar.append("<br>");
+//        }
+//        return txtGrammar.toString();
+//
+//    }
 }

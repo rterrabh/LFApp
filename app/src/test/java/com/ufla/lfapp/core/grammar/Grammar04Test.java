@@ -271,11 +271,9 @@ public class Grammar04Test {
 	public void testFNG() {
 		Grammar newG = g.FNC(g, new AcademicSupport());
 		AcademicSupport academicSupport = new AcademicSupport();
-		Grammar newG2 = newG.removingLeftRecursion(newG, academicSupport,
+		Grammar newG2 = newG.removingLeftRecursionTerra(newG, academicSupport,
 				new HashMap<String, String>(), new AcademicSupportForRemoveLeftRecursion());
-		System.out.println(newG2.toStringRulesMapLeftToRight());
-		System.out.println(academicSupport.getSolutionDescription());
-		newG = newG.FNG(newG, new AcademicSupport());
+		newG = newG.FNGTerra(newG, new AcademicSupport());
 		boolean fng = true;
 		for (Rule element : newG.getRules()) {
 			int counter = 0;
@@ -295,7 +293,6 @@ public class Grammar04Test {
 			}
 		}
 
-		System.out.println(newG.toStringRulesMapLeftToRight());
 		
 		assertEquals(true, fng);
 		assertTrue(newG.isFNG());

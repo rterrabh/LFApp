@@ -274,11 +274,13 @@ public class Grammar10Test {
 				"T5 -> DE", };
 		Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals,
 				expectedInitialSymbol, expectedRules);
-		System.out.println("Expected:");
-		System.out.println(expectedGrammar.toStringRulesMapLeftToRight());
-		System.out.println("Actual:");
-		System.out.println(newG.toStringRulesMapLeftToRight());
+
+		// Algoritmo MODIFICADO
 		//assertEquals(expectedGrammar.getRules(), newG.getRules());
+		String initialSymbol = newG.getInitialSymbol();
+		for (Rule rule : newG.getRules()) {
+			assertTrue(rule.isFnc(initialSymbol));
+		}
 		assertEquals(expectedGrammar.getInitialSymbol(), newG.getInitialSymbol());
 		assertEquals(expectedGrammar.getTerminals(), newG.getTerminals());
 		assertEquals(expectedGrammar.getVariables(), newG.getVariables());
@@ -286,7 +288,7 @@ public class Grammar10Test {
 
 	@Test
 	public void testFNG() {
-		Grammar newG = g.FNG(g, new AcademicSupport());
+		Grammar newG = g.FNGTerra(g, new AcademicSupport());
 		boolean fng = true;
 		for (com.ufla.lfapp.core.grammar.Rule element : newG.getRules()) {
 			int counter = 0;

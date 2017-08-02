@@ -37,8 +37,11 @@ public class PDAToGrammar {
                         stacking.add(tFPA.getStacking());
                     }
                     stacking.add(symbol);
-                    newTFPDAExt.add(new PDAExtTransitionFunction(currentState, tFPA.getSymbol(),
-                            futureState, stacking, symbol));
+                    PDAExtTransitionFunction pdaExtTransitionFunction =
+                            new PDAExtTransitionFunction(currentState, tFPA.getSymbol(),
+                                    futureState, stacking, symbol);
+                    //System.out.println(pdaExtTransitionFunction);
+                    newTFPDAExt.add(pdaExtTransitionFunction);
                 }
             }
         }
@@ -71,6 +74,9 @@ public class PDAToGrammar {
             String symbol = tFPDAExt.getSymbol();
             if (tFPDAExt.getStacking().size() == 1) {
                 String stacking = tFPDAExt.getStacking().get(0);
+//                System.out.println("------------------");
+//                System.out.println(tFPDAExt);
+//                System.out.println(stacking);
                 for (State state : states) {
                     String qk = state.getName();
                     String leftSide = "<" + qi + "," + pops + "," + qk + ">";
@@ -78,10 +84,14 @@ public class PDAToGrammar {
                     variables.add(leftSide);
                     variables.add(rightSide);
                     rightSide = symbol + rightSide;
-                    rules.add(new Rule(leftSide, rightSide));
+                    Rule rule = new Rule(leftSide, rightSide);
+                    //System.out.println(rule);
+                    rules.add(rule);
 
                 }
             } else {
+//                System.out.println("------------------");
+//                System.out.println(tFPDAExt.getStacking());
                 String stack0 = tFPDAExt.getStacking().get(0);
                 String stack1 = tFPDAExt.getStacking().get(1);
                 for (State stateK : states) {
@@ -94,7 +104,9 @@ public class PDAToGrammar {
                         String rightSide = "<" + qn + "," + stack1 + "," + qk + ">";
                         variables.add(rightSide);
                         rightSide = symbol + rightSideAux + rightSide;
-                        rules.add(new Rule(leftSide, rightSide));
+                        Rule rule = new Rule(leftSide, rightSide);
+                        //System.out.println(rule);
+                        rules.add(rule);
                         variables.add(leftSide);
                     }
                 }

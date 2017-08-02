@@ -33,7 +33,7 @@ public class GrammarToPDAExt {
         states.add(q1);
         finalStates.add(q1);
         Set<PDAExtTransitionFunction> transitions = new HashSet<>();
-        Grammar grammarFNG = grammar.FNG(grammar, new AcademicSupport());
+        Grammar grammarFNG = grammar.FNGTerra(grammar, new AcademicSupport());
         grammarFNG.getVariables();
         Map<String, Set<Rule>> rules = grammarFNG.getRulesMapLeftToRule();
         Set<Rule> rulesS = rules.get(grammarFNG.getInitialSymbol());

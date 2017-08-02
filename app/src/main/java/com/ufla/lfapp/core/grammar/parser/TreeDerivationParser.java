@@ -23,8 +23,8 @@ public class TreeDerivationParser {
     private TreeDerivation treeDerivation;
     private TreeDerivation treeDerivationAux;
     private int countNodes;
-    private static final int MAX_NODES = 250;
-    private static final int MAX_LEVEL = 100;
+    //private static final int MAX_NODES = 250;
+    private static final int MAX_LEVEL = 35;
 
     /**
      * Construtor de árvore de derivação com base em uma gramática _grammar_ e uma palavra a ser
@@ -36,6 +36,26 @@ public class TreeDerivationParser {
         this.word = word;
         this.grammar = grammar;
         index = 0;
+    }
+
+    private void printNodeRec(NodeDerivationParser node) {
+        if (node.getChilds() == null) {
+            return;
+        }
+        for (NodeDerivationParser child : node.getChilds()) {
+            System.out.println(child);
+        }
+        for (NodeDerivationParser child : node.getChilds()) {
+            printNodeRec(child);
+        }
+
+    }
+
+    private void printActualTree() {
+        System.out.println("----------------------------");
+        System.out.println(root);
+        printNodeRec(root);
+        System.out.println("----------------------------");
     }
 
     public TreeDerivation getTreeDerivation() {
@@ -52,6 +72,7 @@ public class TreeDerivationParser {
      */
     private void createDataForParser() {
         mostLeftDerivationTable = new MostLeftDerivationTable(grammar);
+        System.out.println(mostLeftDerivationTable);
         String initialVariable = grammar.getInitialSymbol();
         root = new NodeDerivationParser(initialVariable, 0, null, -1);
         actualNode = root;
@@ -75,6 +96,7 @@ public class TreeDerivationParser {
         createDataForParser();
         while (!treeComplete && treeDerivationAux == null) {
             parserNode();
+            //printActualTree();
         }
         clearDataForParser();
     }
@@ -125,7 +147,8 @@ public class TreeDerivationParser {
         String rightSide = rule.getRightSide();
         int n = rightSide.length();
         countNodes += n;
-        if (countNodes >= MAX_NODES || actualNode.getLevel() == MAX_LEVEL) {
+        if (actualNode.getLevel() == MAX_LEVEL) {
+        //if (countNodes >= MAX_NODES || actualNode.getLevel() == MAX_LEVEL) {
             countNodes -= n;
             return;
         }
@@ -337,4 +360,8 @@ public class TreeDerivationParser {
         return treeParser.getDerivation();
     }
 
+    public boolean isAmbiguity() {
+        return treeDerivationAux != null &&
+                !treeDerivation.getDerivation().equals(treeDerivationAux.getDerivation());
+    }
 }

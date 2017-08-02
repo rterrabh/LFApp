@@ -267,6 +267,13 @@ public class TMMultiTapeSimulator {
             stop = processConfigurationEnum();
             configuration = lastConfiguration;
             verifyTapesLength(configuration.getIndex());
+//            System.out.println("----------------");
+//            System.out.println(configuration.getState());
+//            System.out.println(Arrays.toString(configuration.getIndex()));
+//            for (String tape : configuration.getTapes()) {
+//                System.out.println(tape);
+//            }
+
             Set<TMMultiTapeTransitionFunction> transitions = turingMachine
                     .getTransitions(lastConfiguration.transition.getFutureState(),
                             actualSymbols(configuration.getIndex()));

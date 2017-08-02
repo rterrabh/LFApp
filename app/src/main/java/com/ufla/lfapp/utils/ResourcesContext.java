@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.ContextCompatApi24;
 
 /**
  * Created by carlos on 4/24/17.

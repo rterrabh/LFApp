@@ -550,22 +550,23 @@ public class FiniteStateAutomaton
                         entry.getKey().second))) {
                     for (State fechoLambdaFuture : transitionTable.get(Pair.create(futureState,
                             FECHO_LAMBDA))) {
-                        finiteStateAutomatonAFND.FSATransitionFunctions.add(new FSATransitionFunction(entry.getKey().first,
-                                entry.getKey().second, fechoLambdaFuture));
+                        FSATransitionFunction fsaTransitionFunction = new FSATransitionFunction(entry.getKey().first,
+                                entry.getKey().second, fechoLambdaFuture);
+                        finiteStateAutomatonAFND.FSATransitionFunctions.add(fsaTransitionFunction);
                     }
                 }
             }
             // Adicionando transições através de uma leitura e também do fecho-lambda após essa
             // leitura
-            for (State futureState : entry.getValue()) {
-                finiteStateAutomatonAFND.FSATransitionFunctions.add(new FSATransitionFunction(entry.getKey().first,
-                        entry.getKey().second, futureState));
-                for (State futureStateB : transitionTable.get(Pair.create(futureState,
-                        FECHO_LAMBDA))) {
-                    finiteStateAutomatonAFND.FSATransitionFunctions.add(new FSATransitionFunction(entry.getKey().first,
-                            entry.getKey().second, futureStateB));
-                }
-            }
+//            for (State futureState : entry.getValue()) {
+//                finiteStateAutomatonAFND.FSATransitionFunctions.add(new FSATransitionFunction(entry.getKey().first,
+//                        entry.getKey().second, futureState));
+//                for (State futureStateB : transitionTable.get(Pair.create(futureState,
+//                        FECHO_LAMBDA))) {
+//                    finiteStateAutomatonAFND.FSATransitionFunctions.add(new FSATransitionFunction(entry.getKey().first,
+//                            entry.getKey().second, futureStateB));
+//                }
+//            }
         }
         finiteStateAutomatonAFND.initialStatesFromAFNDLambdaToAFD = transitionTable.get(
                 Pair.create(initialState, FECHO_LAMBDA));
@@ -883,7 +884,7 @@ public class FiniteStateAutomaton
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null) return false;
         if (!super.equals(o)) return false;
 
         FiniteStateAutomaton that = (FiniteStateAutomaton) o;

@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -37,6 +38,7 @@ import com.ufla.lfapp.persistence.DbAcess;
 import com.ufla.lfapp.core.machine.State;
 import com.ufla.lfapp.core.machine.fsa.FSATransitionFunction;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
@@ -86,10 +88,12 @@ public class EditFiniteStateAutomatonActivity extends AppCompatActivityContext {
                 && intent.getSerializableExtra(FINITE_STATE_AUTOMATON_EXTRA) != null) {
             drawAutomaton((FiniteStateAutomatonGUI) intent.getSerializableExtra(FINITE_STATE_AUTOMATON_EXTRA));
         } else {
-            SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+            SharedPreferences preferences = getSharedPreferences(
+                    "EditFiniteStateAutomatonActivity", MODE_PRIVATE);
 //            preferences.edit().remove(EDIT_AUTOMATON_PREFERENCES).apply();
             String dotLanguageStr = preferences.getString(EDIT_AUTOMATON_PREFERENCES, "");
             if (!dotLanguageStr.isEmpty()) {
+                System.out.println(dotLanguageStr);
                 editMachineLayout.drawGraph(new DotLanguage(dotLanguageStr)
                         .toGraphAdapter());
             }
@@ -106,7 +110,8 @@ public class EditFiniteStateAutomatonActivity extends AppCompatActivityContext {
             new DbAcess(this).putMachineDotLanguage(new DotLanguage(automatonGUI,
                     automatonGUI.getStateGridPositions()));
         }
-        SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = getSharedPreferences(
+                "EditFiniteStateAutomatonActivity", MODE_PRIVATE).edit();
         editor.putString(EDIT_AUTOMATON_PREFERENCES, new DotLanguage(automatonGUI,
                 automatonGUI.getStateGridPositions()).getGraph());
         editor.apply();
@@ -180,6 +185,7 @@ public class EditFiniteStateAutomatonActivity extends AppCompatActivityContext {
         if (finiteStateAutomaton != null) {
             Set<FSATransitionFunction> FSATransitionFunctionsToComplAuto =
                     finiteStateAutomaton.getTransitionFunctionsToCompleteAutomaton();
+            System.out.println(FSATransitionFunctionsToComplAuto);
             if (FSATransitionFunctionsToComplAuto.isEmpty()) {
                 Toast.makeText(this, R.string.exception_fsa_already_completed, Toast.LENGTH_SHORT)
                         .show();

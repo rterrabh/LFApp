@@ -30,19 +30,20 @@ public class Home extends AppCompatActivityContext {
 
     public void clearPreferences(Context context) {
         String[] preferencesFiles = new String[] {
-                "activities.machine.pda.EditPushdownAutomatonActivity",
-                "activities.machine.tm.EditTMEnumActivity",
-                "activities.machine.tm.EditTMMultiTapesActivity",
-                "activities.machine.tm.EditTMMultiTracksActivity",
-                "activities.machine.tm.EditTuringMachineActivity",
-                "activities.machine.tm.EditTuringMachineActivity",
-                "activities.machine.tm.EditTuringMachineActivity",
-                "activities.machine.fsa.EditFiniteStateAutomatonActivity",
-                "activities.grammar.g.GrammarActivity"
+                "EditFiniteStateAutomatonActivity",
+                "EditPushdownAutomatonActivity",
+                "EditTMEnumActivity",
+                "EditTMMultiTapesActivity",
+                "EditTMMultiTracksActivity",
+                "EditTuringMachineActivity",
+                "EditTuringMachineActivity",
+                "EditTuringMachineActivity",
+                "GrammarActivity"
         };
+
         for (String prefFile : preferencesFiles) {
-            context.getSharedPreferences(
-                    prefFile, MODE_PRIVATE).edit().clear().apply();
+            System.out.println(context.getSharedPreferences(
+                    prefFile, MODE_PRIVATE).edit().clear().commit());
         }
 
     }

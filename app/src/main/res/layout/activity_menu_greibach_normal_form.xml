@@ -52,10 +52,10 @@
                 android:text="@string/properties_chomsky_normal_form"
                 style="@style/ButtonSingleLine" />
 
-            <com.ufla.lfapp.utils.AutoResizeTextView
-                android:id="@+id/removeRecursionLeft"
-                android:text="@string/removal_left_recursion"
-                style="@style/ButtonSingleLine" />
+            <!--<com.ufla.lfapp.utils.AutoResizeTextView-->
+                <!--android:id="@+id/removeRecursionLeft"-->
+                <!--android:text="@string/removal_left_recursion"-->
+                <!--style="@style/ButtonSingleLine" />-->
 
             <com.ufla.lfapp.utils.AutoResizeTextView
                 android:id="@+id/greibachNormalForm"

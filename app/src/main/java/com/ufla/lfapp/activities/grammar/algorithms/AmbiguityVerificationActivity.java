@@ -14,7 +14,7 @@ import java.util.List;
 
 public class AmbiguityVerificationActivity extends HeaderGrammarActivity {
 
-    private int wordsTest = 10000;
+    private int wordsTest = 100;
     private List<String> wordsAmbiguity;
     private ArrayAdapter listAdapterWord;
 

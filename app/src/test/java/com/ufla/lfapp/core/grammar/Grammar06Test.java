@@ -260,7 +260,7 @@ public class Grammar06Test {
 	
 	@Test
 	public void testFNG() {
-		Grammar newG = g.FNG(g, new AcademicSupport());
+		Grammar newG = g.FNGTerra(g, new AcademicSupport());
 		boolean fng = true;
 		for (com.ufla.lfapp.core.grammar.Rule element : newG.getRules()) {
 			int counter = 0;

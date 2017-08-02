@@ -50,7 +50,7 @@ public class AcademicSupportForRemoveLeftRecursion
         Grammar gc = (Grammar) originalGrammar.clone();
         for(int i = 0; i < newRulesStage1.size(); i++) {
             grammarTransformationsStage1.add("2."+(grammarTransformationsStage1
-                    .size()+1)+" "+getGrammarTransformation(gc,
+                    .size()+1)+" "+getGrammarTransformationTerra(gc,
                     deleteRulesStage1.get(i), newRulesStage1.get(i),
                     isImediateLeftRecursiveStage1.get(i)));
             gc = trasformGrammar(gc, deleteRulesStage1.get(i), newRulesStage1.get(i));

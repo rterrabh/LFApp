@@ -162,13 +162,14 @@ public class GrammarTest {
 
         Grammar expectedGrammar = new Grammar(variables, terminals, initialSymbol, rules);
 
-        assertEquals(expectedGrammar.getInitialSymbol(), newG.getInitialSymbol());
-
-        assertEquals(expectedGrammar.getTerminals(), newG.getTerminals());
-
-        //assertEquals(expectedGrammar.getRules(), newG.getRules());
-
-        //assertEquals(expectedGrammar.getVariables(), newG.getVariables());
+        //ALTERACAO NO ALGORITMO
+//        assertEquals(expectedGrammar.getInitialSymbol(), newG.getInitialSymbol());
+//        assertEquals(expectedGrammar.getTerminals(), newG.getTerminals());
+//        assertEquals(expectedGrammar.getRules(), newG.getRules());
+//        assertEquals(expectedGrammar.getVariables(), newG.getVariables());
+        for (Rule rule : newG.getRules()) {
+            assertTrue(!rule.existsLeftRecursion());
+        }
     }
 
     @Test
@@ -191,13 +192,14 @@ public class GrammarTest {
 
         Grammar expectedGrammar = new Grammar(variables, terminals, initialSymbol, rules);
 
-        assertEquals(expectedGrammar.getInitialSymbol(), newG.getInitialSymbol());
-
-        assertEquals(expectedGrammar.getTerminals(), newG.getTerminals());
-
-        //assertEquals(expectedGrammar.getRules(), newG.getRules());
-
-        //assertEquals(expectedGrammar.getVariables(), newG.getVariables());
+        //ALTERACAO NO ALGORITMO
+//        assertEquals(expectedGrammar.getInitialSymbol(), newG.getInitialSymbol());
+//        assertEquals(expectedGrammar.getTerminals(), newG.getTerminals());
+//        assertEquals(expectedGrammar.getRules(), newG.getRules());
+//        assertEquals(expectedGrammar.getVariables(), newG.getVariables());
+        for (Rule rule : newG.getRules()) {
+            assertTrue(!rule.existsLeftRecursion());
+        }
     }
 
     @Test
@@ -223,6 +225,7 @@ public class GrammarTest {
         isImediateLeftRecursive.add(false);
         isImediateLeftRecursive.add(true);
 
+        //ALTERACAO NO ALGORITMO
         //assertEquals(deleteRulesStage1, academicSupportLR.getDeleteRulesStage1());
         //assertEquals(newRulesStage1, academicSupportLR.getNewRulesStage1());
         //assertEquals(isImediateLeftRecursive, academicSupportLR.getIsImediateLeftRecursiveStage1());
@@ -230,7 +233,7 @@ public class GrammarTest {
 
     @Test
     public void testFNG() {
-        Grammar newG = grammar.FNG(grammar, new AcademicSupport());
+        Grammar newG = grammar.FNGTerra(grammar, new AcademicSupport());
         boolean fng = true;
         for (Rule element : newG.getRules()) {
             int counter = 0;
@@ -255,7 +258,7 @@ public class GrammarTest {
     @Test
     public void testFNGGrammar() {
 
-        Grammar newG = grammar.FNG(grammar, new AcademicSupport());
+        Grammar newG = grammar.FNGTerra(grammar, new AcademicSupport());
 
         String[] variables = new String[]{"S", "A", "B", "C", "Z1"};
         String[] terminals = new String[]{"a", "b", "c"};
@@ -270,14 +273,15 @@ public class GrammarTest {
                         "cBZ1CBZ1 | aZ1CBZ1"};
 
         Grammar expectedGrammar = new Grammar(variables, terminals, initialSymbol, rules);
-
-        assertEquals(expectedGrammar.getInitialSymbol(), newG.getInitialSymbol());
-
-        assertEquals(expectedGrammar.getTerminals(), newG.getTerminals());
-
-        //assertEquals(expectedGrammar.getRules(), newG.getRules());
-
-        //assertEquals(expectedGrammar.getVariables(), newG.getVariables());
+        // ALTERACAO  NO ALGORITMO
+//        assertEquals(expectedGrammar.getInitialSymbol(), newG.getInitialSymbol());
+//        assertEquals(expectedGrammar.getTerminals(), newG.getTerminals());
+//        assertEquals(expectedGrammar.getRules(), newG.getRules());
+//        assertEquals(expectedGrammar.getVariables(), newG.getVariables());
+        String initialSymbolNewG = newG.getInitialSymbol();
+        for (Rule rule : newG.getRules()) {
+            assertTrue(rule.isFng(initialSymbolNewG));
+        }
     }
 
     @Test
@@ -310,10 +314,11 @@ public class GrammarTest {
                 new Rule("Z1", "cBCBZ1"), new Rule("Z1", "aCBZ1"), new Rule("Z1", "cBZ1CBZ1"),
                 new Rule("Z1", "aZ1CBZ1")})));
 
-        //assertEquals(deleteRulesStage2, academicSupportFNG.getDeleteRulesStage2());
-        //assertEquals(deleteRulesStage3, academicSupportFNG.getDeleteRulesStage3());
-        //assertEquals(newRulesStage2, academicSupportFNG.getNewRulesStage2());
-        //assertEquals(newRulesStage3, academicSupportFNG.getNewRulesStage3());
+        // ALTERACAO ALGORITMO
+//        assertEquals(deleteRulesStage2, academicSupportFNG.getDeleteRulesStage2());
+//        assertEquals(deleteRulesStage3, academicSupportFNG.getDeleteRulesStage3());
+//        assertEquals(newRulesStage2, academicSupportFNG.getNewRulesStage2());
+//        assertEquals(newRulesStage3, academicSupportFNG.getNewRulesStage3());
     }
 
 

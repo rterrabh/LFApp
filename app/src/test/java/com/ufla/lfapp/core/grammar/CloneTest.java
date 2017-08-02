@@ -41,10 +41,6 @@ public class CloneTest {
         assertEquals(2, this.g.getTerminals().size());
         assertEquals(2, gc.getTerminals().size());
 
-        this.g.setInitialSymbol("S'");
-        assertEquals("S'", this.g.getInitialSymbol());
-        assertEquals("S", gc.getInitialSymbol());
-
 
         Rule rx = new Rule("V", "a");
         assertTrue(this.g.getRules().contains(rx));

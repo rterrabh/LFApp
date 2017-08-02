@@ -2,10 +2,8 @@ package com.ufla.lfapp.activities.grammar.algorithms;
 
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -13,6 +11,7 @@ import android.widget.TextView;
 import com.ufla.lfapp.R;
 import com.ufla.lfapp.activities.grammar.HeaderGrammarActivity;
 import com.ufla.lfapp.core.grammar.AcademicSupport;
+import com.ufla.lfapp.core.grammar.AcademicSupportFNG;
 import com.ufla.lfapp.core.grammar.AcademicSupportForRemoveLeftRecursion;
 import com.ufla.lfapp.core.grammar.Grammar;
 
@@ -21,41 +20,27 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Created by root on 25/07/16.
+ * Created by carlos on 25/07/17.
  */
-public class RemoveLeftRecursionActivity extends HeaderGrammarActivity {
+
+public class GreibachNormalFormTerraActivity extends HeaderGrammarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_remove_left_recursion);
+        setContentView(R.layout.activity_greibach_normal_form_terra);
         super.onCreate(savedInstanceState);
-        setTitle();
+        Log.d("REM_LEFT_REC", "INITIAL_ACTIVITY");
         removingLeftRecursion(getGrammar());
-    }
-
-    private void setTitle() {
-        switch(algorithm) {
-            case GREIBACH_NORMAL_FORM:
-                setTitle(getResources().getString(R.string.lfapp_gnf_title)
-                        + " - 7/8");
-                break;
-            case REMOVE_LEFT_RECURSION:
-                setTitle(getResources().getString(R.string.lfapp_left_recursion_title)
-                        + " - 7/7");
-                break;
-        }
+        fng(new Grammar(grammar));
     }
 
     @Override
     protected Grammar getGrammar() {
         switch(algorithm) {
-            case REMOVE_LEFT_RECURSION:
             case GREIBACH_NORMAL_FORM:
                 Grammar g = new Grammar(grammar);
-                g = g.getGrammarWithInitialSymbolNotRecursive(g, new
-                        AcademicSupport());
-                g = g.getGrammarEssentiallyNoncontracting(g, new
-                        AcademicSupport());
+                g = g.getGrammarWithInitialSymbolNotRecursive(g, new AcademicSupport());
+                g = g.getGrammarEssentiallyNoncontracting(g, new AcademicSupport());
                 g = g.getGrammarWithoutChainRules(g, new AcademicSupport());
                 g = g.getGrammarWithoutNoTerm(g, new AcademicSupport());
                 g = g.getGrammarWithoutNoReach(g, new AcademicSupport());
@@ -69,13 +54,57 @@ public class RemoveLeftRecursionActivity extends HeaderGrammarActivity {
     }
 
     public void next(View view) {
-        switch(algorithm) {
-            case REMOVE_LEFT_RECURSION:
-                onBackPressed();
-                break;
-            case GREIBACH_NORMAL_FORM:
-                changeActivity(this, GreibachNormalFormActivity.class);
-                break;
+        onBackPressed();
+    }
+
+    public void fng(final Grammar g) {
+        AcademicSupport academic = new AcademicSupport();
+        Grammar gAux = g.getGrammarWithInitialSymbolNotRecursive(g, new AcademicSupport());
+        gAux = gAux.getGrammarEssentiallyNoncontracting(gAux, new AcademicSupport());
+        gAux = gAux.getGrammarWithoutChainRules(gAux, new AcademicSupport());
+        gAux = gAux.getGrammarWithoutNoTerm(gAux, new AcademicSupport());
+        gAux = gAux.getGrammarWithoutNoReach(gAux, new AcademicSupport());
+        gAux = gAux.FNC(gAux, new AcademicSupport());
+        AcademicSupportFNG academicSupportFNG = new AcademicSupportFNG();
+        Grammar gc = gAux.FNGTerra(gAux, academic, academicSupportFNG);
+        academic.setResult(gc);
+
+        //Coloca resultado na tela
+        ((TextView) findViewById(R.id.GreibachNormalFormResult)).setText(Html
+                .fromHtml(academic.getResult()));
+        if (academic.getSituation()) {
+            //Insere os comentários na tela
+            TextView commentsOfFNG = (TextView) findViewById(R.id.FNGComentarios2);
+            commentsOfFNG.append(Html
+                    .fromHtml(getString(R.string.greibach_normal_formal_comments)));
+            ((TextView) findViewById(R.id.step1GreibachNormalForm)).setText(Html
+                    .fromHtml(getResources().getString(R.string.removing_left_recursive_terra_algol_p2)));
+            for(String transformation : academicSupportFNG
+                    .getGrammarTransformationsStage2()) {
+                TextView textView = new TextView(this);
+                textView.setTextColor(getResources().getColor(R.color.Black));
+                textView.setSingleLine(false);
+                textView.setText(Html.fromHtml(transformation));
+                TableRow tableRow = new TableRow(this);
+                tableRow.addView(textView);
+                ((TableLayout) findViewById(R.id.step1GreibachNormalFormAcademicSupport))
+                        .addView(tableRow);
+            }
+
+            ((TextView) findViewById(R.id.step2GreibachNormalForm)).setText(Html
+                    .fromHtml(getResources().getString(R.string.removing_left_recursive_terra_algol_p3)));
+            for(String transformation : academicSupportFNG
+                    .getGrammarTransformationsStage3()) {
+                TextView textView = new TextView(this);
+                textView.setTextColor(getResources().getColor(R.color.Black));
+                textView.setText(Html.fromHtml(transformation));
+                TableRow tableRow = new TableRow(this);
+                tableRow.addView(textView);
+                ((TableLayout) findViewById(R.id.step2GreibachNormalFormAcademicSupport))
+                        .addView(tableRow);
+            }
+        } else {
+            ((TextView) findViewById(R.id.FNGComentarios2)).setText(R.string.greibach_normal_formal_already);
         }
     }
 
@@ -90,14 +119,8 @@ public class RemoveLeftRecursionActivity extends HeaderGrammarActivity {
         gc = gc.removingLeftRecursionTerra(gc, academicSupport, sortedVariables,
                 academicSupportLR);
         academicSupport.setResult(gc);
-        TextView resultGrammar = (TextView) findViewById(R.id.RemovalLeftRecursion);
-        resultGrammar.setText(Html.fromHtml(academicSupport.getResult()));
 
         if (academicSupport.getSituation()) {
-            //Realiza comentários sobre o processo
-            TextView text = (TextView) findViewById(R.id.commentsOfRemovalLeftRecursion);
-            text.setText(R.string.remove_left_recursion_comments);
-            academicSupport.setComments(text.toString());
 
             //Realiza o primeiro passo do processo (Ordenação das variáveis)
             ((TextView) findViewById(R.id.step1RemovalLeftRecursion)).setText(R.string.remove_left_recursion_step_1);
@@ -108,7 +131,7 @@ public class RemoveLeftRecursionActivity extends HeaderGrammarActivity {
 
             //Realiza segundo passo do processo (Destaca recursões encontradas)
             ((TextView) findViewById(R.id.step2RemovalLeftRecursion)).setText(Html
-                    .fromHtml(getResources().getString(R.string.removing_left_recursive_algol_p1)));
+                    .fromHtml(getResources().getString(R.string.removing_left_recursive_terra_algol_p1)));
             //step2.setText("(2) Localizar as recursões.");
 
 
@@ -194,28 +217,6 @@ public class RemoveLeftRecursionActivity extends HeaderGrammarActivity {
                 }
             }
         }
-    }
-
-    public static void setListViewHeightBasedOnChildren(ListView listView) {
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null) {
-            // pre-condition
-            return;
-        }
-
-        int totalHeight = listView.getPaddingTop() + listView.getPaddingBottom();
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-            View listItem = listAdapter.getView(i, null, listView);
-            if (listItem instanceof ViewGroup) {
-                listItem.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            }
-            listItem.measure(0, 0);
-            totalHeight += listItem.getMeasuredHeight();
-        }
-
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        listView.setLayoutParams(params);
     }
 
 }

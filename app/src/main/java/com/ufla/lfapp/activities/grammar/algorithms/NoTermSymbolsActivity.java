@@ -35,7 +35,7 @@ public class NoTermSymbolsActivity extends HeaderGrammarActivity {
                 break;
             case GREIBACH_NORMAL_FORM:
                 setTitle(getResources().getString(R.string.lfapp_gnf_title)
-                        + " - 4/8");
+                        + " - 4/7");
                 break;
             case REMOVE_LEFT_RECURSION:
                 setTitle(getResources().getString(R.string.lfapp_left_recursion_title)

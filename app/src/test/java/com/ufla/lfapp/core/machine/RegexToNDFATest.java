@@ -229,8 +229,6 @@ public class RegexToNDFATest {
     public void testA_K() throws Exception {
         FiniteStateAutomatonGUI expected = new FiniteStateAutomatonGUI(A_K, A_K.getStatesPointsFake());
         FiniteStateAutomatonGUI res = FiniteStateAutomatonGUI.getAutomatonByRegex("a*");
-        System.out.println(expected.toStringTest());
-        System.out.println("\n\n"+ res.toStringTest());
         assertEquals(expected, res);
     }
 

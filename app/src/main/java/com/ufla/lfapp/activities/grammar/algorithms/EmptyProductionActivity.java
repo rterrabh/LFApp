@@ -35,7 +35,7 @@ public class EmptyProductionActivity extends HeaderGrammarActivity {
                 break;
             case GREIBACH_NORMAL_FORM:
                 setTitle(getResources().getString(R.string.lfapp_gnf_title)
-                        + " - 1/8");
+                        + " - 1/7");
                 break;
             case REMOVE_LEFT_RECURSION:
                 setTitle(getResources().getString(R.string.lfapp_left_recursion_title)
@@ -74,15 +74,18 @@ public class EmptyProductionActivity extends HeaderGrammarActivity {
      */
     public String joinGrammars(final Grammar grammar1, final Grammar grammar2) {
         StringBuilder newG = new StringBuilder();
-        for (Rule element : grammar1.getRules(grammar1.getInitialSymbol())) {
-            newG.append(element).append("\n");
-        }
+
         for (Rule element : grammar2.getRules()) {
             if (element.getLeftSide().equals(grammar1.getInitialSymbol()) && !grammar1.getRules().contains(element)) {
                 newG.append(element);
                 newG.append("\n");
             }
         }
+
+        for (Rule element : grammar1.getRules(grammar1.getInitialSymbol())) {
+            newG.append(element).append("\n");
+        }
+
 
         for (Rule element : grammar1.getRules()) {
             if (!element.getLeftSide().equals(grammar1.getInitialSymbol())) {

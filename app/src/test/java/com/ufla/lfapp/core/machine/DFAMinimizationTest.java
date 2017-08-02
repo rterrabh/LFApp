@@ -99,8 +99,6 @@ public class DFAMinimizationTest {
 
     @Test
     public void testDFAMinimization() throws Exception {
-                System.out.println(dfa.getMinimizeAutomaton().toStringTest());
-        System.out.println("\n\n"+minDfa.toStringTest());
         assertEquals(minDfa, dfa.getMinimizeAutomaton());
 //        System.out.println(tmSimulator.processALL());
 //        System.out.println(Arrays.toString(tmSimulator.getTapes()));

@@ -10,7 +10,9 @@ import org.junit.runners.Suite.SuiteClasses;
         { DFACompleteTest.class, DFAMinimizationTest.class, DotLanguageParserTest.class,
         FSASimulatorTest.class, LBASimulatorTest.class, NDFAToDFATest.class,
         PDASimulatorTest.class, RegexToNDFATest.class, TMEnumeratorSimulatorTest.class,
-        TMMultiTapeSimulatorTest.class, TMMultiTrackSimulatorTest.class, TMSimulatorTest.class })
+        TMMultiTapeSimulatorTest.class, TMMultiTrackSimulatorTest.class, TMSimulatorTest.class,
+        FiniteAutomataSudkampTest.class, PDAAndCFLSudkampTest.class,
+                TuringMachineSudkampTest.class })
 
 public class MachineTests {
 }

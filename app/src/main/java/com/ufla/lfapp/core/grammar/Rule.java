@@ -58,6 +58,10 @@ public class Rule implements Cloneable, Comparable<Rule> {
 		return result;
 	}
 
+	public boolean useTerm(String term) {
+		return leftSide.contains(term) || rightSide.contains(term);
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -266,7 +270,7 @@ public class Rule implements Cloneable, Comparable<Rule> {
 			return  symbolsOfRightSide;
 		}
 		for (int i = 0; i < rightSide.length(); i++) {
-			if(Character.isLowerCase(rightSide.charAt(i))) {
+			if (Character.isLowerCase(rightSide.charAt(i))) {
 				symbolsOfRightSide.add(Character.toString(rightSide.charAt(i)));
 			} else if (Character.isUpperCase(rightSide.charAt(i))) {
 				int sizeOfSymbol = 1;
@@ -374,26 +378,9 @@ public class Rule implements Cloneable, Comparable<Rule> {
 	}
 
 
+
 	public String getRightSideToHtml() {
-		StringBuilder rightSideHtml = new StringBuilder();
-		boolean isDigit = false;
-		for (int i = 0; i < rightSide.length(); i++) {
-			if (Character.isDigit(rightSide.charAt(i)) && !isDigit) {
-				rightSideHtml.append("<sub>").append(rightSide.charAt(i));
-				isDigit = true;
-			} else if (Character.isDigit(rightSide.charAt(i)) && isDigit) {
-				rightSideHtml.append(rightSide.charAt(i));
-			} else if (!Character.isDigit(rightSide.charAt(i)) && isDigit) {
-				rightSideHtml.append("</sub>").append(rightSide.charAt(i));
-				isDigit = false;
-			} else {
-				rightSideHtml.append(rightSide.charAt(i));
-			}
-		}
-		if (isDigit) {
-			rightSideHtml.append("</sub>");
-		}
-		return rightSideHtml.toString();
+		return GrammarParser.varToHtml(rightSide);
 	}
 
 }

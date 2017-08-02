@@ -76,19 +76,10 @@ public class DotLanguageParserTest {
     @Test
     public void test() {
         FiniteStateAutomaton fsa = getFSA();
-        System.out.println(fsa);
         DotLanguage dot = new DotLanguage(fsa, stateToPoint);
         Pair<FiniteStateAutomaton, Map<State, MyPoint>> pairFSA = dot.toFSA();
         assertEquals(fsa, pairFSA.first);
         assertEquals(stateToPoint, pairFSA.second);
-        System.out.println(dot.getGraph());
-//        System.out.println(dot.getGraph());
-//        String[][] parametersMachine = dot.parametersMachine();
-//        int cont = 0;
-//        for (String[] strs : parametersMachine) {
-//            System.out.println("Param " + cont + ": " + Arrays.toString(strs));
-//            cont++;
-//        }
 
     }
 
@@ -121,10 +112,8 @@ public class DotLanguageParserTest {
 
     @Test
     public void fsa0Test() {
-        System.out.println("? ?/?".replaceAll("\\?", Symbols.LAMBDA));
         String a = "[B/B R, B/B R]";
         String[] params = a.split("[/, ]");
-        System.out.println(Arrays.toString(params));
     }
 
     @Test
@@ -134,9 +123,6 @@ public class DotLanguageParserTest {
         dot.setMachineType(MachineType.FSA);
         Pair<FiniteStateAutomaton, Map<State, MyPoint>> pairFSA = dot.toFSA();
         DotLanguage newDot = new DotLanguage(pairFSA.first, pairFSA.second);
-        System.out.println(dot.getGraph());
-        System.out.println("----------------------------");
-        System.out.println(newDot.getGraph());
         assertEquals(dot, dot);
 
     }
@@ -177,9 +163,6 @@ public class DotLanguageParserTest {
         dot.setMachineType(MachineType.FSA);
         Pair<FiniteStateAutomaton, Map<State, MyPoint>> pairFSA = dot.toFSA();
         DotLanguage newDot = new DotLanguage(pairFSA.first, pairFSA.second);
-        System.out.println(dot.getGraph());
-        System.out.println("----------------------------");
-        System.out.println(newDot.getGraph());
         assertEquals(dot, dot);
 
     }
@@ -231,9 +214,6 @@ public class DotLanguageParserTest {
         dot.setMachineType(MachineType.TM);
         Pair<TuringMachine, Map<State, MyPoint>> pairTM = dot.toTM();
         DotLanguage newDot = new DotLanguage(pairTM.first, pairTM.second);
-        System.out.println(dot.getGraph());
-        System.out.println("----------------------------");
-        System.out.println(newDot.getGraph());
         assertEquals(dot, dot);
     }
 
@@ -293,9 +273,6 @@ public class DotLanguageParserTest {
         dot.setMachineType(MachineType.TM);
         Pair<TuringMachine, Map<State, MyPoint>> pairTM = dot.toTM();
         DotLanguage newDot = new DotLanguage(pairTM.first, pairTM.second);
-        System.out.println(dot.getGraph());
-        System.out.println("----------------------------");
-        System.out.println(newDot.getGraph());
         assertEquals(dot, dot);
 
     }
@@ -330,9 +307,6 @@ public class DotLanguageParserTest {
         dot.setMachineType(MachineType.PDA);
         Pair<PushdownAutomaton, Map<State, MyPoint>> pairPDA = dot.toPDA();
         DotLanguage newDot = new DotLanguage(pairPDA.first, pairPDA.second);
-        System.out.println(dot.getGraph());
-        System.out.println("----------------------------");
-        System.out.println(newDot.getGraph());
         assertEquals(dot, dot);
 
     }
@@ -366,9 +340,6 @@ public class DotLanguageParserTest {
         dot.setMachineType(MachineType.PDA_EXT);
         Pair<PushdownAutomatonExtend, Map<State, MyPoint>> pairTM = dot.toPDAExt();
         DotLanguage newDot = new DotLanguage(pairTM.first, pairTM.second);
-        System.out.println(dot.getGraph());
-        System.out.println("----------------------------");
-        System.out.println(newDot.getGraph());
         assertEquals(dot, dot);
 
     }
@@ -412,9 +383,6 @@ public class DotLanguageParserTest {
         TMMove.test = true;
         Pair<TuringMachineMultiTape, Map<State, MyPoint>> pairTM = dot.toTMMultiTape();
         DotLanguage newDot = new DotLanguage(pairTM.first, pairTM.second);
-        System.out.println(dot.getGraph());
-        System.out.println("----------------------------");
-        System.out.println(newDot.getGraph());
         assertEquals(dot, dot);
 
     }
@@ -456,9 +424,6 @@ public class DotLanguageParserTest {
         dot.setMachineType(MachineType.TM_MULTI_TRACK);
         Pair<TuringMachineMultiTrack, Map<State, MyPoint>> pairTM = dot.toTMMultiTrack();
         DotLanguage newDot = new DotLanguage(pairTM.first, pairTM.second);
-        System.out.println(dot.getGraph());
-        System.out.println("----------------------------");
-        System.out.println(newDot.getGraph());
         assertEquals(dot, dot);
 
     }

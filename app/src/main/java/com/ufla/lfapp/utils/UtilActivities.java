@@ -56,64 +56,58 @@ public class UtilActivities {
         arrow0.setText(" → ");
         row0.addView(left);
         row0.addView(arrow0);
-        ArrayList<String> variables = new ArrayList<>(grammar.getVariables());
-        Collections.sort(variables);
         int contViews = 2;
-        for (Rule element : grammar.getRules()) {
-            if (element.getLeftSide().equals(grammar.getInitialSymbol())) {
-                TextView right = new TextView(context);
-                TextView pipe = new TextView(context);
-                pipe.setText(" | ");
-                if (academic.getIrregularRules().contains(element)) {
-                    setSubscriptItem(right, element.getRightSide());
-                    right.setTextColor(context.getResources().getColor(R.color
-                            .Red));
-                } else if (containsDigit(element.getRightSide())) {
-                    setSubscriptItem(right, element.getRightSide());
-                }else {
-                    right.setText(element.getRightSide());
-                }
-                row0.addView(right);
-                row0.addView(pipe);
-                contViews += 2;
+        for (Rule element : grammar.getRules(grammar.getInitialSymbol())) {
+            TextView right = new TextView(context);
+            TextView pipe = new TextView(context);
+            pipe.setText(" | ");
+            if (academic.getIrregularRules().contains(element)) {
+                setSubscriptItem(right, element.getRightSide());
+                right.setTextColor(context.getResources().getColor(R.color
+                        .Red));
+            } else if (containsDigit(element.getRightSide())) {
+                setSubscriptItem(right, element.getRightSide());
+            }else {
+                right.setText(element.getRightSide());
             }
+            row0.addView(right);
+            row0.addView(pipe);
+            contViews += 2;
         }
         row0.removeViewAt(contViews - 1);
         table.addView(row0);
 
-        for (int i = 0; i < variables.size(); i++) {
-            for (String variable : grammar.getVariables()) {
-                if (!variable.equals(grammar.getInitialSymbol()) && variables.get(i).equals(variable)) {
-                    TableRow row1 = new TableRow(context);
-                    TextView tv0 = new TextView(context);
-                    setSubscriptItem(tv0, variable);
-                    row1.addView(tv0);
-                    TextView arrow1 = new TextView(context);
-                    arrow1.setText("→");
-                    row1.addView(arrow1);
-                    contViews = 2;
-                    for (Rule element : grammar.getRules()) {
-                        if (variable.equals(element.getLeftSide())) {
-                            TextView pipe = new TextView(context);
-                            pipe.setText(" | ");
-                            TextView tv1 = new TextView(context);
-                            if (academic.getIrregularRules().contains(element)) {
-                                setSubscriptItem(tv1, element.getRightSide());
-                                tv1.setTextColor(context.getResources()
-                                        .getColor(R.color.Red));
-                            } else if(containsDigit(element.getRightSide())) {
-                                setSubscriptItem(tv1, element.getRightSide());
-                            } else {
-                                tv1.setText(element.getRightSide());
-                            }
-                            row1.addView(tv1);
-                            row1.addView(pipe);
-                            contViews += 2;
+        for (String variable : grammar.getVariables()) {
+            if (!variable.equals(grammar.getInitialSymbol())) {
+                TableRow row1 = new TableRow(context);
+                TextView tv0 = new TextView(context);
+                setSubscriptItem(tv0, variable);
+                row1.addView(tv0);
+                TextView arrow1 = new TextView(context);
+                arrow1.setText("→");
+                row1.addView(arrow1);
+                contViews = 2;
+                for (Rule element : grammar.getRules()) {
+                    if (variable.equals(element.getLeftSide())) {
+                        TextView pipe = new TextView(context);
+                        pipe.setText(" | ");
+                        TextView tv1 = new TextView(context);
+                        if (academic.getIrregularRules().contains(element)) {
+                            setSubscriptItem(tv1, element.getRightSide());
+                            tv1.setTextColor(context.getResources()
+                                    .getColor(R.color.Red));
+                        } else if(containsDigit(element.getRightSide())) {
+                            setSubscriptItem(tv1, element.getRightSide());
+                        } else {
+                            tv1.setText(element.getRightSide());
                         }
+                        row1.addView(tv1);
+                        row1.addView(pipe);
+                        contViews += 2;
                     }
-                    row1.removeViewAt(contViews - 1);
-                    table.addView(row1);
                 }
+                row1.removeViewAt(contViews - 1);
+                table.addView(row1);
             }
         }
     }
@@ -172,65 +166,57 @@ public class UtilActivities {
         arrow0.setText(" → ");
         row0.addView(left);
         row0.addView(arrow0);
-        ArrayList<String> orderVariables = new ArrayList<>(grammar.getVariables());
-        Collections.sort(orderVariables);
         int contViews = 2;
-        for (Rule element : grammar.getRules()) {
-            if (element.getLeftSide().equals(grammar.getInitialSymbol())) {
-                TextView right = new TextView(context);
-                TextView pipe = new TextView(context);
-                pipe.setText(" | ");
-                if (academic.getInsertedRules().contains(element)) {
-                    setSubscriptItem(right, element.getRightSide());
-                    right.setTextColor(context.getResources().getColor(R.color
-                            .Blue));
-                } else if (containsDigit(element.getRightSide())) {
-                    setSubscriptItem(right, element.getRightSide());
-                } else {
-                    right.append(element.getRightSide());
-                }
-                row0.addView(right);
-                row0.addView(pipe);
-                contViews += 2;
+        for (Rule element : grammar.getRules(grammar.getInitialSymbol())) {
+            TextView right = new TextView(context);
+            TextView pipe = new TextView(context);
+            pipe.setText(" | ");
+            if (academic.getInsertedRules().contains(element)) {
+                setSubscriptItem(right, element.getRightSide());
+                right.setTextColor(context.getResources().getColor(R.color
+                        .Blue));
+            } else if (containsDigit(element.getRightSide())) {
+                setSubscriptItem(right, element.getRightSide());
+            } else {
+                right.append(element.getRightSide());
             }
+            row0.addView(right);
+            row0.addView(pipe);
+            contViews += 2;
         }
         row0.removeViewAt(contViews - 1);
         table.addView(row0);
 
-        for (int i = 0; i < orderVariables.size(); i++) {
-            for (String variable : grammar.getVariables()) {
-                if (!variable.equals(grammar.getInitialSymbol()) && orderVariables.get(i).equals(variable)) {
-                    TableRow row1 = new TableRow(context);
-                    TextView tv0 = new TextView(context);
-                    setSubscriptItem(tv0, variable);
-                    row1.addView(tv0);
-                    TextView arrow1 = new TextView(context);
-                    arrow1.setText("→");
-                    row1.addView(arrow1);
-                    contViews = 2;
-                    for (Rule element : grammar.getRules()) {
-                        if (variable.equals(element.getLeftSide())) {
-                            TextView pipe = new TextView(context);
-                            pipe.setText(" | ");
-                            TextView tv1 = new TextView(context);
-                            if (academic.getInsertedRules().contains(element)) {
-                                setSubscriptItem(tv1, element.getRightSide());
-                                tv1.setTextColor(context.getResources()
-                                        .getColor(R
-                                        .color.Blue));
-                            } else if (containsDigit(element.getRightSide())) {
-                                setSubscriptItem(tv1, element.getRightSide());
-                            } else {
-                                tv1.append(element.getRightSide());
-                            }
-                            row1.addView(tv1);
-                            row1.addView(pipe);
-                            contViews += 2;
+        for (String variable : grammar.getVariables()) {
+            if (!variable.equals(grammar.getInitialSymbol())) {
+                TableRow row1 = new TableRow(context);
+                TextView tv0 = new TextView(context);
+                setSubscriptItem(tv0, variable);
+                row1.addView(tv0);
+                TextView arrow1 = new TextView(context);
+                arrow1.setText("→");
+                row1.addView(arrow1);
+                contViews = 2;
+                for (Rule element : grammar.getRules(variable)) {
+                        TextView pipe = new TextView(context);
+                        pipe.setText(" | ");
+                        TextView tv1 = new TextView(context);
+                        if (academic.getInsertedRules().contains(element)) {
+                            setSubscriptItem(tv1, element.getRightSide());
+                            tv1.setTextColor(context.getResources()
+                                    .getColor(R
+                                    .color.Blue));
+                        } else if (containsDigit(element.getRightSide())) {
+                            setSubscriptItem(tv1, element.getRightSide());
+                        } else {
+                            tv1.append(element.getRightSide());
                         }
-                    }
-                    row1.removeViewAt(contViews - 1);
-                    table.addView(row1);
+                        row1.addView(tv1);
+                        row1.addView(pipe);
+                        contViews += 2;
                 }
+                row1.removeViewAt(contViews - 1);
+                table.addView(row1);
             }
         }
     }
@@ -314,7 +300,6 @@ public class UtilActivities {
                 array.add(variable);
             }
         }
-        Collections.sort(array);
         array.add(0, grammar.getInitialSymbol());
         return array;
     }
@@ -325,7 +310,6 @@ public class UtilActivities {
             if (!set.contains(variable))
                 array.add(variable);
         }
-        Collections.sort(array);
         String aux = array.toString();
         aux = aux.replace("[", "{");
         aux = aux.replace("]", "}");
@@ -347,13 +331,9 @@ public class UtilActivities {
         TextView arrow0 = new TextView(context);
         int contViews = 0;
         boolean initialSymbolIrregular = false;
-        ArrayList<String> orderVariables = new ArrayList<>(grammar.getVariables());
-        Collections.sort(orderVariables);
-        for (Rule element : grammar.getRules()) {
-            if (element.equals(grammar.getInitialSymbol())) {
-                if (academic.getIrregularRules().contains(element)) {
-                    initialSymbolIrregular = true;
-                }
+        for (Rule element : grammar.getRules(grammar.getInitialSymbol())) {
+            if (academic.getIrregularRules().contains(element)) {
+                initialSymbolIrregular = true;
             }
         }
         arrow0.setText(" → ");
@@ -364,72 +344,67 @@ public class UtilActivities {
         row0.addView(left);
         row0.addView(arrow0);
         contViews = 2;
-        for (Rule element : grammar.getRules()) {
-            if (element.getLeftSide().equals(grammar.getInitialSymbol())) {
-                TextView right = new TextView(context);
-                TextView pipe = new TextView(context);
-                pipe.setText(" | ");
-                if (academic.getIrregularRules().contains(element)) {
-                    right.setTextColor((context).getResources().getColor(R.color.Red));
-                    right.setText(element.getRightSide());
-                } else {
-                    right.setText(element.getRightSide());
-                }
-                row0.addView(right);
-                row0.addView(pipe);
-                contViews += 2;
+        for (Rule element : grammar.getRules(grammar.getInitialSymbol())) {
+            TextView right = new TextView(context);
+            TextView pipe = new TextView(context);
+            pipe.setText(" | ");
+            if (academic.getIrregularRules().contains(element)) {
+                right.setTextColor((context).getResources().getColor(R.color.Red));
+                right.setText(element.getRightSide());
+            } else {
+                right.setText(element.getRightSide());
             }
+            row0.addView(right);
+            row0.addView(pipe);
+            contViews += 2;
         }
         row0.removeViewAt(contViews - 1);
         table.addView(row0);
 
-        for (int i = 0; i < orderVariables.size(); i++) {
-            for (String variable : grammar.getVariables()) {
-                contViews = 0;
-                if (!variable.equals(grammar.getInitialSymbol()) &&
-                        orderVariables.get(i).equals(variable)) {
-                    TableRow row1 = new TableRow(context);
-                    TextView tv0 = new TextView(context);
-                    tv0.setText(variable);
-                    TextView arrow1 = new TextView(context);
-                    arrow1.setText("→");
-                    boolean irregularVariable = false;
-                    for (Rule element : grammar.getRules()) {
-                        if (element.getLeftSide().equals(variable)) {
-                            if (academic.getIrregularRules().contains(element) &&
-                                    !academic.getFirstSet().get(academic.getFirstSet().size() - 1)
-                                            .contains(variable)) {
-                                irregularVariable = true;
-                            }
+        for (String variable : grammar.getVariables()) {
+            contViews = 0;
+            if (!variable.equals(grammar.getInitialSymbol())) {
+                TableRow row1 = new TableRow(context);
+                TextView tv0 = new TextView(context);
+                tv0.setText(variable);
+                TextView arrow1 = new TextView(context);
+                arrow1.setText("→");
+                boolean irregularVariable = false;
+                for (Rule element : grammar.getRules()) {
+                    if (element.getLeftSide().equals(variable)) {
+                        if (academic.getIrregularRules().contains(element) &&
+                                !academic.getFirstSet().get(academic.getFirstSet().size() - 1)
+                                        .contains(variable)) {
+                            irregularVariable = true;
                         }
                     }
-
-                    if (irregularVariable) {
-                        tv0.setTextColor((context).getResources().getColor(R.color.Red));
-                    }
-                    row1.addView(tv0);
-                    row1.addView(arrow1);
-                    contViews += 2;
-
-                    for (Rule element : grammar.getRules()) {
-                        if (variable.equals(element.getLeftSide())) {
-                            TextView pipe = new TextView(context);
-                            pipe.setText(" | ");
-                            TextView tv1 = new TextView(context);
-                            if (academic.getIrregularRules().contains(element)) {
-                                tv1.setTextColor((context).getResources().getColor(R.color.Red));
-                                tv1.setText(element.getRightSide());
-                            } else {
-                                tv1.setText(element.getRightSide());
-                            }
-                            row1.addView(tv1);
-                            row1.addView(pipe);
-                            contViews += 2;
-                        }
-                    }
-                    row1.removeViewAt(contViews - 1);
-                    table.addView(row1);
                 }
+
+                if (irregularVariable) {
+                    tv0.setTextColor((context).getResources().getColor(R.color.Red));
+                }
+                row1.addView(tv0);
+                row1.addView(arrow1);
+                contViews += 2;
+
+                for (Rule element : grammar.getRules()) {
+                    if (variable.equals(element.getLeftSide())) {
+                        TextView pipe = new TextView(context);
+                        pipe.setText(" | ");
+                        TextView tv1 = new TextView(context);
+                        if (academic.getIrregularRules().contains(element)) {
+                            tv1.setTextColor((context).getResources().getColor(R.color.Red));
+                            tv1.setText(element.getRightSide());
+                        } else {
+                            tv1.setText(element.getRightSide());
+                        }
+                        row1.addView(tv1);
+                        row1.addView(pipe);
+                        contViews += 2;
+                    }
+                }
+                row1.removeViewAt(contViews - 1);
+                table.addView(row1);
             }
         }
     }

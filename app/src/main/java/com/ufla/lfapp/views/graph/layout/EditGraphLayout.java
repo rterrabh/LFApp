@@ -27,6 +27,7 @@ import com.ufla.lfapp.core.grammar.parser.TreeDerivationPosition;
 import com.ufla.lfapp.core.machine.State;
 import com.ufla.lfapp.core.machine.dotlang.Edge;
 import com.ufla.lfapp.core.machine.dotlang.GraphAdapter;
+import com.ufla.lfapp.core.machine.dotlang.Vertex;
 import com.ufla.lfapp.core.machine.fsa.FSATransitionFunction;
 import com.ufla.lfapp.core.machine.fsa.FiniteStateAutomaton;
 import com.ufla.lfapp.core.machine.fsa.FiniteStateAutomatonGUI;
@@ -1642,8 +1643,8 @@ public class EditGraphLayout extends GridLayout {
         Map<String, VertexView> vertexViewByLabel = getVertexViewByLabel();
         vertexViewByLabel.put(errorStateLabel, errorState);
         for (FSATransitionFunction FSATransitionFunction : FSATransitionFunctionsToCompAuto) {
-            addEdgeView(vertexViewByLabel.get(FSATransitionFunction.getCurrentState()),
-                    vertexViewByLabel.get(FSATransitionFunction.getFutureState()),
+            addEdgeView(vertexViewByLabel.get(FSATransitionFunction.getCurrentState().getName()),
+                    vertexViewByLabel.get(FSATransitionFunction.getFutureState().getName()),
                     FSATransitionFunction.getSymbol());
         }
         FSATransitionFunctionsToCompAuto = null;
@@ -1789,11 +1790,23 @@ public class EditGraphLayout extends GridLayout {
                 errorState.setLabel(errorStateLabel);
                 Map<String, VertexView> vertexViewByLabel = getVertexViewByLabel();
                 vertexViewByLabel.put(errorStateLabel, errorState);
+                Map<Pair<VertexView, VertexView>, String> transitions = new HashMap<>();
                 for (FSATransitionFunction FSATransitionFunction : FSATransitionFunctionsToCompAuto) {
-                    addEdgeView(vertexViewByLabel.get(FSATransitionFunction.getCurrentState()
-                            .getName()),
-                            vertexViewByLabel.get(FSATransitionFunction.getFutureState().getName()),
-                            FSATransitionFunction.getSymbol());
+                    Pair<VertexView, VertexView> pairVertex =
+                            Pair.create(
+                                    vertexViewByLabel.get(FSATransitionFunction.getCurrentState().getName()),
+                                    vertexViewByLabel.get(FSATransitionFunction.getFutureState().getName())
+                            );
+                    String label = transitions.get(pairVertex);
+                    if (label == null) {
+                        label = "";
+                    }
+                    transitions.put(pairVertex, label + ","
+                            + FSATransitionFunction.getSymbol());
+                }
+                for (Pair<VertexView, VertexView> pairVertex : transitions.keySet()) {
+                    addEdgeView(pairVertex.first, pairVertex.second,
+                            transitions.get(pairVertex));
                 }
                 FSATransitionFunctionsToCompAuto = null;
                 errorStateLabel = null;

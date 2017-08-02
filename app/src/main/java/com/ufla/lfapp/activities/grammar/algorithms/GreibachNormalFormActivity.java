@@ -63,7 +63,7 @@ public class GreibachNormalFormActivity extends HeaderGrammarActivity {
         gAux = gAux.getGrammarWithoutNoReach(gAux, new AcademicSupport());
         gAux = gAux.FNC(gAux, new AcademicSupport());
         AcademicSupportFNG academicSupportFNG = new AcademicSupportFNG();
-        Grammar gc = gAux.FNG(gAux, academic, academicSupportFNG);
+        Grammar gc = gAux.FNGTerra(gAux, academic, academicSupportFNG);
         academic.setResult(gc);
 
         //Coloca resultado na tela

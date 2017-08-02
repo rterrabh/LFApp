@@ -275,7 +275,7 @@ public class Grammar11Test {
                 "T -> aTbT | bTaT | abT | aTb | ab | baT | bTa | ba" };
         Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals,
                 expectedInitialSymbol, expectedRules);
-
+        assertEquals(expectedGrammar, newG);
         assertEquals(expectedGrammar.getRules(), newG.getRules());
         assertEquals(expectedGrammar.getInitialSymbol(), newG.getInitialSymbol());
         assertEquals(expectedGrammar.getTerminals(), newG.getTerminals());
@@ -309,12 +309,12 @@ public class Grammar11Test {
         Grammar expectedGrammar = new Grammar(expectedVariables, expectedTerminals,
                 expectedInitialSymbol, expectedRules);
 
-        System.out.println("Expected:");
-        System.out.println(expectedGrammar.toStringRulesMapLeftToRight());
-        System.out.println("Actual:");
-        System.out.println(newG.toStringRulesMapLeftToRight());
-
+        // Algoritmo MODIFICADO
         //assertEquals(expectedGrammar.getRules(), newG.getRules());
+        String initialSymbol = newG.getInitialSymbol();
+        for (Rule rule : newG.getRules()) {
+            assertTrue(rule.isFnc(initialSymbol));
+        }
         assertEquals(expectedGrammar.getInitialSymbol(), newG.getInitialSymbol());
         assertEquals(expectedGrammar.getTerminals(), newG.getTerminals());
         assertEquals(expectedGrammar.getVariables(), newG.getVariables());
@@ -323,7 +323,7 @@ public class Grammar11Test {
 
     @Test
     public void testFNG() {
-        Grammar newG = g.FNG(g, new AcademicSupport());
+        Grammar newG = g.FNGTerra(g, new AcademicSupport());
         boolean fng = true;
         for (com.ufla.lfapp.core.grammar.Rule element : newG.getRules()) {
             int counter = 0;
@@ -359,7 +359,7 @@ public class Grammar11Test {
 
         this.g = new Grammar(variables, terminals, initialSymbol, rules);
         this.g = g.FNC(g, new AcademicSupport());
-        Grammar newG = g.FNG(g, new AcademicSupport());
+        Grammar newG = g.FNGTerra(g, new AcademicSupport());
 
         boolean fng = true;
         for (com.ufla.lfapp.core.grammar.Rule element : newG.getRules()) {
@@ -455,6 +455,7 @@ public class Grammar11Test {
         matrixExpected[0][0] = new TreeSet<>(Arrays.asList(new String[]
                 {"U", "S'", "T7", "T1"}));
         Set<String> topVariables = matrix[0][0];
+
 
         //assertArrayEquals(matrixExpected, matrix);
         assertTrue(topVariables.contains(g.getInitialSymbol()));

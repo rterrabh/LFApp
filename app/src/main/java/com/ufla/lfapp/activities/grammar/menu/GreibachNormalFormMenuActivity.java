@@ -10,6 +10,7 @@ import com.ufla.lfapp.activities.grammar.algorithms.ChomskyNormalFormActivity;
 import com.ufla.lfapp.activities.grammar.algorithms.EmptyProductionActivity;
 import com.ufla.lfapp.activities.grammar.algorithms.GreibachNormalFormActivity;
 import com.ufla.lfapp.activities.grammar.HeaderGrammarActivity;
+import com.ufla.lfapp.activities.grammar.algorithms.GreibachNormalFormTerraActivity;
 import com.ufla.lfapp.activities.grammar.algorithms.NoReachSymbolsActivity;
 import com.ufla.lfapp.activities.grammar.algorithms.NoTermSymbolsActivity;
 import com.ufla.lfapp.activities.grammar.algorithms.RemoveInitialSymbolRecursiveActivity;
@@ -36,8 +37,8 @@ public class GreibachNormalFormMenuActivity extends HeaderGrammarActivity {
         setOnClickListenerGeneric(R.id.term, NoTermSymbolsActivity.class);
         setOnClickListenerGeneric(R.id.reach, NoReachSymbolsActivity.class);
         setOnClickListenerGeneric(R.id.chomskyNormalForm, ChomskyNormalFormActivity.class);
-        setOnClickListenerGeneric(R.id.removeRecursionLeft, RemoveLeftRecursionActivity.class);
-        setOnClickListenerGeneric(R.id.greibachNormalForm, GreibachNormalFormActivity.class);
+        //setOnClickListenerGeneric(R.id.removeRecursionLeft, RemoveLeftRecursionActivity.class);
+        setOnClickListenerGeneric(R.id.greibachNormalForm, GreibachNormalFormTerraActivity.class);
     }
 
     private void setOnClickListenerGeneric(int idView, final Class clazz) {

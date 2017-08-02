@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -28,8 +29,8 @@ public class AcademicSupport {
 
 
     public AcademicSupport() {
-        this("", false, new HashMap<Integer, String>(), "", "",
-                new HashSet<Rule>(), new HashSet<Rule>(),
+        this("", false, new LinkedHashMap<Integer, String>(), "", "",
+                new LinkedHashSet<Rule>(), new LinkedHashSet<Rule>(),
                 new ArrayList<Set<String>>(), new ArrayList<Set<String>>(),
                 new ArrayList<Set<String>>(), new Grammar());
     }
@@ -137,7 +138,7 @@ public class AcademicSupport {
     }
 
     private Set<String> getRuleLeftSides(final Grammar g) {
-        Set<String> lefSides = new HashSet<>();
+        Set<String> lefSides = new LinkedHashSet<>();
         for (Rule rule : g.getRules()) {
             lefSides.add(rule.getLeftSide());
         }
@@ -145,8 +146,6 @@ public class AcademicSupport {
     }
 
     public String formatResultGrammar(final Grammar g) {
-        List<String> listOfVariables = new ArrayList<>(getRuleLeftSides(g));
-        Collections.sort(listOfVariables);
         StringBuilder txtGrammar = new StringBuilder(g.getInitialSymbol()
                 + " →");
         for (Rule element : g.getRules(g.getInitialSymbol())) {
@@ -155,7 +154,7 @@ public class AcademicSupport {
         }
         txtGrammar.deleteCharAt(txtGrammar.length() - 1);
         txtGrammar.append("<br>");
-        for (String variable : listOfVariables) {
+        for (String variable : g.getVariables()) {
             if (variable.equals(g.getInitialSymbol())) {
                 continue;
             }
@@ -251,61 +250,15 @@ public class AcademicSupport {
     }
 
     public void insertOnFirstSet(Set<String>  currentSet, String decision) {
-        if (decision.equals("Lambda") || decision.equals("TERM")
-                || decision.equals("REACH")) {
-            if (!verifySet(firstSet, currentSet)) {
-                Set<String> aux = new LinkedHashSet<>();
-                aux.addAll(currentSet);
-                firstSet.add(aux);
-            }
-        } else if (decision.equals("Chain")) {
-            Set<String> aux = new LinkedHashSet<>();
-            aux.addAll(currentSet);
-           firstSet.add(aux);
-        }
+        firstSet.add(new LinkedHashSet<>(currentSet));
     }
 
     public void insertOnSecondSet(Set<String> currentSet, String decision) {
-        if (decision.equals("Lambda") || decision.equals("TERM")
-                || decision.equals("REACH")) {
-            if (!verifySet(secondSet, currentSet)) {
-                Set<String> aux = new LinkedHashSet<>();
-                aux.addAll(currentSet);
-                secondSet.add(aux);
-            }
-        } else if (decision.equals("Chain")) {
-            Set<String> aux = new LinkedHashSet<>();
-            aux.addAll(currentSet);
-            secondSet.add(aux);
-        }
+        secondSet.add(new LinkedHashSet<>(currentSet));
     }
 
     public void insertOnThirdSet(Set<String> currentSet, String decision) {
-        if (decision.equals("Lambda") || decision.equals("TERM")
-                || decision.equals("REACH")) {
-            if (!verifySet(thirdSet, currentSet)) {
-                Set<String> aux = new LinkedHashSet<>();
-                aux.addAll(currentSet);
-                thirdSet.add(aux);
-            }
-        } else if (decision.equals("Chain")) {
-            Set<String> aux = new LinkedHashSet<>();
-            aux.addAll(currentSet);
-            thirdSet.add(aux);
-        }
-    }
-
-    private boolean verifySet(List<Set<String>> setOfVariables,
-                              Set<String> currentSet) {
-        /*if (setOfVariables.size() != 0) {
-            for (int i = 0; i < setOfVariables.size(); i++) {
-                Set<String> auxSet = setOfVariables
-                .get(setOfVariables.size() - 1);
-                if (auxSet.equals(currentSet)) {
-                }
-            }
-        }*/
-        return false;
+        thirdSet.add(new LinkedHashSet<>(currentSet));
     }
 }
 

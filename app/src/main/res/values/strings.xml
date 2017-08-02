@@ -65,13 +65,13 @@
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <b>for</b> each production in A<sub><small>j</sub></small> <b>do</b><br/>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <b>if</b> A<sub><small>j</sub></small> → A<sub><small>i</sub></small>&#947; <b>then</b><br/>
+                    <b>if</b> A<sub><small>j</sub></small> → A<sub><small>i</sub></small>γ <b>then</b><br/>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        replace A<sub><small>j</sub></small> → A<sub><small>i</sub></small>&#947;<br/>
+                        replace A<sub><small>j</sub></small> → A<sub><small>i</sub></small>γ<br/>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        with A<sub><small>j</sub></small> → &#948;<sub><small>1</sub></small>&#947; | &#948;<sub><small>2</sub></small>&#947; | … | &#948;<sub><small>k</sub></small>&#947;<br/>
+                        with A<sub><small>j</sub></small> → δ<sub><small>1</sub></small>γ | δ<sub><small>2</sub></small>γ | … | δ<sub><small>k</sub></small>γ<br/>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        where A<sub><small>i</sub></small> → &#948;<sub><small>1</sub></small> | &#948;<sub><small>2</sub></small> | … | &#948;<sub><small>k</sub></small><br/>
+                        where A<sub><small>i</sub></small> → δ<sub><small>1</sub></small> | δ<sub><small>2</sub></small> | … | δ<sub><small>k</sub></small><br/>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         are all current productions of A<sub><small>i</sub></small><br/>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -85,21 +85,21 @@
     </string>
     <string name="removing_left_recursive_algol_p2">
         <![CDATA[
-        (1) Remove rules of type A<sub><small>j</sub></small> → A<sub><small>i</sub></small>&#947;, in the reverse order of that used to remove left recursion:<br/>
-        <b>PSEUDOCODE</b><br/>
+        (1) Remove rules of type A<sub><small>j</sub></small> → A<sub><small>i</sub></small>γ, in the reverse order of that used to remove left recursion:<br/>
+        <b>PSEUDOCODE</b><br/>&
         <b>for</b> i = n to 1 <b>do</b><br/>
             &nbsp;&nbsp;&nbsp;
             <b>for</b> j = i-1 to 1 <b>do</b><br/>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <b>for</b> each production in A<sub><small>j</sub></small> <b>do</b><br/>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <b>if</b> A<sub><small>j</sub></small> → A<sub><small>i</sub></small>&#947; <b>then</b><br/>
+                    <b>if</b> A<sub><small>j</sub></small> → A<sub><small>i</sub></small>γ <b>then</b><br/>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        replace A<sub><small>j</sub></small> → A<sub><small>i</sub></small>&#947;<br/>
+                        replace A<sub><small>j</sub></small> → A<sub><small>i</sub></small>γ<br/>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        with A<sub><small>j</sub></small> → &#948;<sub><small>1</sub></small>&#947; | &#948;<sub><small>2</sub></small>&#947; | … | &#948;<sub><small>k</sub></small>&#947;<br/>
+                        with A<sub><small>j</sub></small> → δ<sub><small>1</sub></small>γ | δ<sub><small>2</sub></small>γ | … | δ<sub><small>k</sub></small>γ<br/>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        where A<sub><small>i</sub></small> → &#948;<sub><small>1</sub></small> | &#948;<sub><small>2</sub></small> | … | &#948;<sub><small>k</sub></small><br/>
+                        where A<sub><small>i</sub></small> → δ<sub><small>1</sub></small> | δ<sub><small>2</sub></small> | … | δ<sub><small>k</sub></small><br/>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         are all current productions of A<sub><small>i</sub></small><br/>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -113,19 +113,95 @@
     </string>
     <string name="removing_left_recursive_algol_p3">
         <![CDATA[
-        (2) Remove rules of type Z<sub><small>i</sub></small> → V&#947; in the variables created by the left recursion removal algorithm, in order:<br/>
+        (2) Remove rules of type R<sub><small>i</sub></small> → Vγ in the variables created by the left recursion removal algorithm, in order:<br/>
         <b>PSEUDOCODE</b><br/>
         <b>for</b> i = 1 to n <b>do</b><br/>
             &nbsp;&nbsp;&nbsp;
             <b>for</b> each production in Z<sub><small>i</sub></small> <b>do</b><br/>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <b>if</b> Z<sub><small>i</sub></small> → V&#947; <b>then</b><br/>
+                <b>if</b> Z<sub><small>i</sub></small> → Vγ <b>then</b><br/>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    replace Z<sub><small>i</sub></small> → V&#947;<br/>
+                    replace Z<sub><small>i</sub></small> → Vγ<br/>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    with Z<sub><small>i</sub></small> → &#948;<sub><small>1</sub></small>&#947; | &#948;<sub><small>2</sub></small>&#947; | … | &#948;<sub><small>k</sub></small>&#947;<br/>
+                    with Z<sub><small>i</sub></small> → δ<sub><small>1</sub></small>γ | δ<sub><small>2</sub></small>γ | … | δ<sub><small>k</sub></small>γ<br/>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    where V → &#948;<sub><small>1</sub></small> | &#948;<sub><small>2</sub></small> | … | &#948;<sub><small>k</sub></small><br/>
+                    where V → δ<sub><small>1</sub></small> | δ<sub><small>2</sub></small> | … | δ<sub><small>k</sub></small><br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b>end</b><br/>
+            &nbsp;&nbsp;&nbsp;
+            <b>end</b><br/>
+        <b>end</b><br/>
+        ]]>
+    </string>
+    <string name="removing_left_recursive_terra_algol_p1">
+        <![CDATA[
+        (2) Remove recursions in order:<br/>
+        <b>PSEUDOCODE</b><br/>
+        A = Sorted set of variables (1º the start symbol and then in order of definition)<br/>
+        <b>for</b> i = 1 to n <b>do</b><br/>
+            &nbsp;&nbsp;&nbsp;
+            <b>for</b> each production in A<sub><small>i</sub></small> <b>do</b><br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b>if</b> A<sub><small>i</sub></small> → A<sub><small>j</sub></small>γ <b>and</b> j < i <b>then</b><br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    replace A<sub><small>i</sub></small> → A<sub><small>j</sub></small>γ<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    with A<sub><small>i</sub></small> → δ<sub><small>1</sub></small>γ | δ<sub><small>2</sub></small>γ | … | δ<sub><small>k</sub></small>γ<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    where A<sub><small>j</sub></small> → δ<sub><small>1</sub></small> | δ<sub><small>2</sub></small> | … | δ<sub><small>k</sub></small> are all current productions of A<sub><small>j</sub></small><br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b>end</b><br/>
+            &nbsp;&nbsp;&nbsp;
+            <b>end</b><br/>
+            <b>if</b> A<sub><small>i</sub></small> has direct left recursion <b>then</b><br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                eliminate recursion in A<sub><small>i</sub></small><br/>
+            &nbsp;&nbsp;&nbsp;
+            <b>end</b><br/>
+        <b>end</b><br/>
+        ]]>
+    </string>
+    <string name="removing_left_recursive_terra_algol_p2">
+        <![CDATA[
+        (3) Remove rules of type A<sub><small>i</sub></small> → A<sub><small>j</sub></small>γ, in the reverse order of that used to remove left recursion:<br/>
+        <b>PSEUDOCODE</b><br/>
+        A = Sorted set of variables (1º the start symbol and then in order of definition)<br/>
+        <b>for</b> i = n-1 to 1 <b>do</b><br/>
+            &nbsp;&nbsp;&nbsp;
+            <b>for</b> each production in A<sub><small>i</sub></small> <b>do</b><br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b>if</b> A<sub><small>i</sub></small> → A<sub><small>j</sub></small>γ <b>then</b><br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    replace A<sub><small>i</sub></small> → A<sub><small>j</sub></small>γ<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    with A<sub><small>i</sub></small> → δ<sub><small>1</sub></small>γ | δ<sub><small>2</sub></small>γ | … | δ<sub><small>k</sub></small>γ<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    where A<sub><small>j</sub></small> → δ<sub><small>1</sub></small> | δ<sub><small>2</sub></small> | … | δ<sub><small>k</sub></small> are all current productions of A<sub><small>j</sub></small><br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b>end</b><br/>
+            &nbsp;&nbsp;&nbsp;
+            <b>end</b><br/>
+        <b>end</b><br/>
+        ]]>
+    </string>
+    <string name="removing_left_recursive_terra_algol_p3">
+        <![CDATA[
+        (4) Remove rules of type R<sub><small>i</sub></small> → A<sub><small>j</sub></small>γ in the variables created by the left recursion removal algorithm, in order:<br/>
+        <b>PSEUDOCODE</b><br/>
+        A = Sorted set of variables (1º the start symbol and then in order of definition)<br/>
+        R = Set of variables created by the remove left recursion algorithm sorted by order of creation<br/>
+        n = size of set R<br/>
+        <b>for</b> i = 1 to n <b>do</b><br/>
+            &nbsp;&nbsp;&nbsp;
+            <b>for</b> each production in R<sub><small>i</sub></small> <b>do</b><br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b>if</b> R<sub><small>i</sub></small> → A<sub><small>j</sub></small>γ <b>then</b><br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    replace R<sub><small>i</sub></small> → A<sub><small>j</sub></small>γ<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    with R<sub><small>i</sub></small> → δ<sub><small>1</sub></small>γ | δ<sub><small>2</sub></small>γ | … | δ<sub><small>k</sub></small>γ<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    where A<sub><small>j</sub></small> → δ<sub><small>1</sub></small> | δ<sub><small>2</sub></small> | … | δ<sub><small>k</sub></small> are all current productions of A<sub><small>j</sub></small><br/>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <b>end</b><br/>
             &nbsp;&nbsp;&nbsp;
@@ -427,7 +503,11 @@
     <string name="machine_to_string_parameters">States, Alphabet, Final states, Start state</string>
     <string name="no_convert_this_step"><![CDATA[There are no transformations to be made at this stage!<br/>]]></string>
     <string name="remove_recursion_acd"><![CDATA[Remove direct left recursion:<br/>]]></string>
-    <string name="replace_rues_acd"><![CDATA[Replace rules (A<sub>i</sub> → A<sub>j</sub>&#947;):<br/>]]></string>
+    <string name="replace_rues_acd"><![CDATA[Replace rules (A<sub>i</sub> → A<sub>j</sub>γ):<br/>]]></string>
+    <string name="remove_indirect_left_recursion_terra">
+        <![CDATA[
+        Remove indirect left recursion (replace rules A<sub>i</sub> → A<sub>j</sub>γ):<br/>]]>
+    </string>
     <string name="new_grammar"><![CDATA[New grammar:<br/>]]></string>
     <string name="initial_symbol_not_recursive">
         The start symbol should be limited to start derivations, and can not be a recursive variable.
@@ -564,8 +644,8 @@
     <string name="cyk_comments">The grammar inserted is not in Chomsky Normal Form. Therefore, a transformation was necessary.</string>
     <string name="no_derivation_for_the_word">No derivations were found for the word.</string>
     <string name="derivation">Derivation:</string>
-    <string name="two_derivations_1">Two derivations were found for the word, so this grammar is ambiguous. Derivation 1:</string>
-    <string name="two_derivations_2">Derivation 2:</string>
+    <string name="two_derivations_1">Two derivations were found for the word, so this grammar is ambiguous.\nDerivation 1:\n</string>
+    <string name="two_derivations_2">\nDerivation 2:\n</string>
     <string name="nullable_algol">
         <![CDATA[
         NULL = {A | {A → λ} ∈ P}<br>
@@ -575,12 +655,10 @@
             &nbsp;&nbsp;&nbsp;&nbsp;
             <b>for each</b> A ∈ V <b>do</b><br>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <b>if</b> A → w e w ∈ PREV<sup>∗</sup> <b>do</b><br>
+                <b>if</b> A → w and w ∈ PREV<sup>∗</sup> <b>do</b><br>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     NULL = NULL ∪ {A}<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    NULL = NULL ∪ {A}<br>
-                    <b>until</b> NULL == PREV
+        <b>until</b> NULL == PREV
         ]]>
     </string>
     <string name="removal_empty_prod_comments">
@@ -686,7 +764,7 @@
     <string name="lfapp_cnf">LFApp - CNF</string>
     <string name="lfapp_left_recursion">LFApp - Left Recursion</string>
     <string name="lfapp_gnf">LFApp - GNF</string>
-    <string name="lfapp_gnf_8_8">LFApp - GNF - 8/8</string>
+    <string name="lfapp_gnf_8_8">LFApp - GNF - 7/7</string>
     <string name="lfapp_history">LFApp - History</string>
     <string name="compl_automaton">Complete Automaton</string>
     <string name="processar_palavra">word_process</string>

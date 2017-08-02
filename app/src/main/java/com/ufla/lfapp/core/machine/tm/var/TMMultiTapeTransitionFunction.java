@@ -153,7 +153,7 @@ public class TMMultiTapeTransitionFunction
                 .append(", ")
                 .append(Arrays.deepToString(getWriteSymbols()))
                 .append(", ")
-                .append(Arrays.deepToString(getWriteSymbols()))
+                .append(Arrays.deepToString(getMoves()))
                 .append(']')
                 .toString();
     }

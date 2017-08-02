@@ -33,7 +33,7 @@ public class ChomskyNormalFormActivity extends HeaderGrammarActivity {
                 break;
             case GREIBACH_NORMAL_FORM:
                 setTitle(getResources().getString(R.string.lfapp_gnf_title)
-                        + " - 6/8");
+                        + " - 6/7");
                 break;
             case REMOVE_LEFT_RECURSION:
                 setTitle(getResources().getString(R.string.lfapp_left_recursion_title)
@@ -70,8 +70,10 @@ public class ChomskyNormalFormActivity extends HeaderGrammarActivity {
                 onBackPressed();
                 break;
             case REMOVE_LEFT_RECURSION:
-            case GREIBACH_NORMAL_FORM:
                 changeActivity(this, RemoveLeftRecursionActivity.class);
+                break;
+            case GREIBACH_NORMAL_FORM:
+                changeActivity(this, GreibachNormalFormTerraActivity.class);
                 break;
         }
     }

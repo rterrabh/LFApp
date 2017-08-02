@@ -315,7 +315,7 @@ public class EdgeView extends View {
         String currentState = vertices.first.getLabel();
         String futureState = vertices.second.getLabel();
         Set<FSATransitionFunction> FSATransitionFunctions = new HashSet<>();
-        for (String symbol : label.split("[ ,]")) {
+        for (String symbol : label.split("[ ,\n]")) {
             if (symbol.length() > 0) {
                 FSATransitionFunctions.add(new FSATransitionFunction(new State(currentState), symbol,
                         new State(futureState)));

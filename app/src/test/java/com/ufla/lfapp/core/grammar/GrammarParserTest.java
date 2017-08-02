@@ -1,8 +1,11 @@
 package com.ufla.lfapp.core.grammar;
 
 
+import com.ufla.lfapp.utils.ResourcesContext;
+
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertFalse;
@@ -17,6 +20,37 @@ public class GrammarParserTest {
     @Test
     public void testPatternRuleElement01() {
         assertTrue(pRuleElementRegex.matcher("A").matches());
+    }
+
+    static {
+        ResourcesContext.isTest = true;
+    }
+
+    @Test
+    public void test() {
+        String grammar = "S -> aABC | a | S\n" +
+                "C -> cC | c | A | D\n" +
+                "B -> bcB | bc | λ\n" +
+                "A -> aA | a | B\n" +
+                "D -> EC\n" +
+                "E -> D\n" +
+                "F -> aC | bA";
+        Grammar grammar1 = new Grammar(grammar);
+        Grammar grammar2 = grammar1.getGrammarWithInitialSymbolNotRecursive
+                (grammar1, new AcademicSupport());
+        Grammar grammar3 = grammar2.getGrammarEssentiallyNoncontracting
+                (grammar2, new AcademicSupport());
+        Grammar grammar4 = grammar3.getGrammarWithoutChainRules
+                (grammar3, new AcademicSupport());
+        Grammar grammar5 = grammar4.getGrammarWithoutNoTerm
+                (grammar4, new AcademicSupport());
+        Grammar grammar6 = grammar5.getGrammarWithoutNoReach
+                (grammar5, new AcademicSupport());
+        Grammar grammar7 = grammar6.FNC
+                (grammar6, new AcademicSupport());
+
+
+
     }
 
     @Test
@@ -462,6 +496,16 @@ public class GrammarParserTest {
                         "B -> AB | b\n" +
                         "C -> AC | c")
                 .matches());
+    }
+
+    @Test
+    public void testExtractVar() {
+        String grammar = "S -> AT | AB\n" +
+                "T -> XB\n" +
+                "X -> AT | AB\n" +
+                "A -> a\n" +
+                "B -> b";
+
     }
 
     @Test

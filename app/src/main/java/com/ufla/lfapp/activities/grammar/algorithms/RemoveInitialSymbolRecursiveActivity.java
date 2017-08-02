@@ -39,7 +39,7 @@ public class RemoveInitialSymbolRecursiveActivity extends HeaderGrammarActivity 
                 break;
             case GREIBACH_NORMAL_FORM:
                 setTitle(getResources().getString(R.string.lfapp_gnf_title)
-                        + " - 1/8");
+                        + " - 1/7");
                 break;
             case REMOVE_LEFT_RECURSION:
                 setTitle(getResources().getString(R.string.lfapp_left_recursion_title)
@@ -136,14 +136,8 @@ public class RemoveInitialSymbolRecursiveActivity extends HeaderGrammarActivity 
         TextView left = new TextView(this);
         TextView arrow = new TextView(this);*/
         ArrayList<String> variablesOrdenated = new ArrayList<>(g.getVariables());
-        Collections.sort(variablesOrdenated);
-        variablesOrdenated.remove(oldGrammar.getInitialSymbol());
-        if (!g.getInitialSymbol().equals(oldGrammar.getInitialSymbol())) {
-            addVarOnTable(table, academic, g, g.getInitialSymbol());
-            variablesOrdenated.remove(g.getInitialSymbol());
-        }
-        addVarOnTable(table, academic, g, oldGrammar.getInitialSymbol());
-        variablesOrdenated.remove(oldGrammar.getInitialSymbol());
+        addVarOnTable(table, academic, g, g.getInitialSymbol());
+        variablesOrdenated.remove(g.getInitialSymbol());
         for (String var : variablesOrdenated) {
             addVarOnTable(table, academic, g, var);
         }

@@ -127,7 +127,7 @@ public class Grammar01Test {
 
     @Test
     public void testFNG() {
-        Grammar newG = g.FNG(g, new AcademicSupport());
+        Grammar newG = g.FNGTerra(g, new AcademicSupport());
         boolean fng = true;
         for (Rule element : newG.getRules()) {
             int counter = 0;
@@ -145,7 +145,6 @@ public class Grammar01Test {
                 }
             }
         }
-
         assertEquals(true, fng);
         assertTrue(newG.isFNG());
     }
@@ -161,13 +160,11 @@ public class Grammar01Test {
                 "B -> AB | CB | b",
                 "C -> CC | c | BC" };
         Grammar grammar = new Grammar(variables, terminals, initialSymbol, rules);
-        Grammar newG = g.FNG(grammar, new AcademicSupport());
-        System.out.println(newG.toString());
+        Grammar newG = grammar.FNGTerra(grammar, new AcademicSupport());
         String str[] = new String[] {"c", "bBC", "cBC", "bR1BC", "cR1BC", "CBC", "bC", "cR2",
                 "bBCR2", "cBCR2", "bR1BCR2", "cR1BCR2", "CBCR2", "bCR2"};
         Arrays.sort(str);
 
-        System.out.println(Arrays.toString(str).replace(",", " |"));
         boolean fng = true;
         for (Rule element : newG.getRules()) {
             int counter = 0;

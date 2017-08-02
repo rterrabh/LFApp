@@ -1,6 +1,7 @@
 package com.ufla.lfapp.core.grammar;
 
 import com.ufla.lfapp.R;
+import com.ufla.lfapp.utils.HtmlTags;
 import com.ufla.lfapp.utils.ResourcesContext;
 
 import java.util.ArrayList;
@@ -11,6 +12,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import static com.ufla.lfapp.core.grammar.Rule.isDigitOrApostrophe;
+
 
 public class GrammarParser {
 
@@ -20,14 +23,15 @@ public class GrammarParser {
     // \p{Upper}    ->  An upper-case alphabetic character:[A-Z]
     // \p{Lower}    ->  An upper-case alphabetic character:[A-Z]
     public static final String LAMBDA = "λ";
+    public static final String ARROW_REGEX = "((->)|(→))";
     public static final String VARIABLE_REGEX = "(\\p{Upper}\\d*'*)";
     public static final String TERMINAL_REGEX = "\\p{Lower}";
     public static final String RULE_ELEMENT_LEFT_REGEX = String.format("(%s|%s)+",
             TERMINAL_REGEX, VARIABLE_REGEX);
     public static final String RULE_ELEMENT_RIGHT_REGEX = String.format("(%s|%s)",
             RULE_ELEMENT_LEFT_REGEX, LAMBDA);
-    public static final String RULE_REGEX = String.format("(\\s*%s\\s*->\\s*%s(\\s*\\|\\s*%s)*)",
-            RULE_ELEMENT_LEFT_REGEX, RULE_ELEMENT_RIGHT_REGEX, RULE_ELEMENT_RIGHT_REGEX);
+    public static final String RULE_REGEX = String.format("(\\s*%s\\s*%s\\s*%s(\\s*\\|\\s*%s)*)",
+            RULE_ELEMENT_LEFT_REGEX, ARROW_REGEX, RULE_ELEMENT_RIGHT_REGEX, RULE_ELEMENT_RIGHT_REGEX);
     public static final String GRAMMAR_REGEX = String.format("%s+", RULE_REGEX);
 
     private GrammarParser() {
@@ -42,19 +46,35 @@ public class GrammarParser {
      */
     public static Set<String> extractVariablesFromFull(String txt) {
         Set<String> variables = new LinkedHashSet<>();
-        for (int i = 0; i < txt.length(); ) {
-            if (Character.isUpperCase(txt.charAt(i))) {
-                int k = i+1;
-                while (k != txt.length() && (Character.isDigit(txt.charAt(k)) ||
-                        txt.charAt(k) == '\'')) {
-                    k++;
+        for (String line : txt.split("\n")) {
+            String rulesParams[] = line.trim().split(ARROW_REGEX);
+            String leftSideRule = rulesParams[0].trim();
+            final int N = leftSideRule.length();
+            for (int i = 0; i < N; i++) {
+                if (Character.isUpperCase(leftSideRule.charAt(i))) {
+                    int k = i+1;
+                    while (k < N && (Character.isDigit(leftSideRule.charAt(k)) ||
+                            leftSideRule.charAt(k) == '\'')) {
+                        k++;
+                    }
+                    variables.add(leftSideRule.substring(i, k));
+                    i = k-1;
                 }
-                variables.add(txt.substring(i, k));
-                i = k;
-            } else {
-                i++;
             }
         }
+//        for (int i = 0; i < txt.length(); ) {
+//            if (Character.isUpperCase(txt.charAt(i))) {
+//                int k = i+1;
+//                while (k != txt.length() && (Character.isDigit(txt.charAt(k)) ||
+//                        txt.charAt(k) == '\'')) {
+//                    k++;
+//                }
+//                variables.add(txt.substring(i, k));
+//                i = k;
+//            } else {
+//                i++;
+//            }
+//        }
         return variables;
     }
 
@@ -85,12 +105,7 @@ public class GrammarParser {
         Rule rule = new Rule();
         String[] auxRule;
         for (String x : txt.trim().split("\n")) {
-            if (txt.contains("->")) {
-                auxRule = x.split("->");
-            } else {
-                auxRule = x.split("→");
-            }
-
+            auxRule = x.split(ARROW_REGEX);
             rule.setLeftSide(auxRule[0].trim());
             //ArrayIndexOutOfBoundsException
             String[] rulesOnRightSide = auxRule[1].split("[|]");
@@ -141,7 +156,7 @@ public class GrammarParser {
 
 
     public static boolean inputValidate(final String txtGrammar, final StringBuilder reason) {
-        Set<String> setOfVariables = new HashSet<>();
+        Set<String> setOfVariables = new LinkedHashSet<>();
 
         StringTokenizer token1 = new StringTokenizer(txtGrammar, "\n");
         while (token1.hasMoreTokens()) {
@@ -321,7 +336,7 @@ public class GrammarParser {
 
 
     private static Set<Set<Integer>> combinationsP(List<Integer> groupSize) {
-        Set<Set<Integer>> combinations = new HashSet<>();
+        Set<Set<Integer>> combinations = new LinkedHashSet<>();
         for (int i = 1; i <= groupSize.size(); i++) {
             combinations.addAll(combinationsIntern(groupSize, i));
         }
@@ -330,11 +345,11 @@ public class GrammarParser {
 
     private static Set<Set<Integer>> combinationsIntern(List<Integer> groupSize, int k) {
 
-        Set<Set<Integer>> allCombos = new HashSet<>();
+        Set<Set<Integer>> allCombos = new LinkedHashSet<>();
         // base cases for recursion
         if (k == 0) {
             // There is only one combination of size 0, the empty team.
-            allCombos.add(new HashSet<Integer>());
+            allCombos.add(new LinkedHashSet<Integer>());
             return allCombos;
         }
         if (k > groupSize.size()) {
@@ -357,6 +372,7 @@ public class GrammarParser {
         return allCombos;
     }
 
+    // NOT WORKING GENERAL
     public static String combination(String rightSide, Set<String> nullableVariables) {
         List<Integer> indiceCombinations = new ArrayList<>();
         for (int j = 0; j < rightSide.length(); j++) {
@@ -389,6 +405,7 @@ public class GrammarParser {
     }
 
 
+    // Problema nessa implementação
     /**
      * Verifica a existência de variáveis no conjunto Prev
      *
@@ -415,7 +432,7 @@ public class GrammarParser {
      * @return
      */
     public static Set<String> chainMinusPrev(Set<String> chain, Set<String> prev) {
-        Set<String> aux = new HashSet<>();
+        Set<String> aux = new LinkedHashSet<>();
         for (String element : chain) {
             if (!prev.contains(element)) {
                 aux.add(element);
@@ -440,8 +457,16 @@ public class GrammarParser {
                 boolean insertOnNewRule = true;
                 for (int j = 0; j < element.getRightSide().length() && insertOnNewRule; j++) {
                     if (Character.isUpperCase(element.getRightSide().charAt(j))) {
-                        insertOnNewRule = prev.contains(Character.toString(element
-                                .getRightSide().charAt(j)));
+                        int index = 1;
+                        String rightSide = element.getRightSide();
+                        int N = rightSide.length();
+                        while (index+j != N &&
+                                isDigitOrApostrophe(rightSide.charAt(index+j)) ) {
+                            index++;
+                        }
+                        String var = rightSide.substring(j, index+j);
+                        insertOnNewRule = prev.contains(var);
+                        j += index-1;
                     } else if (Character.isLowerCase(element.getRightSide().charAt(j))) {
                         insertOnNewRule = true;
                     } else if (element.getRightSide().charAt(j) == '.') {
@@ -496,7 +521,7 @@ public class GrammarParser {
      * @return
      */
     public static Set<String> reachMinusPrev(Set<String> reach, Set<String> prev) {
-        Set<String> aux = new HashSet<>();
+        Set<String> aux = new LinkedHashSet<>();
         for (String element : reach) {
             if (!prev.contains(element)) {
                 aux.add(element);
@@ -505,15 +530,46 @@ public class GrammarParser {
         return aux;
     }
 
+    public static String varToHtml(String var) {
+        StringBuilder varHtml = new StringBuilder();
+        boolean lastIsDigit = false;
+        boolean actualIsDigit;
+        int n = var.length();
+        for (int i = 0; i < n; i++) {
+            char c = var.charAt(i);
+            actualIsDigit = Character.isDigit(c);
+            if (actualIsDigit && !lastIsDigit) {
+                varHtml.append(String.format("%s%s", HtmlTags.SUB_OPEN, HtmlTags.SMALL_OPEN));
+                lastIsDigit = true;
+            } else if (!actualIsDigit && lastIsDigit) {
+                varHtml.append(String.format("%s%s", HtmlTags.SMALL_CLOSE, HtmlTags.SUB_CLOSE));
+                lastIsDigit = false;
+            }
+            varHtml.append(c);
+        }
+        if (lastIsDigit) {
+            varHtml.append(String.format("%s%s", HtmlTags.SMALL_CLOSE, HtmlTags.SUB_CLOSE));
+        }
+        return varHtml.toString();
+    }
+
     /**
      * @param reach
      * @param rightSide
      * @return
      */
     public static Set<String> variablesInW(Set<String> reach, String rightSide) {
-        for (int i = 0; i < rightSide.length(); i++) {
+        int N = rightSide.length();
+        for (int i = 0; i < N; i++) {
             if (Character.isUpperCase(rightSide.charAt(i))) {
-                reach.add(Character.toString(rightSide.charAt(i)));
+                int index = 1;
+                while (index+i != N &&
+                        isDigitOrApostrophe(rightSide.charAt(index+i)) ) {
+                    index++;
+                }
+                String var = rightSide.substring(i, index+i);
+                i += index-1;
+                reach.add(var);
             }
         }
         return reach;

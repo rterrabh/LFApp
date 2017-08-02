@@ -1,9 +1,13 @@
 package com.ufla.lfapp.core.grammar;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.Log;
 
 import com.ufla.lfapp.R;
+import com.ufla.lfapp.utils.HtmlTags;
 import com.ufla.lfapp.utils.Symbols;
 
 import java.util.ArrayList;
@@ -66,7 +70,7 @@ public class Grammar implements Cloneable {
         Rule r = new Rule();
         String[] auxRule;
         for (String x : rules) {
-            auxRule = x.split("->");
+            auxRule = x.split(GrammarParser.ARROW_REGEX);
             r.setLeftSide(auxRule[0].trim());
             String[] rulesOnTheRightSide = auxRule[1].split("[|]");
             for (String production : rulesOnTheRightSide) {
@@ -81,7 +85,7 @@ public class Grammar implements Cloneable {
 
     public Grammar(String txt) {
         this.variables = GrammarParser.extractVariablesFromFull(txt);
-        this.terminals = GrammarParser.extractTerminalsFromFull(txt);
+        setTerminals(GrammarParser.extractTerminalsFromFull(txt));
         this.rules = GrammarParser.extractRulesFromFull(txt);
         setInitialSymbol(GrammarParser.extractInitialSymbolFromFull(txt));
     }
@@ -108,11 +112,22 @@ public class Grammar implements Cloneable {
     }
 
     public void setTerminals(Set<String> set) {
+        if (set.contains(Symbols.LAMBDA)) {
+            set.remove(Symbols.LAMBDA);
+        }
         this.terminals = new LinkedHashSet<>(set);
     }
 
-    public void setInitialSymbol(String string) {
-        this.initialSymbol = string;
+    public void setInitialSymbol(String initialSymbol) {
+        if (initialSymbol != null
+                && this.variables.contains(initialSymbol)
+                && !initialSymbol.equals(this.initialSymbol)) {
+            this.initialSymbol = initialSymbol;
+            Set<String> newVariablesOrder = new LinkedHashSet<>();
+            newVariablesOrder.add(initialSymbol);
+            newVariablesOrder.addAll(this.variables);
+            this.variables = newVariablesOrder;
+        }
     }
 
     public void setRules(Set<Rule> set) {
@@ -223,7 +238,7 @@ public class Grammar implements Cloneable {
             if (rule.getRightSide().contains(initialSymbol)) {
                 insert = true;
                 problems.put(counter,  recursionFound + ": " + rule.getLeftSide() +
-                        " -> " + rule.getRightSide() + "\n");
+                        " → " + rule.getRightSide() + "\n");
                 counter++;
             }
         }
@@ -236,36 +251,36 @@ public class Grammar implements Cloneable {
                 ).split("#");
         if (insert) {
             situation = true;
-
+            String newInitialSymbol = initialSymbol + "'";
             solutionDescription
                     .append(parameters[0])
                     .append("G = (V, Σ, P, ")
-                    .append(gc.getInitialSymbol())
+                    .append(initialSymbol)
                     .append(')')
                     .append(parameters[1])
-                    .append(gc.getInitialSymbol())
+                    .append(initialSymbol)
                     .append(parameters[2])
                     .append("G' = (V ∪ {")
-                    .append(gc.getInitialSymbol())
-                    .append("' }, Σ, P ∪ {")
-                    .append(gc.getInitialSymbol())
-                    .append("' → ")
-                    .append(gc.getInitialSymbol())
+                    .append(newInitialSymbol)
+                    .append("}, Σ, P ∪ {")
+                    .append(newInitialSymbol)
+                    .append(" → ")
+                    .append(initialSymbol)
                     .append("}, ")
-                    .append(gc.getInitialSymbol())
-                    .append("' ),")
+                    .append(newInitialSymbol)
+                    .append("),")
                     .append(parameters[3])
-                    .append(gc.getInitialSymbol())
+                    .append(initialSymbol)
                     .append(parameters[4])
                     .append("</p><br>");
-            Rule r = new Rule(initialSymbol + "'", initialSymbol);
+            gc.insertVariable(newInitialSymbol);
+            gc.setInitialSymbol(newInitialSymbol);
+            Rule r = new Rule(newInitialSymbol, initialSymbol);
             gc.insertRule(r);
-            gc.setInitialSymbol(initialSymbol + "'");
             academicSupport.insertNewRule(r);
         } else {
             situation = false;
         }
-        gc.insertVariable(gc.getInitialSymbol());
 
         //seta feedback acadêmico no objeto
         academicSupport.setComments(comments);
@@ -326,7 +341,7 @@ public class Grammar implements Cloneable {
             academicSupport.insertOnSecondSet(prev, "Lambda");
         } while (!prev.equals(nullable));
 
-        Set<Rule> newSetOfRules = new LinkedHashSet<>();
+        Set<Rule> newSetOfRules = new LinkedHashSet<>(setOfRules);
         for (Rule element : setOfRules) {
             String aux = GrammarParser.combination(element.getRightSide(), nullable);
             aux = aux.substring(0, aux.length() - 3);
@@ -402,6 +417,47 @@ public class Grammar implements Cloneable {
 
     public boolean existRule(Rule rule) {
         return rules.contains(rule);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Grammar)) return false;
+
+        Grammar grammar = (Grammar) o;
+
+        if (variables == null
+                || terminals == null
+                || initialSymbol == null
+                || rules == null
+                || !initialSymbol.equals(grammar.initialSymbol)
+                || !variables.containsAll(grammar.variables)
+                || !grammar.variables.containsAll(variables)
+                || !terminals.containsAll(grammar.terminals)
+                || !grammar.terminals.containsAll(terminals)
+                || !rules.containsAll(grammar.rules)
+                || !grammar.rules.containsAll(rules)) {
+            return false;
+        }
+        return true;
+
+    }
+
+    private int sumHashCode(Set<? extends  Object> set) {
+        int sumHash = 0;
+        for (Object o : set) {
+            sumHash += o.hashCode();
+        }
+        return sumHash;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = variables != null ? sumHashCode(variables) : 0;
+        result = 31 * result + (terminals != null ? sumHashCode(terminals) : 0);
+        result = 31 * result + (initialSymbol != null ? initialSymbol.hashCode() : 0);
+        result = 31 * result + (rules != null ? sumHashCode(rules) : 0);
+        return result;
     }
 
     public Set<Rule> getRulesWithFirstProduces(String variable, String symbol,
@@ -495,59 +551,106 @@ public class Grammar implements Cloneable {
         Set<String> prev = new LinkedHashSet<>();
         Grammar gc = (Grammar) g.clone();
 
-        // preenche conjunto term com as variáveis que são terminais
-        for (Rule element : gc.getRules()) {
-            if (element.getRightSide().length() == 1 && (!element.getRightSide().equals("|")) &&
-                    (Character.isLowerCase(element.getRightSide().charAt(0)) ||
-                            element.getRightSide().charAt(0) == '.')) {
-                if (!term.contains(element.getLeftSide())) {
-                    term.add(element.getLeftSide());
+        // preenche conjunto term com as variáveis que geram terminais
+        for (String var : gc.variables) {
+            for (Rule rule : gc.getRules(var)) {
+                String rightSide = rule.getRightSide();
+                int N = rightSide.length();
+                boolean isTerm = true;
+                for (int i = 0; i < N; i++) {
+                    if (!Character.isLowerCase(rightSide.charAt(i))) {
+                        isTerm = false;
+                        break;
+                    }
+                }
+                if (isTerm) {
+                    term.add(rule.getLeftSide());
+                    break;
                 }
             }
         }
+//        for (Rule element : gc.getRules()) {
+//            if (element.getRightSide().length() == 1 &&
+//                    (Character.isLowerCase(element.getRightSide().charAt(0)))) {
+//                if (!term.contains(element.getLeftSide())) {
+//                    term.add(element.getLeftSide());
+//                }
+//            }
+//        }
 
         academicSupport.insertOnFirstSet(term, "TERM");
         academicSupport.insertOnSecondSet(prev, "TERM");
         do {
             prev.addAll(term);
-            for (Rule element : gc.getRules()) {
-                boolean insertOnTerm = true;
-                for (int j = 0; j < element.getRightSide().length() && insertOnTerm; j++) {
-                    if (Character.isLowerCase(element.getRightSide().charAt(j)) &&
-                            !gc.getTerminals().contains(Character.toString(element.getRightSide().charAt(j)))) {
-                        insertOnTerm = false;
-                    } else if (Character.isUpperCase(element.getRightSide().charAt(j))
-                            && !prev.contains(Character.toString(element.getRightSide().charAt(j)))) {
-                        insertOnTerm = false;
-                    }
+            for (String var : gc.variables) {
+                if (term.contains(var)) {
+                    continue;
                 }
-                if (insertOnTerm) {
-                    if (!term.contains(element.getLeftSide())) {
-                        term.add(element.getLeftSide());
-
+                boolean varAdd = false;
+                for (Rule rule : gc.getRules(var)) {
+                    boolean isTerm = true;
+                    for (String symbol : rule.getSymbolsOfRightSide()) {
+                        if (!Character.isLowerCase(symbol.charAt(0)) && !term.contains(symbol)) {
+                            isTerm = false;
+                            break;
+                        }
+                    }
+                    if (isTerm) {
+                        term.add(var);
+                        break;
                     }
                 }
             }
+//            for (Rule element : gc.getRules()) {
+//                boolean insertOnTerm = true;
+//                for (int j = 0; j < element.getRightSide().length() && insertOnTerm; j++) {
+//                    if (Character.isLowerCase(element.getRightSide().charAt(j)) &&
+//                            !gc.getTerminals().contains(Character.toString(element.getRightSide().charAt(j)))) {
+//                        insertOnTerm = false;
+//                    } else if (Character.isUpperCase(element.getRightSide().charAt(j))
+//                            && !prev.contains(Character.toString(element.getRightSide().charAt(j)))) {
+//                        insertOnTerm = false;
+//                    }
+//                }
+//                if (insertOnTerm) {
+//                    if (!term.contains(element.getLeftSide())) {
+//                        term.add(element.getLeftSide());
+//
+//                    }
+//                }
+//            }
             academicSupport.insertOnFirstSet(term, "TERM");
             academicSupport.insertOnSecondSet(prev, "TERM");
         } while (!term.equals(prev));
-
         if (term.size() != gc.getVariables().size()) {
             academicSupport.setSituation(true);
         } else {
             academicSupport.setSituation(false);
         }
 
-        Grammar aux = new Grammar();
-        aux.setVariables(prev);
-        aux.setRules(GrammarParser.updateRules(prev, gc, academicSupport));
-        aux.setTerminals(GrammarParser.updateTerminals(aux));
-        aux.removeTerminal(Grammar.LAMBDA);
-        gc.setVariables(aux.getVariables());
-        gc.setTerminals(aux.getTerminals());
-        gc.setRules(aux.getRules());
-
+        gc.variables.retainAll(prev);
+        gc.setRules(GrammarParser.updateRules(prev, gc, academicSupport));
+        gc.updateTerminals();
         return gc;
+    }
+
+    private boolean termInUse(String term) {
+        for (Rule rule : rules) {
+            if (rule.useTerm(term)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void updateTerminals() {
+        Set<String> noMoreTerms = new HashSet<>();
+        for (String term : terminals) {
+            if (!termInUse(term)) {
+                noMoreTerms.add(term);
+            }
+        }
+        terminals.removeAll(noMoreTerms);
     }
 
     /**
@@ -579,16 +682,10 @@ public class Grammar implements Cloneable {
             academicSupport.insertOnSecondSet(prev, "REACH");
             academicSupport.insertOnThirdSet(newSet, "REACH");
         } while (!reach.equals(prev));
-        Grammar aux = new Grammar();
-        aux.setVariables(prev);
-        aux.setInitialSymbol(gc.getInitialSymbol());
-        aux.setRules(GrammarParser.updateRules(prev, gc, academicSupport));
-        aux.setTerminals(GrammarParser.updateTerminals(aux));
-        aux.removeTerminal(Grammar.LAMBDA);
-        gc.setVariables(aux.getVariables());
-        gc.setTerminals(aux.getTerminals());
-        gc.setRules(aux.getRules());
-        return aux;
+        gc.variables.retainAll(prev);
+        gc.setRules(GrammarParser.updateRules(prev, gc, academicSupport));
+        gc.updateTerminals();
+        return gc;
     }
 
 
@@ -641,19 +738,12 @@ public class Grammar implements Cloneable {
 
     public Set<Rule> getRulesWithInitialSymbolFirst() {
         Set<Rule> rulesInit = new LinkedHashSet<>();
-        if (initialSymbol == null) {
-            return rules;
-        }
-        for (Rule rule : getRules()) {
-            if (rule.getLeftSide().equals(initialSymbol)) {
+        for (String var : variables) {
+            for(Rule rule : getRules(var)) {
                 rulesInit.add(rule);
             }
         }
-        for (Rule rule : getRules()) {
-            if (!rule.getLeftSide().equals(initialSymbol)) {
-                rulesInit.add(rule);
-            }
-        }
+        rules = rulesInit;
         return rulesInit;
     }
 
@@ -679,6 +769,15 @@ public class Grammar implements Cloneable {
             int contChomskyVariables = 1;
             Map<String, Rule> rulesProdOOneTerm = gc.rulesProducesOnlyOneTerminal();
             // Rules bigger than 1 symbol and have terminals
+            for (String var : gc.variables) {
+                for (Rule rule : gc.getRules(var)) {
+                    if (rule.getNumberOfSymbolsInRightSide() > 1) {
+                        if (rule.containsTerminalOnRightSide()) {
+
+                        }
+                    }
+                }
+            }
             for (Rule rule : gc.rules) {
                 if (rule.getNumberOfSymbolsInRightSide() > 1 && rule.containsTerminalOnRightSide()) {
                     deleteRules.add(rule);
@@ -727,6 +826,41 @@ public class Grammar implements Cloneable {
                     deleteRules.add(rule);
                     academic.insertIrregularRule(rule);
                     List<String> listRightSide = rule.getListOfSymbolsOnRightSide();
+                    int N = listRightSide.size() - 2;
+                    String leftSide = rule.getLeftSide();
+                    String rightSide;
+                    Rule newRule;
+                    for (int i = 1; i < N; i++) {
+                        String nextLeftSide = CHOMSKY_PREFIX + contChomskyVariables;
+                        contChomskyVariables++;
+                        gc.variables.add(nextLeftSide);
+                        rightSide = listRightSide.get(i-1) + nextLeftSide;
+                        newRule = new Rule(leftSide, rightSide);
+                        newSetOfRules.add(newRule);
+                        academic.insertNewRule(newRule);
+                        leftSide = nextLeftSide;
+                    }
+                    rightSide = listRightSide.get(N) + listRightSide.get(N+1);
+                    newRule = rulesProdOOneRightSide.get(rightSide);
+                    Rule newRule1;
+                    if (newRule == null) {
+                        String nextLeftSide = CHOMSKY_PREFIX + contChomskyVariables;
+                        contChomskyVariables++;
+                        gc.variables.add(nextLeftSide);
+                        newRule1 = new Rule(leftSide, listRightSide.get(N-1) +
+                                nextLeftSide);
+                        newRule = new Rule(nextLeftSide, rightSide);
+                        rulesProdOOneRightSide.put(rightSide, newRule);
+                    } else {
+                        newRule1 = new Rule(leftSide, listRightSide.get(N-1) +
+                                newRule.getLeftSide());
+                    }
+                    newSetOfRules.add(newRule1);
+                    academic.insertNewRule(newRule1);
+                    newSetOfRules.add(newRule);
+                    academic.insertNewRule(newRule);
+
+                    /*
                     while (listRightSide.size() > 2) {
                         String strRightSide = listRightSide.get(listRightSide.size()-2) +
                                 listRightSide.get(listRightSide.size()-1);
@@ -752,7 +886,7 @@ public class Grammar implements Cloneable {
                     String strRightSide = listRightSide.get(0) + listRightSide.get(1);
                     Rule newRule = new Rule(rule.getLeftSide(), strRightSide);
                     newSetOfRules.add(newRule);
-                    academic.insertNewRule(newRule);
+                    academic.insertNewRule(newRule);*/
                 }
             }
             gc.rules.removeAll(deleteRules);
@@ -943,7 +1077,7 @@ public class Grammar implements Cloneable {
         academicLR.setOriginalGrammar((Grammar) g.clone());
         if (GrammarParser.checksGrammar(gc, academic)) {
             int order = 1;
-            int numberOfVariablesForRemovingLeftRecursing = 1;
+            int countVarRemLeftRec = 1;
             Set<Rule> rulesWithLeftRecursion = new LinkedHashSet<>();
             Set<Rule> rulesWithoutLeftRecursion = new LinkedHashSet<>();
             Set<Rule> newSetOfRules;
@@ -1013,7 +1147,7 @@ public class Grammar implements Cloneable {
                 if (!rulesWithLeftRecursion.isEmpty()) {
                     newSetOfRules = new LinkedHashSet<>();
                     String leftSide = RECURSIVE_REMOVAL_PREFIX +
-                            String.valueOf(numberOfVariablesForRemovingLeftRecursing);
+                            String.valueOf(countVarRemLeftRec);
                     variableOrder.offer(leftSide);
                     for (Rule element : rulesWithLeftRecursion) {
                         academic.insertIrregularRule(element);
@@ -1038,7 +1172,7 @@ public class Grammar implements Cloneable {
 //                    gc.rules = newSetOfRules;
                     gc.rules.addAll(newSetOfRules);
                     gc.rules.removeAll(rulesWithLeftRecursion);
-                    numberOfVariablesForRemovingLeftRecursing++;
+                    countVarRemLeftRec++;
                 }
                 rulesWithLeftRecursion.clear();
                 rulesWithoutLeftRecursion.clear();
@@ -1085,7 +1219,124 @@ public class Grammar implements Cloneable {
                 order++;
             }
             academicLR.setOrderVariablesFNG(variableOrder);
-            for (int i = 1; i < numberOfVariablesForRemovingLeftRecursing; i++) {
+            for (int i = 1; i < countVarRemLeftRec; i++) {
+                gc.insertVariable(RECURSIVE_REMOVAL_PREFIX + String.valueOf(i));
+            }
+            if (!academic.getIrregularRules().isEmpty()) {
+                academic.setSituation(true);
+            }
+        }
+        return gc;
+
+    }
+
+    public Grammar removingLeftRecursionTerra
+            (final Grammar g, final AcademicSupport academic,
+             final Map<String, String> sortedVariables,
+             final AcademicSupportForRemoveLeftRecursion academicLR) {
+        Grammar gc = (Grammar) g.clone();
+        academicLR.setOriginalGrammar((Grammar) g.clone());
+        if (GrammarParser.checksGrammar(gc, academic)) {
+            int order = 1;
+            int countVarRemLeftRec = 1;
+            Set<Rule> rulesWithLeftRecursion = new LinkedHashSet<>();
+            Set<Rule> rulesWithoutLeftRecursion = new LinkedHashSet<>();
+            Set<Rule> newSetOfRules;
+            Set<Rule> removalRules = new LinkedHashSet<>();
+            Deque<String> variableOrder = new LinkedList<>();
+            List<String> variablesAux = getOrderVariablesForRemoveLeftRecursion();
+            Map<String, Integer> orderVariables = new HashMap<>();
+            int N = variablesAux.size();
+            for (int i = 0; i < N; i++) {
+                orderVariables.put(variablesAux.get(i), i+1);
+            }
+            academicLR.setOrderVariables(new ArrayList<>(variablesAux));
+            for (int i = 0; i < N; i++) {
+                String variable = variablesAux.get(i);
+                //BEGIN - remoção da recursão à esquerda indireta
+                Set<Rule> indirLeftRec =  new LinkedHashSet<>();
+                do {
+                    indirLeftRec.clear();
+                    for (Rule element : gc.getRules(variable)) {
+                        String firstVar = element.getFirstVariableOfRightSide();
+                        if (firstVar != null && orderVariables.get(firstVar) < i + 1) {
+                            indirLeftRec.add(element);
+                        }
+                    }
+                    if (!indirLeftRec.isEmpty()) {
+                        newSetOfRules = new LinkedHashSet<>();
+                        for (Rule element : indirLeftRec) {
+                                //System.out.println(indirLeftRec);
+                            String firstVar = element.getFirstVariableOfRightSide();
+                            academic.insertIrregularRule(element);
+                            String leftSide = element.getLeftSide();
+                            int begin = firstVar.length();
+                            String finalRightSide = element.getRightSide().substring(begin);
+                            for (Rule rul : gc.getRules(firstVar)) {
+                                String rightSideBegin = rul.getRightSide();
+                                Rule r = new Rule(leftSide, rightSideBegin + finalRightSide);
+                                    //.out.println("NEW RULE");
+                                    //System.out.println(r);
+                                academic.insertNewRule(r);
+                                newSetOfRules.add(r);
+                            }
+                        }
+                        academicLR.addGrammarTransformationStage1(
+                                indirLeftRec, newSetOfRules, false);
+                        gc.rules.addAll(newSetOfRules);
+                        gc.rules.removeAll(indirLeftRec);
+                    }
+                } while (!indirLeftRec.isEmpty());
+
+                //END - remoção da recursão à esquerda indireta
+                for (Rule element : gc.getRules(variable)) {
+                    if (element.existsLeftRecursion()) {
+                        //System.out.println(element);
+                        rulesWithLeftRecursion.add(element);
+                    } else {
+                        rulesWithoutLeftRecursion.add(element);
+                    }
+                }
+                //BEGIN - remoção da recursão à esquerda direta
+                if (!rulesWithLeftRecursion.isEmpty()) {
+                    newSetOfRules = new LinkedHashSet<>();
+                    String leftSide = RECURSIVE_REMOVAL_PREFIX +
+                            String.valueOf(countVarRemLeftRec);
+                    variableOrder.offer(leftSide);
+                    for (Rule element : rulesWithLeftRecursion) {
+                        academic.insertIrregularRule(element);
+                        Rule r = new Rule(leftSide, element.getRightSide().substring(1));
+                        academic.insertNewRule(r);
+                        newSetOfRules.add(r);
+                        r = new Rule(leftSide,
+                                element.getRightSide().substring(1) + leftSide);
+                        academic.insertNewRule(r);
+                        newSetOfRules.add(r);
+                    }
+                    for (Rule element : rulesWithoutLeftRecursion) {
+                        Rule r = new Rule(element.getLeftSide(),
+                                element.getRightSide() + leftSide);
+                        newSetOfRules.add(r);
+                        academic.insertNewRule(r);
+                    }
+                    academicLR.addGrammarTransformationStage1(
+                            rulesWithLeftRecursion, newSetOfRules, true);
+//                    newSetOfRules.addAll(gc.rules);
+//                    newSetOfRules.removeAll(rulesWithLeftRecursion);
+//                    gc.rules = newSetOfRules;
+                    gc.rules.addAll(newSetOfRules);
+                    gc.rules.removeAll(rulesWithLeftRecursion);
+                    countVarRemLeftRec++;
+                }
+                rulesWithLeftRecursion.clear();
+                rulesWithoutLeftRecursion.clear();
+                //END - remoção da recursão à esquerda direta
+                variableOrder.push(variable);
+                sortedVariables.put(variable, String.valueOf(order));
+                order++;
+            }
+            academicLR.setOrderVariablesFNG(variableOrder);
+            for (int i = 1; i < countVarRemLeftRec; i++) {
                 gc.insertVariable(RECURSIVE_REMOVAL_PREFIX + String.valueOf(i));
             }
             if (!academic.getIrregularRules().isEmpty()) {
@@ -1224,20 +1475,12 @@ public class Grammar implements Cloneable {
         return variablesWithoutLeftRecursion;
     }
 
-    public void sortVariables(List<String> variables) {
-        Collections.sort(variables);
-        if (variables.contains(this.initialSymbol)) {
-            variables.remove(this.initialSymbol);
-            variables.add(0, this.initialSymbol);
-        }
-    }
 
     public List<String> getBestOrderVariablesForRemovingLeftRecursion
             (final AcademicSupportFNG academicSupportFng) {
         List<String> orderVariables = new ArrayList<>();
         List<String> orderVariablesAux = new ArrayList<>
                 (getVariablesWithoutDirectLeftRecursion());
-        sortVariables(orderVariablesAux);
         orderVariables.addAll(orderVariablesAux);
         //orderVariablesAux.Get
         List<String> variablesWithLeftRecursion = new ArrayList<>();
@@ -1357,6 +1600,79 @@ public class Grammar implements Cloneable {
         return gc;
     }
 
+    public Grammar FNGTerra(final Grammar g, final AcademicSupport academic) {
+        Grammar gAux = (Grammar) g.clone();
+        if (gAux.isFNG()) {
+            return gAux;
+        }
+        gAux = g.getGrammarWithInitialSymbolNotRecursive(gAux, academic);
+        gAux = gAux.getGrammarEssentiallyNoncontracting(gAux, academic);
+        gAux = gAux.getGrammarWithoutChainRules(gAux, academic);
+        gAux = gAux.getGrammarWithoutNoTerm(gAux, academic);
+        gAux = gAux.getGrammarWithoutNoReach(gAux, academic);
+        gAux = gAux.FNC(gAux, academic);
+        return gAux.FNGTerra(gAux, academic, new AcademicSupportFNG());
+    }
+
+    public Grammar FNGTerra(final Grammar g, final AcademicSupport academic,
+                       final AcademicSupportFNG academicSupportFNG) {
+        AcademicSupportForRemoveLeftRecursion academicSupportRLF =
+                new AcademicSupportForRemoveLeftRecursion();
+        Grammar gc = g.removingLeftRecursionTerra(g, new AcademicSupport(),
+                new LinkedHashMap<String, String>(), academicSupportRLF);
+        academicSupportFNG.setOriginalGrammar((Grammar) gc.clone());
+        academicSupportRLF.getGrammarTransformationsStage1();
+        Set<Rule> newSetOfRules;
+        Set<Rule> removalRules = new LinkedHashSet<>();
+        Deque<String> variableOrder = academicSupportRLF.getOrderVariablesFNG();
+        academicSupportFNG.setOrderVariables(academicSupportRLF.getOrderVariables());
+        if (gc.isFNG()) {
+            return gc;
+        }
+        //BEGIN - Propagação volta - remoção da recursão à esquerda indireta
+        String variable;
+        while (!variableOrder.isEmpty()) {
+            variable = variableOrder.pop();
+            newSetOfRules = new LinkedHashSet<>();
+            for (Rule element : gc.getRules(variable)) {
+                String firstVar = element.getFirstVariableOfRightSide();
+                if (firstVar != null) {
+                    removalRules.add(element);
+                    academic.insertIrregularRule(element);
+                    for (Rule elementAux : gc.getRules(firstVar)) {
+                        Rule r = new Rule(element.getLeftSide(),
+                                elementAux.getRightSide() +
+                                        element.getRightSide().substring(firstVar.length()));
+                        academic.insertNewRule(r);
+                        newSetOfRules.add(r);
+                    }
+                }
+            }
+            if (!newSetOfRules.isEmpty()) {
+                if (variable.startsWith(RECURSIVE_REMOVAL_PREFIX) &&
+                        variable.length() > 1) {
+                    academicSupportFNG.addGrammarTransformationStage3(
+                            removalRules, newSetOfRules);
+                } else {
+                    academicSupportFNG.addGrammarTransformationStage2(
+                            removalRules, newSetOfRules);
+                }
+//                    newSetOfRules.addAll(gc.rules);
+//                    newSetOfRules.removeAll(removalRules);
+//                    gc.rules = newSetOfRules;
+                gc.rules.addAll(newSetOfRules);
+                gc.rules.removeAll(removalRules);
+                removalRules.clear();
+            }
+        }
+        //END - Propagação volta - remoção da recursão à esquerda indireta
+        if (!academic.getIrregularRules().isEmpty()) {
+            academic.setSituation(true);
+        }
+
+        return gc;
+    }
+
 
     // ALGORITMO DE RECONHECIMENTO CYK
     public static Set<String>[][] CYK(Grammar g, String word) {
@@ -1413,7 +1729,7 @@ public class Grammar implements Cloneable {
             }
             rightSideSet.add(rule.getRightSide());
         }
-        Set<String> deleteEntry = new HashSet<>();
+        Set<String> deleteEntry = new LinkedHashSet<>();
         for (Map.Entry<String, Set<String>> entry : rulesMapLeftToRight.entrySet()) {
             if (entry.getValue().isEmpty()) {
                 deleteEntry.add(entry.getKey());
@@ -1446,12 +1762,12 @@ public class Grammar implements Cloneable {
     public String toStringRulesMapLeftToRight() {
         StringBuilder sb = new StringBuilder();
         Map<String, Set<String>> leftToRigth = getRulesMapLeftToRight();
-        SortedMap<String, SortedSet<String>> leftToRigthSorted = new TreeMap<>();
+        Map<String, Set<String>> leftToRigthSorted = new LinkedHashMap<>();
         for (String left : leftToRigth.keySet()) {
-            leftToRigthSorted.put(left, new TreeSet<>(leftToRigth.get(left)));
+            leftToRigthSorted.put(left, new LinkedHashSet<>(leftToRigth.get(left)));
         }
         for (String left : leftToRigthSorted.keySet()) {
-            sb.append(left).append(" -> ");
+            sb.append(left).append(" → ");
             for (String right : leftToRigthSorted.get(left)) {
                 sb.append(right).append(" | ");
             }
@@ -1524,7 +1840,7 @@ public class Grammar implements Cloneable {
     public String toStringRulesMapRightToLeft() {
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, Set<String>> entry : getRulesMapRightToLeft().entrySet()) {
-            sb.append(entry.getKey()).append(" -> ");
+            sb.append(entry.getKey()).append(" → ");
             for (String leftSide : entry.getValue()) {
                 sb.append(leftSide).append(" | ");
             }
@@ -1560,9 +1876,9 @@ public class Grammar implements Cloneable {
     }
 
     private String replaceStringtoHtml(String str) {
-        str = str.replace("<", "&lt;");
-        str = str.replace(">", "&gt;");
-        return str.replace("\n", "<br>");
+//        str = str.replace("<", "&lt;");
+//        str = str.replace(">", "&gt;");
+        return str.replace("\n", HtmlTags.BREAK_LINE);
     }
 
     private String toHtmlCollection(Set<String> collection) {
@@ -1575,30 +1891,91 @@ public class Grammar implements Cloneable {
         return Html.fromHtml(academic.getResult());
     }
 
+    /**
+     * Gera uma string, formatada em HTML, representando a gramática.
+     * @return string, formatada em HTML, representando a gramática
+     */
+    public String toStringHtml() {
+        final int PIPE_N = Symbols.PIPE.length();
+        StringBuilder grammarHtml = new StringBuilder();
+        for (String var : this.variables) {
+            grammarHtml.append(GrammarParser.varToHtml(var))
+                    .append(String.format(" %s ", Symbols.ARROW));
+            for (Rule rule : this.getRules(var)) {
+                grammarHtml.append(String.format(" %s %s", rule.getRightSideToHtml(),
+                        Symbols.PIPE));
+            }
+            final int N = grammarHtml.length();
+            grammarHtml.delete(N-PIPE_N-1, N)
+                    .append(HtmlTags.BREAK_LINE);
+        }
+        return grammarHtml.toString();
+    }
+
+    /**
+     * Gera uma string, formatada em HTML, representando a gramática.
+     * Porém, modifica as cores das regras passadas recebidas por parâmetro (rulesDifColor),
+     * para a cor também recebida por parâmetro.
+     * @param rulesDifColor regras especificadas para a mudança de cor
+     * @param colorRules cor definida para aplicar nas regras
+     * @return string, formatada em HTML, representando a gramática com a cor das regras
+     * especificadas modificadas.
+     */
+    public String toStringHtmlWithColorInSpecialRules(Set<Rule> rulesDifColor,
+                                                      String colorRules) {
+        final int PIPE_N = Symbols.PIPE.length();
+        final String FONT_COLOR_OPEN = HtmlTags.FONT_COLOR_OPEN(colorRules);
+        StringBuilder grammarHtml = new StringBuilder();
+        for (String var : this.variables) {
+            grammarHtml.append(GrammarParser.varToHtml(var))
+                    .append(String.format(" %s ", Symbols.ARROW));
+            for (Rule rule : this.getRules(var)) {
+                if (rulesDifColor.contains(rule)) {
+                    grammarHtml.append(String.format(
+                            " %s%s%s %s",
+                            FONT_COLOR_OPEN,
+                            rule.getRightSideToHtml(),
+                            HtmlTags.FONT_CLOSE,
+                            Symbols.PIPE));
+                } else {
+                    grammarHtml.append(String.format(
+                            " %s %s",
+                            rule.getRightSideToHtml(),
+                            Symbols.PIPE));
+                }
+            }
+            final int N = grammarHtml.length();
+            grammarHtml.delete(N-PIPE_N-1, N)
+                    .append(HtmlTags.BREAK_LINE);
+        }
+        return grammarHtml.toString();
+    }
+
     public Spanned toHtml() {
         final String[] parameters =
                 getString(
                         R.string.grammar_to_string_parameters
                 ).split("#");
         StringBuilder sb = new StringBuilder()
-                .append("<b>")
+                .append(HtmlTags.BOLD_OPEN)
                 .append(parameters[0])
-                .append("</b>")
+                .append(HtmlTags.BOLD_CLOSE)
                 .append(toHtmlCollection(variables))
-                .append("<br>")
-                .append("<b>")
+                .append(HtmlTags.BREAK_LINE)
+                .append(HtmlTags.BOLD_OPEN)
                 .append(parameters[1])
-                .append("</b>")
+                .append(HtmlTags.BOLD_CLOSE)
                 .append(toHtmlCollection(terminals))
-                .append("<br>")
-                .append("<b>")
+                .append(HtmlTags.BREAK_LINE)
+                .append(HtmlTags.BOLD_OPEN)
                 .append(parameters[2])
-                .append("</b>")
+                .append(HtmlTags.BOLD_CLOSE)
                 .append(replaceStringtoHtml(initialSymbol))
-                .append("<br>")
-                .append("<b>")
+                .append(HtmlTags.BREAK_LINE)
+                .append(HtmlTags.BOLD_OPEN)
                 .append(parameters[3])
-                .append("</b><br>")
+                .append(HtmlTags.BOLD_CLOSE)
+                .append(HtmlTags.BREAK_LINE)
                 .append(replaceStringtoHtml(toStringRulesMapLeftToRight()));
         return Html.fromHtml(sb.toString());
     }

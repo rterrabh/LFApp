@@ -288,6 +288,12 @@ public class FiniteStateAutomatonGUI
         return contPar == 0;
     }
 
+    public static final char KLENNE_CHAR = '*';
+    public static final char UNION_CHAR0 = '|';
+    public static final char UNION_CHAR1 = '/';
+    public static final char PARENTHESES_OPEN = '(';
+    public static final char PARENTHESES_CLOSE = ')';
+
     //Fecho de kleene, concatenação, união
     @Nullable
     public static FiniteStateAutomatonGUI getAutomatonByRegex(String regex) {
@@ -296,53 +302,105 @@ public class FiniteStateAutomatonGUI
         }
         Deque<Character> operators = new ArrayDeque<>();
         Deque<FiniteStateAutomatonGUI> automatons = new ArrayDeque<>();
-        int parent = 0;
         for (int i = 0; i < regex.length(); i++) {
             char symbol = regex.charAt(i);
-            if (symbol != '(' && symbol != ')' && symbol != '*' && symbol != '|'
-                    && symbol != '/') {
-                FiniteStateAutomatonGUI newAutomaton = newAutomaton(Character.toString(symbol));
-                if (i + 1 < regex.length() && regex.charAt(i + 1) == '*') {
-                    newAutomaton = newAutomaton.kleene();
+            if (symbol == PARENTHESES_OPEN) {
+                operators.push(PARENTHESES_CLOSE);
+            } else if (symbol == PARENTHESES_CLOSE) {
+                // enquanto operador de união
+                while (operators.pop() != PARENTHESES_CLOSE) {
+                    FiniteStateAutomatonGUI automatonA = automatons.pop();
+                    FiniteStateAutomatonGUI automatonB = automatons.pop();
+                    FiniteStateAutomatonGUI newAutomaton = automatonB.or(automatonA);
+//                    System.out.println("--OR--INIT");
+//                    System.out.println(automatonA);
+//                    System.out.println("--OR--");
+//                    System.out.println(automatonB);
+//                    System.out.println("RESULT");
+//                    System.out.println(newAutomaton);
+                    automatons.push(newAutomaton);
+                }
+                if (automatons.size() >= 2
+                        && automatons.size() > operators.size() + 1) {
+                    FiniteStateAutomatonGUI automatonA = automatons.pop();
+                    FiniteStateAutomatonGUI automatonB = automatons.pop();
+                    FiniteStateAutomatonGUI newAutomaton = automatonB.concat(automatonA);
+//                    System.out.println("--CONCAT--INIT");
+//                    System.out.println(automatonA);
+//                    System.out.println("--CONCAT--");
+//                    System.out.println(automatonB);
+//                    System.out.println("RESULT");
+//                    System.out.println(newAutomaton);
+                    automatons.push(newAutomaton);
+                }
+                if (i + 1 < regex.length()
+                        && regex.charAt(i + 1) == KLENNE_CHAR) {
+                    FiniteStateAutomatonGUI automatonA = automatons.pop();
+                    FiniteStateAutomatonGUI newAutomaton = automatonA.kleene();
+//                    System.out.println("--KLEENE--");
+//                    System.out.println(automatonA);
+//                    System.out.println("RESULT");
+//                    System.out.println(newAutomaton);
+                    automatons.push(newAutomaton);
                     i++;
                 }
-                if (automatons.size() > 2 && automatons.size() > operators.size() + 1) {
+            } else if (symbol == UNION_CHAR0) {
+                operators.push(UNION_CHAR0);
+            } else {
+                FiniteStateAutomatonGUI newAutomaton = newAutomaton(Character.toString(symbol));
+//                System.out.println("--CREATE--");
+//                System.out.println(newAutomaton);
+                if (i + 1 < regex.length()
+                        && regex.charAt(i + 1) == KLENNE_CHAR) {
+                    FiniteStateAutomatonGUI automatonA = newAutomaton;
+                    newAutomaton = newAutomaton.kleene();
+//                    System.out.println("--KLEENE--");
+//                    System.out.println(automatonA);
+//                    System.out.println("RESULT");
+//                    System.out.println(newAutomaton);
+                    i++;
+                }
+//                System.out.println("OPERADORS");
+//                System.out.println(operators);
+                if (automatons.size() >= 2
+                        && automatons.size() > operators.size() + 1) {
+                    FiniteStateAutomatonGUI automatonA = newAutomaton;
+                    FiniteStateAutomatonGUI automatonB = automatons.pop();
+                    newAutomaton = automatonB.concat(automatonA);
+//                    System.out.println("--CONCAT--INIT");
+//                    System.out.println(automatonA);
+//                    System.out.println("--CONCAT--");
+//                    System.out.println(automatonB);
+//                    System.out.println("RESULT");
+//                    System.out.println(newAutomaton);
                     newAutomaton = automatons.pop().concat(newAutomaton);
                 }
                 automatons.push(newAutomaton);
-            } else if (symbol == '(') {
-                operators.push('(');
-                parent++;
-            } else if (symbol == ')') {
-                while (operators.pop() != '(') {
-                    FiniteStateAutomatonGUI newAutomaton = automatons.pop();
-                    newAutomaton = automatons.pop().or(newAutomaton);
-                    automatons.push(newAutomaton);
-                }
-                parent--;
-                if (automatons.size() > 2 && automatons.size() > operators.size() + 1) {
-                    FiniteStateAutomatonGUI newAutomaton = automatons.pop();
-                    newAutomaton = automatons.pop().concat(newAutomaton);
-                    automatons.push(newAutomaton);
-                }
-                if (i + 1 < regex.length() && regex.charAt(i + 1) == '*') {
-                    FiniteStateAutomatonGUI newAutomaton = automatons.pop().kleene();
-                    automatons.push(newAutomaton);
-                    i++;
-                }
-            } else {
-                operators.push('|');
             }
         }
         while (!operators.isEmpty()) {
-            FiniteStateAutomatonGUI newAutomaton = automatons.pop();
-            newAutomaton = automatons.pop().or(newAutomaton);
+            FiniteStateAutomatonGUI automatonA = automatons.pop();
+            FiniteStateAutomatonGUI automatonB = automatons.pop();
+            FiniteStateAutomatonGUI newAutomaton = automatonB.or(automatonA);
+//            System.out.println("--OR--INIT");
+//            System.out.println(automatonA);
+//            System.out.println("--OR--");
+//            System.out.println(automatonB);
+//            System.out.println("RESULT");
+//            System.out.println(newAutomaton);
             automatons.push(newAutomaton);
             operators.pop();
         }
         if (automatons.size() == 2) {
-            FiniteStateAutomatonGUI newAutomaton = automatons.pop();
-            newAutomaton = automatons.pop().concat(newAutomaton);
+            FiniteStateAutomatonGUI automatonA = automatons.pop();
+            FiniteStateAutomatonGUI automatonB = automatons.pop();
+            FiniteStateAutomatonGUI newAutomaton = automatonB.concat(automatonA);
+//            System.out.println("--CONCAT--INIT");
+//            System.out.println(automatonA);
+//            System.out.println("--CONCAT--");
+//            System.out.println(automatonB);
+//            System.out.println("RESULT");
+//            System.out.println(newAutomaton);
             automatons.push(newAutomaton);
         }
         FiniteStateAutomatonGUI automatonGUIRegex = automatons.pop();

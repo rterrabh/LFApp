@@ -32,7 +32,7 @@ public class CFGToPDAStage1Activity extends AppCompatActivityContext {
         Grammar grammar = new Grammar(grammarStr);
         TextView tvInputGrammar = (TextView) findViewById(R.id.inputGrammar);
         tvInputGrammar.setText(grammar.toHtmlFormated());
-        Grammar grammarGreibach = grammar.FNG(grammar, new AcademicSupport());
+        Grammar grammarGreibach = grammar.FNGTerra(grammar, new AcademicSupport());
         TextView tvGrammarFNG = (TextView) findViewById(R.id.grammarFNG);
         tvGrammarFNG.setText(getResources().getString(R.string.grammar_in_gnf)
                 + grammarGreibach.toHtmlFormated());

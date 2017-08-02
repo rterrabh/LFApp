@@ -52,7 +52,7 @@
     <string name="removing_left_recursive_algol_p1">
         <![CDATA[
         (2) Remover recursões em ordem:<br/>
-        <b>Pseudocode</b><br/>
+        <b>ALGORITMO</b><br/>
         <b>para</b> i = 1 até n <b>faça</b><br/>
             &nbsp;&nbsp;&nbsp;
             <b>se</b> A<sub><small>i</sub></small> possui recursão à esquerda direta <b>então</b><br/>
@@ -65,13 +65,13 @@
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <b>para</b> cada produção em A<sub><small>j</sub></small> <b>faça</b><br/>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <b>if</b> A<sub><small>j</sub></small> → A<sub><small>i</sub></small>&#947; <b>então</b><br/>
+                    <b>if</b> A<sub><small>j</sub></small> → A<sub><small>i</sub></small>γ <b>então</b><br/>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        substitua A<sub><small>j</sub></small> → A<sub><small>i</sub></small>&#947;<br/>
+                        substitua A<sub><small>j</sub></small> → A<sub><small>i</sub></small>γ<br/>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        por A<sub><small>j</sub></small> → &#948;<sub><small>1</sub></small>&#947; | &#948;<sub><small>2</sub></small>&#947; | … | &#948;<sub><small>k</sub></small>&#947;<br/>
+                        por A<sub><small>j</sub></small> → δ<sub><small>1</sub></small>γ | δ<sub><small>2</sub></small>γ | … | δ<sub><small>k</sub></small>γ<br/>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        onde A<sub><small>i</sub></small> → &#948;<sub><small>1</sub></small> | &#948;<sub><small>2</sub></small> | … | &#948;<sub><small>k</sub></small><br/>
+                        onde A<sub><small>i</sub></small> → δ<sub><small>1</sub></small> | δ<sub><small>2</sub></small> | … | δ<sub><small>k</sub></small><br/>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         são todas as produções atuais de A<sub><small>i</sub></small><br/>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -85,7 +85,7 @@
     </string>
     <string name="removing_left_recursive_algol_p2">
         <![CDATA[
-        (1) Remover regras do tipo A<sub><small>j</sub></small> → A<sub><small>i</sub></small>&#947;, na ordem inversa da utilizada para remover recursão à esquerda:<br/>
+        (1) Remover regras do tipo A<sub><small>j</sub></small> → A<sub><small>i</sub></small>γ, na ordem inversa da utilizada para remover recursão à esquerda:<br/>
         <b>ALGORITMO</b><br/>
         <b>para</b> i = n até 1 <b>faça</b><br/>
             &nbsp;&nbsp;&nbsp;
@@ -93,13 +93,13 @@
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <b>para</b> cada produção em A<sub><small>j</sub></small> <b>faça</b><br/>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <b>se</b> A<sub><small>j</sub></small> → A<sub><small>i</sub></small>&#947; <b>então</b><br/>
+                    <b>se</b> A<sub><small>j</sub></small> → A<sub><small>i</sub></small>γ <b>então</b><br/>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        substitua A<sub><small>j</sub></small> → A<sub><small>i</sub></small>&#947;<br/>
+                        substitua A<sub><small>j</sub></small> → A<sub><small>i</sub></small>γ<br/>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        por A<sub><small>j</sub></small> → &#948;<sub><small>1</sub></small>&#947; | &#948;<sub><small>2</sub></small>&#947; | … | &#948;<sub><small>k</sub></small>&#947;<br/>
+                        por A<sub><small>j</sub></small> → δ<sub><small>1</sub></small>γ | δ<sub><small>2</sub></small>γ | … | δ<sub><small>k</sub></small>γ<br/>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        onde A<sub><small>i</sub></small> → &#948;<sub><small>1</sub></small> | &#948;<sub><small>2</sub></small> | … | &#948;<sub><small>k</sub></small><br/>
+                        onde A<sub><small>i</sub></small> → δ<sub><small>1</sub></small> | δ<sub><small>2</sub></small> | … | δ<sub><small>k</sub></small><br/>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         são todas as produções atuais de A<sub><small>i</sub></small><br/>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -113,19 +113,95 @@
     </string>
     <string name="removing_left_recursive_algol_p3">
         <![CDATA[
-        (2) Remover regras do tipo Z<sub><small>i</sub></small> → V&#947; nas variáveis criadas pelo algoritmo de remoção de recursão à esquerda, em ordem:<br/>
+        (2) Remover regras do tipo R<sub><small>i</sub></small> → Vγ nas variáveis criadas pelo algoritmo de remoção de recursão à esquerda, em ordem:<br/>
         <b>ALGORITMO</b><br/>
         <b>para</b> i = 1 até n <b>faça</b><br/>
             &nbsp;&nbsp;&nbsp;
-            <b>para</b> cada produção em Z<sub><small>i</sub></small> <b>faça</b><br/>
+            <b>para</b> cada produção em R<sub><small>i</sub></small> <b>faça</b><br/>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <b>se</b> Z<sub><small>i</sub></small> → V&#947; <b>então</b><br/>
+                <b>se</b> R<sub><small>i</sub></small> → Vγ <b>então</b><br/>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    substitua Z<sub><small>i</sub></small> → V&#947;<br/>
+                    substitua R<sub><small>i</sub></small> → Vγ<br/>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    por Z<sub><small>i</sub></small> → &#948;<sub><small>1</sub></small>&#947; | &#948;<sub><small>2</sub></small>&#947; | … | &#948;<sub><small>k</sub></small>&#947;<br/>
+                    por R<sub><small>i</sub></small> → δ<sub><small>1</sub></small>γ | δ<sub><small>2</sub></small>γ | … | δ<sub><small>k</sub></small>γ<br/>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    onde V → &#948;<sub><small>1</sub></small> | &#948;<sub><small>2</sub></small> | … | &#948;<sub><small>k</sub></small><br/>
+                    onde V → δ<sub><small>1</sub></small> | δ<sub><small>2</sub></small> | … | δ<sub><small>k</sub></small><br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b>fim</b><br/>
+            &nbsp;&nbsp;&nbsp;
+            <b>fim</b><br/>
+        <b>fim</b><br/>
+        ]]>
+    </string>
+    <string name="removing_left_recursive_terra_algol_p1">
+        <![CDATA[
+        (2) Remover recursões em ordem:<br/>
+        <b>ALGORITMO</b><br/>
+        A = conjunto de variáveis ordenadas (1º o símbolo inicial e depois por ordem de definição)<br/>
+        <b>para</b> i = 1 até n <b>faça</b><br/>
+            &nbsp;&nbsp;&nbsp;
+            <b>para</b> cada produção em A<sub><small>i</sub></small> <b>faça</b><br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b>se</b> A<sub><small>i</sub></small> → A<sub><small>j</sub></small>γ <b>e</b> j < i <b>então</b><br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    substituir A<sub><small>i</sub></small> → A<sub><small>j</sub></small>γ<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    por A<sub><small>i</sub></small> → δ<sub><small>1</sub></small>γ | δ<sub><small>2</sub></small>γ | … | δ<sub><small>k</sub></small>γ<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    onde A<sub><small>j</sub></small> → δ<sub><small>1</sub></small> | δ<sub><small>2</sub></small> | … | δ<sub><small>k</sub></small> são todas produções de A<sub><small>j</sub></small><br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b>fim</b><br/>
+            &nbsp;&nbsp;&nbsp;
+            <b>fim</b><br/>
+            <b>se</b> A<sub><small>i</sub></small> possui recursão à esquerda direta <b>então</b><br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                elimine a recursão em A<sub><small>i</sub></small><br/>
+            &nbsp;&nbsp;&nbsp;
+            <b>fim</b><br/>
+        <b>fim</b><br/>
+        ]]>
+    </string>
+    <string name="removing_left_recursive_terra_algol_p2">
+        <![CDATA[
+        (3) Remover regras do tipo A<sub><small>i</sub></small> → A<sub><small>j</sub></small>γ, na ordem inversa da utilizada para remover recursão à esquerda:<br/>
+        <b>ALGORITMO</b><br/>
+        A = conjunto de variáveis ordenadas (1º o símbolo inicial e depois por ordem de definição)<br/>
+        <b>para</b> i = n-1 até 1 <b>faça</b><br/>
+            &nbsp;&nbsp;&nbsp;
+            <b>para</b> cada produção em A<sub><small>i</sub></small> <b>faça</b><br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b>if</b> A<sub><small>i</sub></small> → A<sub><small>j</sub></small>γ <b>then</b><br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    substituir A<sub><small>i</sub></small> → A<sub><small>j</sub></small>γ<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    por A<sub><small>i</sub></small> → δ<sub><small>1</sub></small>γ | δ<sub><small>2</sub></small>γ | … | δ<sub><small>k</sub></small>γ<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    onde A<sub><small>j</sub></small> → δ<sub><small>1</sub></small> | δ<sub><small>2</sub></small> | … | δ<sub><small>k</sub></small> são todas produções de A<sub><small>j</sub></small><br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b>fim</b><br/>
+            &nbsp;&nbsp;&nbsp;
+            <b>fim</b><br/>
+        <b>fim</b><br/>
+        ]]>
+    </string>
+    <string name="removing_left_recursive_terra_algol_p3">
+        <![CDATA[
+        (4) Remover regras do tipo R<sub><small>i</sub></small> → A<sub><small>j</sub></small>γ nas variáveis criadas pelo algoritmo de remoção de recursão à esquerda, em ordem:<br/>
+        <b>ALGORITMO</b><br/>
+        A = conjunto de variáveis ordenadas (1º o símbolo inicial e depois por ordem de definição)<br/>
+        R = conjunto de variáveis criadas pelo algoritmo de remoção de recursão à esquerda ordenadas pela ordem de criação<br/>
+        n = tamanho do conjunto R
+        <b>para</b> i = 1 até n <b>faça</b><br/>
+            &nbsp;&nbsp;&nbsp;
+            <b>para</b> cada produção em R<sub><small>i</sub></small> <b>faça</b><br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <b>se</b> R<sub><small>i</sub></small> → A<sub><small>j</sub></small>γ <b>então</b><br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    substituir R<sub><small>i</sub></small> → A<sub><small>j</sub></small>γ<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    por R<sub><small>i</sub></small> → δ<sub><small>1</sub></small>γ | δ<sub><small>2</sub></small>γ | … | δ<sub><small>k</sub></small>γ<br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    onde A<sub><small>j</sub></small> → δ<sub><small>1</sub></small> | δ<sub><small>2</sub></small> | … | δ<sub><small>k</sub></small> são todas produções de A<sub><small>j</sub></small><br/>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <b>fim</b><br/>
             &nbsp;&nbsp;&nbsp;
@@ -425,7 +501,11 @@
     <string name="machine_to_string_parameters">Estados,Alfabeto,Estados finais,Estado inicial</string>
     <string name="no_convert_this_step"><![CDATA[Não há transformações à serem realizadas nesta etapa!<br/>]]></string>
     <string name="remove_recursion_acd"><![CDATA[Remover recursão direta à esquerda:<br/>]]></string>
-    <string name="replace_rues_acd"><![CDATA[Substituir regras (A<sub>i</sub> → A<sub>j</sub>&#947;):<br/>]]></string>
+    <string name="replace_rues_acd"><![CDATA[Substituir regras (A<sub>i</sub> → A<sub>j</sub>γ):<br/>]]></string>
+    <string name="remove_indirect_left_recursion_terra">
+        <![CDATA[
+        Remover a recursão indireta à esquerda (substituir regras A<sub>i</sub> → A<sub>j</sub>γ)):<br/>]]>
+    </string>
     <string name="new_grammar"><![CDATA[Nova gramática:<br/>]]></string>
     <string name="initial_symbol_not_recursive">
         O símbolo inicial deve se limitar a iniciar derivações, não podendo ser uma variável recursiva.
@@ -562,8 +642,8 @@
     <string name="cyk_comments">A gramática inserida não está na Forma Normal de Chomsky. Logo, uma transformação foi necessária.</string>
     <string name="no_derivation_for_the_word">Não foi encontrada nenhuma derivação para a palavra.</string>
     <string name="derivation">Derivação:</string>
-    <string name="two_derivations_1">Foram encontradas duas derivações para a palavra, portanto esta gramática é ambígua Derivação 1:</string>
-    <string name="two_derivations_2">Derivação 2:</string>
+    <string name="two_derivations_1">Foram encontradas duas derivações para a palavra, portanto esta gramática é ambígua.\nDerivação 1:\n</string>
+    <string name="two_derivations_2">\nDerivação 2:\n</string>
     <string name="nullable_algol">
         <![CDATA[
         NULL = {A | {A → λ} ∈ P}<br>
@@ -576,9 +656,7 @@
                 <b>se</b> A → w e w ∈ PREV<sup>∗</sup> <b>faça</b><br>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     NULL = NULL ∪ {A}<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    NULL = NULL ∪ {A}<br>
-                    <b>até</b> NULL == PREV
+        <b>até</b> NULL == PREV
         ]]>
     </string>
     <string name="removal_empty_prod_comments">
@@ -684,7 +762,7 @@
     <string name="lfapp_cnf">LFApp - FNC</string>
     <string name="lfapp_left_recursion">LFApp - Recursão à Esq</string>
     <string name="lfapp_gnf">LFApp - FNG</string>
-    <string name="lfapp_gnf_8_8">LFApp - FNG - 8/8</string>
+    <string name="lfapp_gnf_8_8">LFApp - FNG - 7/7</string>
     <string name="lfapp_history">LFApp - Histórico</string>
     <string name="compl_automaton">Autômato Completo</string>
     <string name="processar_palavra">Processar palavra (AF)</string>

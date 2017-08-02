@@ -11,7 +11,9 @@ import org.junit.runners.Suite.SuiteClasses;
         Grammar03Test.class, Grammar04Test.class, Grammar05Test.class,
         Grammar06Test.class, Grammar07Test.class, Grammar08Test.class,
         Grammar09Test.class, Grammar10Test.class, Grammar11Test.class,
-        GrammarTest.class, GrammarParserTest.class, RuleTests.class })
+        GrammarTest.class, GrammarParserTest.class, RuleTests.class,
+        GrammarTransformationsSudkampTest.class, LefmostDerAndAmbSudkampTest.class,
+        PropRegLangSudkampTest.class })
 public class GrammarTests {
 
     static {

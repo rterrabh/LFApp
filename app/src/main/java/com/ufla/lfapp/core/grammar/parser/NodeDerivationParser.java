@@ -3,6 +3,8 @@ package com.ufla.lfapp.core.grammar.parser;
 import com.ufla.lfapp.core.grammar.Grammar;
 import com.ufla.lfapp.core.grammar.Rule;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.List;
 
@@ -18,6 +20,21 @@ public class NodeDerivationParser {
     private int childInd;
     private List<NodeDerivationParser> childs;
     private NodeDerivationParser father;
+
+    public String getSpace() {
+        char[] space = new char[level*2];
+        Arrays.fill(space, ' ');
+        return new String(space);
+    }
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        return sb.append(getSpace())
+                .append(node)
+                .append(", ")
+                .append(stackRules)
+                .toString();
+    }
 
     public NodeDerivationParser(String node, int level, NodeDerivationParser father,
                                 int childInd) {

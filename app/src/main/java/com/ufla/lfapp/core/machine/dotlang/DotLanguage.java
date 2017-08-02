@@ -355,6 +355,7 @@ public class DotLanguage implements Serializable {
         final int PATTERN_LABEL_LENGHT = PATTERN_LABEL.length();
         List<String> transitionsList = new ArrayList<>();
         while (!lines[ind].isEmpty()) {
+            //System.out.println(lines[ind]);
             StringBuilder sb = new StringBuilder();
             init = 2;
             end = lines[ind].indexOf(PATTERN_ARROW);

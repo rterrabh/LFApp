@@ -178,6 +178,13 @@ public class TMSimulator {
                 return false;
             }
             tapes.addLast(tape.toString());
+//            System.out.println("----------------------------");
+//            System.out.println("CONF");
+//            System.out.println(actualConfiguration.getState() + ", " +
+//                    actualConfiguration.getIndex() + ", " +
+//                    tape.charAt(actualConfiguration.getIndex()));
+//            System.out.println(tape.toString());
+//            System.out.println("NEXT_CONF");
             StringBuilder sb = new StringBuilder();
             sb.append(tape.substring(0, index));
             sb.append(actualConfiguration.state);
@@ -203,9 +210,13 @@ public class TMSimulator {
                 }
 
                 for (TMTransitionFunction t : transitions) {
-                    stackConfiguration.push(new Configuration(depth, index,
+                    Configuration configuration = new Configuration(depth, index,
                             t.getFutureState(), t.getSymbol(), t.getWriteSymbol(),
-                            t.getMove()));
+                            t.getMove());
+                    stackConfiguration.push(configuration);
+//                    System.out.println(configuration.getState() + ", "
+//                            + configuration.getIndex());
+
                 }
             }
         }
