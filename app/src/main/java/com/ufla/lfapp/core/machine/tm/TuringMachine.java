@@ -88,20 +88,6 @@ public class TuringMachine
         return transitions;
     }
 
-    public SortedSet<TMTransitionFunction> createTransitions(String currentState, String futureState,
-                                                             String label) {
-        SortedSet<TMTransitionFunction> transitions = new TreeSet<>();
-        State a = getState(currentState);
-        State b = getState(futureState);
-        String[] tra = label.split("\\n");
-        for (int i = 0; i < tra.length; i++) {
-            String[] args = tra[i].split(" /");
-            transitions.add(new TMTransitionFunction(a, args[0], b, args[1],
-                    TMMove.getInstance(args[2])));
-        }
-        return transitions;
-    }
-
 
     @Override
     public SortedSet<String> getAlphabet() {
@@ -112,10 +98,6 @@ public class TuringMachine
 
     public Set<TMTransitionFunction> getTransitionFunctions() {
         return transitionFunction;
-    }
-
-    public void setTransitionFunction(Set<TMTransitionFunction> transitionFunction) {
-        this.transitionFunction = transitionFunction;
     }
 
     @Override

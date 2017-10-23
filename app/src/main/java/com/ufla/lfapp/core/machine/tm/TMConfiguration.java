@@ -24,10 +24,6 @@ public class TMConfiguration extends Configuration {
         this(previous, state, depth, tape.toString(), index);
     }
 
-    public String getTape() {
-        return tape;
-    }
-
     public int getIndex() {
         return index;
     }

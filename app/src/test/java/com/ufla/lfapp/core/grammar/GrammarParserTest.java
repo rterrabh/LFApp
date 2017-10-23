@@ -3,9 +3,9 @@ package com.ufla.lfapp.core.grammar;
 
 import com.ufla.lfapp.utils.ResourcesContext;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertFalse;
@@ -22,10 +22,10 @@ public class GrammarParserTest {
         assertTrue(pRuleElementRegex.matcher("A").matches());
     }
 
-    static {
+    @BeforeClass
+    public static void setTest() {
         ResourcesContext.isTest = true;
     }
-
     @Test
     public void test() {
         String grammar = "S -> aABC | a | S\n" +

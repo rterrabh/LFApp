@@ -17,7 +17,8 @@ import java.util.Set;
 
 public class GrammarTransformationsSudkampTest {
 
-    static {
+    @BeforeClass
+    public static void setTest() {
         ResourcesContext.isTest = true;
     }
 

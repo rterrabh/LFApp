@@ -12,42 +12,37 @@ import java.util.Set;
 /**
  * Created by carlos on 30/07/16.
  */
-public abstract class AcademicSupportRemoveLeftRecursiveAbstract {
+public abstract class AbstractAcademicSupportRLR {
 
     private List<String> orderVariables;
-    Grammar originalGrammar;
+    protected Grammar originalGrammar;
 
-    AcademicSupportRemoveLeftRecursiveAbstract() {
+    AbstractAcademicSupportRLR() {
         this.orderVariables = new ArrayList<>();
     }
 
-    void setOriginalGrammar(Grammar originalGrammar) {
+    public void setOriginalGrammar(Grammar originalGrammar) {
         this.originalGrammar = originalGrammar;
     }
 
-    void handleEmptyGrammarTransformations(List<String> grammarTransformations) {
-        if(grammarTransformations.isEmpty()) {
+    public void handleEmptyGrammarTransformations(List<String> grammarTransformations) {
+        if (grammarTransformations.isEmpty()) {
             grammarTransformations.add(ResourcesContext.getString(R.string.no_convert_this_step));
         }
     }
 
-    List<String> getOrderVariables() {
+    public List<String> getOrderVariables() {
         return orderVariables;
     }
 
-    void setOrderVariables(List<String> orderVariables) {
+    public void setOrderVariables(List<String> orderVariables) {
         this.orderVariables = orderVariables;
     }
 
     String getGrammarTransformation(Grammar grammar, Set<Rule>
-            ruleWithProblems, Set<Rule> newRules, boolean
-                                                    imediateLeftRecursive) {
+            ruleWithProblems, Set<Rule> newRules) {
         StringBuilder txtGrammar = new StringBuilder();
-        if (imediateLeftRecursive) {
-            txtGrammar.append(ResourcesContext.getString(R.string.remove_recursion_acd));
-        } else {
-            txtGrammar.append(ResourcesContext.getString(R.string.replace_rues_acd));
-        }
+        txtGrammar.append(ResourcesContext.getString(R.string.replace_rues_acd));
         txtGrammar.append(grammar.toStringHtmlWithColorInSpecialRules(ruleWithProblems,
                 HtmlColors.RED));
         insertVariablesInOrderVariables(newRules);
@@ -61,7 +56,7 @@ public abstract class AcademicSupportRemoveLeftRecursiveAbstract {
 
     String getGrammarTransformationTerra(Grammar grammar, Set<Rule>
             ruleWithProblems, Set<Rule> newRules, boolean
-                                            imediateLeftRecursive) {
+                                                 imediateLeftRecursive) {
         StringBuilder txtGrammar = new StringBuilder();
         if (imediateLeftRecursive) {
             txtGrammar.append(ResourcesContext.getString(R.string.remove_recursion_acd));
@@ -80,15 +75,15 @@ public abstract class AcademicSupportRemoveLeftRecursiveAbstract {
     }
 
     private void insertVariablesInOrderVariables(Set<Rule> newRules) {
-        for(Rule rule : newRules) {
-            if(!orderVariables.contains(rule.getLeftSide())) {
+        for (Rule rule : newRules) {
+            if (!orderVariables.contains(rule.getLeftSide())) {
                 orderVariables.add(rule.getLeftSide());
             }
         }
     }
 
     Grammar trasformGrammar(Grammar grammar, Set<Rule> ruleWithProblems,
-                                    Set<Rule> newRules) {
+                            Set<Rule> newRules) {
         Grammar gc = (Grammar) grammar.clone();
         gc.removeRules(ruleWithProblems);
         gc.insertRules(newRules);
@@ -96,28 +91,4 @@ public abstract class AcademicSupportRemoveLeftRecursiveAbstract {
         return gc;
     }
 
-//    private String insertGrammarWithModifiedColorRules
-//            (Grammar grammar, Set<Rule> ruleForModifiedColor, String color) {
-//        StringBuilder txtGrammar = new StringBuilder();
-//        for (String variable : orderVariables) {
-//            txtGrammar.append(GrammarParser.varToHtml(variable))
-//                    .append(" →");
-//            for(Rule rule : grammar.getRules(variable)) {
-//                txtGrammar.append(' ');
-//                if(ruleForModifiedColor.contains(rule)) {
-//                    txtGrammar.append("<font color=\"").append(color)
-//                            .append("\">").append(rule
-//                            .getRightSideToHtml()).append("</font>");
-//                } else {
-//                    txtGrammar.append(rule.getRightSideToHtml());
-//                }
-//                txtGrammar.append(" |");
-//            }
-//            txtGrammar.deleteCharAt(txtGrammar.length() - 1);
-//            txtGrammar.deleteCharAt(txtGrammar.length() - 1);
-//            txtGrammar.append("<br>");
-//        }
-//        return txtGrammar.toString();
-//
-//    }
 }

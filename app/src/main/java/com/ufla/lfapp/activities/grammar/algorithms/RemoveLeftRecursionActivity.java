@@ -13,10 +13,9 @@ import android.widget.TextView;
 import com.ufla.lfapp.R;
 import com.ufla.lfapp.activities.grammar.HeaderGrammarActivity;
 import com.ufla.lfapp.core.grammar.AcademicSupport;
-import com.ufla.lfapp.core.grammar.AcademicSupportForRemoveLeftRecursion;
+import com.ufla.lfapp.core.grammar.AcademicSupportRLR;
 import com.ufla.lfapp.core.grammar.Grammar;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -84,8 +83,8 @@ public class RemoveLeftRecursionActivity extends HeaderGrammarActivity {
 
         //Realiza processo
         AcademicSupport academicSupport = new AcademicSupport();
-        AcademicSupportForRemoveLeftRecursion academicSupportLR = new
-                AcademicSupportForRemoveLeftRecursion();
+        AcademicSupportRLR academicSupportLR = new
+                AcademicSupportRLR();
         Map<String, String> sortedVariables = new LinkedHashMap<>();
         gc = gc.removingLeftRecursionTerra(gc, academicSupport, sortedVariables,
                 academicSupportLR);

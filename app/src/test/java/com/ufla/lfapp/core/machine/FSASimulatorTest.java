@@ -7,6 +7,7 @@ import com.ufla.lfapp.core.machine.tm.TMSimulator;
 import com.ufla.lfapp.utils.ResourcesContext;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -26,9 +27,9 @@ public class FSASimulatorTest {
 
     private FiniteStateAutomaton fsa;
 
-    static {
+    @BeforeClass
+    public static void setTest() {
         ResourcesContext.isTest = true;
-        TMMove.test = true;
     }
 
     @Before

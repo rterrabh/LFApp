@@ -11,7 +11,7 @@ import com.ufla.lfapp.R;
 import com.ufla.lfapp.activities.grammar.HeaderGrammarActivity;
 import com.ufla.lfapp.core.grammar.AcademicSupport;
 import com.ufla.lfapp.core.grammar.AcademicSupportFNG;
-import com.ufla.lfapp.core.grammar.AcademicSupportForRemoveLeftRecursion;
+import com.ufla.lfapp.core.grammar.AcademicSupportRLR;
 import com.ufla.lfapp.core.grammar.Grammar;
 
 import java.util.HashMap;
@@ -41,7 +41,7 @@ public class GreibachNormalFormActivity extends HeaderGrammarActivity {
                 g = g.FNC(g, new AcademicSupport());
                 return g.removingLeftRecursion
                         (g, new AcademicSupport(), new HashMap<String, String>(),
-                        new AcademicSupportForRemoveLeftRecursion());
+                        new AcademicSupportRLR());
             default: return super.getGrammar();
         }
     }

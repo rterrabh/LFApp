@@ -31,20 +31,6 @@ public class FiniteStateFiniteStateAutomatonGUIBuilder extends FiniteStateAutoma
         id = -1l;
     }
 
-    /**
-     * Constrói um autômato com os atributos do autômato passada por parâmetro.
-     *
-     * @param automatonGUI autômato usada para construir o autômato desse construtor de autômato
-     */
-    public FiniteStateFiniteStateAutomatonGUIBuilder(FiniteStateAutomatonGUI automatonGUI) {
-        super(automatonGUI);
-        id = automatonGUI.getId();
-        label = automatonGUI.getLabel();
-        contUses = automatonGUI.getContUses();
-        creationDate = automatonGUI.getCreationDate();
-        stateGridPositions = automatonGUI.getStateGridPoint();
-    }
-
 
     public FiniteStateFiniteStateAutomatonGUIBuilder addOrChangeStatePosition(State state, Point gridPosition) {
         super.addState(state);

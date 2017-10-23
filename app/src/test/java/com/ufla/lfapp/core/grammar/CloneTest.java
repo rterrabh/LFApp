@@ -1,14 +1,22 @@
 package com.ufla.lfapp.core.grammar;
 
+import com.ufla.lfapp.utils.ResourcesContext;
+
 import static org.junit.Assert.*;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 
 public class CloneTest {
 
     private Grammar g;
+
+    @BeforeClass
+    public static void setTest() {
+        ResourcesContext.isTest = true;
+    }
 
     @Before
     public void setUp() {

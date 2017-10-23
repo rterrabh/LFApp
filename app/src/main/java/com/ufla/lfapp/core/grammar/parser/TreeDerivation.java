@@ -22,9 +22,6 @@ public class TreeDerivation {
 
     public String getDerivation(NodeDerivation node) {
         List<NodeDerivation> childs = node.getChilds();
-        if (childs == null) {
-            return node.getNode();
-        }
         StringBuilder sbDerivation = new StringBuilder();
         int n = node.getCountChilds();
         for (int i = 0; i < n; i++) {
@@ -54,37 +51,37 @@ public class TreeDerivation {
         do {
             childs = actualNode.getChilds();
             if (childs != null)
-            if (childs != null && !childs.isEmpty()) {
-                String derivation = getDerivation(actualNode);
-                lastDerivation.deleteCharAt(indice);
-                lastDerivation.insert(indice, derivation);
-                sbDerivation.append(lastDerivation)
-                        .append(" => ");
-                actualNode = childs.get(0);
-                int indexLambda = lastDerivation.indexOf(Grammar.LAMBDA);
-                if (indexLambda > - 1) {
-                    lastDerivation.deleteCharAt(indexLambda);
+                if (childs != null && !childs.isEmpty()) {
+                    String derivation = getDerivation(actualNode);
+                    lastDerivation.deleteCharAt(indice);
+                    lastDerivation.insert(indice, derivation);
                     sbDerivation.append(lastDerivation)
                             .append(" => ");
-                    indice--;
-                }
-            } else {
-                indice++;
-                childInd = actualNode.getChildInd();
-                parentNode = actualNode.getFather();
-                int countChild = parentNode.getCountChilds();
-                while (childInd == countChild - 1 && parentNode.getFather() != null) {
-                    actualNode = parentNode;
+                    actualNode = childs.get(0);
+                    int indexLambda = lastDerivation.indexOf(Grammar.LAMBDA);
+                    if (indexLambda > -1) {
+                        lastDerivation.deleteCharAt(indexLambda);
+                        sbDerivation.append(lastDerivation)
+                                .append(" => ");
+                        indice--;
+                    }
+                } else {
+                    indice++;
                     childInd = actualNode.getChildInd();
                     parentNode = actualNode.getFather();
-                    countChild = parentNode.getCountChilds();
+                    int countChild = parentNode.getCountChilds();
+                    while (childInd == countChild - 1 && parentNode.getFather() != null) {
+                        actualNode = parentNode;
+                        childInd = actualNode.getChildInd();
+                        parentNode = actualNode.getFather();
+                        countChild = parentNode.getCountChilds();
+                    }
+                    if (childInd != countChild - 1) {
+                        actualNode = parentNode.getChilds().get(childInd + 1);
+                    } else {
+                        parentNode = null;
+                    }
                 }
-                if (childInd != countChild - 1) {
-                    actualNode = parentNode.getChilds().get(childInd + 1);
-                } else {
-                    parentNode = null;
-                }
-            }
         } while (parentNode != null);
         String derivation = sbDerivation.toString();
         derivation = derivation.substring(0, derivation.length() - 4);

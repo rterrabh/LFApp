@@ -1,9 +1,6 @@
 package com.ufla.lfapp.core.grammar;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -18,6 +15,7 @@ public class AcademicSupport {
     private String comments;
     private boolean situation;
     private Map<Integer, String> foundProblems;
+    private Grammar grammar;
     private String result;
     private String solutionDescription;
     private Set<Rule> insertedRules;
@@ -25,7 +23,6 @@ public class AcademicSupport {
     private List<Set<String>> firstSet;
     private List<Set<String>> secondSet;
     private List<Set<String>> thirdSet;
-    private Grammar grammar;
 
 
     public AcademicSupport() {
@@ -37,7 +34,7 @@ public class AcademicSupport {
 
     public AcademicSupport(String comments, boolean situation,
                            Map<Integer, String> foundProblems,
-                           Grammar g, String solutionDescription,
+                           Grammar resultGrammar, String solutionDescription,
                            Set<Rule> insertedRules,
                            Set<Rule> irregularRules, List<Set<String>> firtSet,
                            List<Set<String>> secondSet,
@@ -46,14 +43,14 @@ public class AcademicSupport {
         this.comments = comments;
         this.situation = situation;
         this.foundProblems = foundProblems;
-        setResult(g);
+        this.grammar = grammar;
+        setResult(resultGrammar);
         this.solutionDescription = solutionDescription;
         this.insertedRules = insertedRules;
         this.irregularRules = irregularRules;
         this.firstSet = firtSet;
         this.secondSet = secondSet;
         this.thirdSet = thirdSet;
-        this.grammar = grammar;
     }
 
     //Construtor base
@@ -65,10 +62,10 @@ public class AcademicSupport {
                            List<Set<String>> secondSet,
                            List<Set<String>> thirdSet,
                            Grammar grammar) {
-        super();
         this.comments = comments;
         this.situation = situation;
         this.foundProblems = foundProblems;
+        this.grammar = grammar;
         this.result = result;
         this.solutionDescription = solutionDescription;
         this.insertedRules = insertedRules;
@@ -76,9 +73,127 @@ public class AcademicSupport {
         this.firstSet = firtSet;
         this.secondSet = secondSet;
         this.thirdSet = thirdSet;
-        this.grammar = grammar;
-
     }
+
+    /**
+     * Formata uma gramática em texto com para visualização.
+     *
+     * @param grammar gramática a ser formatada.
+     * @return texto com gramática formatada
+     */
+    public String formatResultGrammar(final Grammar grammar) {
+        StringBuilder txtGrammar = new StringBuilder(formatVariableRules(grammar.getInitialSymbol(),
+                grammar));
+        for (String variable : grammar.getVariables()) {
+            if (variable.equals(grammar.getInitialSymbol())) {
+                continue;
+            }
+            txtGrammar.append(formatVariableRules(variable, grammar));
+        }
+        return txtGrammar.toString();
+    }
+
+    /**
+     * Formata uma variável e suas regras.
+     *
+     * @param variable variável a ser formatada
+     * @param grammar  gramática da variável a ser formatada
+     * @return variável e regras formatadas
+     */
+    private String formatVariableRules(String variable, final Grammar grammar) {
+        StringBuilder formatedRules = new StringBuilder();
+        formatedRules.append(formatElement(variable)).append(" →");
+        for (Rule element : grammar.getRules(variable)) {
+            formatedRules.append(" ").append(formatElement
+                    (element.getRightSide())).append(" |");
+        }
+        formatedRules.deleteCharAt(formatedRules.length() - 1).deleteCharAt(formatedRules.length()
+                - 1).append("<br>");
+        return formatedRules.toString();
+    }
+
+    /**
+     * Formata um elemento de uma regra gramatical, caso este elemento for uma variável e tenha
+     * digítos coloca os dígitos dentro da tag <sub>.
+     *
+     * @param element elemento a ser formatado
+     * @return elemento formatado
+     */
+    private String formatElement(String element) {
+        if (element.length() == 1) {
+            return element;
+        }
+        StringBuilder formatedElement = new StringBuilder();
+        boolean isDigit = false;
+        for (int i = 0; i < element.length(); i++) {
+            if (Character.isDigit(element.charAt(i)) && !isDigit) {
+                formatedElement.append("<sub>").append(element.charAt(i));
+                isDigit = true;
+            } else if (Character.isDigit(element.charAt(i)) && isDigit) {
+                formatedElement.append(element.charAt(i));
+            } else if (!Character.isDigit(element.charAt(i)) && isDigit) {
+                formatedElement.append("</sub>").append(element.charAt(i));
+                isDigit = false;
+            } else {
+                formatedElement.append(element.charAt(i));
+            }
+        }
+        if (isDigit) {
+            formatedElement.append("</sub>");
+        }
+        return formatedElement.toString();
+    }
+
+    /**
+     * Insere um nova regra no conjunto de novas regras.
+     *
+     * @param irregularRule nova regra a ser inserida
+     */
+    public void insertNewRule(Rule newRule) {
+        this.insertedRules.add(newRule);
+    }
+
+    /**
+     * Insere um regra irregular no conjunto de regras irregulares.
+     *
+     * @param irregularRule regra irregular a ser inserida
+     */
+    public void insertIrregularRule(Rule irregularRule) {
+        this.irregularRules.add(irregularRule);
+    }
+
+    /**
+     * Insere um conjunto na primeira lista de conjuntos.
+     *
+     * @param currentSet conjunto a ser inserido
+     * @param decision
+     */
+    public void insertOnFirstSet(Set<String> currentSet, String decision) {
+        firstSet.add(new LinkedHashSet<>(currentSet));
+    }
+
+    /**
+     * Insere um conjunto na segunda lista de conjuntos.
+     *
+     * @param currentSet conjunto a ser inserido
+     * @param decision
+     */
+    public void insertOnSecondSet(Set<String> currentSet, String decision) {
+        secondSet.add(new LinkedHashSet<>(currentSet));
+    }
+
+    /**
+     * Insere um conjunto na terceira lista de conjuntos.
+     *
+     * @param currentSet conjunto a ser inserido
+     * @param decision
+     */
+    public void insertOnThirdSet(Set<String> currentSet, String decision) {
+        thirdSet.add(new LinkedHashSet<>(currentSet));
+    }
+
+
+    // Métodos acessores
 
     public String getComments() {
         return comments;
@@ -103,7 +218,6 @@ public class AcademicSupport {
     public void setFoundProblems(Map<Integer, String> foundProblems) {
         this.foundProblems = foundProblems;
     }
-
 
     public Grammar getGrammar() {
         return grammar;
@@ -137,85 +251,6 @@ public class AcademicSupport {
         this.insertedRules = insertedRules;
     }
 
-    private Set<String> getRuleLeftSides(final Grammar g) {
-        Set<String> lefSides = new LinkedHashSet<>();
-        for (Rule rule : g.getRules()) {
-            lefSides.add(rule.getLeftSide());
-        }
-        return lefSides;
-    }
-
-    public String formatResultGrammar(final Grammar g) {
-        StringBuilder txtGrammar = new StringBuilder(g.getInitialSymbol()
-                + " →");
-        for (Rule element : g.getRules(g.getInitialSymbol())) {
-            txtGrammar.append(" ").append(putSentenceOnSubstring(element
-                    .getRightSide())).append(" |");
-        }
-        txtGrammar.deleteCharAt(txtGrammar.length() - 1);
-        txtGrammar.append("<br>");
-        for (String variable : g.getVariables()) {
-            if (variable.equals(g.getInitialSymbol())) {
-                continue;
-            }
-            if (variable.length() > 1) {
-                for (int i = 0; i < variable.length(); i++) {
-                    if (Character.isDigit(variable.charAt(i))) {
-                        int j = i+1;
-                        while (j != variable.length() && Character.isDigit(variable.charAt(j))) {
-                            j++;
-                        }
-                        i = j-1;
-                        txtGrammar.append("<sub>").append(variable.substring(i, j)).append("</sub>");
-                    } else {
-                        txtGrammar.append(variable.charAt(i));
-                    }
-                }
-            } else {
-                txtGrammar.append(variable);
-            }
-            txtGrammar.append(" →");
-            for (Rule element : g.getRules(variable)) {
-                    txtGrammar.append(" ").append(putSentenceOnSubstring
-                            (element.getRightSide()));
-                    txtGrammar.append(" |");
-            }
-            txtGrammar.deleteCharAt(txtGrammar.length() - 1);
-            txtGrammar.append("<br>");
-        }
-        return txtGrammar.toString();
-    }
-
-    String putSentenceOnSubstring(String element) {
-        StringBuilder newSentence = new StringBuilder();
-        boolean isDigit = false;
-        for (int i = 0; i < element.length(); i++) {
-            if (Character.isDigit(element.charAt(i)) && !isDigit) {
-                newSentence.append("<sub>").append(element.charAt(i));
-                isDigit = true;
-            } else if (Character.isDigit(element.charAt(i)) && isDigit) {
-                newSentence.append(element.charAt(i));
-            } else if (!Character.isDigit(element.charAt(i)) && isDigit) {
-                newSentence.append("</sub>").append(element.charAt(i));
-                isDigit = false;
-            } else {
-                newSentence.append(element.charAt(i));
-            }
-        }
-        if (isDigit) {
-            newSentence.append("</sub>");
-        }
-        return newSentence.toString();
-    }
-
-    void insertNewRule(Rule newRule) {
-        this.insertedRules.add(newRule);
-    }
-
-    void insertIrregularRule(Rule irregularRule) {
-        this.irregularRules.add(irregularRule);
-    }
-
     public Set<Rule> getIrregularRules() {
         return irregularRules;
     }
@@ -240,7 +275,6 @@ public class AcademicSupport {
         this.secondSet = secondSet;
     }
 
-
     public List<Set<String>> getThirdSet() {
         return thirdSet;
     }
@@ -249,17 +283,6 @@ public class AcademicSupport {
         this.thirdSet = thirdSet;
     }
 
-    public void insertOnFirstSet(Set<String>  currentSet, String decision) {
-        firstSet.add(new LinkedHashSet<>(currentSet));
-    }
-
-    public void insertOnSecondSet(Set<String> currentSet, String decision) {
-        secondSet.add(new LinkedHashSet<>(currentSet));
-    }
-
-    public void insertOnThirdSet(Set<String> currentSet, String decision) {
-        thirdSet.add(new LinkedHashSet<>(currentSet));
-    }
 }
 
 

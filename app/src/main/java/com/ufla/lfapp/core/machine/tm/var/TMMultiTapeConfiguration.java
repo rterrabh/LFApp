@@ -31,10 +31,6 @@ public class TMMultiTapeConfiguration extends Configuration {
         return tapes;
     }
 
-    public int[] getIndexes() {
-        return indexes;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

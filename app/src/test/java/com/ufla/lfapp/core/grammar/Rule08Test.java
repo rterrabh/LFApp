@@ -1,6 +1,9 @@
 package com.ufla.lfapp.core.grammar;
 
+import com.ufla.lfapp.utils.ResourcesContext;
+
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -16,6 +19,11 @@ public class Rule08Test {
 
     Rule rule;
     // T12 -> Z12T31R120
+
+    @BeforeClass
+    public static void setTest() {
+        ResourcesContext.isTest = true;
+    }
 
     @Before
     public void setUp() {

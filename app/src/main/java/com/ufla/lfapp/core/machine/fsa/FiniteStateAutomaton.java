@@ -82,28 +82,16 @@ public class FiniteStateAutomaton
                                 State initialState, SortedSet<State> finalStates,
                                 SortedSet<FSATransitionFunction> FSATransitionFunctions) {
         super(states, initialState, finalStates);
+        this.FSATransitionFunctions = new TreeSet<>();
         if (FSATransitionFunctions == null) {
             return;
         }
-        this.FSATransitionFunctions = new TreeSet<>();
         for (FSATransitionFunction FSATransitionFunction : FSATransitionFunctions) {
             State currentState = getState(FSATransitionFunction.getCurrentState().getName());
             State futureState = getState(FSATransitionFunction.getFutureState().getName());
             this.FSATransitionFunctions.add(new FSATransitionFunction(currentState,
                     FSATransitionFunction.getSymbol(), futureState));
         }
-    }
-
-    public static SortedSet<FSATransitionFunction> copyTransictionFunctions(
-            Set<FSATransitionFunction> FSATransitionFunctions) {
-        SortedSet<FSATransitionFunction> copyTransictionFunctions = new TreeSet<>();
-        if (FSATransitionFunctions == null) {
-            return copyTransictionFunctions;
-        }
-        for (FSATransitionFunction FSATransitionFunction : FSATransitionFunctions) {
-            copyTransictionFunctions.add(FSATransitionFunction.copy());
-        }
-        return copyTransictionFunctions;
     }
 
     public FiniteStateAutomaton(FiniteStateAutomaton finiteStateAutomaton) {
@@ -136,18 +124,6 @@ public class FiniteStateAutomaton
         Set<State> statesWithout = new HashSet<>(states);
         statesWithout.remove(state);
         return statesWithout;
-    }
-
-    public Map<State, State> getStatesMapSimplify() {
-        int contStates = 0;
-        Map<State, State> statesMap = new HashMap<>();
-        statesMap.put(initialState, new State("q" + contStates));
-        contStates++;
-        for (State state : statesNamesWithout(initialState)) {
-            statesMap.put(state, new State("q" + contStates));
-            contStates++;
-        }
-        return statesMap;
     }
 
 
@@ -479,55 +455,6 @@ public class FiniteStateAutomaton
             finiteStateAutomaton.FSATransitionFunctions.add(t.copy());
         }
         return finiteStateAutomaton;
-    }
-
-    /**
-     * Encontra o conjunto de estados alcançáveis partindo de um determinado estado e consumindo
-     * um determinado símbolo.
-     * @param fromState estado de partida para os estados alcançáveis
-     * @param symbol símbolo de leitura para os estados alcançáveis
-     * @return retorna conjunto de estados alcançáveis
-     */
-    public SortedSet<State> getStatesReachWithSymbol(State fromState, String symbol) {
-        SortedSet<State> states = new TreeSet<>();
-        
-        for (FSATransitionFunction FSATransitionFunction : FSATransitionFunctions) {
-            if (FSATransitionFunction.equalsCurrentState(fromState) &&
-                    FSATransitionFunction.equalsSymbol(symbol)) {
-                states.add(FSATransitionFunction.getFutureState());
-            }
-        }
-
-        return states;
-    }
-
-    /**
-     * Encontra o fecho-lambda de um estado. O fecho-lambda de um estado é um conjunto de estados
-     * em que se pode alcançar consumindo apenas lambda. O fecho-lambda de um estado no mínimo
-     * possui o próprio estado.
-     *
-     * @param state estado a ser encontrado seu fecho-lambda
-     * @return fecho-lambda do estado
-     */
-    public SortedSet<State> getLambdaClosure(State state) {
-        SortedSet<State> states = new TreeSet<>();
-        SortedSet<State> statesNotVerify = new TreeSet<>();
-        SortedSet<State> newStates = new TreeSet<>();
-
-        statesNotVerify.add(state);
-        while (!statesNotVerify.isEmpty()) {
-            for (State stateForVerify : statesNotVerify) {
-                newStates.addAll(getStatesReachWithSymbol(state, LAMBDA));
-                states.add(stateForVerify);
-            }
-            newStates.removeAll(states);
-            statesNotVerify.clear();
-            statesNotVerify.addAll(newStates);
-            states.addAll(newStates);
-            newStates.clear();
-        }
-
-        return states;
     }
 
     public FiniteStateAutomaton AFNDLambdaToAFND() {
@@ -921,30 +848,9 @@ public class FiniteStateAutomaton
         return null;
     }
 
-    public FSATransitionFunction getTransitionWithStates(State fromState, State toState) {
-        for (FSATransitionFunction t : FSATransitionFunctions) {
-            if (t.getCurrentState().equals(fromState)
-                    && t.getFutureState().equals(toState)) {
-                return t;
-            }
-        }
-        return null;
-    }
-
     @Override
     public MachineType getMachineType() {
         return MachineType.FSA;
-    }
-
-    public Set<FSATransitionFunction> getTransitionsWithStates(State fromState, State toState) {
-        Set<FSATransitionFunction> transitions = new HashSet<>();
-        for (FSATransitionFunction t : FSATransitionFunctions) {
-            if (t.getCurrentState().equals(fromState)
-                    && t.getFutureState().equals(toState)) {
-                transitions.add(t);
-            }
-        }
-        return transitions;
     }
 
     public SortedSet<State> getFutureStates(State currentState, String symbol) {
@@ -988,22 +894,6 @@ public class FiniteStateAutomaton
         }
         return transitionTableAFND;
     }
-
-    public FSATransitionFunction[][] getTransitionTable() {
-        SortedSet<String> alphabetSet = getAlphabet();
-        FSATransitionFunction[][] transitionTable =
-                new FSATransitionFunction[states.size()][alphabetSet.size()];
-        State states[] = this.states.toArray(new State[this.states.size()]);
-        String alphabet[] = alphabetSet.toArray(new String[alphabetSet.size()]);
-        for (int i = 0; i < states.length; i++) {
-                for (int j = 0; j < alphabet.length; j++) {
-                    transitionTable[i][j] = getTransition(states[i], alphabet[j]);
-                }
-        }
-        return transitionTable;
-    }
-
-
 
     @Override
     public String toString() {

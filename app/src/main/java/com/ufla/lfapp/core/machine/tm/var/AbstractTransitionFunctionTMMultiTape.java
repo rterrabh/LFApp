@@ -21,9 +21,6 @@ public abstract class AbstractTransitionFunctionTMMultiTape
     public int compareTo(TransitionFunction another) {
         int result = super.compareTo(another);
         if (result != 0) return result;
-        if (!another.getClass().getSuperclass().equals(this.getClass())) {
-            return -1;
-        }
         AbstractTransitionFunctionTMMultiTape t =
                 (AbstractTransitionFunctionTMMultiTape) another;
         result = readSymbols.length + writeSymbols.length
@@ -32,7 +29,7 @@ public abstract class AbstractTransitionFunctionTMMultiTape
             return result;
         }
         for (int i = 0; i < readSymbols.length; i++) {
-            result = readSymbols[i].compareTo(t.writeSymbols[i]);
+            result = readSymbols[i].compareTo(t.readSymbols[i]);
             if (result != 0) {
                 return result;
             }
@@ -95,32 +92,8 @@ public abstract class AbstractTransitionFunctionTMMultiTape
         return readSymbols;
     }
 
-    public void setReadSymbols(String[] readSymbols) {
-        this.readSymbols = readSymbols;
-    }
-
-    public void setReadSymbol(int index, String readSymbol) {
-        this.readSymbols[index] = readSymbol;
-    }
-
     public String[] getWriteSymbols() {
         return writeSymbols;
-    }
-
-    public void setWriteSymbols(String[] writeSymbols) {
-        this.writeSymbols = writeSymbols;
-    }
-
-    public void setWriteSymbol(int index, String writeSymbol) {
-        this.writeSymbols[index] = writeSymbol;
-    }
-
-    public String getSymbolsWithSep() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < readSymbols.length; i++) {
-            sb.append(readSymbols[i]).append('/').append(writeSymbols[i]).append(", ");
-        }
-        return sb.substring(0, sb.length()-2);
     }
 
     public String getSymbols() {
@@ -128,7 +101,7 @@ public abstract class AbstractTransitionFunctionTMMultiTape
         for (int i = 0; i < readSymbols.length; i++) {
             sb.append(readSymbols[i]).append('/').append(writeSymbols[i]).append(' ');
         }
-        return sb.substring(0, sb.length()-1);
+        return sb.substring(0, sb.length() - 1);
     }
 
     // MÉTODOS EQUALS
@@ -136,11 +109,16 @@ public abstract class AbstractTransitionFunctionTMMultiTape
         return Arrays.deepEquals(this.readSymbols, readSymbols);
     }
 
-    public boolean equalsWriteSymbols(String[] writeSymbols) {
-        return Arrays.deepEquals(this.writeSymbols, writeSymbols);
+    public void setReadSymbols(String[] readSymbols) {
+        this.readSymbols = readSymbols;
+    }
+
+    public void setWriteSymbols(String[] writeSymbols) {
+        this.writeSymbols = writeSymbols;
     }
 
     @Override
+
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -159,15 +137,6 @@ public abstract class AbstractTransitionFunctionTMMultiTape
         result = 31 * result + Arrays.deepHashCode(readSymbols);
         result = 31 * result + Arrays.deepHashCode(writeSymbols);
         return result;
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("AbstractTransitionFunctionTMMultiTape{");
-        sb.append("readSymbols=").append(Arrays.toString(readSymbols));
-        sb.append(", writeSymbols=").append(Arrays.toString(writeSymbols));
-        sb.append('}');
-        return sb.toString();
     }
 
 }

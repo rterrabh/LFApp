@@ -28,7 +28,6 @@ public class NDFAToDFATest {
 
     static {
         ResourcesContext.isTest = true;
-        TMMove.test = true;
     }
 
     @Before

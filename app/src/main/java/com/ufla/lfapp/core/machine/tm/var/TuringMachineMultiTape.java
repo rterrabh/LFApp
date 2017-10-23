@@ -80,14 +80,6 @@ public class TuringMachineMultiTape
         setTransitionFunction(transitionFunction);
     }
 
-    public boolean addTransition(TMMultiTapeTransitionFunction transition) {
-        if (transition.hasNumTapes(getNumTapes())) {
-            getTransitionFunctions().add(transition);
-            return true;
-        }
-        return false;
-    }
-
     public Map<Pair<State, State>, SortedSet<String>> getTransitionsTMMultiTape() {
         Set<TMMultiTapeTransitionFunction> transitionFunction = getTransitionFunctions();
         Map<Pair<State, State>, SortedSet<String>> transitionsTMMultiTape = new HashMap<>();
@@ -125,30 +117,6 @@ public class TuringMachineMultiTape
             }
         }
         return list.toArray(new String[0]);
-    }
-
-    public SortedSet<TMMultiTapeTransitionFunction> createTransitions(String currentState, String futureState,
-                                                                       String label) {
-        SortedSet<TMMultiTapeTransitionFunction> transitions = new TreeSet<>();
-        State a = getState(currentState);
-        State b = getState(futureState);
-        String[] tra = label.split("\\n");
-        for (int i = 0; i < tra.length; i++) {
-            String[] args = clean(tra[i].split("[, /]"));
-            int n = args.length / 3;
-            String readSymbols[] = new String[n];
-            String writeSymbols[] = new String[n];
-            TMMove moves[] = new TMMove[n];
-            for (int j = 0; j < n; j++) {
-                readSymbols[j] = args[j * 3];
-                writeSymbols[j] = args[j * 3 + 1];
-                moves[j] = TMMove.getInstance(args[j * 3 + 2]);
-            }
-            transitions.add(new TMMultiTapeTransitionFunction(a, b, readSymbols,
-                    writeSymbols,
-                    moves));
-        }
-        return transitions;
     }
 
     // MÉTODOS ACESSORES

@@ -7,12 +7,14 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 
 @SuiteClasses(
-        { DFACompleteTest.class, DFAMinimizationTest.class, DotLanguageParserTest.class,
-        FSASimulatorTest.class, LBASimulatorTest.class, NDFAToDFATest.class,
-        PDASimulatorTest.class, RegexToNDFATest.class, TMEnumeratorSimulatorTest.class,
-        TMMultiTapeSimulatorTest.class, TMMultiTrackSimulatorTest.class, TMSimulatorTest.class,
-        FiniteAutomataSudkampTest.class, PDAAndCFLSudkampTest.class,
-                TuringMachineSudkampTest.class })
+        {DFACompleteTest.class, DFAMinimizationTest.class, DotLanguageParserTest.class,
+                FSASimulatorTest.class, LBASimulatorTest.class, NDFAToDFATest.class,
+                PDASimulatorTest.class, RegexToNDFATest.class, TMEnumeratorSimulatorTest.class,
+                TMMultiTapeSimulatorTest.class, TMMultiTrackSimulatorTest.class, TMSimulatorTest.class,
+                FiniteAutomataSudkampTest.class, PDAAndCFLSudkampTest.class,
+                TuringMachineSudkampTest.class, GraphAdapterTest.class, ConfigurationTest.class,
+                TransitionFunctionTest.class, FSABuilderTest.class
+        })
 
 public class MachineTests {
 }

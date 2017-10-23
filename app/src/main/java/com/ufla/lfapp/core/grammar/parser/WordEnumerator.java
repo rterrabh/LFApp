@@ -28,10 +28,7 @@ public class WordEnumerator {
         this.numberOfWords = numberOfWords;
         this.words = new ArrayList<>(numberOfWords);
         alphabet = new TreeSet<>();
-        alphabet = grammar.getTerminals();
-        if (alphabet.contains(Grammar.LAMBDA)) {
-            alphabet.remove(Grammar.LAMBDA);
-        }
+        setAlphabet(grammar.getTerminals());
         generateWords();
     }
 
@@ -47,7 +44,7 @@ public class WordEnumerator {
     private void generateWords() {
         int contWords = 0;
         int order = 1;
-        words.add(Grammar.LAMBDA);
+        words.add("");
         contWords++;
         while (contWords < numberOfWords) {
             Permut permut = new Permut(order, alphabet);

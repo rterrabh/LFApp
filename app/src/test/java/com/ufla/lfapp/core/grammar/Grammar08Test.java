@@ -11,7 +11,8 @@ public class Grammar08Test {
 
 	private Grammar g;
 
-	static {
+	@BeforeClass
+	public static void setTest() {
 		ResourcesContext.isTest = true;
 	}
 	

@@ -15,7 +15,8 @@ import org.junit.Test;
 
 public class LefmostDerAndAmbSudkampTest {
 
-    static {
+    @BeforeClass
+    public static void setTest() {
         ResourcesContext.isTest = true;
     }
 

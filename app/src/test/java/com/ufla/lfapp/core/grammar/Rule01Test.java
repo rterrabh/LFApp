@@ -1,5 +1,7 @@
 package com.ufla.lfapp.core.grammar;
 
+import com.ufla.lfapp.utils.ResourcesContext;
+
 import static org.junit.Assert.*;
 
 import org.junit.*;
@@ -14,6 +16,11 @@ public class Rule01Test {
 
     Rule rule;
     // S -> aSBC
+
+    @BeforeClass
+    public static void setTest() {
+        ResourcesContext.isTest = true;
+    }
 
     @Before
     public void setUp() {

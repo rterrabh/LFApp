@@ -6,11 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.RunnableFuture;
 
 /**
  * Created by carlos on 2/22/17.
@@ -37,6 +35,17 @@ public class AmbiguityVerification {
         verify();
     }
 
+//    private void verifyLinear() {
+//        for (final String word : words) {
+//            System.out.println("Word -> " + word);
+//            TreeDerivationParser treeDerivationParser = new TreeDerivationParser(grammar, word);
+//            treeDerivationParser.parser();
+//            if (treeDerivationParser.getTreeDerivationAux() != null) {
+//                wordsAmbiguity.add(word);
+//            }
+//        }
+//    }
+
     private void verify() {
         for (final String word : words) {
             futures.add(executorService.submit(new Runnable() {
@@ -54,9 +63,7 @@ public class AmbiguityVerification {
         for (Future<?> future : futures) {
             try {
                 future.get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
+            } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
         }
@@ -65,7 +72,7 @@ public class AmbiguityVerification {
     public boolean isAmbiguityGrammar() {
         return !wordsAmbiguity.isEmpty();
     }
-    
+
     public List<String> getWordsAmbiguity() {
         return wordsAmbiguity;
     }

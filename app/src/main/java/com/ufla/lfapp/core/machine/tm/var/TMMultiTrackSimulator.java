@@ -124,6 +124,10 @@ public class TMMultiTrackSimulator {
             return tapes;
         }
 
+//        public String toString() {
+//            return index + " - " + Arrays.deepToString(tapes);
+//        }
+
     }
 
     private boolean validityFromAlphabet() {

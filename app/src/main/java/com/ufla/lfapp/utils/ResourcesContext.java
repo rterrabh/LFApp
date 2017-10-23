@@ -34,7 +34,7 @@ public class ResourcesContext {
 
     public static String getString(int id) {
         if (isTest) {
-            return "1#,2#,3#,4#,5#,6#,7#,ola";
+            return ResourcesTest.getString(id);
         }
         ResourcesContext rc = ResourcesContext.getInstance();
         if (rc.resources == null) {

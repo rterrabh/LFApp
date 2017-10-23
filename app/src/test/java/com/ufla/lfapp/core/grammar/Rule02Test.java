@@ -1,5 +1,7 @@
 package com.ufla.lfapp.core.grammar;
 
+import com.ufla.lfapp.utils.ResourcesContext;
+
 import static org.junit.Assert.*;
 
 import org.junit.*;
@@ -12,17 +14,22 @@ import java.util.Set;
 
 public class Rule02Test {
 
-    com.ufla.lfapp.core.grammar.Rule rule;
+    Rule rule;
     // S -> λ
+
+    @BeforeClass
+    public static void setTest() {
+        ResourcesContext.isTest = true;
+    }
 
     @Before
     public void setUp() {
-        rule = new com.ufla.lfapp.core.grammar.Rule("S", "λ");
+        rule = new Rule("S", "λ");
     }
 
     @Test
     public void testClone1() {
-        com.ufla.lfapp.core.grammar.Rule rc = (com.ufla.lfapp.core.grammar.Rule) rule.clone();
+        Rule rc = (Rule) rule.clone();
         assertEquals(rc, rule);
         rc.setRightSide("abr");
         assertNotEquals(rc, rule);
@@ -30,7 +37,7 @@ public class Rule02Test {
 
     @Test
     public void testClone2() {
-        com.ufla.lfapp.core.grammar.Rule rc = (com.ufla.lfapp.core.grammar.Rule) rule.clone();
+        Rule rc = (Rule) rule.clone();
         assertEquals(rc, rule);
         rc.setLeftSide("A");
         assertNotEquals(rc, rule);

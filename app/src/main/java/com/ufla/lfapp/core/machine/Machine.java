@@ -38,7 +38,6 @@ public abstract class Machine implements Serializable {
 
     /**
      * Estado inicial da máquina.
-
      */
     protected State initialState;
     /**
@@ -50,33 +49,9 @@ public abstract class Machine implements Serializable {
     protected Date creationDate;
     protected Integer contUses = 1;
 
-    public String getLabelTransition(State current, State future) {
-        Set<TransitionFunction> transitions =
-                getTransitions(current, future);
-        StringBuilder sb = new StringBuilder();
-        for (TransitionFunction tf : transitions) {
-            sb.append(tf.getLabel())
-                    .append("\\n");
-        }
-        return sb.substring(0, sb.length()-1);
-    }
-
     public abstract Set<? extends TransitionFunction> getTransitionFunctionsGen();
 
     public abstract MachineType getMachineType();
-
-    public Set<TransitionFunction> getTransitions(State current, State future) {
-        Set<? extends TransitionFunction> transitions = getTransitionFunctionsGen();
-        Set<TransitionFunction> transitionsResult = new HashSet<>();
-        for (TransitionFunction t : transitions) {
-            if (t.getCurrentState().equals(current)
-                    && t.getFutureState().equals(future)) {
-                transitionsResult.add(t);
-            }
-        }
-        return transitionsResult;
-    }
-
 
     /**
      * Construtor vazio. Inicia os atributos agregados com objetos vazios. O estado inicial é
@@ -146,16 +121,6 @@ public abstract class Machine implements Serializable {
 
     public abstract Set<? extends TransitionFunction> getTransitionFunctions();
 
-    protected static SortedSet<State> copyStates(SortedSet<State> states) {
-        SortedSet<State> copyStates = new TreeSet<>();
-        if (states == null) {
-            return copyStates;
-        }
-        for (State state : states) {
-            copyStates.add(state.copy());
-        }
-        return copyStates;
-    }
 
     public State getState(String stateName) {
         for (State state : states) {
@@ -175,6 +140,7 @@ public abstract class Machine implements Serializable {
         if (finalStates == null) {
             return;
         }
+
         for (State state : finalStates) {
             this.finalStates.add(getState(state.getName()));
         }

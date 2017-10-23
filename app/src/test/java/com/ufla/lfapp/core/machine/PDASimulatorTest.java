@@ -3,10 +3,6 @@ package com.ufla.lfapp.core.machine;
 import com.ufla.lfapp.core.machine.pda.PDASimulator;
 import com.ufla.lfapp.core.machine.pda.PDATransitionFunction;
 import com.ufla.lfapp.core.machine.pda.PushdownAutomaton;
-import com.ufla.lfapp.core.machine.tm.TMMove;
-import com.ufla.lfapp.core.machine.tm.TMSimulator;
-import com.ufla.lfapp.core.machine.tm.TMTransitionFunction;
-import com.ufla.lfapp.core.machine.tm.TuringMachine;
 import com.ufla.lfapp.utils.ResourcesContext;
 import com.ufla.lfapp.utils.Symbols;
 
@@ -32,7 +28,6 @@ public class PDASimulatorTest {
 
     static {
         ResourcesContext.isTest = true;
-        TMMove.test = true;
     }
 
     @Before
@@ -63,61 +58,61 @@ public class PDASimulatorTest {
     @Test
     public void testWord_01() throws Exception {
         PDASimulator pdaSimulator = new PDASimulator(pda, "ab");
-        assertEquals(true, pdaSimulator.processWithoutSpannable());
+        assertEquals(true, pdaSimulator.process());
     }
 
     @Test
     public void testWord_02() throws Exception {
         PDASimulator pdaSimulator = new PDASimulator(pda, "aabb");
-        assertEquals(true, pdaSimulator.processWithoutSpannable());
+        assertEquals(true, pdaSimulator.process());
     }
 
     @Test
     public void testWord_03() throws Exception {
         PDASimulator pdaSimulator = new PDASimulator(pda, "aaabbb");
-        assertEquals(true, pdaSimulator.processWithoutSpannable());
+        assertEquals(true, pdaSimulator.process());
     }
 
     @Test
     public void testWord_04() throws Exception {
         PDASimulator pdaSimulator = new PDASimulator(pda, "aaaabbbb");
-        assertEquals(true, pdaSimulator.processWithoutSpannable());
+        assertEquals(true, pdaSimulator.process());
     }
 
     @Test
     public void testWord_05() throws Exception {
         PDASimulator pdaSimulator = new PDASimulator(pda, "a");
-        assertEquals(false, pdaSimulator.processWithoutSpannable());
+        assertEquals(false, pdaSimulator.process());
     }
 
     @Test
     public void testWord_06() throws Exception {
         PDASimulator pdaSimulator = new PDASimulator(pda, "b");
-        assertEquals(false, pdaSimulator.processWithoutSpannable());
+        assertEquals(false, pdaSimulator.process());
     }
 
     @Test
     public void testWord_07() throws Exception {
         PDASimulator pdaSimulator = new PDASimulator(pda, "aa");
-        assertEquals(false, pdaSimulator.processWithoutSpannable());
+        assertEquals(false, pdaSimulator.process());
     }
 
     @Test
     public void testWord_08() throws Exception {
         PDASimulator pdaSimulator = new PDASimulator(pda, "bb");
-        assertEquals(false, pdaSimulator.processWithoutSpannable());
+        assertEquals(false, pdaSimulator.process());
     }
 
     @Test
     public void testWord_09() throws Exception {
         PDASimulator pdaSimulator = new PDASimulator(pda, "aba");
-        assertEquals(false, pdaSimulator.processWithoutSpannable());
+        assertEquals(false, pdaSimulator.process());
     }
 
     @Test
     public void testWord_10() throws Exception {
         PDASimulator pdaSimulator = new PDASimulator(pda, "bbaa");
-        assertEquals(false, pdaSimulator.processWithoutSpannable());
+        assertEquals(false, pdaSimulator.process());
     }
 
 }

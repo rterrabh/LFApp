@@ -93,8 +93,6 @@ public class TMMultiTapeSimulator {
     }
 
 
-
-
     public class Configuration {
 
         int depth;
@@ -162,7 +160,6 @@ public class TMMultiTapeSimulator {
     private List<String> symbolsExternFromAlphabet() {
         return null;
     }
-
 
 
     public void verifyWord() throws Exception {
@@ -267,12 +264,6 @@ public class TMMultiTapeSimulator {
             stop = processConfigurationEnum();
             configuration = lastConfiguration;
             verifyTapesLength(configuration.getIndex());
-//            System.out.println("----------------");
-//            System.out.println(configuration.getState());
-//            System.out.println(Arrays.toString(configuration.getIndex()));
-//            for (String tape : configuration.getTapes()) {
-//                System.out.println(tape);
-//            }
 
             Set<TMMultiTapeTransitionFunction> transitions = turingMachine
                     .getTransitions(lastConfiguration.transition.getFutureState(),
@@ -298,8 +289,7 @@ public class TMMultiTapeSimulator {
                 index = backtrackConfiguration(index);
                 depth--;
             }
-            // Run configuration
-//            actualConfiguration.setTapes(tapes);
+            // Run configuration;
             stackActualConfiguration.addLast(actualConfiguration);
             index = processConfiguration(index);
             depth++;

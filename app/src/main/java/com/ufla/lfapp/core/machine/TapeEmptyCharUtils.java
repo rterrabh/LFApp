@@ -11,13 +11,7 @@ import java.util.Arrays;
 
 public class TapeEmptyCharUtils {
 
-    ///*
     public static final String EMPTY_CHAR_STR = "B";
-    //*/
-    /*
-    public static final String EMPTY_CHAR_STR = ResourcesContext
-            .getString(R.string.empty_char_tape);
-    */
     public static final char EMPTY_CHAR = EMPTY_CHAR_STR.charAt(0);
     private static final int EMPTY_CHAR_INCREASE = 5;
 
@@ -25,6 +19,7 @@ public class TapeEmptyCharUtils {
     private TapeEmptyCharUtils() {
 
     }
+
 
     public static String increaseEmptyString() {
         char[] emptyString = new char[EMPTY_CHAR_INCREASE];

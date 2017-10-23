@@ -25,19 +25,18 @@ public class MostLeftDerivationTable {
     private Map<String, Integer> variableToIndice;
     private Map<String, Integer> terminalToIndice;
     private Set<Rule>[][] table;
-    private boolean containsLambdaRules;
 
     public MostLeftDerivationTable(Grammar grammar) {
-        containsLambdaRules = false;
         fillTable(grammar);
+        //System.out.println(toString());
     }
 
     public Deque<Rule> getRules(String variable, String terminalLeft) {
         Deque<Rule> rules = new ArrayDeque<>();
         int y = variableToIndice.get(variable);
-        int x = terminalToIndice.get(terminalLeft);
+        Integer x = terminalToIndice.get(terminalLeft);
         rules.addAll(table[y][x]);
-        if (containsLambdaRules) {
+        if (!terminalLeft.equals(Grammar.LAMBDA)) {
             x = terminalToIndice.get(Grammar.LAMBDA);
             rules.addAll(table[y][x]);
         }
@@ -70,10 +69,10 @@ public class MostLeftDerivationTable {
             terminalToIndice.put(terminal, indCont);
             indCont++;
         }
+        terminalToIndice.put(Grammar.LAMBDA, indCont);
     }
 
     private Set<String> setNullable(Grammar grammar) {
-        containsLambdaRules = true;
         Set<String> nullable = new TreeSet<>();
         int x = terminalToIndice.get(GrammarParser.LAMBDA);
         for (Map.Entry<String, Integer> entry : variableToIndice.entrySet()) {
@@ -104,21 +103,14 @@ public class MostLeftDerivationTable {
         return nullable;
     }
 
-
     private void fillTable(Grammar grammar) {
         Set<String> terminals = grammar.getTerminals();
         Set<String> variables = grammar.getVariables();
-        initTable(variables.size(), terminals.size());
+        initTable(variables.size(), terminals.size() + 1);
         setVariableIndices(variables);
         setTerminalIndices(terminals);
-        Set<String> nullable = new HashSet<>();
-        if (terminals.contains(GrammarParser.LAMBDA)) {
-            nullable = setNullable(grammar);
-        }
+        Set<String> nullable = setNullable(grammar);
         for (String terminal : terminals) {
-            if (terminal.equals(GrammarParser.LAMBDA)) {
-                continue;
-            }
             Set<String> leftGenerate = new HashSet<>();
             int x = terminalToIndice.get(terminal);
             for (Map.Entry<String, Integer> entry : variableToIndice.entrySet()) {
@@ -137,9 +129,6 @@ public class MostLeftDerivationTable {
                 rulesAdd = false;
                 for (Map.Entry<String, Integer> entry : variableToIndice.entrySet()) {
                     String variable = entry.getKey();
-//                    if (leftGenerate.contains(variable)) {
-//                        continue;
-//                    }
                     Set<Rule> rules = grammar.getRulesWithFirstProduces(variable, leftGenerate,
                             nullable);
                     if (rules != null && !rules.isEmpty()) {
@@ -171,19 +160,21 @@ public class MostLeftDerivationTable {
 
     /**
      * Retorna a lista de variáveis na ordem da criação da tabela.
+     *
      * @return lista de variáveis na ordem da criação da tabela.
      */
     private List<String> getVariables() {
         int lin = table.length;
         String[] variables = new String[lin];
         for (Map.Entry<String, Integer> entry : variableToIndice.entrySet()) {
-            variables[entry.getValue()] =  entry.getKey();
+            variables[entry.getValue()] = entry.getKey();
         }
-        return  new ArrayList<>(Arrays.asList(variables));
+        return new ArrayList<>(Arrays.asList(variables));
     }
 
     /**
      * Retorna a lista de terminais na ordem da criação da tabela.
+     *
      * @return lista de terminais na ordem da criação da tabela.
      */
     private List<String> getTerminals() {

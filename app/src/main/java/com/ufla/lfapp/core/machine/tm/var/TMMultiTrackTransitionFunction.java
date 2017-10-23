@@ -24,12 +24,10 @@ public class TMMultiTrackTransitionFunction
     public int compareTo(TransitionFunction another) {
         int result = super.compareTo(another);
         if (result != 0) return result;
-        if (!(another instanceof TMMultiTapeTransitionFunction)) {
-            return -1;
-        }
         TMMultiTrackTransitionFunction t =
                 (TMMultiTrackTransitionFunction) another;
-        return move.compareTo(t.move);
+        result = move.compareTo(t.move);
+        return result;
     }
 
     public String getLabel() {
@@ -76,15 +74,6 @@ public class TMMultiTrackTransitionFunction
         return move;
     }
 
-    public void setMove(TMMove move) {
-        this.move = move;
-    }
-
-    // MÉTODOS EQUALS
-    public boolean equalsMove(TMMove move) {
-        return this.move.equals(move);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -102,6 +91,10 @@ public class TMMultiTrackTransitionFunction
         int result = super.hashCode();
         result = 31 * result + (move != null ? move.hashCode() : 0);
         return result;
+    }
+
+    public void setMove(TMMove move) {
+        this.move = move;
     }
 
     @Override

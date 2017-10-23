@@ -3,6 +3,7 @@ package com.ufla.lfapp.core.grammar;
 import com.ufla.lfapp.utils.ResourcesContext;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -22,7 +23,8 @@ public class GrammarTest {
 
     private Grammar grammar;
 
-    static {
+    @BeforeClass
+    public static void setTest() {
         ResourcesContext.isTest = true;
     }
 
@@ -177,7 +179,7 @@ public class GrammarTest {
 
         Grammar newG = grammar.removingLeftRecursion
                 (grammar, new AcademicSupport(), new HashMap<String, String>(),
-                        new AcademicSupportForRemoveLeftRecursion());
+                        new AcademicSupportRLR());
 
         String[] variables = new String[]{"S", "A", "B", "C", "Z1"};
         String[] terminals = new String[]{"a", "b", "c"};
@@ -205,8 +207,8 @@ public class GrammarTest {
     @Test
     public void testAcademicSupportRemovingLeftRecursion() {
 
-        AcademicSupportForRemoveLeftRecursion academicSupportLR =
-                new AcademicSupportForRemoveLeftRecursion();
+        AcademicSupportRLR academicSupportLR =
+                new AcademicSupportRLR();
         grammar.removingLeftRecursion
                 (grammar, new AcademicSupport(), new HashMap<String, String>(),
                         academicSupportLR);
@@ -288,7 +290,7 @@ public class GrammarTest {
     public void testAcademicSupportFNG() {
 
         AcademicSupportFNG academicSupportFNG = new AcademicSupportFNG();
-        grammar.FNG(grammar, new AcademicSupport(), academicSupportFNG);
+        grammar.FNGTerra(grammar, new AcademicSupport(), academicSupportFNG);
 
         List<Set<Rule>> deleteRulesStage2 = new ArrayList<>();
         deleteRulesStage2.add(new HashSet<>(Arrays.asList(new Rule[]{new Rule("C", "AC")})));

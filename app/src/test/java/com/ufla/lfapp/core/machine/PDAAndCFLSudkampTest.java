@@ -1,9 +1,6 @@
 package com.ufla.lfapp.core.machine;
 
 import com.ufla.lfapp.core.grammar.Grammar;
-import com.ufla.lfapp.core.machine.fsa.FSATransitionFunction;
-import com.ufla.lfapp.core.machine.fsa.FiniteStateAutomaton;
-import com.ufla.lfapp.core.machine.fsa.FiniteStateAutomatonGUI;
 import com.ufla.lfapp.core.machine.pda.GrammarToPDAExt;
 import com.ufla.lfapp.core.machine.pda.PDAExtTransitionFunction;
 import com.ufla.lfapp.core.machine.pda.PDASimulator;
@@ -11,14 +8,12 @@ import com.ufla.lfapp.core.machine.pda.PDAToGrammar;
 import com.ufla.lfapp.core.machine.pda.PDATransitionFunction;
 import com.ufla.lfapp.core.machine.pda.PushdownAutomaton;
 import com.ufla.lfapp.core.machine.pda.PushdownAutomatonExtend;
-import com.ufla.lfapp.core.machine.tm.TMMove;
 import com.ufla.lfapp.utils.ResourcesContext;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -38,7 +33,6 @@ public class PDAAndCFLSudkampTest {
 
     static {
         ResourcesContext.isTest = true;
-        TMMove.test = true;
     }
 
     private PushdownAutomaton getAutomatonExample_7_1_1() {

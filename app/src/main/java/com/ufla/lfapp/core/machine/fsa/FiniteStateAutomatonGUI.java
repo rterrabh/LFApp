@@ -90,14 +90,6 @@ public class FiniteStateAutomatonGUI
         }
     }
 
-    private void displayStateGridPositions() {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (Map.Entry<State, MyPoint> myPointEntry : stateGridPositions.entrySet()) {
-            stringBuilder.append("{" + myPointEntry.getKey().toString() + " -> " +
-                myPointEntry.getValue().toString() + "}");
-        }
-    }
-
     private FiniteStateAutomatonGUI kleene() {
        // Log.d("kleene", "kleene");
         FiniteStateAutomatonGUI automaton = new FiniteStateAutomatonGUI(this);

@@ -28,7 +28,6 @@ public class TMSimulatorTest {
 
     static {
         ResourcesContext.isTest = true;
-        TMMove.test = true;
     }
 
     @Before
@@ -61,7 +60,7 @@ public class TMSimulatorTest {
     @Test
     public void testWord_01() throws Exception {
         TMSimulator tmSimulator = new TMSimulator(tm, "aabab");
-        assertEquals(true, tmSimulator.processWithoutSpan());
+        assertEquals(true, tmSimulator.process());
 //        System.out.println(tmSimulator.processALL());
 //        System.out.println(Arrays.toString(tmSimulator.getTapes()));
 //        System.out.println(Arrays.deepToString(tmSimulator.getConfigurations()));
@@ -70,54 +69,54 @@ public class TMSimulatorTest {
     @Test
     public void testWord_02() throws Exception {
         TMSimulator tmSimulator = new TMSimulator(tm, "ababab");
-        assertEquals(true, tmSimulator.processWithoutSpan());
+        assertEquals(true, tmSimulator.process());
     }
 
     @Test
     public void testWord_03() throws Exception {
         TMSimulator tmSimulator = new TMSimulator(tm, "abab");
-        assertEquals(true, tmSimulator.processWithoutSpan());
+        assertEquals(true, tmSimulator.process());
     }
 
     @Test
     public void testWord_04() throws Exception {
         TMSimulator tmSimulator = new TMSimulator(tm, "bb");
-        assertEquals(true, tmSimulator.processWithoutSpan());
+        assertEquals(true, tmSimulator.process());
     }
 
     @Test
     public void testWord_05() throws Exception {
         TMSimulator tmSimulator = new TMSimulator(tm, "babaa");
-        assertEquals(false, tmSimulator.processWithoutSpan());
+        assertEquals(false, tmSimulator.process());
     }
 
     @Test
     public void testWord_06() throws Exception {
         TMSimulator tmSimulator = new TMSimulator(tm, "a");
-        assertEquals(false, tmSimulator.processWithoutSpan());
+        assertEquals(false, tmSimulator.process());
     }
 
     @Test
     public void testWord_07() throws Exception {
         TMSimulator tmSimulator = new TMSimulator(tm, "ababa");
-        assertEquals(false, tmSimulator.processWithoutSpan());
+        assertEquals(false, tmSimulator.process());
     }
 
     @Test
     public void testWord_08() throws Exception {
         TMSimulator tmSimulator = new TMSimulator(tm, "ababaabaa");
-        assertEquals(false, tmSimulator.processWithoutSpan());
+        assertEquals(false, tmSimulator.process());
     }
 
     @Test
     public void testWord_09() throws Exception {
         TMSimulator tmSimulator = new TMSimulator(tm, "aaa");
-        assertEquals(false, tmSimulator.processWithoutSpan());
+        assertEquals(false, tmSimulator.process());
     }
 
     @Test
     public void testWord_10() throws Exception {
         TMSimulator tmSimulator = new TMSimulator(tm, "bbbba");
-        assertEquals(false, tmSimulator.processWithoutSpan());
+        assertEquals(false, tmSimulator.process());
     }
 }

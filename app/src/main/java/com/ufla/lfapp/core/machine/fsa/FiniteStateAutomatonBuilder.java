@@ -7,7 +7,9 @@ import com.ufla.lfapp.core.machine.TransitionAtt;
 import com.ufla.lfapp.utils.ResourcesContext;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -17,7 +19,7 @@ import java.util.TreeSet;
  * Created by carlos on 12/11/16.
  */
 
-public class FiniteStateAutomatonBuilder extends MachineBuilder {
+public class FiniteStateAutomatonBuilder extends MachineBuilder<FiniteStateAutomatonBuilder> {
 
     protected SortedSet<FSATransitionFunction> FSATransitionFunctions;
 
@@ -65,16 +67,6 @@ public class FiniteStateAutomatonBuilder extends MachineBuilder {
         return addTransition(new FSATransitionFunction(currentState, symbol, futureState));
     }
 
-    /**
-     * Remove uma função de transição do autômato em construção.
-     *
-     * @param FSATransitionFunction função de transição a ser removida do autômato
-     * @return próprio construtor de autômato
-     */
-    public FiniteStateAutomatonBuilder removeTransition(FSATransitionFunction FSATransitionFunction) {
-        FSATransitionFunctions.remove(FSATransitionFunction);
-        return this;
-    }
 
     /**
      * Remove uma coleção de funções de transições que tenham seus atributos iguais aos passados
@@ -90,24 +82,44 @@ public class FiniteStateAutomatonBuilder extends MachineBuilder {
      * @throws RuntimeException vetor com os tipos de atributos deverá ter o mesmo tamanho do vetor
      * com o valor dos atributos
      */
-    public FiniteStateAutomatonBuilder removeTransitionsWhere(TransitionAtt transitionAtt[],
-                                                              State transitionAttValue[]) {
+    public FiniteStateAutomatonBuilder removeTransitionsWhere(TransitionAtt[] transitionAtt,
+                                                              String[] transitionAttValue) {
+        removeTransitionsWhereNotSafe(transitionAtt, transitionAttValue);
+        updateStates();
+        return this;
+    }
+
+    /**
+     * Remove uma coleção de funções de transições que tenham seus atributos iguais aos passados
+     * por parâmetro. Exemplo de uso: remover todas funções de transições que saiam do estado "q2"
+     * e cheguem no estado "q1", implementação:
+     * <code> removeTransitionsWhere( new TransitionAtt[] { TransitionAtt.CURRENT_STATE,
+     *      TransitionAtt.FUTURE_STATE }, new String[] { "q2", "q1" } ); </code>
+     *
+     * @param transitionAtt atributos que serão comparados
+     * @param transitionAttValue valor dos atributos que serão comparados
+     *
+     * @throws RuntimeException vetor com os tipos de atributos deverá ter o mesmo tamanho do vetor
+     * com o valor dos atributos
+     */
+    private void removeTransitionsWhereNotSafe(TransitionAtt[] transitionAtt,
+                                                              String[] transitionAttValue) {
         if (transitionAtt.length != transitionAttValue.length) {
             throw new RuntimeException(ResourcesContext.getString(R.string.exceptions_transition_builder_args));
         }
         Iterator<FSATransitionFunction> iterator = FSATransitionFunctions.iterator();
         while (iterator.hasNext()) {
-            FSATransitionFunction FSATransitionFunction = iterator.next();
+            FSATransitionFunction fsaTransitionFunction = iterator.next();
             int contAttTrue = 0;
             for (int i = 0; i < transitionAttValue.length; i++) {
                 if (transitionAtt[i].equals(TransitionAtt.CURRENT_STATE) &&
-                        FSATransitionFunction.getCurrentState().equals(transitionAttValue[i])) {
+                        fsaTransitionFunction.getCurrentState().getName().equals(transitionAttValue[i])) {
                     contAttTrue++;
                 } else if (transitionAtt[i].equals(TransitionAtt.SYMBOL) &&
-                        FSATransitionFunction.getSymbol().equals(transitionAttValue[i])) {
+                        fsaTransitionFunction.getSymbol().equals(transitionAttValue[i])) {
                     contAttTrue++;
                 } else if (transitionAtt[i].equals(TransitionAtt.FUTURE_STATE) &&
-                        FSATransitionFunction.getFutureState().equals(transitionAttValue[i])) {
+                        fsaTransitionFunction.getFutureState().getName().equals(transitionAttValue[i])) {
                     contAttTrue++;
                 }
             }
@@ -115,8 +127,8 @@ public class FiniteStateAutomatonBuilder extends MachineBuilder {
                 iterator.remove();
             }
         }
-        return this;
     }
+
 
     /**
      * Remove um estado do autômato.
@@ -126,27 +138,27 @@ public class FiniteStateAutomatonBuilder extends MachineBuilder {
      */
     @Override
     public FiniteStateAutomatonBuilder removeState(State state) {
-        removeTransitionsWhere(new TransitionAtt[] { TransitionAtt.CURRENT_STATE },
-                new State[] { state });
-        removeTransitionsWhere(new TransitionAtt[] { TransitionAtt.FUTURE_STATE },
-                new State[] { state });
+        removeTransitionsWhereNotSafe(new TransitionAtt[] { TransitionAtt.CURRENT_STATE },
+                new String[] { state.getName() });
+        removeTransitionsWhereNotSafe(new TransitionAtt[] { TransitionAtt.FUTURE_STATE },
+                new String[] { state.getName() });
         super.removeState(state);
         return this;
     }
 
-    /**
-     * Remove uma coleção de estados do autômato.
-     *
-     * @param states coleção de estados removidas do autômato
-     * @return próprio construtor de autômato
-     */
-    @Override
-    public FiniteStateAutomatonBuilder removeStates(Collection<State> states) {
-        for (State state : states) {
-            removeState(state);
+    private void updateStates() {
+        Set<State> states = new HashSet<>();
+        for (FSATransitionFunction fsaTransitionFunction : FSATransitionFunctions) {
+            states.add(fsaTransitionFunction.getCurrentState());
+            states.add(fsaTransitionFunction.getFutureState());
         }
-        return this;
+        this.states.retainAll(states);
+        this.finalStates.retainAll(states);
+        if (initialState != null && !states.contains(initialState)) {
+            initialState = null;
+        }
     }
+
 
     /**
      * Cria o autômato em construção.

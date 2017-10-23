@@ -37,7 +37,6 @@ public class DotLanguageParserTest {
 
     static {
         ResourcesContext.isTest = true;
-        TMMove.test = true;
     }
 
     public FiniteStateAutomaton getFSA() {
@@ -380,7 +379,6 @@ public class DotLanguageParserTest {
         DotLanguage dot = new DotLanguage(TM_MULTI_TAPE_ENUM_01);
         dot.setLabel("tm_multi_tape_enum_01");
         dot.setMachineType(MachineType.TM_MULTI_TAPE);
-        TMMove.test = true;
         Pair<TuringMachineMultiTape, Map<State, MyPoint>> pairTM = dot.toTMMultiTape();
         DotLanguage newDot = new DotLanguage(pairTM.first, pairTM.second);
         assertEquals(dot, dot);

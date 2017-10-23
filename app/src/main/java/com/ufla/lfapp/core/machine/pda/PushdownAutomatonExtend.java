@@ -47,11 +47,11 @@ public class PushdownAutomatonExtend extends Machine implements Serializable {
 
     private void defineStates(PushdownAutomaton pda) {
         SortedSet<State> statesPDA = pda.getStates();
-        for (State state: statesPDA) {
+        for (State state : statesPDA) {
             states.add(new State(state.getName()));
         }
         SortedSet<State> finalStatesPDA = pda.getFinalStates();
-        for (State state: finalStatesPDA) {
+        for (State state : finalStatesPDA) {
             finalStates.add(getState(state.getName()));
         }
         initialState = getState(pda.getInitialState().getName());
@@ -63,7 +63,6 @@ public class PushdownAutomatonExtend extends Machine implements Serializable {
             transitionFunction.add(new PDAExtTransitionFunction(tFPDA, this));
         }
     }
-
 
 
     private void defineAutomaton(PushdownAutomaton pda) {
@@ -90,16 +89,6 @@ public class PushdownAutomatonExtend extends Machine implements Serializable {
             alphabet.add(tFPAExt.getSymbol());
         }
         return alphabet;
-    }
-
-    public SortedSet<String> getStackAlphabet() {
-        SortedSet<String> stackAlphabet = new TreeSet<>();
-        for (PDAExtTransitionFunction tFPAExt : transitionFunction) {
-            stackAlphabet.add(tFPAExt.getPops());
-            stackAlphabet.addAll(tFPAExt.getStacking());
-        }
-        stackAlphabet.remove(Symbols.LAMBDA);
-        return stackAlphabet;
     }
 
     public Map<Pair<State, State>, SortedSet<String>> getTransitionsPDA() {

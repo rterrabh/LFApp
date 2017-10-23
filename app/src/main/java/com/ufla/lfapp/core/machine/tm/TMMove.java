@@ -15,17 +15,14 @@ public enum TMMove implements Serializable {
     LEFT,
     STATIC;
 
-    public static boolean test = false;
-    private static String RIGHT_STR  = "R";
-    private static String LEFT_STR  = "L";
-    private static String STATIC_STR  = "S";
+    private static String RIGHT_STR = "R";
+    private static String LEFT_STR = "L";
+    private static String STATIC_STR = "S";
 
     static {
-        if (!test) {
-//            RIGHT_STR  = ResourcesContext.getString(R.string.direction_right);
-//            LEFT_STR  = ResourcesContext.getString(R.string.direction_left);
-//            STATIC_STR  = ResourcesContext.getString(R.string.direction_static);
-        }
+        RIGHT_STR = ResourcesContext.getString(R.string.direction_right);
+        LEFT_STR = ResourcesContext.getString(R.string.direction_left);
+        STATIC_STR = ResourcesContext.getString(R.string.direction_static);
     }
 
 
@@ -42,10 +39,6 @@ public enum TMMove implements Serializable {
         throw new RuntimeException(
                 ResourcesContext.getString(R.string.exception_instance_not_found_for)
                         + str + "'!");
-    }
-
-    public String stringValue() {
-        return toString();
     }
 
     @Override

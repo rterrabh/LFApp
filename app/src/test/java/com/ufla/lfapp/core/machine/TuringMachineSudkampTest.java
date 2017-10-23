@@ -1,8 +1,5 @@
 package com.ufla.lfapp.core.machine;
 
-import com.ufla.lfapp.core.machine.pda.PDASimulator;
-import com.ufla.lfapp.core.machine.pda.PDATransitionFunction;
-import com.ufla.lfapp.core.machine.pda.PushdownAutomaton;
 import com.ufla.lfapp.core.machine.tm.TMMove;
 import com.ufla.lfapp.core.machine.tm.TMSimulator;
 import com.ufla.lfapp.core.machine.tm.TMTransitionFunction;
@@ -33,7 +30,6 @@ public class TuringMachineSudkampTest {
 
     static {
         ResourcesContext.isTest = true;
-        TMMove.test = true;
     }
 
     public TMMove[] getMoves(String[] movesStr) {
@@ -77,7 +73,7 @@ public class TuringMachineSudkampTest {
         TuringMachine tm = getTMExample_8_1_1();
         String string = "abab";
         TMSimulator tmSimulator = new TMSimulator(tm,string);
-        assertTrue(tmSimulator.processWithoutSpan());
+        assertTrue(tmSimulator.process());
     }
 
     private TuringMachine getTMExample_8_2_1() {
@@ -114,7 +110,7 @@ public class TuringMachineSudkampTest {
         TuringMachine tm = getTMExample_8_2_1();
         String string = "aabb";
         TMSimulator tmSimulator = new TMSimulator(tm,string);
-        assertTrue(tmSimulator.processWithoutSpan());
+        assertTrue(tmSimulator.process());
     }
 
 
@@ -213,22 +209,22 @@ public class TuringMachineSudkampTest {
         String string6 = "cacbacbabcbba";
 
         TMSimulator tmSimulator = new TMSimulator(tm, string1);
-        assertTrue(tmSimulator.processWithoutSpan());
+        assertTrue(tmSimulator.process());
 
         tmSimulator = new TMSimulator(tm, string2);
-        assertTrue(tmSimulator.processWithoutSpan());
+        assertTrue(tmSimulator.process());
 
         tmSimulator = new TMSimulator(tm, string3);
-        assertFalse(tmSimulator.processWithoutSpan());
+        assertFalse(tmSimulator.process());
 
         tmSimulator = new TMSimulator(tm, string4);
-        assertFalse(tmSimulator.processWithoutSpan());
+        assertFalse(tmSimulator.process());
 
         tmSimulator = new TMSimulator(tm, string5);
-        assertTrue(tmSimulator.processWithoutSpan());
+        assertTrue(tmSimulator.process());
 
         tmSimulator = new TMSimulator(tm, string6);
-        assertTrue(tmSimulator.processWithoutSpan());
+        assertTrue(tmSimulator.process());
 
     }
 

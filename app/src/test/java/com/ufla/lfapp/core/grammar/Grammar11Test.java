@@ -15,7 +15,8 @@ public class Grammar11Test {
 
     private Grammar g;
 
-    static {
+    @BeforeClass
+    public static void setTest() {
         ResourcesContext.isTest = true;
     }
 
@@ -310,7 +311,7 @@ public class Grammar11Test {
                 expectedInitialSymbol, expectedRules);
 
         // Algoritmo MODIFICADO
-        //assertEquals(expectedGrammar.getRules(), newG.getRules());
+        // assertEquals(expectedGrammar.getRules(), newG.getRules());
         String initialSymbol = newG.getInitialSymbol();
         for (Rule rule : newG.getRules()) {
             assertTrue(rule.isFnc(initialSymbol));
@@ -453,11 +454,11 @@ public class Grammar11Test {
         matrixExpected[1][1] = new TreeSet<>(Arrays.asList(new String[]
                 {"T"}));
         matrixExpected[0][0] = new TreeSet<>(Arrays.asList(new String[]
-                {"U", "S'", "T7", "T1"}));
+                {"S'", "U", "T8", "T2"}));
         Set<String> topVariables = matrix[0][0];
 
 
-        //assertArrayEquals(matrixExpected, matrix);
+        assertArrayEquals(matrixExpected, matrix);
         assertTrue(topVariables.contains(g.getInitialSymbol()));
 
     }

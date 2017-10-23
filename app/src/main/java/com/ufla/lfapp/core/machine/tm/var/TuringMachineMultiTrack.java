@@ -41,8 +41,8 @@ public class TuringMachineMultiTrack
     }
 
     public TuringMachineMultiTrack(SortedSet<String> states,
-                                  String initialState,
-                                  SortedSet<String> finalStates,
+                                   String initialState,
+                                   SortedSet<String> finalStates,
                                    int numTracks) {
         this(states, initialState, finalStates,
                 new TreeSet<TMMultiTrackTransitionFunction>(),
@@ -50,9 +50,9 @@ public class TuringMachineMultiTrack
     }
 
     public TuringMachineMultiTrack(SortedSet<String> states,
-                                  String initialState,
-                                  SortedSet<String> finalStates,
-                                  Set<TMMultiTrackTransitionFunction> transitionFunction,
+                                   String initialState,
+                                   SortedSet<String> finalStates,
+                                   Set<TMMultiTrackTransitionFunction> transitionFunction,
                                    int numTracks) {
         super(states, initialState, finalStates);
         setNumTracks(numTracks);
@@ -60,29 +60,21 @@ public class TuringMachineMultiTrack
     }
 
     public TuringMachineMultiTrack(SortedSet<State> states,
-                                  State initialState,
-                                  SortedSet<State> finalStates,
+                                   State initialState,
+                                   SortedSet<State> finalStates,
                                    int numTracks) {
         this(states, initialState, finalStates,
                 new TreeSet<TMMultiTrackTransitionFunction>(), numTracks);
     }
 
     public TuringMachineMultiTrack(SortedSet<State> states,
-                                  State initialState,
-                                  SortedSet<State> finalStates,
-                                  Set<TMMultiTrackTransitionFunction> transitionFunction,
+                                   State initialState,
+                                   SortedSet<State> finalStates,
+                                   Set<TMMultiTrackTransitionFunction> transitionFunction,
                                    int numTracks) {
         super(states, initialState, finalStates);
         setNumTracks(numTracks);
         setTransitionFunction(transitionFunction);
-    }
-
-    public boolean addTransition(TMMultiTrackTransitionFunction transition) {
-        if (transition.hasNumTapes(getNumTracks())) {
-            getTransitionFunctions().add(transition);
-            return true;
-        }
-        return false;
     }
 
     public Map<Pair<State, State>, SortedSet<String>> getTransitionsTMMultiTrack() {
@@ -115,28 +107,6 @@ public class TuringMachineMultiTrack
     }
 
     // MÉTODOS ACESSORES
-
-    public SortedSet<TMMultiTrackTransitionFunction> createTransitions(String currentState, String futureState,
-                                                             String label) {
-        SortedSet<TMMultiTrackTransitionFunction> transitions = new TreeSet<>();
-        State a = getState(currentState);
-        State b = getState(futureState);
-        String[] tra = label.split("\\n");
-        for (int i = 0; i < tra.length; i++) {
-            String[] args = tra[i].split("[ /]");
-            int n = args.length / 2;
-            String readSymbols[] = new String[n];
-            String writeSymbols[] = new String[n];
-            for (int j = 0; j < n; j++) {
-                readSymbols[j] = args[j * 2];
-                writeSymbols[j] = args[j * 2 + 1];
-            }
-            transitions.add(new TMMultiTrackTransitionFunction(a, b, readSymbols,
-                    writeSymbols,
-                    TMMove.getInstance(args[args.length-1])));
-        }
-        return transitions;
-    }
 
     public int getNumTracks() {
         return numTracks;

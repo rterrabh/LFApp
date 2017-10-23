@@ -26,7 +26,6 @@ public class DFAMinimizationTest {
 
     static {
         ResourcesContext.isTest = true;
-        TMMove.test = true;
     }
 
     @Before

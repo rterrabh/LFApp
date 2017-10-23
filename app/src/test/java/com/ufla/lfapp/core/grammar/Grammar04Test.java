@@ -14,7 +14,8 @@ public class Grammar04Test {
 	
 	private Grammar g;
 
-	static {
+	@BeforeClass
+	public static void setTest() {
 		ResourcesContext.isTest = true;
 	}
 
@@ -272,7 +273,7 @@ public class Grammar04Test {
 		Grammar newG = g.FNC(g, new AcademicSupport());
 		AcademicSupport academicSupport = new AcademicSupport();
 		Grammar newG2 = newG.removingLeftRecursionTerra(newG, academicSupport,
-				new HashMap<String, String>(), new AcademicSupportForRemoveLeftRecursion());
+				new HashMap<String, String>(), new AcademicSupportRLR());
 		newG = newG.FNGTerra(newG, new AcademicSupport());
 		boolean fng = true;
 		for (Rule element : newG.getRules()) {

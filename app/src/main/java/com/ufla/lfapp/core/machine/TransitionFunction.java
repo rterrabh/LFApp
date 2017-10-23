@@ -18,6 +18,9 @@ public abstract class TransitionFunction
 
     @Override
     public int compareTo(TransitionFunction another) {
+        if (!(this.getClass().equals(another.getClass()))) {
+            return -1;
+        }
         int result = currentState.compareTo(another.currentState);
         if (result != 0) return result;
         return futureState.compareTo(another.futureState);
@@ -69,18 +72,6 @@ public abstract class TransitionFunction
         return this.currentState.equals(currentState);
     }
 
-    public boolean equalsCurrentState(String currentStateStr) {
-        return currentStateStr.equals(currentState.getName());
-    }
-
-    public boolean equalsFutureState(State futureState) {
-        return this.futureState.equals(futureState);
-    }
-
-    public boolean equalsFutureState(String futureStateStr) {
-        return futureStateStr.equals(futureState.getName());
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -99,15 +90,6 @@ public abstract class TransitionFunction
         int result = currentState != null ? currentState.hashCode() : 0;
         result = 31 * result + (futureState != null ? futureState.hashCode() : 0);
         return result;
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("TransitionFunction{");
-        sb.append("currentState=").append(currentState);
-        sb.append(", futureState=").append(futureState);
-        sb.append('}');
-        return sb.toString();
     }
 
 }

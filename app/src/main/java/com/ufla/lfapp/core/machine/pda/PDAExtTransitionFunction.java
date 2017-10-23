@@ -81,9 +81,8 @@ public class PDAExtTransitionFunction
 
     @Override
     public int compareTo(TransitionFunction another) {
-        int result =  super.compareTo(another);
+        int result = super.compareTo(another);
         if (result != 0) return result;
-        if (!(another instanceof PDAExtTransitionFunction)) return 1;
 
         PDAExtTransitionFunction anotherPAExt = (PDAExtTransitionFunction) another;
         result = pops.compareTo(anotherPAExt.pops);

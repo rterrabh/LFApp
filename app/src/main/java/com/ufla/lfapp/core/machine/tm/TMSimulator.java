@@ -25,7 +25,6 @@ public class TMSimulator {
     private StringBuilder tapeALL;
     private StringBuilder tape;
     private Deque<String> tapes;
-    private Deque<Spannable> configurationsSpan;
     private Deque<Configuration> stackConfiguration;
     private Deque<Configuration> stackActualConfiguration;
     private static final int MAX_DEPTH = 10000;
@@ -34,7 +33,6 @@ public class TMSimulator {
         this.turingMachine = turingMachine;
         this.word = word;
         stackConfiguration = new LinkedList<>();
-        configurationsSpan = new LinkedList<>();
         tapes = new LinkedList<>();
         stackActualConfiguration = new LinkedList<>();
         tape = new StringBuilder()
@@ -45,10 +43,6 @@ public class TMSimulator {
                 .append('<')
                 .append(word)
                 .append('>');
-    }
-
-    public List<Spannable> getTapesConfigurations() {
-        return new ArrayList<>(configurationsSpan);
     }
 
     public String[] getTapes() {
@@ -103,7 +97,7 @@ public class TMSimulator {
                     ", read='" + read + '\'' +
                     ", write='" + write + '\'' +
                     ", move=" + move +
-                    '}'+'\n';
+                    '}' + '\n';
         }
 
         public Configuration(int index, State state) {
@@ -141,87 +135,7 @@ public class TMSimulator {
     }
 
 
-    public boolean processWithoutSpan() throws Exception {
-        verifyWord();
-        stackConfiguration.push(new Configuration(0, turingMachine.getInitialState()));
-        int depth = 0;
-        int index = 0;
-        while (!stackConfiguration.isEmpty()) {
-            Configuration actualConfiguration = stackConfiguration.pop();
-            // Backtracking
-            while (actualConfiguration.depth < depth) {
-                Configuration lastConfiguration = stackActualConfiguration.removeLast();
-                if (lastConfiguration.move.equals(TMMove.LEFT)) {
-                    index++;
-                } else if (lastConfiguration.move.equals(TMMove.RIGHT)) {
-                    index--;
-                }
-                tape.setCharAt(index, lastConfiguration.read.charAt(0));
-                tapes.removeLast();
-                //configurationsSpan.removeLast();
-                depth--;
-            }
-            // Run configuration
-            stackActualConfiguration.addLast(actualConfiguration);
-            tape.setCharAt(index, actualConfiguration.write.charAt(0));
-            if (actualConfiguration.move.equals(TMMove.LEFT)) {
-                actualConfiguration.index--;
-                index--;
-            } else if (actualConfiguration.move.equals(TMMove.RIGHT)) {
-                actualConfiguration.index++;
-                index++;
-            }
-            if (index == tape.length()) {
-                tape.append(TapeEmptyCharUtils.increaseEmptyString());
-            }
-            if (index < 0) {
-                return false;
-            }
-            tapes.addLast(tape.toString());
-//            System.out.println("----------------------------");
-//            System.out.println("CONF");
-//            System.out.println(actualConfiguration.getState() + ", " +
-//                    actualConfiguration.getIndex() + ", " +
-//                    tape.charAt(actualConfiguration.getIndex()));
-//            System.out.println(tape.toString());
-//            System.out.println("NEXT_CONF");
-            StringBuilder sb = new StringBuilder();
-            sb.append(tape.substring(0, index));
-            sb.append(actualConfiguration.state);
-            sb.append(tape.substring(index));
-            //SpannableStringBuilder span = new SpannableStringBuilder(sb.toString());
-//            span.setSpan(new BackgroundColorSpan(ResourcesContext.getColor(R.color.PaleGreen2)),
-//                    index,
-//                    index + actualConfiguration.state.toString().length(),
-//                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
-//            span.append("...");
-//            configurationsSpan.addLast(span);
-            depth++;
-            if (turingMachine.isFinalState(actualConfiguration.state)) {
-                return true;
-            }
-            boolean generateProcess = false;
-            if (depth < MAX_DEPTH) {
-                Set<TMTransitionFunction> transitions = turingMachine
-                        .getTransitions(actualConfiguration.state,
-                                Character.toString(tape.charAt(index)) );
-                if (!transitions.isEmpty()) {
-                    generateProcess = true;
-                }
 
-                for (TMTransitionFunction t : transitions) {
-                    Configuration configuration = new Configuration(depth, index,
-                            t.getFutureState(), t.getSymbol(), t.getWriteSymbol(),
-                            t.getMove());
-                    stackConfiguration.push(configuration);
-//                    System.out.println(configuration.getState() + ", "
-//                            + configuration.getIndex());
-
-                }
-            }
-        }
-        return false;
-    }
 
     public boolean process() throws Exception {
         verifyWord();
@@ -240,7 +154,6 @@ public class TMSimulator {
                 }
                 tape.setCharAt(index, lastConfiguration.read.charAt(0));
                 tapes.removeLast();
-                configurationsSpan.removeLast();
                 depth--;
             }
             // Run configuration
@@ -264,30 +177,19 @@ public class TMSimulator {
             sb.append(tape.substring(0, index));
             sb.append(actualConfiguration.state);
             sb.append(tape.substring(index));
-            SpannableStringBuilder span = new SpannableStringBuilder(sb.toString());
-//            span.setSpan(new BackgroundColorSpan(ResourcesContext.getColor(R.color.PaleGreen2)),
-//                    index,
-//                    index + actualConfiguration.state.toString().length(),
-//                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
-            span.append("...");
-            configurationsSpan.addLast(span);
             depth++;
             if (turingMachine.isFinalState(actualConfiguration.state)) {
                 return true;
             }
-            boolean generateProcess = false;
             if (depth < MAX_DEPTH) {
                 Set<TMTransitionFunction> transitions = turingMachine
                         .getTransitions(actualConfiguration.state,
-                                Character.toString(tape.charAt(index)) );
-                if (!transitions.isEmpty()) {
-                    generateProcess = true;
-                }
+                                Character.toString(tape.charAt(index)));
 
                 for (TMTransitionFunction t : transitions) {
-                        stackConfiguration.push(new Configuration(depth, index,
-                                t.getFutureState(), t.getSymbol(), t.getWriteSymbol(),
-                                t.getMove()));
+                    stackConfiguration.push(new Configuration(depth, index,
+                            t.getFutureState(), t.getSymbol(), t.getWriteSymbol(),
+                            t.getMove()));
                 }
             }
         }
@@ -311,7 +213,6 @@ public class TMSimulator {
                 }
                 tapeALL.setCharAt(index, lastConfiguration.read.charAt(0));
                 tapes.removeLast();
-                configurationsSpan.removeLast();
                 depth--;
             }
             // Run configuration
@@ -335,7 +236,7 @@ public class TMSimulator {
             if (depth < MAX_DEPTH) {
                 Set<TMTransitionFunction> transitions = turingMachine
                         .getTransitions(actualConfiguration.state,
-                                Character.toString(tapeALL.charAt(index)) );
+                                Character.toString(tapeALL.charAt(index)));
 
                 for (TMTransitionFunction t : transitions) {
                     stackConfiguration.push(new Configuration(depth, index,

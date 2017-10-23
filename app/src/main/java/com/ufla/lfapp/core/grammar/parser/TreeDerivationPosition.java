@@ -27,7 +27,6 @@ public class TreeDerivationPosition implements Serializable {
         fillNodesByLevel();
         setPositions();
         updateXToPositive();
-        //clearNodesByLevel();
     }
 
     /**
@@ -223,10 +222,4 @@ public class TreeDerivationPosition implements Serializable {
         levelMax = contLevel;
     }
 
-    /**
-     * Define o mapa dos nós pelo nível da árvore como nulo a fim de liberar memória.
-     */
-    private void clearNodesByLevel() {
-        nodesByLevel = null;
-    }
 }

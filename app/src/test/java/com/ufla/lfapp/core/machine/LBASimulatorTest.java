@@ -31,7 +31,6 @@ public class LBASimulatorTest {
 
     static {
         ResourcesContext.isTest = true;
-        TMMove.test = true;
     }
 
     @Before

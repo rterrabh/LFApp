@@ -63,11 +63,4 @@ public class FiniteStateAutomatonDAO
         transitionsId.put(FSATransitionFunction, transitionId);
     }
 
-    public Long getTransitionId(FSATransitionFunction FSATransitionFunction) {
-        return transitionsId.get(FSATransitionFunction);
-    }
-
-
-
-
 }

@@ -2,7 +2,6 @@ package com.ufla.lfapp.core.machine;
 
 import com.ufla.lfapp.core.machine.fsa.FSATransitionFunction;
 import com.ufla.lfapp.core.machine.fsa.FiniteStateAutomaton;
-import com.ufla.lfapp.core.machine.tm.TMMove;
 import com.ufla.lfapp.utils.ResourcesContext;
 
 import org.junit.Before;
@@ -26,7 +25,6 @@ public class DFACompleteTest {
 
     static {
         ResourcesContext.isTest = true;
-        TMMove.test = true;
     }
 
 

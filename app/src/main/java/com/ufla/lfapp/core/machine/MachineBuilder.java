@@ -9,7 +9,7 @@ import java.util.TreeSet;
  * <p>
  * Created by carlos on 12/7/16.
  */
-public abstract class MachineBuilder {
+public abstract class MachineBuilder<MachineType extends MachineBuilder> {
 
     /**
      * Conjunto dos estados da máquina.
@@ -53,9 +53,6 @@ public abstract class MachineBuilder {
         return null;
     }
 
-    public void renameState(String oldName, String newName) {
-        getState(oldName).setName(newName);
-    }
 
     /**
      * Define o estado inicial da máquina.
@@ -63,10 +60,10 @@ public abstract class MachineBuilder {
      * @param initialState estado inicial da máquina
      * @return próprio construtor de máquina
      */
-    public MachineBuilder withInitialState(State initialState) {
+    public MachineType withInitialState(State initialState) {
         addState(initialState);
         this.initialState = initialState;
-        return this;
+        return (MachineType) this;
     }
 
     /**
@@ -75,22 +72,9 @@ public abstract class MachineBuilder {
      * @param state estado adicionado na máquina
      * @return próprio construtor de máquina
      */
-    public MachineBuilder addState(State state) {
+    protected MachineType addState(State state) {
         states.add(state);
-        return this;
-    }
-
-    /**
-     * Adiciona uma coleção de estados na máquina.
-     *
-     * @param states coleção de estados adicionados na máquina
-     * @return próprio construtor de máquina
-     */
-    public MachineBuilder addStates(Collection<State> states) {
-        for (State state : states) {
-            addState(state);
-        }
-        return this;
+        return (MachineType) this;
     }
 
     /**
@@ -99,27 +83,15 @@ public abstract class MachineBuilder {
      * @param state estado removido da máquina
      * @return próprio construtor de máquina
      */
-    public MachineBuilder removeState(State state) {
+    protected MachineType removeState(State state) {
         if (state.equals(initialState)) {
             initialState = null;
         }
         finalStates.remove(state);
         states.remove(state);
-        return this;
+        return (MachineType) this;
     }
 
-    /**
-     * Remove uma coleção de estados da máquina.
-     *
-     * @param states coleção de estados removidas da máquina
-     * @return próprio construtor de máquina
-     */
-    public MachineBuilder removeStates(Collection<State> states) {
-        for (State state : states) {
-            removeState(state);
-        }
-        return this;
-    }
 
     /**
      * Define um estado da máquina como final. Insere-o no conjunto dos estados finais. Se o
@@ -128,50 +100,10 @@ public abstract class MachineBuilder {
      * @param finalState estado final da máquina
      * @return próprio construtor de máquina
      */
-    public MachineBuilder defineFinalState(State finalState) {
+    public MachineType defineFinalState(State finalState) {
         addState(finalState);
         finalStates.add(finalState);
-        return this;
-    }
-
-    /**
-     * Define uma coleção de estados da máquina como finais. Insere-os no conjunto dos estados
-     * finais. Se algum destes estados ainda não é um estado da máquina, este estado é adicionado
-     * a máquina.
-     *
-     * @param finalStates coleção de estados finais adicionados na máquina
-     * @return próprio construtor de máquina
-     */
-    public MachineBuilder addFinalStates(Collection<State> finalStates) {
-        for (State finalState : finalStates) {
-            defineFinalState(finalState);
-        }
-        return this;
-    }
-
-    /**
-     * Remove um estado do conjunto dos estados finais da máquina.
-     *
-     * @param finalState estado final a ser removido do conjunto dos estados finais da máquina
-     * @return próprio construtor de máquina
-     */
-    public MachineBuilder removeFinalState(State finalState) {
-        finalStates.remove(finalState);
-        return this;
-    }
-
-    /**
-     * Remove uma coleção de estados do conjunto dos estados finais da máquina.
-     *
-     * @param finalStates coleção de estados que serão removidos do conjunto dos estados finais
-     *                    da máquina
-     * @return próprio construtor de máquina
-     */
-    public MachineBuilder removeFinalStates(Collection<State> finalStates) {
-        for (State finalState : finalStates) {
-            removeFinalState(finalState);
-        }
-        return this;
+        return (MachineType) this;
     }
 
 }

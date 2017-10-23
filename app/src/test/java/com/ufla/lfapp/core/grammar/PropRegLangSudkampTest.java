@@ -21,11 +21,10 @@ import static org.junit.Assert.assertEquals;
  */
 
 public class PropRegLangSudkampTest {
-
-
-    static {
+    
+    @BeforeClass
+    public static void setTest() {
         ResourcesContext.isTest = true;
-        TMMove.test = true;
     }
 
     private FiniteStateAutomaton getAutomatonExample_6_1_1() {

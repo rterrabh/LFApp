@@ -1,6 +1,9 @@
 package com.ufla.lfapp.core.grammar;
 
+import com.ufla.lfapp.utils.ResourcesContext;
+
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -15,17 +18,22 @@ import static org.junit.Assert.assertTrue;
 
 public class Rule04Test {
 
-    com.ufla.lfapp.core.grammar.Rule rule;
+    Rule rule;
     // S -> abba
 
+    @BeforeClass
+    public static void setTest() {
+        ResourcesContext.isTest = true;
+    }
+    
     @Before
     public void setUp() {
-        rule = new com.ufla.lfapp.core.grammar.Rule("S", "abba");
+        rule = new Rule("S", "abba");
     }
 
     @Test
     public void testClone1() {
-        com.ufla.lfapp.core.grammar.Rule rc = (com.ufla.lfapp.core.grammar.Rule) rule.clone();
+        Rule rc = (Rule) rule.clone();
         assertEquals(rc, rule);
         rc.setRightSide("abr");
         assertNotEquals(rc, rule);
@@ -33,7 +41,7 @@ public class Rule04Test {
 
     @Test
     public void testClone2() {
-        com.ufla.lfapp.core.grammar.Rule rc = (com.ufla.lfapp.core.grammar.Rule) rule.clone();
+        Rule rc = (Rule) rule.clone();
         assertEquals(rc, rule);
         rc.setLeftSide("A");
         assertNotEquals(rc, rule);

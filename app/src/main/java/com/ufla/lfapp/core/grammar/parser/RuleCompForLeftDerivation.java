@@ -17,7 +17,10 @@ public class RuleCompForLeftDerivation implements Comparator<Rule> {
         String rightSide2 = rule2.getRightSide();
         if (Character.isLowerCase(rightSide1.charAt(0))) {
             if (Character.isLowerCase(rightSide2.charAt(0))) {
-                return rightSide2.length() - rightSide1.length();
+                if (rightSide2.length() == rightSide1.length()) {
+                    return rightSide1.compareTo(rightSide2);
+                }
+                return rightSide1.length() - rightSide2.length();
             }
             return -1;
         }
@@ -25,11 +28,14 @@ public class RuleCompForLeftDerivation implements Comparator<Rule> {
             return 1;
         }
         if (rightSide1.charAt(0) == leftSide.charAt(0)) {
+            if (rightSide2.charAt(0) == leftSide.charAt(0)) {
+                if (rightSide2.length() == rightSide1.length()) {
+                    return rightSide1.compareTo(rightSide2);
+                }
+                return rightSide1.length() - rightSide2.length();
+            }
             return 1;
         }
-        if (rightSide2.charAt(0) == leftSide.charAt(0)) {
-            return -1;
-        }
-        return rightSide2.length() - rightSide1.length();
+        return -1;
     }
 }

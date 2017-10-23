@@ -68,20 +68,6 @@ public class DotLanguage implements Serializable {
     private Integer contUses;
     private Date creationDate;
 
-//    /**
-//     * Cria uma instância de <code>DotLanguage</code> que representa o autômato passado
-//     * por parâmetro em forma de grafo.
-//     *
-//     * @param automatonGUI autômato a ser usado para criar grafo na linguagem dot
-//     */
-//    public DotLanguage (FiniteStateAutomatonGUI automatonGUI) {
-//        this.id = automatonGUI.getId();
-//        this.label = automatonGUI.getLabel();
-//        this.contUses = automatonGUI.getContUses();
-//        this.creationDate = automatonGUI.getCreationDate();
-//        this.graph = parseDotLanguageIntern(automatonGUI);
-//    }
-
     public MachineType getMachineType() {
         return machineType;
     }
@@ -96,7 +82,7 @@ public class DotLanguage implements Serializable {
 
 
     public DotLanguage(Machine machine, Map<State, MyPoint> stateToPoint) {
-        this.id =  machine.getId();
+        this.id = machine.getId();
         this.label = machine.getLabel();
         this.contUses = machine.getContUses();
         this.creationDate = machine.getCreationDate();
@@ -108,7 +94,6 @@ public class DotLanguage implements Serializable {
     }
 
 
-
     public DotLanguage(long id, String graph, String label, int contUses, Date creationDate) {
         this.id = id;
         this.graph = graph;
@@ -116,7 +101,6 @@ public class DotLanguage implements Serializable {
         this.contUses = contUses;
         this.creationDate = creationDate;
     }
-
 
 
     public DotLanguage(long id, String graph, String label, int contUses, Date creationDate,
@@ -208,29 +192,6 @@ public class DotLanguage implements Serializable {
         return graphSb.toString();
     }
 
-    /**
-     * Converte uma representação de um autômato, do domínio da aplicação LFApp, para
-     * string com uma representação em grafos na linguagem dot.
-     *
-     * @param automatonGUI autômato a ser convertido para linguagem dot
-     *
-     * @return string com o texto da representação do autômato em grafos na
-     * linguagem dot
-     */
-    private static String parseDotLanguageIntern(FiniteStateAutomatonGUI automatonGUI) {
-        StringBuilder graphSb = new StringBuilder();
-        graphSb.append(DIGRAPH)
-                .append(' ')
-                .append(UNTITLED)
-                .append(" {")
-                .append(END_LINE)
-                .append(parseDotLanguageVertex(automatonGUI))
-                .append(parseDotLanguageEdges(automatonGUI))
-                .append("}")
-                .append(END_LINE);
-        return graphSb.toString();
-    }
-
     private static String getFinalStatesStr(Machine machine) {
         Set<State> finalStates = machine.getFinalStates();
         if (finalStates.isEmpty()) {
@@ -242,8 +203,8 @@ public class DotLanguage implements Serializable {
                     .append(s)
                     .append("\", ");
         }
-        sb.deleteCharAt(sb.length()-1);
-        sb.setCharAt(sb.length()-1, ';');
+        sb.deleteCharAt(sb.length() - 1);
+        sb.setCharAt(sb.length() - 1, ';');
         return sb.toString();
     }
 
@@ -287,15 +248,15 @@ public class DotLanguage implements Serializable {
     private static String parseDotLanguageIntern(Machine machine,
                                                  Map<State, MyPoint> stateToPoint) {
         return String.format("digraph %s {\n\n" +
-                "\tdpi = 480;\n" +
-                "\trankdir=LR;\n\n" +
-                "\t\"startRes\" [shape=point, style=\"invis\"];\n" +
-                "\tnode [shape = doublecircle, color=\"#968D8D\", fontcolor=black, fillcolor=\"#FFCCCC\", style=\"filled\"];\n" +
-                "%s\n\n" +
-                "\tnode [shape = circle];\n\n" +
-                "%s\n" +
-                "\t\"startRes\" -> \"%s\";\n\n" +
-                "%s\n\n}",
+                        "\tdpi = 480;\n" +
+                        "\trankdir=LR;\n\n" +
+                        "\t\"startRes\" [shape=point, style=\"invis\"];\n" +
+                        "\tnode [shape = doublecircle, color=\"#968D8D\", fontcolor=black, fillcolor=\"#FFCCCC\", style=\"filled\"];\n" +
+                        "%s\n\n" +
+                        "\tnode [shape = circle];\n\n" +
+                        "%s\n" +
+                        "\t\"startRes\" -> \"%s\";\n\n" +
+                        "%s\n\n}",
                 UNTITLED,
                 getFinalStatesStr(machine),
                 parseDotLanguageVertex(machine, stateToPoint),
@@ -343,9 +304,9 @@ public class DotLanguage implements Serializable {
         ind++;
         // END - STATES_POINT_PARAMETER
         // BEGIN - START_STATE_PARAMETER
-        int end = lines[ind].length()-2;
+        int end = lines[ind].length() - 2;
         int init = lines[ind].lastIndexOf(" \"") + 2;
-        parameters[2] = new String[] { lines[ind].substring(init, end) };
+        parameters[2] = new String[]{lines[ind].substring(init, end)};
         // END - START_STATE_PARAMETER
         // BEGIN - TRANSITIONS_PARAMETER
         ind += 2;
@@ -355,7 +316,6 @@ public class DotLanguage implements Serializable {
         final int PATTERN_LABEL_LENGHT = PATTERN_LABEL.length();
         List<String> transitionsList = new ArrayList<>();
         while (!lines[ind].isEmpty()) {
-            //System.out.println(lines[ind]);
             StringBuilder sb = new StringBuilder();
             init = 2;
             end = lines[ind].indexOf(PATTERN_ARROW);
@@ -366,7 +326,7 @@ public class DotLanguage implements Serializable {
             sb.append(lines[ind].substring(init, end))
                     .append('\n');
             init = end + PATTERN_LABEL_LENGHT;
-            end = lines[ind].length()-3;
+            end = lines[ind].length() - 3;
             sb.append(lines[ind].substring(init, end));
             transitionsList.add(sb.toString());
             ind++;
@@ -376,18 +336,6 @@ public class DotLanguage implements Serializable {
         return parameters;
     }
 
-
-//    /**
-//     * Converte uma representação de um autômato, do domínio da aplicação LFApp, para
-//     * uma representação em grafos na linguagem dot.
-//     *
-//     * @param automatonGUI autômato a ser convertido para linguagem dot
-//     *
-//     * @return representação do autômato em grafos na linguagem dot
-//     */
-//    public static DotLanguage parseDotLanguage(FiniteStateAutomatonGUI automatonGUI) {
-//        return new DotLanguage(automatonGUI);
-//    }
 
     private static String parseDotLanguageEdges(TreeDerivationPosition tree) {
         Map<Integer, List<List<NodeDerivationPosition>>> nodesByLevel =
@@ -448,13 +396,8 @@ public class DotLanguage implements Serializable {
     }
 
 
-    public static DotLanguage parseDotLanguage(TreeDerivationPosition tree) {
-        String graph = parseDotLanguageIntern(tree);
-        return new DotLanguage(graph);
-    }
-
     public SortedSet<FSATransitionFunction> getFSATransitionFunctions(String[] labels,
-                                                          Map<String, State> nameToState) {
+                                                                      Map<String, State> nameToState) {
         SortedSet<FSATransitionFunction> transitionFunctions = new TreeSet<>();
         for (String label : labels) {
             String param[] = label.split("\n");
@@ -495,7 +438,7 @@ public class DotLanguage implements Serializable {
     }
 
     public SortedSet<PDAExtTransitionFunction> getPDAExtTransitionFunctions(String[] labels,
-                                                                      Map<String, State> nameToState) {
+                                                                            Map<String, State> nameToState) {
         SortedSet<PDAExtTransitionFunction> transitionFunctions = new TreeSet<>();
         for (String label : labels) {
             String param[] = label.split("\n");
@@ -513,7 +456,7 @@ public class DotLanguage implements Serializable {
     }
 
     public SortedSet<TMTransitionFunction> getTMTransitionFunctions(String[] labels,
-                                                                            Map<String, State> nameToState) {
+                                                                    Map<String, State> nameToState) {
         SortedSet<TMTransitionFunction> transitionFunctions = new TreeSet<>();
         for (String label : labels) {
             String param[] = label.split("\n");
@@ -566,7 +509,7 @@ public class DotLanguage implements Serializable {
     }
 
     public SortedSet<TMMultiTapeTransitionFunction> getTMMultiTapeTransitionFunctions(String[] labels,
-                                                                                       Map<String, State> nameToState) {
+                                                                                      Map<String, State> nameToState) {
         SortedSet<TMMultiTapeTransitionFunction> transitionFunctions = new TreeSet<>();
         for (String label : labels) {
             String param[] = label.split("\n");
@@ -578,7 +521,7 @@ public class DotLanguage implements Serializable {
                 transTapes[0] = transTapes[0].substring(1);
                 int nTape = transTapes.length - 1;
                 int nTapeLength = transTapes[nTape].length();
-                transTapes[nTape] = transTapes[nTape].substring(0, nTapeLength-1);
+                transTapes[nTape] = transTapes[nTape].substring(0, nTapeLength - 1);
                 String[][] tapesParam = tapesToTapesParam(transTapes);
                 transitionFunctions.add(new TMMultiTapeTransitionFunction(current,
                         future,
@@ -591,25 +534,25 @@ public class DotLanguage implements Serializable {
     }
 
     public String[] readSymbolsInTracksParam(String[] tracksParam) {
-        int n = (tracksParam.length-1) / 2;
+        int n = (tracksParam.length - 1) / 2;
         String[] readSymbols = new String[n];
         for (int i = 0; i < n; i++) {
-            readSymbols[i] = tracksParam[i*2];
+            readSymbols[i] = tracksParam[i * 2];
         }
         return readSymbols;
     }
 
     public String[] writeSymbolsInTracksParam(String[] tracksParam) {
-        int n = (tracksParam.length-1) / 2;
+        int n = (tracksParam.length - 1) / 2;
         String[] writeSymbols = new String[n];
         for (int i = 0; i < n; i++) {
-            writeSymbols[i] = tracksParam[(i*2) + 1];
+            writeSymbols[i] = tracksParam[(i * 2) + 1];
         }
         return writeSymbols;
     }
 
     public SortedSet<TMMultiTrackTransitionFunction> getTMMultiTrackTransitionFunctions(String[] labels,
-                                                                                      Map<String, State> nameToState) {
+                                                                                        Map<String, State> nameToState) {
         SortedSet<TMMultiTrackTransitionFunction> transitionFunctions = new TreeSet<>();
         for (String label : labels) {
             String param[] = label.split("\n");
@@ -621,7 +564,7 @@ public class DotLanguage implements Serializable {
                 tracksParam[0] = tracksParam[0].substring(1);
                 int nTape = tracksParam.length - 1;
                 int nTapeLength = tracksParam[nTape].length();
-                tracksParam[nTape] = tracksParam[nTape].substring(0, nTapeLength-1);
+                tracksParam[nTape] = tracksParam[nTape].substring(0, nTapeLength - 1);
                 transitionFunctions.add(new TMMultiTrackTransitionFunction(current,
                         future,
                         readSymbolsInTracksParam(tracksParam),
@@ -805,190 +748,7 @@ public class DotLanguage implements Serializable {
         return Pair.create(tm, stateToPoint);
     }
 
-//    private List<String> clean(List<String> str) {
-//        List<String> list = new ArrayList<>();
-//        for (String st : str) {
-//            if (!st.isEmpty()) {
-//                list.add(st);
-//            }
-//        }
-//        return list;
-//    }
-//
-//    //private Map<State, MyPoint> stateMyPointMap = new HashMap<>();
-//
-//    private int defineStates(Machine machine) {
-//        machine.setId(id);
-//        machine.setCreationDate(creationDate);
-//        machine.setContUses(contUses);
-//        machine.setLabel(label);
-//        SortedSet<State> states = new TreeSet<>();
-//        SortedSet<State> finalStates = new TreeSet<>();
-//        final String p1 = "style=\"filled\"];\n\t";
-//        int index = graph.indexOf(p1) + p1.length();
-//        int indexAux = index + 1;
-//        while (graph.charAt(indexAux) != ';') {
-//            indexAux++;
-//        }
-//        Set<String> finalStatesStr = new HashSet<>(
-//                clean(Arrays.asList(
-//                        graph.substring(index, indexAux).split(", "))));
-//        indexAux++;
-//        while (graph.charAt(indexAux) != '\n') {
-//            indexAux++;
-//        }
-//        while (graph.charAt(indexAux) == '\n' || graph.charAt(indexAux) == '\t') {
-//            indexAux++;
-//        }
-//        String p2 = "pos=\"";
-//        do {
-//            index = indexAux;
-//            while (graph.charAt(indexAux) != '[') {
-//                indexAux++;
-//            }
-//            String stateStr = graph.substring(index, indexAux-1);
-//            State state = new State(stateStr);
-//            states.add(state);
-//            if (finalStatesStr.contains(stateStr)) {
-//                finalStates.add(state);
-//            }
-//            index = graph.indexOf(p2, indexAux) + p2.length();
-//            indexAux = graph.indexOf(',', index);
-//            MyPoint myPoint = new MyPoint();
-//            myPoint.x = Integer.parseInt(graph.substring(index, indexAux));
-//            index = indexAux + 1;
-//            indexAux = graph.indexOf('!', index);
-//            myPoint.y = Integer.parseInt(graph.substring(index, indexAux));
-//            stateMyPointMap.put(state, myPoint);
-//            indexAux += 6;
-//        } while (graph.charAt(indexAux) != '\n');
-//        String p3 = "start -> ";
-//        while (graph.charAt(indexAux) == '\n' || graph.charAt(indexAux) == '\t') {
-//            indexAux++;
-//        }
-//        indexAux += p3.length();
-//        index = indexAux;
-//        indexAux = graph.indexOf(';', index);
-//        String initialState = graph.substring(index, indexAux);
-//        machine.setStates(states);
-//        machine.setFinalStates(finalStates);
-//        machine.setInitialState(machine.getState(initialState));
-//        while (graph.charAt(indexAux) == '\n' || graph.charAt(indexAux) == '\t') {
-//            indexAux++;
-//        }
-//        return indexAux;
-//    }
-//
-//    private String[] transitionArgs(int index) {
-//        String[] args = new String[4];
-//        if (graph.charAt(index) == '\n') {
-//            return null;
-//        }
-//        String p1 = " -> ";
-//        String p2 = " [label=\"";
-//        int indexAux = graph.indexOf(p1, index);
-//        args[0] = graph.substring(index, indexAux);
-//        index = indexAux + p1.length();
-//        indexAux = graph.indexOf(p2, index);
-//        args[1] = graph.substring(index, indexAux);
-//        index = indexAux + p2.length();
-//        indexAux = graph.indexOf("\"];", index);
-//        args[2] = graph.substring(index, indexAux);
-//        index = indexAux + 5;
-//        args[3] = Integer.toString(index);
-//        return args;
-//    }
-//
-//    public Map<State, MyPoint> getStateMyPointMap() {
-//        return stateMyPointMap;
-//    }
-//
-//    private PushdownAutomaton toPDA() {
-//        PushdownAutomaton pda = new PushdownAutomaton(new TreeSet<State>(), null,
-//                new TreeSet<State>(), new TreeSet<PDATransitionFunction>());
-//        int index = defineStates(pda);
-//        String[] args;
-//        Set<PDATransitionFunction> transitionFunctions = new TreeSet<>();
-//        while ((args = transitionArgs(index)) != null) {
-//            transitionFunctions.addAll(pda.createTransitions(args[0], args[1], args[2]));
-//            index = Integer.parseInt(args[3]);
-//        }
-//        pda.setTransictionFunction(transitionFunctions);
-//        return pda;
-//    }
-//
-//    private TuringMachine toTuringMachine() {
-//        TuringMachine tm = new TuringMachine(new TreeSet<State>(), null,
-//                new TreeSet<State>(), new TreeSet<TMTransitionFunction>());
-//        int index = defineStates(tm);
-//        String[] args;
-//        Set<TMTransitionFunction> transitionFunctions = new TreeSet<>();
-//        while ((args = transitionArgs(index)) != null) {
-//            transitionFunctions.addAll(tm.createTransitions(args[0], args[1], args[2]));
-//            index = Integer.parseInt(args[3]);
-//        }
-//        tm.setTransitionFunction(transitionFunctions);
-//        return tm;
-//    }
-
-//    public int getNumTapes() {
-//        return numTapes;
-//    }
-//
-//    public void setNumTapes(int numTapes) {
-//        this.numTapes = numTapes;
-//    }
-
-    //private int numTapes;
-//
-//    private TuringMachineMultiTape toTuringMachineMultiTape() {
-//        TuringMachineMultiTape tm = new TuringMachineMultiTape(new TreeSet<State>(), null,
-//                new TreeSet<State>(), new TreeSet<TMMultiTapeTransitionFunction>(), numTapes);
-//        int index = defineStates(tm);
-//        String[] args;
-//        Set<TMMultiTapeTransitionFunction> transitionFunctions = new TreeSet<>();
-//        while ((args = transitionArgs(index)) != null) {
-//            transitionFunctions.addAll(tm.createTransitions(args[0], args[1], args[2]));
-//            index = Integer.parseInt(args[3]);
-//        }
-//        tm.setTransitionFunction(transitionFunctions);
-//        return tm;
-//    }
-//
-//    private TuringMachineMultiTrack toTuringMachineMultiTrack() {
-//        TuringMachineMultiTrack tm = new TuringMachineMultiTrack(new TreeSet<State>(), null,
-//                new TreeSet<State>(), new TreeSet<TMMultiTrackTransitionFunction>(), numTapes);
-//        int index = defineStates(tm);
-//        String[] args;
-//        Set<TMMultiTrackTransitionFunction> transitionFunctions = new TreeSet<>();
-//        while ((args = transitionArgs(index)) != null) {
-//            transitionFunctions.addAll(tm.createTransitions(args[0], args[1], args[2]));
-//            index = Integer.parseInt(args[3]);
-//        }
-//        tm.setTransitionFunction(transitionFunctions);
-//        return tm;
-//    }
-//
-//
-//    private FiniteStateAutomatonGUI toAutomatonGUINew() {
-//        FiniteStateAutomaton fsa = new FiniteStateAutomaton(new TreeSet<State>(), null,
-//                new TreeSet<State>(), new TreeSet<FSATransitionFunction>());
-//        int index = defineStates(fsa);
-//        String[] args;
-//        Set<FSATransitionFunction> transitionFunctions = new TreeSet<>();
-//        while ((args = transitionArgs(index)) != null) {
-//            State a = fsa.getState(args[0]);
-//            State b = fsa.getState(args[1]);
-//            String[] symbols = args[2].split("\\n");
-//            for (int i = 0; i < symbols.length; i++) {
-//                transitionFunctions.add(new FSATransitionFunction(a, symbols[i], b));
-//            }
-//            index = Integer.parseInt(args[3]);
-//        }
-//        return new FiniteStateAutomatonGUI(fsa, getStatePoint());
-//    }
-
-    public  FiniteStateAutomatonGUI newToAutomatonGUI() {
+    public FiniteStateAutomatonGUI newToAutomatonGUI() {
         Pair<FiniteStateAutomaton, Map<State, MyPoint>> pairFSA = toFSA();
         return new FiniteStateAutomatonGUI(pairFSA.first, pairFSA.second, id, label, contUses,
                 creationDate);
@@ -1005,10 +765,6 @@ public class DotLanguage implements Serializable {
         }
         finiteStateAutomatonGUIBuilder.setLabel(label);
         String aux[] = lines[ind].split(" ");
-        if (aux.length >= 2) {
-            //this.label = aux[1];
-            //finiteStateAutomatonGUIBuilder.setLabel(label);
-        }
         ind++;
         String posAttr = "[" + POS_ATTR + EQUALS;
         while (ind < length && !lines[ind].contains(EDGE)) {
@@ -1094,14 +850,6 @@ public class DotLanguage implements Serializable {
                 .setCreationDate(creationDate);
         return finiteStateAutomatonGUIBuilder.createAutomatonGUI();
     }
-//
-//    public SortedMap<State, Point> getStatePoint() {
-//        SortedMap<State, Point> statePointMap = new TreeMap<>();
-//        for (Map.Entry<State, MyPoint> e : stateMyPointMap.entrySet()) {
-//            statePointMap.put(e.getKey(), e.getValue().toPoint());
-//        }
-//        return statePointMap;
-//    }
 
     public String getGraph() {
         return graph;
@@ -1109,10 +857,6 @@ public class DotLanguage implements Serializable {
 
     public String getLabel() {
         return label;
-    }
-
-    public Integer getContUses() {
-        return contUses;
     }
 
     public Date getCreationDate() {
@@ -1144,6 +888,7 @@ public class DotLanguage implements Serializable {
         }
         return setParametersMachine;
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

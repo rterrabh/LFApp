@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 
 public class State
-        implements Serializable, Comparable<State>  {
+        implements Serializable, Comparable<State> {
 
     private String name;
 
@@ -35,6 +35,7 @@ public class State
                     if (c != '\'') {
                         return this.name;
                     }
+                    i++;
                 }
             }
             int lastDigit = (indAposInit != -1) ? indAposInit : lenght;

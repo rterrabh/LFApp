@@ -24,13 +24,14 @@ public class TreeDerivationParser {
     private TreeDerivation treeDerivationAux;
     private int countNodes;
     //private static final int MAX_NODES = 250;
-    private static final int MAX_LEVEL = 35;
+    private static final int MAX_LEVEL = 5;
 
     /**
      * Construtor de árvore de derivação com base em uma gramática _grammar_ e uma palavra a ser
      * derivada _word_.
+     *
      * @param grammar gramática a ser usada na derivação
-     * @param word palavra a ser derivada
+     * @param word    palavra a ser derivada
      */
     public TreeDerivationParser(Grammar grammar, String word) {
         this.word = word;
@@ -38,25 +39,28 @@ public class TreeDerivationParser {
         index = 0;
     }
 
-    private void printNodeRec(NodeDerivationParser node) {
-        if (node.getChilds() == null) {
-            return;
-        }
-        for (NodeDerivationParser child : node.getChilds()) {
-            System.out.println(child);
-        }
-        for (NodeDerivationParser child : node.getChilds()) {
-            printNodeRec(child);
-        }
+//    private void printNodeRec(NodeDerivationParser node) {
+//        if (node.getChilds() == null) {
+//            return;
+//        }
+//        for (NodeDerivationParser child : node.getChilds()) {
+//            System.out.println(child);
+//        }
+//        for (NodeDerivationParser child : node.getChilds()) {
+//            printNodeRec(child);
+//        }
+//
+//    }
+//
+//    static int printCont = 0;
+//
+//    private void printActualTree() {
+//        System.out.println("----------------------------");
+//        System.out.println(root);
+//        printNodeRec(root);
+//        System.out.println("----------------------------");
+//    }
 
-    }
-
-    private void printActualTree() {
-        System.out.println("----------------------------");
-        System.out.println(root);
-        printNodeRec(root);
-        System.out.println("----------------------------");
-    }
 
     public TreeDerivation getTreeDerivation() {
         return treeDerivation;
@@ -72,7 +76,6 @@ public class TreeDerivationParser {
      */
     private void createDataForParser() {
         mostLeftDerivationTable = new MostLeftDerivationTable(grammar);
-        System.out.println(mostLeftDerivationTable);
         String initialVariable = grammar.getInitialSymbol();
         root = new NodeDerivationParser(initialVariable, 0, null, -1);
         actualNode = root;
@@ -96,7 +99,10 @@ public class TreeDerivationParser {
         createDataForParser();
         while (!treeComplete && treeDerivationAux == null) {
             parserNode();
-            //printActualTree();
+//            printCont++;
+//            if (printCont > 100) {
+//                printActualTree();
+//            }
         }
         clearDataForParser();
     }
@@ -148,7 +154,6 @@ public class TreeDerivationParser {
         int n = rightSide.length();
         countNodes += n;
         if (actualNode.getLevel() == MAX_LEVEL) {
-        //if (countNodes >= MAX_NODES || actualNode.getLevel() == MAX_LEVEL) {
             countNodes -= n;
             return;
         }
@@ -200,12 +205,13 @@ public class TreeDerivationParser {
      * de derivação mais à esquerda e coloca-as na pilha.
      */
     private void setStackRules() {
-        if (index == word.length()) {
+        if (index > word.length()) {
             cutBranch();
             return;
         }
         String variable = actualNode.getNode();
-        String terminal = Character.toString(word.charAt(index));
+        String terminal = (index == word.length()) ? Grammar.LAMBDA :
+                Character.toString(word.charAt(index));
         Deque<Rule> rules = mostLeftDerivationTable.getRules(variable, terminal);
         actualNode.setStackRules(rules);
     }
@@ -214,6 +220,7 @@ public class TreeDerivationParser {
      * Atualiza o índice da palavra para cortar o ramo, onde o parâmetro rootBranch é a raiz do
      * ramo.
      * Atualiza o contador de nós.
+     *
      * @param rootBranch raíz do ramo a ser cortado
      */
     private void updateIndexWordForCutBranch(NodeDerivationParser rootBranch) {
@@ -282,8 +289,11 @@ public class TreeDerivationParser {
      */
     private boolean isAValidSymbol() {
         String symbol = actualNode.getNode();
-        return index != word.length() && (symbol.charAt(0) == word.charAt(index)
-                || symbol.equals(Grammar.LAMBDA));
+        if (index == word.length()) {
+            return symbol.equals(Grammar.LAMBDA);
+        }
+        return symbol.charAt(0) == word.charAt(index)
+                || symbol.equals(Grammar.LAMBDA);
     }
 
     /**
@@ -294,12 +304,12 @@ public class TreeDerivationParser {
      */
     private void verifyDerivate() {
         if (index == word.length()) {
-            if (treeDerivation == null) {
+               if (treeDerivation == null) {
+//                System.out.println("ÁRVORE COMPLETA!");
                 treeDerivation = new TreeDerivation(root);
             } else {
                 treeDerivationAux = new TreeDerivation(root);
             }
-        } else {
         }
     }
 
@@ -307,6 +317,7 @@ public class TreeDerivationParser {
      * Busca um próximo nó folha na árvore, a ordem para essa busca é a pré-ordem. Caso não seja
      * encontrado um nó define o nó atual como a raiz, isto também indica que uma árvore foi
      * completada.
+     *
      * @return true caso encontre um próximo nó folha, ou false caso contrário
      */
     private boolean findNextLeafNode() {
@@ -348,17 +359,7 @@ public class TreeDerivationParser {
             actualNode = actualNode.getNodeChild(actualNode.getCountChilds() - 1);
         }
     }
-    
 
-    /**
-     * Converte essa arvóre de derivação para texto.
-     * @return texto com informações da arvóre de derivação
-     */
-    @Override
-    public String toString() {
-        TreeDerivation treeParser = new TreeDerivation(root);
-        return treeParser.getDerivation();
-    }
 
     public boolean isAmbiguity() {
         return treeDerivationAux != null &&

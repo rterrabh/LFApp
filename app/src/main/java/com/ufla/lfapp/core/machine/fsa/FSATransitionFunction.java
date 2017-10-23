@@ -27,14 +27,6 @@ public class FSATransitionFunction
                 new State(FSATransitionFunction.getFutureState().getName()));
     }
 
-    public int processIndex(int index) {
-        return (readLambda()) ? index : index + 1;
-    }
-
-    public boolean readLambda() {
-        return getSymbol().equals(Symbols.LAMBDA);
-    }
-
     // REFACTOR
     public static String stateWithSpan(String state) {
         return new StringBuilder()
@@ -51,15 +43,11 @@ public class FSATransitionFunction
 
     // MÉTODOS EQUALS
     public boolean equalsCurrentState(State currentState) {
-        return getSymbol().equals(currentState);
+        return getCurrentState().equals(currentState);
     }
 
     public boolean equalsSymbol(String symbol) {
         return getSymbol().equals(symbol);
-    }
-
-    public boolean equalsFutureState(State futureState) {
-        return getFutureState().equals(futureState);
     }
 
     // MÉTODOS ACESSORES
@@ -75,10 +63,6 @@ public class FSATransitionFunction
     public int compareTo(TransitionFunction another) {
         int result = super.compareTo(another);
         if (result != 0) return result;
-        if (!(another instanceof FSATransitionFunction)
-                && !another.getClass().getSuperclass().equals(this.getClass())) {
-            return -1;
-        }
         FSATransitionFunction t = (FSATransitionFunction) another;
         return symbol.compareTo(t.symbol);
     }

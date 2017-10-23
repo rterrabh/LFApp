@@ -11,7 +11,6 @@ import java.io.Serializable;
  */
 
 
-
 public class TMTransitionFunction
         extends FSATransitionFunction
         implements Serializable {
@@ -24,9 +23,6 @@ public class TMTransitionFunction
         int result = super.compareTo(another);
         if (result != 0) {
             return result;
-        }
-        if ( !(another instanceof TMTransitionFunction)) {
-            return -1;
         }
         TMTransitionFunction t = (TMTransitionFunction) another;
         result = writeSymbol.compareTo(t.writeSymbol);
@@ -49,19 +45,16 @@ public class TMTransitionFunction
         return writeSymbol;
     }
 
-    public void setWriteSymbol(String writeSymbol) {
-        this.writeSymbol = writeSymbol;
-    }
-
     public TMMove getMove() {
         return move;
     }
 
-    public void setMove(TMMove move) {
-        this.move = move;
+    public void setWriteSymbol(String writeSymbol) {
+        this.writeSymbol = writeSymbol;
     }
 
     @Override
+
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

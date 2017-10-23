@@ -5,7 +5,6 @@ import com.ufla.lfapp.utils.HtmlTags;
 import com.ufla.lfapp.utils.ResourcesContext;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -34,9 +33,6 @@ public class GrammarParser {
             RULE_ELEMENT_LEFT_REGEX, ARROW_REGEX, RULE_ELEMENT_RIGHT_REGEX, RULE_ELEMENT_RIGHT_REGEX);
     public static final String GRAMMAR_REGEX = String.format("%s+", RULE_REGEX);
 
-    private GrammarParser() {
-
-    }
 
     /**
      * Extrai variáveis da gramática
@@ -52,29 +48,16 @@ public class GrammarParser {
             final int N = leftSideRule.length();
             for (int i = 0; i < N; i++) {
                 if (Character.isUpperCase(leftSideRule.charAt(i))) {
-                    int k = i+1;
+                    int k = i + 1;
                     while (k < N && (Character.isDigit(leftSideRule.charAt(k)) ||
                             leftSideRule.charAt(k) == '\'')) {
                         k++;
                     }
                     variables.add(leftSideRule.substring(i, k));
-                    i = k-1;
+                    i = k - 1;
                 }
             }
         }
-//        for (int i = 0; i < txt.length(); ) {
-//            if (Character.isUpperCase(txt.charAt(i))) {
-//                int k = i+1;
-//                while (k != txt.length() && (Character.isDigit(txt.charAt(k)) ||
-//                        txt.charAt(k) == '\'')) {
-//                    k++;
-//                }
-//                variables.add(txt.substring(i, k));
-//                i = k;
-//            } else {
-//                i++;
-//            }
-//        }
         return variables;
     }
 
@@ -132,21 +115,6 @@ public class GrammarParser {
             i++;
         }
         return txt.substring(0, i);
-    }
-
-    public static boolean regexVerifyInputGrammar(String txtGrammar) {
-        return txtGrammar.matches(GRAMMAR_REGEX);
-    }
-
-    public static boolean simpleVerifyInputGrammar(String txtGrammar) {
-        final int PARAMS_LENGTH = 2;
-        for (String line : txtGrammar.split("\n")) {
-            String[] params = line.split("->");
-            if (params.length != PARAMS_LENGTH) {
-                return false;
-            }
-        }
-        return true;
     }
 
 
@@ -259,7 +227,7 @@ public class GrammarParser {
                 academic.append(ResourcesContext.getString(R.string.exception_rule_not_in_grammar))
                         .append(' ').append(element).append(' ')
                         .append(ResourcesContext.getString(R.string.exception_rule_not_sensitive_free_2))
-                .append('\n');
+                        .append('\n');
                 return false;
             }
         }
@@ -293,7 +261,7 @@ public class GrammarParser {
      * @param sentence
      * @return
      */
-    private static boolean containsSentence(final Grammar g, String sentence) {
+    public static boolean containsSentence(final Grammar g, String sentence) {
         boolean contains = true;
         StringBuilder element = new StringBuilder();
         for (int i = 0; i < sentence.length(); i++) {
@@ -405,7 +373,6 @@ public class GrammarParser {
     }
 
 
-    // Problema nessa implementação
     /**
      * Verifica a existência de variáveis no conjunto Prev
      *
@@ -449,7 +416,7 @@ public class GrammarParser {
      * @return
      */
     public static Set<Rule> updateRules(Set<String> prev, Grammar g,
-                                              final AcademicSupport academic) {
+                                        final AcademicSupport academic) {
         Set<Rule> newRules = new LinkedHashSet<>();
         for (Rule element : g.getRules()) {
             if (prev.contains(element.getLeftSide())) {
@@ -460,19 +427,13 @@ public class GrammarParser {
                         int index = 1;
                         String rightSide = element.getRightSide();
                         int N = rightSide.length();
-                        while (index+j != N &&
-                                isDigitOrApostrophe(rightSide.charAt(index+j)) ) {
+                        while (index + j != N &&
+                                isDigitOrApostrophe(rightSide.charAt(index + j))) {
                             index++;
                         }
-                        String var = rightSide.substring(j, index+j);
+                        String var = rightSide.substring(j, index + j);
                         insertOnNewRule = prev.contains(var);
-                        j += index-1;
-                    } else if (Character.isLowerCase(element.getRightSide().charAt(j))) {
-                        insertOnNewRule = true;
-                    } else if (element.getRightSide().charAt(j) == '.') {
-                        insertOnNewRule = true;
-                    } else {
-                        insertOnNewRule = false;
+                        j += index - 1;
                     }
                 }
                 if (insertOnNewRule) {
@@ -491,25 +452,6 @@ public class GrammarParser {
             }
         }
         return newRules;
-    }
-
-    /**
-     * Atualiza terminais da gramática após remover símbolos inúteis.
-     *
-     * @param g
-     * @return
-     */
-    public static Set<String> updateTerminals(Grammar g) {
-        Set<String> newTerminals = new LinkedHashSet<>();
-        for (Rule element : g.getRules()) {
-            for (int i = 0; i < element.getRightSide().length(); i++) {
-                if (Character.isLowerCase(element.getRightSide().charAt(i))) {
-                    newTerminals.add(Character.toString(element.getRightSide()
-                            .charAt(i)));
-                }
-            }
-        }
-        return newTerminals;
     }
 
 
@@ -563,12 +505,12 @@ public class GrammarParser {
         for (int i = 0; i < N; i++) {
             if (Character.isUpperCase(rightSide.charAt(i))) {
                 int index = 1;
-                while (index+i != N &&
-                        isDigitOrApostrophe(rightSide.charAt(index+i)) ) {
+                while (index + i != N &&
+                        isDigitOrApostrophe(rightSide.charAt(index + i))) {
                     index++;
                 }
-                String var = rightSide.substring(i, index+i);
-                i += index-1;
+                String var = rightSide.substring(i, index + i);
+                i += index - 1;
                 reach.add(var);
             }
         }
@@ -600,66 +542,12 @@ public class GrammarParser {
         return grammarTest;
     }
 
-
-    /**
-     * Retorna o índice do primeiro elemento de uma produção
-     */
-    static int indexOfFirstChar(String rightSide) {
-        boolean firstCharacter = true;
-        int i = 0;
-        if (counterOfRightSide(rightSide) != 1) {
-            i = 1;
-            while (firstCharacter) {
-                if (!Character.isDigit(rightSide.charAt(i))) {
-                    firstCharacter = false;
-                } else {
-                    i++;
-                }
-            }
-        }
-        return i;
-    }
-
-    /**
-     * @param rightSide : string
-     * @return : retorna a quantidade de elementos na string
-     */
-    static int counterOfRightSide(String rightSide) {
-        int i = 0;
-        int j = 0;
-        while (i != rightSide.length()) {
-            if (Character.isLetter(rightSide.charAt(i))) {
-                j++;
-            }
-            i++;
-        }
-        return j;
-    }
-
-    /**
-     * Verifica se existe recursão direta
-     *
-     * @param
-     */
-    static boolean existsDirectRecursion(Grammar g) {
-        for (String variable : g.getVariables()) {
-            for (Rule element : g.getRules()) {
-                if (variable.equals(element.getLeftSide())) {
-                    if (variable.equals(Character.toString(element.getRightSide().charAt(0)))) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
     /**
      * Retorna verdadeiro se existir recursão
      *
      * @param olderVariables
      */
-    static boolean existsRecursion(final Grammar g, Map<String, String> variablesInOrder, Set<String> olderVariables) {
+    public static boolean existsRecursion(final Grammar g, Map<String, String> variablesInOrder, Set<String> olderVariables) {
         for (String variable : g.getVariables()) {
             if (olderVariables.contains(variable)) {
                 for (Rule element : g.getRules()) {
@@ -692,68 +580,6 @@ public class GrammarParser {
         }
         return newRightSide;
     }
-
-//    /**
-//     * @param g: gramática livre de contexto
-//     * @return automaton: gramática livre de contexto convertida em autômato de pilha
-//     */
-//    public static PushdownAutomaton turnsGrammarToPushdownAutomata(final Grammar g) {
-//        Grammar gc = (Grammar) g.clone();
-//        AcademicSupport academic = new AcademicSupport();
-//
-//        if (!gc.isFNG()) {
-//            gc = g.FNG(gc, academic);
-//        }
-//
-//        PushdownAutomaton automaton = new PushdownAutomaton();
-//
-//        if (gc.isFNG()) {
-//            //inicializando o automato
-//            //adiciona estado final
-//            Set<String> finalStates = new LinkedHashSet<>();
-//            finalStates.add("q1");
-//            //automaton.setFinalStates(finalStates);
-//
-//            //adiciona estado inicial
-//            //automaton.setInitialState("q0");
-//
-//            //adiciona os estados que serão utilizados
-//            Set<String> states = new LinkedHashSet<>();
-//            states.add("q0");
-//            states.add("q1");
-//           // automaton.setStates(states);
-//
-//            //adiciona alfabeto da pilha
-//            automaton.setStackAlphabet(gc.getVariables());
-//
-//            //adiciona alfabeto
-//            //automaton.setAlphabet(gc.getTerminals());
-//
-//            //adicionando função de transição
-//            Set<PDATransitionFunction> transitionTable = new HashSet<>();
-//            for (Rule element : gc.getRules()) {
-//                PDATransitionFunction transitionFunction = new PDATransitionFunction();
-//                if (element.getLeftSide().equals(gc.getInitialSymbol())) {
-//                    transitionFunction.setCurrentState("q0");
-//                    transitionFunction.setFutureState("q1");
-//                    transitionFunction.setPops(".");
-//                    transitionFunction.setSymbol(Character.toString(element.getRightSide().charAt(0)));
-//                    String stacking = ("." .equals(element.getRightSide()) ? (element.getRightSide()) : (element.getRightSide().substring(1)));
-//                    transitionFunction.setStacking(stacking);
-//                } else {
-//                    transitionFunction.setCurrentState("q1");
-//                    transitionFunction.setFutureState("q1");
-//                    transitionFunction.setPops(element.getLeftSide());
-//                    transitionFunction.setSymbol(Character.toString(element.getRightSide().charAt(0)));
-//                    transitionFunction.setStacking(element.getRightSide().substring(1));
-//                }
-//                transitionTable.add(transitionFunction);
-//            }
-//            automaton.setTransictionFunction(transitionTable);
-//        }
-//
-//        return automaton;
-//    }
 
     public static String[][] turnsTreesetOnArray(Set<String>[][] CYK, String word) {
         String[][] cykOut = new String[word.length() + 1][word.length()];

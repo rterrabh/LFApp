@@ -28,7 +28,6 @@ public class TMMultiTapeSimulatorTest {
 
     static {
         ResourcesContext.isTest = true;
-        TMMove.test = true;
     }
 
     @Before

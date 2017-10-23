@@ -26,7 +26,6 @@ public class FiniteAutomataSudkampTest {
 
     static {
         ResourcesContext.isTest = true;
-        TMMove.test = true;
     }
 
     private FiniteStateAutomaton getAutomatonFigure_5_2() {

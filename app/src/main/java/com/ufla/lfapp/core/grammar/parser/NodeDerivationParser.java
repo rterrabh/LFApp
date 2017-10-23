@@ -21,21 +21,6 @@ public class NodeDerivationParser {
     private List<NodeDerivationParser> childs;
     private NodeDerivationParser father;
 
-    public String getSpace() {
-        char[] space = new char[level*2];
-        Arrays.fill(space, ' ');
-        return new String(space);
-    }
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        return sb.append(getSpace())
-                .append(node)
-                .append(", ")
-                .append(stackRules)
-                .toString();
-    }
-
     public NodeDerivationParser(String node, int level, NodeDerivationParser father,
                                 int childInd) {
         this.node = node;
@@ -49,7 +34,7 @@ public class NodeDerivationParser {
     }
 
     public boolean hasRulesOnStack() {
-        return !stackRules.isEmpty();
+        return stackRules != null && !stackRules.isEmpty();
     }
 
     public boolean isVariable() {
@@ -59,6 +44,13 @@ public class NodeDerivationParser {
     public boolean isLambda() {
         return node.equals(Grammar.LAMBDA);
     }
+
+    public String getSpace() {
+        char[] space = new char[level * 2];
+        Arrays.fill(space, ' ');
+        return new String(space);
+    }
+
     public NodeDerivationParser getNodeChild(int ind) {
         return childs.get(ind);
     }
@@ -69,6 +61,8 @@ public class NodeDerivationParser {
         }
         return stackRules.pop();
     }
+
+    // métodos acessores
 
     public void setChilds(List<NodeDerivationParser> childs) {
         this.childs = childs;
@@ -107,6 +101,26 @@ public class NodeDerivationParser {
 
     public List<NodeDerivationParser> getChilds() {
         return childs;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getSpace())
+                .append(node)
+                .append(", ");
+        if (stackRules == null) {
+            return sb.append("null").toString();
+        }
+        if (stackRules.isEmpty()) {
+            return sb.append("[]").toString();
+        }
+        sb.append("[");
+        for (Rule rule : stackRules) {
+            sb.append(rule.getRightSide()).append(", ");
+        }
+        sb.deleteCharAt(sb.length() - 1).setCharAt(sb.length() - 1, ']');
+        return sb.toString();
     }
 
 }

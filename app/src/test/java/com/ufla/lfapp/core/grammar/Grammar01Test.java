@@ -1,9 +1,9 @@
 package com.ufla.lfapp.core.grammar;
 
-import com.ufla.lfapp.core.machine.tm.TMMove;
 import com.ufla.lfapp.utils.ResourcesContext;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -19,7 +19,8 @@ public class Grammar01Test {
 
     private Grammar g;
 
-    static {
+    @BeforeClass
+    public static void setTest() {
         ResourcesContext.isTest = true;
     }
 

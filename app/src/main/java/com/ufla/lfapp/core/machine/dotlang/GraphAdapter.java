@@ -23,4 +23,8 @@ public class GraphAdapter implements Serializable {
     public State startState;
     public DotLanguage dotLanguage;
 
+    public GraphAdapter() {
+
+    }
+
 }

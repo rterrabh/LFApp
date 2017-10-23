@@ -4,6 +4,12 @@ import com.ufla.lfapp.core.machine.tm.TMMove;
 import com.ufla.lfapp.core.machine.tm.TMSimulator;
 import com.ufla.lfapp.core.machine.tm.TMTransitionFunction;
 import com.ufla.lfapp.core.machine.tm.TuringMachine;
+import com.ufla.lfapp.core.machine.tm.var.TMMultiTapeSimulator;
+import com.ufla.lfapp.core.machine.tm.var.TMMultiTapeTransitionFunction;
+import com.ufla.lfapp.core.machine.tm.var.TMMultiTrackSimulator;
+import com.ufla.lfapp.core.machine.tm.var.TMMultiTrackTransitionFunction;
+import com.ufla.lfapp.core.machine.tm.var.TuringMachineMultiTape;
+import com.ufla.lfapp.core.machine.tm.var.TuringMachineMultiTrack;
 import com.ufla.lfapp.utils.ResourcesContext;
 
 import org.junit.Before;
@@ -16,6 +22,8 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -28,7 +36,6 @@ public class TMMultiTrackSimulatorTest {
 
     static {
         ResourcesContext.isTest = true;
-        TMMove.test = true;
     }
 
     @Before
@@ -73,6 +80,59 @@ public class TMMultiTrackSimulatorTest {
                     TMMove.getInstance(tfS[4])));
         }
         this.tm = new TuringMachine(states, statesMap.get("q0"), finalStates, tf);
+    }
+
+    public TMMove getMove(String[] movesStr) {
+        return TMMove.getInstance(movesStr[0]);
+    }
+
+    private TuringMachineMultiTrack getTMExample_8_6_1() {
+        String[] statesStr = { "q0", "q1", "q2", "q3" };
+        SortedSet<State> states = new TreeSet<>();
+        Map<String, State> statesMap = new HashMap<>();
+        for (String st : statesStr) {
+            State state = new State(st);
+            states.add(state);
+            statesMap.put(st, state);
+        }
+        SortedSet<State> finalStates = new TreeSet<>();
+        finalStates.add(statesMap.get("q3"));
+        String[][][] tfStr = {
+                { { "q0" }, { "B", "B" }, { "q1" }, { "B", "B" }, { "R" }  },
+                { { "q1" }, { "a", "B" }, { "q1" }, { "a", "B" }, { "R" }  },
+                { { "q1" }, { "b", "B" }, { "q2" }, { "b", "B" }, { "R" }  },
+                { { "q2" }, { "a", "B" }, { "q2" }, { "a", "B" }, { "R" }  },
+                { { "q2" }, { "B", "B" }, { "q3" }, { "B", "B" }, { "R" }  },
+        };
+        Set<TMMultiTrackTransitionFunction> tf = new HashSet<>();
+        for (String[][] tfS : tfStr) {
+            tf.add(new TMMultiTrackTransitionFunction(statesMap.get(tfS[0][0]),
+                    statesMap.get(tfS[2][0]), tfS[1], tfS[3],
+                    getMove(tfS[4])));
+        }
+        return new TuringMachineMultiTrack(states, statesMap.get("q0"), finalStates, tf, 2);
+    }
+
+    // pag 269 FEATURE - Turing Machines - TM Multi-tape Simulator
+    @Test
+    public void example_8_6_1Test() throws Exception {
+        TuringMachineMultiTrack tm = getTMExample_8_6_1();
+        String string1 = "aaabaaa";
+        String string2 = "aabaaa";
+        String string3 = "b";
+        String string4 = "abba";
+        TMMultiTrackSimulator tmSimulator = new TMMultiTrackSimulator(tm, string1);
+        assertTrue(tmSimulator.process());
+
+        tmSimulator = new TMMultiTrackSimulator(tm, string2);
+        assertTrue(tmSimulator.process());
+
+        tmSimulator = new TMMultiTrackSimulator(tm, string3);
+        assertTrue(tmSimulator.process());
+
+        tmSimulator = new TMMultiTrackSimulator(tm, string4);
+        assertFalse(tmSimulator.process());
+
     }
 
     @Test

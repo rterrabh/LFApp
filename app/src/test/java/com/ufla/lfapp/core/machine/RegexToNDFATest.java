@@ -32,7 +32,6 @@ public class RegexToNDFATest {
 
     static {
         ResourcesContext.isTest = true;
-        TMMove.test = true;
     }
 
     public FiniteStateAutomaton getA() {

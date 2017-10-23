@@ -24,9 +24,6 @@ public class TMMultiTapeTransitionFunction
     public int compareTo(TransitionFunction another) {
         int result = super.compareTo(another);
         if (result != 0) return result;
-        if (!(another instanceof TMMultiTapeTransitionFunction)) {
-            return -1;
-        }
         TMMultiTapeTransitionFunction t =
                 (TMMultiTapeTransitionFunction) another;
         result = moves.length - t.moves.length;
@@ -54,8 +51,8 @@ public class TMMultiTapeTransitionFunction
                     .append(moves[i])
                     .append(", ");
         }
-        sb.deleteCharAt(sb.length()-1);
-        sb.setCharAt(sb.length()-1, ']');
+        sb.deleteCharAt(sb.length() - 1);
+        sb.setCharAt(sb.length() - 1, ']');
         return sb.toString();
     }
 
@@ -75,12 +72,17 @@ public class TMMultiTapeTransitionFunction
         }
     }
 
+    public void setMoves(TMMove[] moves) {
+        this.moves = moves;
+    }
+
     public boolean hasNumTapes(int numTapes) {
         if (!super.hasNumTapes(numTapes)) {
             return false;
         }
         if (moves.length != numTapes) {
             return false;
+
         }
         return true;
     }
@@ -107,19 +109,6 @@ public class TMMultiTapeTransitionFunction
     // MÉTODOS ACESSORES
     public TMMove[] getMoves() {
         return moves;
-    }
-
-    public void setMoves(TMMove[] moves) {
-        this.moves = moves;
-    }
-
-    public void setMove(int index, TMMove move) {
-        this.moves[index] = move;
-    }
-
-    // MÉTODOS EQUALS
-    public boolean equalsMoves(TMMove[] moves) {
-        return Arrays.deepEquals(this.moves, moves);
     }
 
     @Override

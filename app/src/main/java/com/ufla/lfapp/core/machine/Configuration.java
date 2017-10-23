@@ -25,10 +25,6 @@ public abstract class Configuration {
         return state;
     }
 
-    public int getDepth() {
-        return depth;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

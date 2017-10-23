@@ -33,7 +33,6 @@ public class TMEnumeratorSimulatorTest {
 
     static {
         ResourcesContext.isTest = true;
-        TMMove.test = true;
     }
 
     public TMMove[] getMoves(String[] movesStr) {

@@ -1,5 +1,8 @@
 package com.ufla.lfapp.core.grammar;
 
+import com.ufla.lfapp.utils.ResourcesContext;
+
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -13,6 +16,11 @@ public class RuleTest {
 
     Rule rule;
 
+    @BeforeClass
+    public static void setTest() {
+        ResourcesContext.isTest = true;
+    }
+
     @Test
     public void testRightSideContainsSymbol() {
         rule = new Rule("S", "BaA");
@@ -20,6 +28,30 @@ public class RuleTest {
         assertTrue(rule.rightSideContainsSymbol("A"));
         assertTrue(rule.rightSideContainsSymbol("B"));
         assertFalse(rule.rightSideContainsSymbol("b"));
+    }
+
+    @Test
+    public void testCompareTo() {
+        rule = new Rule("S", "BaA");
+        Rule rule2 = new Rule("S", "a");
+        Rule rule3 = new Rule("S", "a");
+        Rule rule4 = new Rule("A", "a");
+        assertTrue(rule.compareTo(rule2) < 0);
+        assertTrue(rule3.compareTo(rule2) == 0);
+        assertTrue(rule2.compareTo(rule) > 0);
+        assertTrue(rule.compareTo(rule4) > 0);
+    }
+
+    @Test
+    public void testEquals() {
+        rule = new Rule("S", "BaA");
+        assertTrue(rule.equals(rule));
+        assertFalse(rule.equals(null));
+        assertFalse(rule.equals("rule"));
+        Rule rule1 = new Rule(null, "b");
+        Rule rule2 = new Rule("S", null);
+        assertFalse(rule1.equals(rule));
+        assertFalse(rule2.equals(rule));
     }
 
     @Test

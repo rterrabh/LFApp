@@ -22,7 +22,7 @@ public class NodeDerivationPosition implements Serializable {
     private MyPoint position;
 
     private static NodeDerivationPosition getNode(NodeDerivation node,
-                                                          NodeDerivationPosition father) {
+                                                  NodeDerivationPosition father) {
         NodeDerivationPosition nodeDerivationPos = new NodeDerivationPosition();
         nodeDerivationPos.node = node.getNode();
         nodeDerivationPos.level = node.getLevel();
@@ -38,66 +38,20 @@ public class NodeDerivationPosition implements Serializable {
     }
 
     public static NodeDerivationPosition getRootFromNode(NodeDerivation node) {
-        NodeDerivationPosition rootNodePosition = new NodeDerivationPosition();
-        rootNodePosition.node = node.getNode();
-        rootNodePosition.level = node.getLevel();
-        rootNodePosition.childInd = node.getChildInd();
-        rootNodePosition.childs = new ArrayList<>();
-        rootNodePosition.father = null;
-        List<NodeDerivation> childs = node.getChilds();
-        int n = node.getCountChilds();
-        for (int i = 0; i < n; i++) {
-            rootNodePosition.childs.add(getNode(childs.get(i),
-                    rootNodePosition));
-        }
-        return rootNodePosition;
+        return getNode(node, null);
     }
 
-    public int getCountChilds() {
-        if (childs == null) {
-            return -1;
-        }
-        return childs.size();
-    }
 
     public String getNode() {
         return node;
-    }
-
-    public void setNode(String node) {
-        this.node = node;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
-    }
-
-    public int getChildInd() {
-        return childInd;
-    }
-
-    public void setChildInd(int childInd) {
-        this.childInd = childInd;
     }
 
     public List<NodeDerivationPosition> getChilds() {
         return childs;
     }
 
-    public void setChilds(List<NodeDerivationPosition> childs) {
-        this.childs = childs;
-    }
-
     public NodeDerivationPosition getFather() {
         return father;
-    }
-
-    public void setFather(NodeDerivationPosition father) {
-        this.father = father;
     }
 
     public MyPoint getPosition() {
@@ -106,6 +60,29 @@ public class NodeDerivationPosition implements Serializable {
 
     public void setPosition(Point position) {
         this.position = new MyPoint(position);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        NodeDerivationPosition that = (NodeDerivationPosition) o;
+
+        if (level != that.level) return false;
+        if (node != null ? !node.equals(that.node) : that.node != null) return false;
+        if (father != null ? !father.equals(that.father) : that.father != null) return false;
+        return position != null ? position.equals(that.position) : that.position == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = node != null ? node.hashCode() : 0;
+        result = 31 * result + level;
+        result = 31 * result + (father != null ? father.hashCode() : 0);
+        result = 31 * result + (position != null ? position.hashCode() : 0);
+        return result;
     }
 
     @Override
