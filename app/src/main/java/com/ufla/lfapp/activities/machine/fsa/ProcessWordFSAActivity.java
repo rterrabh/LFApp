@@ -13,9 +13,14 @@ import android.widget.TextView;
 
 import com.ufla.lfapp.R;
 import com.ufla.lfapp.activities.AppCompatActivityContext;
+import com.ufla.lfapp.core.machine.State;
 import com.ufla.lfapp.core.machine.fsa.FiniteStateAutomatonGUI;
+import com.ufla.lfapp.core.machine.tm.TMSimulator;
 import com.ufla.lfapp.views.graph.layout.NonEditGraphLayout;
+import com.ufla.lfapp.views.machine.configuration.TapeView;
 
+import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 
 public class ProcessWordFSAActivity extends AppCompatActivityContext {
@@ -59,13 +64,25 @@ public class ProcessWordFSAActivity extends AppCompatActivityContext {
         }
 
         LinearLayout lvNewTransitions = (LinearLayout) findViewById(R.id.configurations);
-        List<SpannableString> spannables = automatonGUI.configurationsSpan;
-        List<String> newTransitionsStr = automatonGUI.configurations;
-        for (SpannableString str : spannables) {
-            TextView textView = new TextView(this);
-            textView.setTextColor(Color.BLACK);
-            textView.setText(str);
-            lvNewTransitions.addView(textView);
+//        List<SpannableString> spannables = automatonGUI.configurationsSpan;
+//        List<String> newTransitionsStr = automatonGUI.configurations;
+        List<Integer> indexes = new ArrayList<>(automatonGUI.confIndex);
+        List<State> states = new ArrayList<>(automatonGUI.confStates);
+        int N = states.size();
+        for (int i = N-1; i >= 0; i--) {
+//            TextView textView = new TextView(this);
+//            textView.setTextColor(Color.BLACK);
+//            textView.setText(str);
+//            lvNewTransitions.addView(textView);
+            TapeView tapeView = new TapeView(this);
+            tapeView.isTM = false;
+            tapeView.setTape(word);
+            tapeView.setIndex(indexes.get(i));
+            tapeView.setState(states.get(i).getName());
+            tapeView.setInitialState(automatonGUI.isInitialState(states.get(i)));
+            tapeView.setFinalState(automatonGUI.isFinalState(states.get(i)));
+            tapeView.finalize();
+            lvNewTransitions.addView(tapeView);
         }
 //        for (String conf : newTransitionsStr) {
 //            TextView textView = new TextView(this);

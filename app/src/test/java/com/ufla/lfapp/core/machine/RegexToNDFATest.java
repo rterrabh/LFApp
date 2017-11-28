@@ -8,6 +8,7 @@ import com.ufla.lfapp.utils.ResourcesContext;
 import com.ufla.lfapp.utils.Symbols;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -30,7 +31,8 @@ public class RegexToNDFATest {
     private FiniteStateAutomaton AorB;
     private FiniteStateAutomaton AorB_K;
 
-    static {
+    @BeforeClass
+    public static void setTest() {
         ResourcesContext.isTest = true;
     }
 

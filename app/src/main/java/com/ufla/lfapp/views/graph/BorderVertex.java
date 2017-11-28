@@ -11,7 +11,7 @@ public class BorderVertex {
     private boolean left;
     private boolean right;
 
-    public BorderVertex(boolean left, boolean top, boolean right, boolean bottom ) {
+    public BorderVertex(boolean left, boolean top, boolean right, boolean bottom) {
         this.left = left;
         this.top = top;
         this.right = right;

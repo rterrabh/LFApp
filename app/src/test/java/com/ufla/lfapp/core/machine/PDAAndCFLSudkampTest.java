@@ -12,6 +12,7 @@ import com.ufla.lfapp.utils.ResourcesContext;
 
 import junit.framework.Assert;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -31,7 +32,8 @@ import static org.junit.Assert.assertEquals;
 
 public class PDAAndCFLSudkampTest {
 
-    static {
+    @BeforeClass
+    public static void setTest() {
         ResourcesContext.isTest = true;
     }
 

@@ -9,6 +9,7 @@ import com.ufla.lfapp.core.machine.tm.var.TMMultiTapeTransitionFunction;
 import com.ufla.lfapp.core.machine.tm.var.TuringMachineMultiTape;
 import com.ufla.lfapp.utils.ResourcesContext;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -28,7 +29,8 @@ import static org.junit.Assert.assertArrayEquals;
 
 public class TuringMachineSudkampTest {
 
-    static {
+    @BeforeClass
+    public static void setTest() {
         ResourcesContext.isTest = true;
     }
 

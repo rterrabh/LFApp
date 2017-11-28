@@ -7,6 +7,7 @@ import com.ufla.lfapp.core.machine.fsa.FiniteStateAutomaton;
 import com.ufla.lfapp.core.machine.tm.TMMove;
 import com.ufla.lfapp.utils.ResourcesContext;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -24,7 +25,8 @@ import static org.junit.Assert.assertTrue;
 
 public class FiniteAutomataSudkampTest {
 
-    static {
+    @BeforeClass
+    public static void setTest() {
         ResourcesContext.isTest = true;
     }
 

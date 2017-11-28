@@ -37,7 +37,12 @@ public class TMMultiTrackTransitionView extends EdgeView {
 
     @Override
     protected String[] getLabelLines() {
-        return getTransitionsMultiTrack(label);
+        String[] labelLines = getTransitionsMultiTrack(label);
+        if (labelLines.length == 0) {
+            setInitialLabel();
+            return  getTransitionsMultiTrack(label);
+        }
+        return labelLines;
     }
 
     @Override

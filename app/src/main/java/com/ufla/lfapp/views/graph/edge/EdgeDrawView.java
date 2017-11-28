@@ -88,6 +88,16 @@ public class EdgeDrawView implements EdgeDraw {
     }
 
     @Override
+    public float distanceToObject(PointF point) {
+        return interactArea.distanceToObject(point);
+    }
+
+    @Override
+    public boolean isOnInteractLabelArea(PointF point) {
+        return interactArea.isOnInteractLabelArea(point);
+    }
+
+    @Override
     public Paint.Align getPaintAlign() {
         return paintAlign;
     }

@@ -36,7 +36,7 @@ public class TuringMachineMultiTape
 
     public TuringMachineMultiTape(int numTapes) {
         this(new TreeSet<String>(),
-                "",
+                null,
                 new TreeSet<String>(),
                 new TreeSet<TMMultiTapeTransitionFunction>(),
                 numTapes);
@@ -78,6 +78,10 @@ public class TuringMachineMultiTape
         super(states, initialState, finalStates);
         setNumTapes(numTapes);
         setTransitionFunction(transitionFunction);
+    }
+
+    public TuringMachineMultiTape() {
+        this(2);
     }
 
     public Map<Pair<State, State>, SortedSet<String>> getTransitionsTMMultiTape() {

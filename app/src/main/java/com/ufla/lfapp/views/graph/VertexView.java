@@ -163,11 +163,11 @@ public class VertexView extends View {
     }
 
     public Point getGridPoint() {
-        return PointUtils.clonePoint(gridPoint);
+        return gridPoint;
     }
 
     public void setGridPoint(Point gridPoint) {
-        this.gridPoint = PointUtils.clonePoint(gridPoint);
+        this.gridPoint = gridPoint;
     }
 
     /*public StateViewB(Context context, AttributeSet attrs) {

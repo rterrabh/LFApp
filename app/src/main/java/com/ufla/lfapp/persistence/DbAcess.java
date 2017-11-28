@@ -872,7 +872,11 @@ public class DbAcess {
         List<DotLanguage> dotLanguages = getLastMachineDotLanguages(machineTypeSel);
         List<GraphAdapter> graphAdapters = new ArrayList<>();
         for (DotLanguage dotLanguage : dotLanguages) {
-            graphAdapters.add(dotLanguage.toGraphAdapter());
+            try {
+                graphAdapters.add(dotLanguage.toGraphAdapter());
+            } catch (Exception e) {
+                    e.printStackTrace();
+            }
         }
         return graphAdapters;
     }

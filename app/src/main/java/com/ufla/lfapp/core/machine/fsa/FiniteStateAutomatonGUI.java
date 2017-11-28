@@ -468,8 +468,12 @@ public class FiniteStateAutomatonGUI
         id = -1L;
     }
 
-    public Point getGridPosition(State state) {
+    public Point getGridPositionPoint(State state) {
         return stateGridPositions.get(state).toPoint();
+    }
+
+    public MyPoint getGridPosition(State state) {
+        return stateGridPositions.get(state);
     }
 
     public SortedMap<State, Point> getStateGridPoint() {

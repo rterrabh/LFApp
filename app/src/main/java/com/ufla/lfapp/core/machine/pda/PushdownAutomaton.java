@@ -33,7 +33,7 @@ public class PushdownAutomaton extends Machine implements Serializable {
     }
 
     public PushdownAutomaton() {
-        this(new TreeSet<String>(), "", new TreeSet<String>(), new TreeSet<PDATransitionFunction>());
+        this(new TreeSet<String>(), null, new TreeSet<String>(), new TreeSet<PDATransitionFunction>());
     }
 
     @Override

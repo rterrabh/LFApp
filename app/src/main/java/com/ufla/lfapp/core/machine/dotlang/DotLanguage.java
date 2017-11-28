@@ -127,7 +127,7 @@ public class DotLanguage implements Serializable {
      * @return string com a representação textual das transições do autômato como arestas
      * na linguagem dot
      */
-    private static String parseDotLanguageEdges(FiniteStateAutomatonGUI automatonGUI) {
+    private static String parseDotLanguageEdgesOld(FiniteStateAutomatonGUI automatonGUI) {
         StringBuilder graphSb = new StringBuilder();
         for (FSATransitionFunction transitionFunc : automatonGUI.getTransitionFunctions()) {
             graphSb.append(TAB)
@@ -154,10 +154,10 @@ public class DotLanguage implements Serializable {
      * @return string com a representação textual dos estados do autômato como vértices
      * na linguagem dot
      */
-    private static String parseDotLanguageVertex(FiniteStateAutomatonGUI automatonGUI) {
+    private static String parseDotLanguageVertexOld(FiniteStateAutomatonGUI automatonGUI) {
         StringBuilder graphSb = new StringBuilder();
         for (State state : automatonGUI.getStates()) {
-            Point pos = automatonGUI.getGridPosition(state);
+            MyPoint pos = automatonGUI.getGridPosition(state);
             graphSb.append(TAB)
                     .append(state.getName())
                     .append(" [")
@@ -191,6 +191,27 @@ public class DotLanguage implements Serializable {
         }
         return graphSb.toString();
     }
+
+    private static String parseDotLanguageInternOld(FiniteStateAutomatonGUI automatonGUI) {
+        StringBuilder graphSb = new StringBuilder();
+        graphSb.append(DIGRAPH)
+                .append(' ')
+                .append(UNTITLED)
+                .append(" {")
+                .append(END_LINE)
+                .append(parseDotLanguageVertexOld(automatonGUI))
+                .append(parseDotLanguageEdgesOld(automatonGUI))
+                .append("}")
+                .append(END_LINE);
+        return graphSb.toString();
+    }
+
+    public static DotLanguage parseDotLanguageOld(FiniteStateAutomatonGUI automatonGUI) {
+        String graph = parseDotLanguageInternOld(automatonGUI);
+        return new DotLanguage(-1, graph, null, 0, new Date(), MachineType.FSA);
+    }
+
+
 
     private static String getFinalStatesStr(Machine machine) {
         Set<State> finalStates = machine.getFinalStates();
@@ -393,6 +414,12 @@ public class DotLanguage implements Serializable {
                 .append("}")
                 .append(END_LINE);
         return graphSb.toString();
+    }
+
+    public static DotLanguage parseDotLanguage(TreeDerivationPosition tree) {
+        String graph = parseDotLanguageIntern(tree);
+
+        return new DotLanguage(-1, graph, null, 0, new Date(), MachineType.UNDEFINED);
     }
 
 
@@ -609,113 +636,148 @@ public class DotLanguage implements Serializable {
         if (machineType == null || !machineType.equals(MachineType.FSA)) {
             throw new IllegalMachineTypeException(machineType, MachineType.FSA);
         }
-        String[][] parametersMachine = parametersMachine();
-        Map<String, State> nameToState = createNameToState(parametersMachine[1]);
-        Map<State, MyPoint> stateToPoint = createStateToMyPoint(parametersMachine[1], nameToState);
-        SortedSet<State> states = new TreeSet<>(nameToState.values());
-        SortedSet<State> finalStates = getFinalStates(parametersMachine[0], nameToState);
-        State startState = nameToState.get(parametersMachine[2][0]);
-        SortedSet<FSATransitionFunction> transitionFunctions =
-                getFSATransitionFunctions(parametersMachine[3], nameToState);
-        FiniteStateAutomaton fsa = new FiniteStateAutomaton(states, startState,
-                finalStates, transitionFunctions);
-        this.defineMachine(fsa);
-        return Pair.create(fsa, stateToPoint);
+        try {
+            String[][] parametersMachine = parametersMachine();
+            Map<String, State> nameToState = createNameToState(parametersMachine[1]);
+            Map<State, MyPoint> stateToPoint = createStateToMyPoint(parametersMachine[1],
+                                                                    nameToState);
+            SortedSet<State> states = new TreeSet<>(nameToState.values());
+            SortedSet<State> finalStates = getFinalStates(parametersMachine[0], nameToState);
+            State startState = nameToState.get(parametersMachine[2][0]);
+            SortedSet<FSATransitionFunction> transitionFunctions =
+                    getFSATransitionFunctions(parametersMachine[3], nameToState);
+            FiniteStateAutomaton fsa = new FiniteStateAutomaton(states, startState,
+                                                                finalStates, transitionFunctions);
+            this.defineMachine(fsa);
+            return Pair.create(fsa, stateToPoint);
+        } catch (Exception e) {
+
+        }
+        return Pair.create(new FiniteStateAutomaton(), (Map<State, MyPoint>) new HashMap<State, MyPoint>());
     }
 
     public GraphAdapter toGraphAdapter() {
-        GraphAdapter graphAdapter = new GraphAdapter();
-        graphAdapter.dotLanguage = this;
-        String[][] parametersMachine = parametersMachine();
-        Map<String, State> nameToState = createNameToState(parametersMachine[1]);
-        graphAdapter.stateMyPointMap = createStateToMyPoint(parametersMachine[1], nameToState);
-        graphAdapter.stateSet = new TreeSet<>(nameToState.values());
-        graphAdapter.stateFinals = getFinalStates(parametersMachine[0], nameToState);
-        graphAdapter.startState = nameToState.get(parametersMachine[2][0]);
-        graphAdapter.edgeList = new ArrayList<>();
-        for (String edgeStr : parametersMachine[3]) {
-            String[] params = edgeStr.split("\n");
-            Edge edge = new Edge();
-            edge.current = nameToState.get(params[0]);
-            edge.future = nameToState.get(params[1]);
-            edge.label = params[2].replaceAll("\\\\n", "\n");
-            graphAdapter.edgeList.add(edge);
-        }
-        return graphAdapter;
-    }
+        try {
+            GraphAdapter graphAdapter = new GraphAdapter();
+            graphAdapter.dotLanguage = this;
+            String[][] parametersMachine = parametersMachine();
+            Map<String, State> nameToState = createNameToState(parametersMachine[1]);
+            graphAdapter.stateMyPointMap = createStateToMyPoint(parametersMachine[1], nameToState);
+            graphAdapter.stateSet = new TreeSet<>(nameToState.values());
+            graphAdapter.stateFinals = getFinalStates(parametersMachine[0], nameToState);
+            graphAdapter.startState = nameToState.get(parametersMachine[2][0]);
+            graphAdapter.edgeList = new ArrayList<>();
+            for (String edgeStr : parametersMachine[3]) {
+                String[] params = edgeStr.split("\n");
+                Edge edge = new Edge();
+                edge.current = nameToState.get(params[0]);
+                edge.future = nameToState.get(params[1]);
+                edge.label = params[2].replaceAll("\\\\n", "\n");
+                graphAdapter.edgeList.add(edge);
+            }
+            return graphAdapter;
+        } catch (Exception e) {
 
+        }
+        return new GraphAdapter();
+    }
     public Pair<PushdownAutomaton, Map<State, MyPoint>> toPDA() {
         if (machineType == null || !machineType.equals(MachineType.PDA)) {
             throw new IllegalMachineTypeException(machineType, MachineType.PDA);
         }
-        String[][] parametersMachine = parametersMachine();
-        Map<String, State> nameToState = createNameToState(parametersMachine[1]);
-        Map<State, MyPoint> stateToPoint = createStateToMyPoint(parametersMachine[1], nameToState);
-        SortedSet<State> states = new TreeSet<>(nameToState.values());
-        SortedSet<State> finalStates = getFinalStates(parametersMachine[0], nameToState);
-        State startState = nameToState.get(parametersMachine[2][0]);
-        SortedSet<PDATransitionFunction> transitionFunctions =
-                getPDATransitionFunctions(parametersMachine[3], nameToState);
-        PushdownAutomaton pda = new PushdownAutomaton(states, startState, finalStates, transitionFunctions);
-        defineMachine(pda);
-        return Pair.create(pda, stateToPoint);
+        try {
+            String[][] parametersMachine = parametersMachine();
+            Map<String, State> nameToState = createNameToState(parametersMachine[1]);
+            Map<State, MyPoint> stateToPoint = createStateToMyPoint(parametersMachine[1],
+                                                                    nameToState);
+            SortedSet<State> states = new TreeSet<>(nameToState.values());
+            SortedSet<State> finalStates = getFinalStates(parametersMachine[0], nameToState);
+            State startState = nameToState.get(parametersMachine[2][0]);
+            SortedSet<PDATransitionFunction> transitionFunctions =
+                    getPDATransitionFunctions(parametersMachine[3], nameToState);
+            PushdownAutomaton pda = new PushdownAutomaton(states, startState, finalStates,
+                                                          transitionFunctions);
+            defineMachine(pda);
+            return Pair.create(pda, stateToPoint);
+        } catch (Exception e) {
+
+        }
+        return Pair.create(new PushdownAutomaton(), (Map<State, MyPoint>) new HashMap<State, MyPoint>());
     }
 
     public Pair<PushdownAutomatonExtend, Map<State, MyPoint>> toPDAExt() {
         if (machineType == null || !machineType.equals(MachineType.PDA_EXT)) {
             throw new IllegalMachineTypeException(machineType, MachineType.PDA_EXT);
         }
-        String[][] parametersMachine = parametersMachine();
-        Map<String, State> nameToState = createNameToState(parametersMachine[1]);
-        Map<State, MyPoint> stateToPoint = createStateToMyPoint(parametersMachine[1], nameToState);
-        SortedSet<State> states = new TreeSet<>(nameToState.values());
-        SortedSet<State> finalStates = getFinalStates(parametersMachine[0], nameToState);
-        State startState = nameToState.get(parametersMachine[2][0]);
-        SortedSet<PDAExtTransitionFunction> transitionFunctions =
-                getPDAExtTransitionFunctions(parametersMachine[3], nameToState);
-        PushdownAutomatonExtend pda = new PushdownAutomatonExtend(states, startState, finalStates, transitionFunctions);
-        defineMachine(pda);
-        return Pair.create(pda, stateToPoint);
+        try {
+            String[][] parametersMachine = parametersMachine();
+            Map<String, State> nameToState = createNameToState(parametersMachine[1]);
+            Map<State, MyPoint> stateToPoint = createStateToMyPoint(parametersMachine[1], nameToState);
+            SortedSet<State> states = new TreeSet<>(nameToState.values());
+            SortedSet<State> finalStates = getFinalStates(parametersMachine[0], nameToState);
+            State startState = nameToState.get(parametersMachine[2][0]);
+            SortedSet<PDAExtTransitionFunction> transitionFunctions =
+                    getPDAExtTransitionFunctions(parametersMachine[3], nameToState);
+            PushdownAutomatonExtend pda = new PushdownAutomatonExtend(states, startState, finalStates, transitionFunctions);
+            defineMachine(pda);
+            return Pair.create(pda, stateToPoint);
+        } catch (Exception e) {
+
+        }
+        return Pair.create(new PushdownAutomatonExtend(), (Map<State, MyPoint>) new HashMap<State, MyPoint>());
     }
 
     public Pair<TuringMachine, Map<State, MyPoint>> toTM() {
         if (machineType == null || !machineType.equals(MachineType.TM)) {
             throw new IllegalMachineTypeException(machineType, MachineType.TM);
         }
-        String[][] parametersMachine = parametersMachine();
-        Map<String, State> nameToState = createNameToState(parametersMachine[1]);
-        Map<State, MyPoint> stateToPoint = createStateToMyPoint(parametersMachine[1], nameToState);
-        SortedSet<State> states = new TreeSet<>(nameToState.values());
-        SortedSet<State> finalStates = getFinalStates(parametersMachine[0], nameToState);
-        State startState = nameToState.get(parametersMachine[2][0]);
-        SortedSet<TMTransitionFunction> transitionFunctions =
-                getTMTransitionFunctions(parametersMachine[3], nameToState);
-        TuringMachine tm = new TuringMachine(states, startState, finalStates, transitionFunctions);
-        defineMachine(tm);
-        return Pair.create(tm, stateToPoint);
+        try {
+            String[][] parametersMachine = parametersMachine();
+            Map<String, State> nameToState = createNameToState(parametersMachine[1]);
+            Map<State, MyPoint> stateToPoint = createStateToMyPoint(parametersMachine[1],
+                                                                    nameToState);
+            SortedSet<State> states = new TreeSet<>(nameToState.values());
+            SortedSet<State> finalStates = getFinalStates(parametersMachine[0], nameToState);
+            State startState = nameToState.get(parametersMachine[2][0]);
+            SortedSet<TMTransitionFunction> transitionFunctions =
+                    getTMTransitionFunctions(parametersMachine[3], nameToState);
+            TuringMachine tm = new TuringMachine(states, startState, finalStates,
+                                                 transitionFunctions);
+            defineMachine(tm);
+            return Pair.create(tm, stateToPoint);
+        } catch (Exception e) {
+
+        }
+        return Pair.create(new TuringMachine(), (Map<State, MyPoint>) new HashMap<State, MyPoint>());
     }
 
     public Pair<TuringMachineMultiTape, Map<State, MyPoint>> toTMMultiTape() {
         if (machineType == null || !machineType.equals(MachineType.TM_MULTI_TAPE)) {
             throw new IllegalMachineTypeException(machineType, MachineType.TM_MULTI_TAPE);
         }
-        String[][] parametersMachine = parametersMachine();
-        Map<String, State> nameToState = createNameToState(parametersMachine[1]);
-        Map<State, MyPoint> stateToPoint = createStateToMyPoint(parametersMachine[1], nameToState);
-        SortedSet<State> states = new TreeSet<>(nameToState.values());
-        SortedSet<State> finalStates = getFinalStates(parametersMachine[0], nameToState);
-        State startState = nameToState.get(parametersMachine[2][0]);
-        SortedSet<TMMultiTapeTransitionFunction> transitionFunctions =
-                getTMMultiTapeTransitionFunctions(parametersMachine[3], nameToState);
-        int numTapes = 2;
-        for (TMMultiTapeTransitionFunction tf : transitionFunctions) {
-            numTapes = tf.getNumTapes();
-            break;
+        try {
+            String[][] parametersMachine = parametersMachine();
+            Map<String, State> nameToState = createNameToState(parametersMachine[1]);
+            Map<State, MyPoint> stateToPoint = createStateToMyPoint(parametersMachine[1],
+                                                                    nameToState);
+            SortedSet<State> states = new TreeSet<>(nameToState.values());
+            SortedSet<State> finalStates = getFinalStates(parametersMachine[0], nameToState);
+            State startState = nameToState.get(parametersMachine[2][0]);
+            SortedSet<TMMultiTapeTransitionFunction> transitionFunctions =
+                    getTMMultiTapeTransitionFunctions(parametersMachine[3], nameToState);
+            int numTapes = 2;
+            for (TMMultiTapeTransitionFunction tf : transitionFunctions) {
+                numTapes = tf.getNumTapes();
+                break;
+            }
+            TuringMachineMultiTape tm = new TuringMachineMultiTape(states, startState, finalStates,
+                                                                   transitionFunctions, numTapes);
+            defineMachine(tm);
+            return Pair.create(tm, stateToPoint);
+        } catch (Exception e) {
+
         }
-        TuringMachineMultiTape tm = new TuringMachineMultiTape(states, startState, finalStates,
-                transitionFunctions, numTapes);
-        defineMachine(tm);
-        return Pair.create(tm, stateToPoint);
+        return Pair.create(new TuringMachineMultiTape(), (Map<State, MyPoint>) new HashMap<State, MyPoint>());
     }
 
     public void defineMachine(Machine m) {
@@ -729,23 +791,31 @@ public class DotLanguage implements Serializable {
         if (machineType == null || !machineType.equals(MachineType.TM_MULTI_TRACK)) {
             throw new IllegalMachineTypeException(machineType, MachineType.TM_MULTI_TRACK);
         }
-        String[][] parametersMachine = parametersMachine();
-        Map<String, State> nameToState = createNameToState(parametersMachine[1]);
-        Map<State, MyPoint> stateToPoint = createStateToMyPoint(parametersMachine[1], nameToState);
-        SortedSet<State> states = new TreeSet<>(nameToState.values());
-        SortedSet<State> finalStates = getFinalStates(parametersMachine[0], nameToState);
-        State startState = nameToState.get(parametersMachine[2][0]);
-        SortedSet<TMMultiTrackTransitionFunction> transitionFunctions =
-                getTMMultiTrackTransitionFunctions(parametersMachine[3], nameToState);
-        int numTracks = 2;
-        for (TMMultiTrackTransitionFunction tf : transitionFunctions) {
-            numTracks = tf.getNumTapes();
-            break;
+        try {
+            String[][] parametersMachine = parametersMachine();
+            Map<String, State> nameToState = createNameToState(parametersMachine[1]);
+            Map<State, MyPoint> stateToPoint = createStateToMyPoint(parametersMachine[1],
+                                                                    nameToState);
+            SortedSet<State> states = new TreeSet<>(nameToState.values());
+            SortedSet<State> finalStates = getFinalStates(parametersMachine[0], nameToState);
+            State startState = nameToState.get(parametersMachine[2][0]);
+            SortedSet<TMMultiTrackTransitionFunction> transitionFunctions =
+                    getTMMultiTrackTransitionFunctions(parametersMachine[3], nameToState);
+            int numTracks = 2;
+            for (TMMultiTrackTransitionFunction tf : transitionFunctions) {
+                numTracks = tf.getNumTapes();
+                break;
+            }
+            TuringMachineMultiTrack tm = new TuringMachineMultiTrack(states, startState,
+                                                                     finalStates,
+                                                                     transitionFunctions,
+                                                                     numTracks);
+            defineMachine(tm);
+            return Pair.create(tm, stateToPoint);
+        } catch (Exception e) {
+
         }
-        TuringMachineMultiTrack tm = new TuringMachineMultiTrack(states, startState, finalStates,
-                transitionFunctions, numTracks);
-        defineMachine(tm);
-        return Pair.create(tm, stateToPoint);
+        return Pair.create(new TuringMachineMultiTrack(), (Map<State, MyPoint>) new HashMap<State, MyPoint>());
     }
 
     public FiniteStateAutomatonGUI newToAutomatonGUI() {
@@ -891,23 +961,27 @@ public class DotLanguage implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        try {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
 
-        DotLanguage that = (DotLanguage) o;
+            DotLanguage that = (DotLanguage) o;
 
-        Set<String>[] setParameterMachine = getSetParameterMachine();
-        Set<String>[] thatSetParameterMachine = that.getSetParameterMachine();
-        if (setParameterMachine != null
+            Set<String>[] setParameterMachine = getSetParameterMachine();
+            Set<String>[] thatSetParameterMachine = that.getSetParameterMachine();
+            if (setParameterMachine != null
                 ? !Arrays.deepEquals(setParameterMachine, thatSetParameterMachine)
                 : thatSetParameterMachine != null) return false;
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (machineType != that.machineType) return false;
-        if (label != null ? !label.equals(that.label) : that.label != null) return false;
-        if (contUses != null ? !contUses.equals(that.contUses) : that.contUses != null)
-            return false;
-        return creationDate != null ? creationDate.equals(that.creationDate) : that.creationDate == null;
-
+            if (id != null ? !id.equals(that.id) : that.id != null) return false;
+            if (machineType != that.machineType) return false;
+            if (label != null ? !label.equals(that.label) : that.label != null) return false;
+            if (contUses != null ? !contUses.equals(that.contUses) : that.contUses != null)
+                return false;
+            return creationDate != null ? creationDate.equals(that.creationDate)
+                                        : that.creationDate == null;
+        } catch (Exception e) {
+            return true;
+        }
     }
 
     @Override

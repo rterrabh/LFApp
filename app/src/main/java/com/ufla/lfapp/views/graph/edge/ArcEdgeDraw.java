@@ -35,12 +35,6 @@ public class ArcEdgeDraw extends AbstractArcEdgeDraw {
     }
 
     @Override
-    protected void defineInteractArea() {
-        interactArea = new BezierQuadraticCurve(circPoints.first, pointControl, circPoints.second,
-                getPointsControlInteractArea(), vertexRadius);
-    }
-
-    @Override
     protected void setPointControl() {
         LENGHT = vertexRadius / 2.0f;
         ERROR_RECT_F_LABEL_OUT = LENGHT * 1.50f;
@@ -139,7 +133,6 @@ public class ArcEdgeDraw extends AbstractArcEdgeDraw {
         }
         return Pair.create(pointF0, pointFX);
     }
-
 
     @Override
     public Paint.Align getPaintAlign() {

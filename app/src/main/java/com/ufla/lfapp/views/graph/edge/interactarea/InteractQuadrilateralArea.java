@@ -7,6 +7,7 @@ import android.support.v4.util.Pair;
 import com.ufla.lfapp.R;
 import com.ufla.lfapp.utils.PointUtils;
 import com.ufla.lfapp.utils.ResourcesContext;
+import com.ufla.lfapp.views.graph.layout.EditGraphLayout;
 
 /**
  * Created by carlos on 11/21/16.
@@ -49,6 +50,7 @@ public class InteractQuadrilateralArea implements InteractArea, Cloneable {
             red = (p.y - a.y) / (double) (p.x - a.x);
             blue = (b.y - a.y) / (double) (b.x - a.x);
         } catch (ArithmeticException e) {
+            // NOT TO DO
         }
         return red >= blue;
     }
@@ -56,24 +58,38 @@ public class InteractQuadrilateralArea implements InteractArea, Cloneable {
     @Override
     public boolean isOnInteractArea(PointF point) {
         boolean inside = false;
-
-        for(int i = 0, j = NUMBER_OF_VERTICES - 1; i < NUMBER_OF_VERTICES; j = i++) {
-            if( intersects(points[i], points[j], point)) {
+        for (int i = 0, j = NUMBER_OF_VERTICES - 1; i < NUMBER_OF_VERTICES; j = i++) {
+            if (intersects(points[i], points[j], point)) {
                 inside = !inside;
             }
         }
-
         return inside;
+    }
+
+    @Override
+    public boolean isOnInteractLabelArea(PointF point) {
+        return false;
+    }
+
+    @Override
+    public float distanceToObject(PointF point) {
+        return (float) ( Math.abs((points[2].y - points[0].y) * point.x - (points[2].x - points[0].x)
+                        * point.y + points[2].x * points[0].y - points[2].y * points[0].x) /
+                        Math.sqrt(Math.pow(points[2].y - points[0].y, 2.0) +
+                                Math.pow(points[2].x - points[0].x, 2.0) ) );
     }
 
     @Override
     public Path getInteractArea() {
         Path interactArea = new Path();
-        interactArea.moveTo(points[0].x, points[0].y);
-        for (int i = 1; i < NUMBER_OF_VERTICES; i++) {
-            interactArea.lineTo(points[i].x, points[i].y);
+        // Px(t) = P0 + (P1 - P0)t
+        PointF point = new PointF();
+        for (float t = 0; t <= 1.1; t += 0.1) {
+            point.x = points[2].x - (points[2].x - points[0].x) * t;
+            point.y = points[2].y - (points[2].y - points[0].y) * t;
+            interactArea.addCircle(point.x, point.y, EditGraphLayout.MAX_DISTANCE_FROM_EDGE,
+                    Path.Direction.CW);
         }
-        interactArea.lineTo(points[0].x, points[0].y);
         return interactArea;
     }
 

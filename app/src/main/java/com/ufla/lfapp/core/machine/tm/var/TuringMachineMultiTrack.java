@@ -8,6 +8,7 @@ import com.ufla.lfapp.core.machine.MachineType;
 import com.ufla.lfapp.core.machine.State;
 import com.ufla.lfapp.core.machine.TransitionFunction;
 import com.ufla.lfapp.core.machine.tm.TMMove;
+import com.ufla.lfapp.core.machine.tm.TMTransitionFunction;
 import com.ufla.lfapp.utils.ResourcesContext;
 
 import java.io.Serializable;
@@ -34,7 +35,7 @@ public class TuringMachineMultiTrack
 
     public TuringMachineMultiTrack(int numTracks) {
         this(new TreeSet<String>(),
-                "",
+                null,
                 new TreeSet<String>(),
                 new TreeSet<TMMultiTrackTransitionFunction>(),
                 numTracks);
@@ -75,6 +76,10 @@ public class TuringMachineMultiTrack
         super(states, initialState, finalStates);
         setNumTracks(numTracks);
         setTransitionFunction(transitionFunction);
+    }
+
+    public TuringMachineMultiTrack() {
+        this(2);
     }
 
     public Map<Pair<State, State>, SortedSet<String>> getTransitionsTMMultiTrack() {

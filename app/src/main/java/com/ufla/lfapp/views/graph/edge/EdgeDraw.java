@@ -24,6 +24,10 @@ public interface EdgeDraw {
 
     boolean isOnInteractArea(PointF pointF);
 
+    float distanceToObject(PointF point);
+
+    boolean isOnInteractLabelArea(PointF point);
+
     Path getPathInteractArea();
 
     float distanceToCircumferenceOfSourceVertex(PointF point);

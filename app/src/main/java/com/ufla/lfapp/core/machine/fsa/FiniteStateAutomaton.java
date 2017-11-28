@@ -113,7 +113,7 @@ public class FiniteStateAutomaton
         return FSATransitionFunctions;
     }
 
-    protected FiniteStateAutomaton() {
+    public FiniteStateAutomaton() {
         states = new TreeSet<>();
         finalStates = new TreeSet<>();
         FSATransitionFunctions = new TreeSet<>();
@@ -126,8 +126,12 @@ public class FiniteStateAutomaton
         return statesWithout;
     }
 
+    public DFAMinimizationTableRow getDFAMinTableRow(Pair<State, State> statePair) {
+        return new DFAMinimizationTableRow(statePair);
+    }
 
-    private class DFAMinimizationTableRow {
+
+    public class DFAMinimizationTableRow {
 
         Pair<State, State> statePair;
         boolean statePairDistinct;
@@ -619,7 +623,7 @@ public class FiniteStateAutomaton
         return true;
     }
 
-    private List<String> symbolsExternFromAlphabet(String word) {
+    public List<String> symbolsExternFromAlphabet(String word) {
         List<String> symbolsExternFromAlphabet = new ArrayList<>();
         SortedSet<String> alphabet = getAlphabet();
         for (int i = 0; i < word.length(); i++) {
@@ -644,6 +648,9 @@ public class FiniteStateAutomaton
 
     public List<String> configurations;
     public List<SpannableString> configurationsSpan;
+    public Deque<Integer> confIndex;
+    public Deque<State> confStates;
+
 
     public boolean processEntry(String word) throws Exception {
         if (!validityFromAlphabet(word)) {
@@ -659,21 +666,25 @@ public class FiniteStateAutomaton
         }
         configurations = new ArrayList<>();
         configurationsSpan = new ArrayList<>();
+        confIndex = new ArrayDeque<>();
+        confStates = new ArrayDeque<>();
         Deque<Process> stackProcess = new ArrayDeque<>();
         stackProcess.push(new Process(0, initialState));
         int cont = 0;
         while (!stackProcess.isEmpty()) {
             Process actualProcess = stackProcess.pop();
-            StringBuilder sb = new StringBuilder();
-            sb.append(word.substring(0, actualProcess.position));
-            sb.append(actualProcess.actualState);
-            sb.append(word.substring(actualProcess.position));
-            SpannableString span = new SpannableString(sb.toString());
+            confStates.push(actualProcess.actualState);
+            confIndex.push(actualProcess.position);
+//            StringBuilder sb = new StringBuilder();
+//            sb.append(word.substring(0, actualProcess.position));
+//            sb.append(actualProcess.actualState);
+//            sb.append(word.substring(actualProcess.position));
+          //  SpannableString span = new SpannableString(sb.toString());
 //            span.setSpan(new BackgroundColorSpan(ResourcesContext.getColor(R.color.PaleGreen2)), actualProcess.position,
 //                    actualProcess.position + actualProcess.actualState.toString().length(),
 //                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
-            configurations.add(sb.toString());
-            configurationsSpan.add(span);
+            //configurations.add(sb.toString());
+            //configurationsSpan.add(span);
             if (actualProcess.position == word.length() &&
                     finalStates.contains(actualProcess.actualState)) {
                 return true;

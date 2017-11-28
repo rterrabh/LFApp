@@ -1,5 +1,7 @@
 package com.ufla.lfapp.core.machine;
 
+
+
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -13,8 +15,11 @@ import org.junit.runners.Suite.SuiteClasses;
                 TMMultiTapeSimulatorTest.class, TMMultiTrackSimulatorTest.class, TMSimulatorTest.class,
                 FiniteAutomataSudkampTest.class, PDAAndCFLSudkampTest.class,
                 TuringMachineSudkampTest.class, GraphAdapterTest.class, ConfigurationTest.class,
-                TransitionFunctionTest.class, FSABuilderTest.class, DotLanguageTest.class, FSATest.class
+                TransitionFunctionTest.class, FSABuilderTest.class
         })
 
-public class MachineTests {
+/**
+ * Created by carlos on 10/23/17.
+ */
+public class FSATests {
 }

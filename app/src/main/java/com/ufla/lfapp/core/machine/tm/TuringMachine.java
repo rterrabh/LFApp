@@ -39,7 +39,7 @@ public class TuringMachine
 
     // CONSTRUCTORS
     public TuringMachine() {
-        this(new TreeSet<String>(), "", new TreeSet<String>(), new TreeSet<TMTransitionFunction>());
+        this(new TreeSet<String>(), null, new TreeSet<String>(), new TreeSet<TMTransitionFunction>());
     }
 
     public TuringMachine(SortedSet<String> states, String initialState,

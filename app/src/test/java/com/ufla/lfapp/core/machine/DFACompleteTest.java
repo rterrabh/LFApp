@@ -5,6 +5,7 @@ import com.ufla.lfapp.core.machine.fsa.FiniteStateAutomaton;
 import com.ufla.lfapp.utils.ResourcesContext;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -23,10 +24,10 @@ public class DFACompleteTest {
     private FiniteStateAutomaton dfa;
     private FiniteStateAutomaton completeDfa;
 
-    static {
+    @BeforeClass
+    public static void setTest() {
         ResourcesContext.isTest = true;
     }
-
 
     @Before
     public void setUp() {

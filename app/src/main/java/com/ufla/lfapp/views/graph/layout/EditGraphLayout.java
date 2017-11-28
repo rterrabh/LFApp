@@ -9,6 +9,7 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.support.v4.util.Pair;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -27,7 +28,6 @@ import com.ufla.lfapp.core.grammar.parser.TreeDerivationPosition;
 import com.ufla.lfapp.core.machine.State;
 import com.ufla.lfapp.core.machine.dotlang.Edge;
 import com.ufla.lfapp.core.machine.dotlang.GraphAdapter;
-import com.ufla.lfapp.core.machine.dotlang.Vertex;
 import com.ufla.lfapp.core.machine.fsa.FSATransitionFunction;
 import com.ufla.lfapp.core.machine.fsa.FiniteStateAutomaton;
 import com.ufla.lfapp.core.machine.fsa.FiniteStateAutomatonGUI;
@@ -65,9 +65,9 @@ public class EditGraphLayout extends GridLayout {
         private Set<String> setAlphabet;
 
         public Alphabet() {
-            List<String> list = Arrays.asList(new String[] { "a", "0" });
+            List<String> list = Arrays.asList(new String[]{"a", "0"});
             alphabet = new ArrayDeque<>(list);
-            setAlphabet = new HashSet<>(Arrays.asList(new String[] { "a", "0" }));
+            setAlphabet = new HashSet<>(Arrays.asList(new String[]{"a", "0"}));
 
         }
 
@@ -82,7 +82,7 @@ public class EditGraphLayout extends GridLayout {
         }
 
         public void updateAlphabet(List<String> updates) {
-            int n = updates.size()-1;
+            int n = updates.size() - 1;
             for (int i = 0; i < n; i++) {
                 String symbol = updates.get(i);
                 if (!setAlphabet.contains(symbol)) {
@@ -114,6 +114,7 @@ public class EditGraphLayout extends GridLayout {
         alphabet.updateAlphabet(updates);
     }
 
+    public static int MAX_DISTANCE_FROM_EDGE;
     private Alphabet alphabet = new Alphabet();
     public static final int CREATION_MODE = 0;
     public static final int EDITION_MODE = 1;
@@ -308,7 +309,7 @@ public class EditGraphLayout extends GridLayout {
         setmVertexBorderPaint();
         for (int i = 0; i < viewsOnGrid.length; i++) {
             for (int j = 0; j < viewsOnGrid[i].length; j++) {
-                if (viewsOnGrid[i][j] instanceof  VertexView) {
+                if (viewsOnGrid[i][j] instanceof VertexView) {
                     ((VertexView) viewsOnGrid[i][j]).setStyle();
                 } else {
                     viewsOnGrid[i][j].invalidate();
@@ -334,6 +335,7 @@ public class EditGraphLayout extends GridLayout {
         vertexErrorRectLabel = (dpi / 32.0f) * sizeReference;
         vertexInitialStateSize = (int) ((dpi / 8.0f) * sizeReference);
         vertexBorderStrokeWidth = (dpi / 800.0f) * sizeReference;
+        setMaxDistanceFromEdge();
     }
 
     private void setSizeOfEdgeViews() {
@@ -358,7 +360,7 @@ public class EditGraphLayout extends GridLayout {
     }
 
     public void removeSpaces() {
-        removeSpaces( 0, 0 );
+        removeSpaces(0, 0);
     }
 
     public void betterVerticalVisualisation() {
@@ -489,14 +491,14 @@ public class EditGraphLayout extends GridLayout {
 //        }
         int squareDimension = getVertexSquareDimension();
         int minHeightSquares = minHeight / squareDimension;
-        if ( (maxPoint.y - minPoint.y + 1) < minHeightSquares ) {
+        if ((maxPoint.y - minPoint.y + 1) < minHeightSquares) {
             maxPoint.y = minHeightSquares + minPoint.y - 1;
             if (maxPoint.y > viewsOnGrid.length - 1) {
                 growRows(maxPoint.y - (viewsOnGrid.length - 1));
             }
         }
         int minWidthSquares = minWidth / squareDimension;
-        if ( (maxPoint.x - minPoint.x + 1) < minWidthSquares ) {
+        if ((maxPoint.x - minPoint.x + 1) < minWidthSquares) {
             maxPoint.x = minWidthSquares + minPoint.x - 1;
             if (maxPoint.x > viewsOnGrid[0].length - 1) {
                 growColumns(maxPoint.x - (viewsOnGrid[0].length - 1));
@@ -522,7 +524,7 @@ public class EditGraphLayout extends GridLayout {
         View newViewsOnGrid[][] = new View[actualNumRows][actualNumColumns];
         for (int i = minPoint.y; i < maxPoint.y; i++) {
             for (int j = minPoint.x; j < maxPoint.x; j++) {
-                newViewsOnGrid[i-minPoint.y][j-minPoint.x] = viewsOnGrid[i][j];
+                newViewsOnGrid[i - minPoint.y][j - minPoint.x] = viewsOnGrid[i][j];
                 if (viewsOnGrid[i][j] instanceof VertexView) {
                     if (viewsOnGrid[i][j].equals(initialState)) {
                         if (j > 0 && viewsOnGrid[i][j].equals(viewsOnGrid[i][j - 1])) {
@@ -640,7 +642,7 @@ public class EditGraphLayout extends GridLayout {
             addEdgeView(
                     graphAdapter.stateMyPointMap.get(edge.current).toPoint(),
                     graphAdapter.stateMyPointMap.get(edge.future).toPoint(),
-            edge.label);
+                    edge.label);
         }
         naiveVerifyReflexives();
         invalidate();
@@ -653,10 +655,10 @@ public class EditGraphLayout extends GridLayout {
         }
         State initialState = automatonGUI.getInitialState();
         if (initialState != null) {
-            setVertexViewAsInitial(automatonGUI.getGridPosition(initialState));
+            setVertexViewAsInitial(automatonGUI.getGridPositionPoint(initialState));
         }
         for (State state : automatonGUI.getFinalStates()) {
-            setVertexViewAsFinal(automatonGUI.getGridPosition(state));
+            setVertexViewAsFinal(automatonGUI.getGridPositionPoint(state));
         }
         for (Map.Entry<Pair<State, State>, SortedSet<String>> entry :
                 automatonGUI.getTransitionsAFD().entrySet()) {
@@ -666,8 +668,8 @@ public class EditGraphLayout extends GridLayout {
                         .append(',');
             }
             sb.deleteCharAt(sb.length() - 1);
-            addEdgeView(automatonGUI.getGridPosition(entry.getKey().first),
-                    automatonGUI.getGridPosition(entry.getKey().second), sb.toString());
+            addEdgeView(automatonGUI.getGridPositionPoint(entry.getKey().first),
+                    automatonGUI.getGridPositionPoint(entry.getKey().second), sb.toString());
         }
         naiveVerifyReflexives();
         invalidate();
@@ -677,7 +679,7 @@ public class EditGraphLayout extends GridLayout {
         for (int i = 0; i < viewsOnGrid.length; i++) {
             for (int j = 0; j < viewsOnGrid[i].length; j++) {
                 if (viewsOnGrid[i][j] instanceof VertexView &&
-                        !viewsOnGrid[i][j+1].equals(initialState)) {
+                        !viewsOnGrid[i][j + 1].equals(initialState)) {
                     VertexView vertexView = (VertexView) viewsOnGrid[i][j];
                     removeVertexView(vertexView.getGridPoint());
                 }
@@ -775,6 +777,7 @@ public class EditGraphLayout extends GridLayout {
         this.scaleGestureDetector = new ScaleGestureDetector(getContext(), new ScaleListener());
         init();
     }
+
     public EditGraphLayout(Context context) {
         super(context);
         this.gestureDetector = new GestureDetector(getContext(), new GestureListener());
@@ -797,29 +800,32 @@ public class EditGraphLayout extends GridLayout {
     }
 
     public void setInitialState(VertexView vertexView) {
-        Point point = vertexView.getGridPoint();
-        point.x--;
-        if ( point.x == 0 ) {
-            vertexView.setLeft( true );
+        Point gridPoint = vertexView.getGridPoint();
+        if (gridPoint.x - 1 >= 0 &&
+                viewsOnGrid[gridPoint.y][gridPoint.x - 1] instanceof VertexView) {
+            Toast.makeText(getContext(), "Não é possível definir como inicial,\n" +
+                    "pois há um estado ao lado esquerdo.\nMova um dos estados.", Toast.LENGTH_SHORT)
+                    .show();
+            return;
+        }
+        if (gridPoint.x - 1 < 0) {
+            growColumnsLeft(3);
+            vertexView = (VertexView) viewsOnGrid[gridPoint.y][gridPoint.x];
+        }
+        if (gridPoint.x - 1 == 0) {
+            vertexView.setLeft(true);
         }
         if (initialState != null) {
             removeInitialState();
         }
         initialState = vertexView;
-        Point gridPoint = initialState.getGridPoint();
-        if (gridPoint.x - 1 < 0 ||
-                viewsOnGrid[gridPoint.y][gridPoint.x - 1] instanceof VertexView) {
-            Toast.makeText(getContext(), R.string.error, Toast.LENGTH_SHORT)
-                    .show();
-        } else {
-            removeView(viewsOnGrid[gridPoint.y][gridPoint.x - 1]);
-            viewsOnGrid[gridPoint.y][gridPoint.x - 1] = vertexView;
-            removeView(initialState);
-            addView(initialState, new LayoutParams(GridLayout.spec(gridPoint.y),
-                    GridLayout.spec(gridPoint.x - 1, 2)));
-            initialState.setInitialState(true);
-            initialState.setStyle();
-        }
+        removeView(viewsOnGrid[gridPoint.y][gridPoint.x - 1]);
+        viewsOnGrid[gridPoint.y][gridPoint.x - 1] = vertexView;
+        removeView(initialState);
+        addView(initialState, new LayoutParams(GridLayout.spec(gridPoint.y),
+                GridLayout.spec(gridPoint.x - 1, 2)));
+        initialState.setInitialState(true);
+        initialState.setStyle();
         defineInitialState = false;
     }
 
@@ -851,6 +857,10 @@ public class EditGraphLayout extends GridLayout {
             HorizontalScrollView parentView = (HorizontalScrollView) getParent();
             parentView.removeView(this);
         }
+    }
+
+    private void setMaxDistanceFromEdge() {
+        MAX_DISTANCE_FROM_EDGE = getVertexRadius();
     }
 
 
@@ -926,7 +936,7 @@ public class EditGraphLayout extends GridLayout {
     }
 
     private void growColumns() {
-        growColumns( INITIAL_NUM_COLUMNS );
+        growColumns(INITIAL_NUM_COLUMNS);
     }
 
     /**
@@ -934,15 +944,15 @@ public class EditGraphLayout extends GridLayout {
      * em 1.5 vezes do tamanho atual.
      */
     private void growColumns(int newColumns) {
-        if ( newColumns < 1) {
+        if (newColumns < 1) {
             return;
         }
         for (int i = 0; i < viewsOnGrid.length; i++) {
             if (viewsOnGrid[i][actualNumColumns - 1] instanceof VertexView) {
-                ( (VertexView) viewsOnGrid[i][actualNumColumns - 1] ).setRight( false );
+                ((VertexView) viewsOnGrid[i][actualNumColumns - 1]).setRight(false);
             }
-            if (viewsOnGrid[i][actualNumColumns - 1] instanceof SpaceWithBorder){
-                ( (SpaceWithBorder) viewsOnGrid[i][actualNumColumns - 1] ).setRight( false );
+            if (viewsOnGrid[i][actualNumColumns - 1] instanceof SpaceWithBorder) {
+                ((SpaceWithBorder) viewsOnGrid[i][actualNumColumns - 1]).setRight(false);
             }
         }
         View viewsOnGridOld[][] = viewsOnGrid;
@@ -970,27 +980,140 @@ public class EditGraphLayout extends GridLayout {
         invalidate();
     }
 
+    private void growRowsTop(int newRows) {
+        if (newRows < 1) {
+            return;
+        }
+        View viewsOnGridOld[][] = viewsOnGrid;
+        Set<EdgeView> edgesOnGridOld[][] = edgesOnGrid;
+        int oldNumRows = actualNumRows;
+        actualNumRows += newRows;
+        setRowCount(actualNumRows);
+        viewsOnGrid = new View[actualNumRows][actualNumColumns];
+        edgesOnGrid = new Set[actualNumRows][actualNumColumns];
+
+        for (int j = 0; j < actualNumColumns; j++) {
+            for (int i = 0; i < newRows; i++) {
+                SpaceWithBorder space = getSpaceWithBorder(new Point(j, i));
+                viewsOnGrid[i][j] = space;
+                addView(space, new LayoutParams(GridLayout.spec(i), GridLayout.spec(j)));
+            }
+            for (int i = oldNumRows; i < actualNumRows; i++) {
+                SpaceWithBorder space = getSpaceWithBorder(new Point(j, i));
+                viewsOnGrid[i][j] = space;
+                addView(space, new LayoutParams(GridLayout.spec(i), GridLayout.spec(j)));
+            }
+        }
+        invalidate();
+
+        for (int i = newRows; i < actualNumRows; i++) {
+            for (int j = 0; j < actualNumColumns; j++) {
+                viewsOnGrid[i][j] = viewsOnGridOld[i - newRows][j];
+                edgesOnGrid[i][j] = edgesOnGridOld[i - newRows][j];
+                if (viewsOnGrid[i][j] instanceof VertexView &&
+                        viewsOnGrid[i][j] != viewsOnGridOld[i - newRows][j + 1]) {
+                    VertexView vertexView = (VertexView) viewsOnGrid[i][j];
+                    Point gridPoint = vertexView.getGridPoint();
+                    gridPoint.y += newRows;
+                }
+            }
+        }
+        for (int i = newRows; i < actualNumRows; i++) {
+            for (int j = actualNumColumns - 1; j >= 0; j--) {
+                if (viewsOnGrid[i][j] instanceof VertexView) {
+                    VertexView vertexView = (VertexView) viewsOnGrid[i][j];
+                    if (viewsOnGrid[i][j + 1] == initialState) {
+                        continue;
+                    }
+                    onMove = vertexView;
+                    moveVertexViewWithoutVerification(vertexView.getGridPoint());
+                } else {
+                    removeView(viewsOnGrid[i][j]);
+                    SpaceWithBorder space = getSpaceWithBorder(new Point(j, i));
+                    viewsOnGrid[i][j] = space;
+                    addView(space, new LayoutParams(GridLayout.spec(i), GridLayout.spec(j)));
+                }
+            }
+        }
+        invalidate();
+    }
+
+    private void growColumnsLeft(int newColumns) {
+        if (newColumns < 1) {
+            return;
+        }
+        View viewsOnGridOld[][] = viewsOnGrid;
+        Set<EdgeView> edgesOnGridOld[][] = edgesOnGrid;
+        int oldNumColumns = actualNumColumns;
+        actualNumColumns += newColumns;
+        setColumnCount(actualNumColumns);
+        viewsOnGrid = new View[actualNumRows][actualNumColumns];
+        edgesOnGrid = new Set[actualNumRows][actualNumColumns];
+
+        for (int i = 0; i < actualNumRows; i++) {
+            for (int j = 0; j < newColumns; j++) {
+                SpaceWithBorder space = getSpaceWithBorder(new Point(j, i));
+                viewsOnGrid[i][j] = space;
+                addView(space, new LayoutParams(GridLayout.spec(i), GridLayout.spec(j)));
+            }
+            for (int j = oldNumColumns; j < actualNumColumns; j++) {
+                SpaceWithBorder space = getSpaceWithBorder(new Point(j, i));
+                viewsOnGrid[i][j] = space;
+                addView(space, new LayoutParams(GridLayout.spec(i), GridLayout.spec(j)));
+            }
+        }
+        invalidate();
+
+        for (int i = 0; i < actualNumRows; i++) {
+            for (int j = newColumns; j < actualNumColumns; j++) {
+                viewsOnGrid[i][j] = viewsOnGridOld[i][j - newColumns];
+                edgesOnGrid[i][j] = edgesOnGridOld[i][j - newColumns];
+                if (viewsOnGrid[i][j] instanceof VertexView &&
+                        viewsOnGrid[i][j] != viewsOnGridOld[i][j - newColumns + 1]) {
+                    VertexView vertexView = (VertexView) viewsOnGrid[i][j];
+                    Point gridPoint = vertexView.getGridPoint();
+                    gridPoint.x += newColumns;
+                }
+            }
+        }
+        for (int i = 0; i < actualNumRows; i++) {
+            for (int j = actualNumColumns - 1; j >= newColumns; j--) {
+                if (viewsOnGrid[i][j] instanceof VertexView) {
+                    VertexView vertexView = (VertexView) viewsOnGrid[i][j];
+                    if (viewsOnGrid[i][j + 1] == initialState) {
+                        continue;
+                    }
+                    onMove = vertexView;
+                    moveVertexViewWithoutVerification(vertexView.getGridPoint());
+                } else {
+                    removeView(viewsOnGrid[i][j]);
+                    SpaceWithBorder space = getSpaceWithBorder(new Point(j, i));
+                    viewsOnGrid[i][j] = space;
+                    addView(space, new LayoutParams(GridLayout.spec(i), GridLayout.spec(j)));
+                }
+            }
+        }
+        invalidate();
+    }
+
     private void growRows() {
-        growRows( INITIAL_NUM_ROWS );
+        growRows(INITIAL_NUM_ROWS);
     }
 
     /**
      * Realiza o crescimento do <i>grid</i> em termos de linhas. Aumenta a quantidade de linhas
      * em 1.5 vezes do tamanho atual.
      */
-    private void growRows( int newRows ) {
-        if ( newRows < 1) {
+    private void growRows(int newRows) {
+        if (newRows < 1) {
             return;
         }
-        for (int i = 0; i < viewsOnGrid[actualNumRows - 1].length; i++)
-        {
-            if (viewsOnGrid[actualNumRows - 1][i] instanceof VertexView)
-            {
-                ( (VertexView) viewsOnGrid[actualNumRows - 1][i] ).setBottom( false );
+        for (int i = 0; i < viewsOnGrid[actualNumRows - 1].length; i++) {
+            if (viewsOnGrid[actualNumRows - 1][i] instanceof VertexView) {
+                ((VertexView) viewsOnGrid[actualNumRows - 1][i]).setBottom(false);
             }
-            if (viewsOnGrid[actualNumRows - 1][i] instanceof SpaceWithBorder)
-            {
-                ( (SpaceWithBorder) viewsOnGrid[actualNumRows - 1][i] ).setBottom( false );
+            if (viewsOnGrid[actualNumRows - 1][i] instanceof SpaceWithBorder) {
+                ((SpaceWithBorder) viewsOnGrid[actualNumRows - 1][i]).setBottom(false);
             }
         }
         View viewsOnGridOld[][] = viewsOnGrid;
@@ -1018,6 +1141,49 @@ public class EditGraphLayout extends GridLayout {
         invalidate();
     }
 
+    /**
+     * Realiza o crescimento do <i>grid</i> em termos de linhas. Aumenta a quantidade de linhas
+     * em 1.5 vezes do tamanho atual.
+     */
+    private void growRowsUp(int newRows) {
+        if (newRows < 1) {
+            return;
+        }
+        for (int i = 0; i < viewsOnGrid[0].length; i++) {
+            if (viewsOnGrid[0][i] instanceof VertexView) {
+                ((VertexView) viewsOnGrid[0][i]).setTop(false);
+            }
+            if (viewsOnGrid[0][i] instanceof SpaceWithBorder) {
+                ((SpaceWithBorder) viewsOnGrid[0][i]).setTop(false);
+            }
+        }
+        View viewsOnGridOld[][] = viewsOnGrid;
+        Set<EdgeView> edgesOnGridOld[][] = edgesOnGrid;
+        int oldNumRows = actualNumRows;
+        actualNumRows += newRows;
+        viewsOnGrid = new View[actualNumRows][actualNumColumns];
+        edgesOnGrid = new Set[actualNumRows][actualNumColumns];
+        for (int i = 0; i < viewsOnGridOld.length; i++) {
+            for (int j = 0; j < viewsOnGridOld[i].length; j++) {
+                viewsOnGrid[i][j] = viewsOnGridOld[i][j];
+                edgesOnGrid[i][j] = edgesOnGridOld[i][j];
+            }
+        }
+        setRowCount(actualNumRows);
+        invalidate();
+        for (int i = oldNumRows; i < actualNumRows; i++) {
+            for (int j = 0; j < actualNumColumns; j++) {
+                SpaceWithBorder space = getSpaceWithBorder(new Point(j, i));
+
+                viewsOnGrid[i][j] = space;
+                addView(space, new LayoutParams(GridLayout.spec(i), GridLayout.spec(j)));
+            }
+        }
+        invalidate();
+    }
+
+
+
     private VertexView viewOnDrag;
     private String msg;
 
@@ -1043,7 +1209,7 @@ public class EditGraphLayout extends GridLayout {
     }
 
     public void validatePoint(final Point gridPoint) {
-        while (actualNumRows - gridPoint.y < DIST_FREE_SPACE_MIN ) {
+        while (actualNumRows - gridPoint.y < DIST_FREE_SPACE_MIN) {
             growRows();
         }
         while (actualNumColumns - gridPoint.x < DIST_FREE_SPACE_MIN) {
@@ -1101,12 +1267,10 @@ public class EditGraphLayout extends GridLayout {
     }
 
 
-
     class MyOnDragListener implements OnDragListener {
         @Override
         public boolean onDrag(View v, DragEvent event) {
-            switch(event.getAction())
-            {
+            switch (event.getAction()) {
                 case DragEvent.ACTION_DRAG_STARTED:
                     // Do nothing
                     break;
@@ -1116,7 +1280,7 @@ public class EditGraphLayout extends GridLayout {
                     int y_cord = (int) event.getY();
                     break;
 
-                case DragEvent.ACTION_DRAG_EXITED :
+                case DragEvent.ACTION_DRAG_EXITED:
                     x_cord = (int) event.getX();
                     y_cord = (int) event.getY();
                     Point gridPoint = new Point();
@@ -1139,12 +1303,12 @@ public class EditGraphLayout extends GridLayout {
                     }
                     break;
 
-                case DragEvent.ACTION_DRAG_LOCATION  :
+                case DragEvent.ACTION_DRAG_LOCATION:
                     x_cord = (int) event.getX();
                     y_cord = (int) event.getY();
                     break;
 
-                case DragEvent.ACTION_DRAG_ENDED   :
+                case DragEvent.ACTION_DRAG_ENDED:
                     // Do nothing
                     break;
 
@@ -1171,7 +1335,8 @@ public class EditGraphLayout extends GridLayout {
                     }
                     // Do nothing
                     break;
-                default: break;
+                default:
+                    break;
             }
             return true;
         }
@@ -1198,7 +1363,13 @@ public class EditGraphLayout extends GridLayout {
         naiveVerifyReflexives();
     }
 
+    /**
+     * Remove uma aresta do gráfico.
+     *
+     * @param edgeView aresta a ser removida
+     */
     public void removeEdgeView(EdgeView edgeView) {
+        Log.d("REMOVE_EDGE", "REMOVE_EDGE");
         nullableEdgesOnView(edgeView);
         removeView(edgeView);
         edgeViews.remove(edgeView);
@@ -1238,7 +1409,7 @@ public class EditGraphLayout extends GridLayout {
         if (x < 0 || y < 0 || x >= actualNumColumns || y >= actualNumRows) {
             return false;
         }
-        return  viewsOnGrid[y][x] instanceof SpaceWithBorder && (edgesOnGrid[y][x] == null
+        return viewsOnGrid[y][x] instanceof SpaceWithBorder && (edgesOnGrid[y][x] == null
                 || edgesOnGrid[y][x].isEmpty());
     }
 
@@ -1248,7 +1419,7 @@ public class EditGraphLayout extends GridLayout {
         }
         int space = (viewsOnGrid[y][x] instanceof SpaceWithBorder) ? 0 : 1;
         if (edgesOnGrid[y][x] != null) {
-           space += edgesOnGrid[y][x].size();
+            space += edgesOnGrid[y][x].size();
         }
         return space;
     }
@@ -1314,11 +1485,26 @@ public class EditGraphLayout extends GridLayout {
         return new EdgeView(getContext(), toast);
     }
 
+    public void verifyEdgeOnBoards(Point sourceGridPoint, Point targetGridPoint) {
+        if (sourceGridPoint.x == 0 && targetGridPoint.x == 0) {
+            growColumnsLeft(3);
+        } else if (sourceGridPoint.x == actualNumColumns - 1
+                && targetGridPoint.x == actualNumColumns - 1) {
+            growColumns(3);
+        } else if (sourceGridPoint.y == 0 && targetGridPoint.y == 0) {
+            growRowsTop(3);
+        } else if (sourceGridPoint.y == actualNumRows - 1
+                && targetGridPoint.y == actualNumRows - 1) {
+            growRows(3);
+        }
+    }
+
     /**
      * Adiciona uma transição entre dois estados. Por parâmetro é recebido as coordenadas dos
      * estado atual e futuro, respectivamente, também recebe o símbolo da transição.
      */
     public EdgeView addEdgeView(VertexView sourceVertex, VertexView targetVertex, boolean toast) {
+        verifyEdgeOnBoards(sourceVertex.getGridPoint(), targetVertex.getGridPoint());
         final EdgeView edgeView = newEdgeView(toast);
         edgeView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams
                 .WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -1463,10 +1649,11 @@ public class EditGraphLayout extends GridLayout {
     public void nullableEdgesOnView(EdgeView edgeView) {
         Pair<Point, Point> gridPoints = edgeView.getGridPoints();
         if (gridPoints.first.equals(gridPoints.second)) {
+            edgesOnGrid[gridPoints.first.y][gridPoints.first.x].remove(edgeView);
             if (edgeView.isReflexiveUp()) {
-                edgesOnGrid[gridPoints.first.y-1][gridPoints.first.x].remove(edgeView);
+                edgesOnGrid[gridPoints.first.y - 1][gridPoints.first.x].remove(edgeView);
             } else {
-                edgesOnGrid[gridPoints.first.y+1][gridPoints.first.x].remove(edgeView);
+                edgesOnGrid[gridPoints.first.y + 1][gridPoints.first.x].remove(edgeView);
             }
             return;
         }
@@ -1606,8 +1793,31 @@ public class EditGraphLayout extends GridLayout {
         return e;
     }
 
+    public void moveVertexViewWithoutVerification(Point newPoint) {
+        VertexView onMoveCpRef = onMove;
+        Set<EdgeView> edgeViewDepencies = new HashSet<>(onMoveCpRef.getEdgeDependencies());
+        boolean isInitialState = onMoveCpRef.isInitialState();
+        removeVertexView(onMoveCpRef.getGridPoint());
+        VertexView newOnMove = addVertexView(newPoint, onMoveCpRef.getLabel(), isInitialState,
+                onMoveCpRef.isFinalState());
+        Iterator<EdgeView> edgeViewIterator = edgeViewDepencies.iterator();
+        while (edgeViewIterator.hasNext()) {
+            EdgeView edgeView = edgeViewIterator.next();
+            Pair<VertexView, VertexView> vertices = edgeView.getVertices();
+            if (vertices.first.equals(onMoveCpRef) && vertices.second.equals(onMoveCpRef)) {
+                addEdgeView(newOnMove, newOnMove, edgeView.getLabel());
+            } else if (vertices.first.equals(onMoveCpRef)) {
+                addEdgeView(newOnMove, vertices.second, edgeView.getLabel());
+            } else {
+                addEdgeView(vertices.first, newOnMove, edgeView.getLabel());
+            }
+        }
+        naiveVerifyReflexives();
+    }
+
     public void moveVertexView(Point newPoint) {
-        if (onMove.equals(initialState) && newPoint.x == 0) {
+        if (onMove.equals(initialState) && (newPoint.x == 0 ||
+                viewsOnGrid[newPoint.y][newPoint.x - 1] instanceof VertexView) ) {
             Toast.makeText(getContext(), R.string.exception_move_state,
                     Toast.LENGTH_LONG)
                     .show();
@@ -1615,26 +1825,7 @@ public class EditGraphLayout extends GridLayout {
             onMove = null;
             return;
         }
-        VertexView onMoveCp = onMove;
-        Set<EdgeView> edgeViewDepencies = new HashSet<>(onMoveCp.getEdgeDependencies());
-        boolean isInitialState = onMoveCp.isInitialState();
-        removeVertexView(onMoveCp.getGridPoint());
-        VertexView newOnMove = addVertexView(newPoint, onMoveCp.getLabel(), isInitialState,
-                onMoveCp.isFinalState());
-        Iterator<EdgeView> edgeViewIterator = edgeViewDepencies.iterator();
-        while (edgeViewIterator.hasNext()) {
-            EdgeView edgeView = edgeViewIterator.next();
-            Pair<VertexView, VertexView> vertices = edgeView.getVertices();
-            if (vertices.first.equals(onMoveCp) && vertices.second.equals(onMoveCp)) {
-                addEdgeView(newOnMove, newOnMove, edgeView.getLabel());
-            } else if (vertices.first.equals(onMoveCp)) {
-                addEdgeView(newOnMove, vertices.second, edgeView.getLabel());
-            } else {
-                addEdgeView(vertices.first, newOnMove, edgeView.getLabel());
-            }
-        }
-        onMove = null;
-        naiveVerifyReflexives();
+        moveVertexViewWithoutVerification(newPoint);
     }
 
     public void addErrorState(Point point) {
@@ -1829,17 +2020,10 @@ public class EditGraphLayout extends GridLayout {
                 }
                 return ((VertexView) view).onDownAction(getMotionEventForVertexView(e));
             }
-            Set<EdgeView> edgeOnGridPoint = edgesOnGrid[gridPoint.y][gridPoint.x];
-            PointF pointF = new PointF();
-            if (edgeOnGridPoint != null) {
-                for (EdgeView edgeView : edgeOnGridPoint) {
-                    pointF.x = e.getX();
-                    pointF.y = e.getY();
-                    if (edgeView.isOnInteractArea(pointF)) {
-                        return edgeView.onDownAction(getMotionEventForEdgeView(e,
-                                edgeView.getGridBeginHeight(), edgeView.getGridBeginWidth()));
-                    }
-                }
+            EdgeView interactEdge = interactEdgeView(e.getX(), e.getY());
+            if (interactEdge != null) {
+                return interactEdge.onDownAction(getMotionEventForEdgeView(e,
+                        interactEdge.getGridBeginHeight(), interactEdge.getGridBeginWidth()));
             }
             addVertexView(gridPoint);
             return true;
@@ -1878,29 +2062,46 @@ public class EditGraphLayout extends GridLayout {
             return true;
         }
 
+        public EdgeView interactEdgeView(float x, float y) {
+            PointF point = new PointF(x, y);
+            Point gridPoint = gridPoint(point.x, point.y);
+            Set<EdgeView> edgeOnGridPoint = edgesOnGrid[gridPoint.y][gridPoint.x];
+            EdgeView nearestEdge = null;
+            float nearestDistance = Float.MAX_VALUE;
+            if (edgeOnGridPoint != null) {
+                for (EdgeView edgeView : edgeOnGridPoint) {
+                    if (edgeView.isOnInteractLabelArea(point)) {
+                        return edgeView;
+                    }
+                    float distance = edgeView.distanceToObject(point);
+                    if (distance < nearestDistance) {
+                        nearestEdge = edgeView;
+                        nearestDistance = distance;
+                    }
+                }
+            }
+            if (nearestDistance <= MAX_DISTANCE_FROM_EDGE) {
+                return nearestEdge;
+            }
+            return null;
+        }
+
         public void onLongPressAction(MotionEvent e) {
 //            if (threadControl.isAlive()) {
 //                threadControl.interrupt();
 //            }
             Point gridPoint = gridPoint(e.getX(), e.getY());
             View view = viewsOnGrid[gridPoint.y][gridPoint.x];
-            if (view instanceof  VertexView) {
+            if (view instanceof VertexView) {
                 if (!(view == initialState &&
                         viewsOnGrid[gridPoint.y][gridPoint.x + 1] == initialState)) {
                     ((VertexView) view).onLongPressAction(getMotionEventForVertexView(e));
                 }
             } else {
-                Set<EdgeView> edgeOnGridPoint = edgesOnGrid[gridPoint.y][gridPoint.x];
-                PointF pointF = new PointF();
-                if (edgeOnGridPoint != null) {
-                    for (EdgeView edgeView : edgeOnGridPoint) {
-                        pointF.x = e.getX();
-                        pointF.y = e.getY();
-                        if (edgeView.isOnInteractArea(pointF)) {
-                            edgeView.onLongPressAction(getMotionEventForEdgeView(e,
-                                    edgeView.getGridBeginHeight(), edgeView.getGridBeginWidth()));
-                        }
-                    }
+                EdgeView interactEdge = interactEdgeView(e.getX(), e.getY());
+                if (interactEdge != null) {
+                    interactEdge.onLongPressAction(getMotionEventForEdgeView(e,
+                            interactEdge.getGridBeginHeight(), interactEdge.getGridBeginWidth()));
                 }
             }
 //            if (threadControl.isAlive()) {
@@ -1919,26 +2120,16 @@ public class EditGraphLayout extends GridLayout {
         public boolean onDoubleTapAction(MotionEvent e) {
             Point gridPoint = gridPoint(e.getX(), e.getY());
             View view = viewsOnGrid[gridPoint.y][gridPoint.x];
-            if (view instanceof  VertexView) {
-                if (view == initialState &&
-                        viewsOnGrid[gridPoint.y][gridPoint.x + 1] == initialState) {
-                    return  true;
+            if (view instanceof VertexView) {
+                if (!(view == initialState &&
+                        viewsOnGrid[gridPoint.y][gridPoint.x + 1] == initialState)) {
+                    return ((VertexView) view).onDoubleTapAction(getMotionEventForVertexView(e));
                 }
-                return ((VertexView) view).onDoubleTapAction(getMotionEventForVertexView(e));
             }
-            Set<EdgeView> edgeOnGridPoint = edgesOnGrid[gridPoint.y][gridPoint.x];
-            PointF pointF = new PointF();
-            if (edgeOnGridPoint != null) {
-                Iterator<EdgeView> edgeViewIterator = edgeOnGridPoint.iterator();
-                while (edgeViewIterator.hasNext()) {
-                    EdgeView edgeView = edgeViewIterator.next();
-                    pointF.x = e.getX() - (getVertexSquareDimension() * edgeView.getGridBeginWidth());
-                    pointF.y = e.getY() - (getVertexSquareDimension() * edgeView.getGridBeginHeight());
-                    if (edgeView.isOnInteractArea(pointF)) {
-                        return edgeView.onDoubleTapAction(getMotionEventForEdgeView(e,
-                                edgeView.getGridBeginHeight(), edgeView.getGridBeginWidth()));
-                    }
-                }
+            EdgeView interactEdge = interactEdgeView(e.getX(), e.getY());
+            if (interactEdge != null) {
+                interactEdge.onDoubleTapAction(getMotionEventForEdgeView(e,
+                        interactEdge.getGridBeginHeight(), interactEdge.getGridBeginWidth()));
             }
             return true;
         }

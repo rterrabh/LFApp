@@ -90,12 +90,17 @@ public class EditFiniteStateAutomatonActivity extends AppCompatActivityContext {
         } else {
             SharedPreferences preferences = getSharedPreferences(
                     "EditFiniteStateAutomatonActivity", MODE_PRIVATE);
-//            preferences.edit().remove(EDIT_AUTOMATON_PREFERENCES).apply();
+
             String dotLanguageStr = preferences.getString(EDIT_AUTOMATON_PREFERENCES, "");
             if (!dotLanguageStr.isEmpty()) {
                 System.out.println(dotLanguageStr);
-                editMachineLayout.drawGraph(new DotLanguage(dotLanguageStr)
-                        .toGraphAdapter());
+                try {
+                    editMachineLayout.drawGraph(new DotLanguage(dotLanguageStr)
+                                                        .toGraphAdapter());
+                } catch (Exception e) {
+                    preferences.edit().remove(EDIT_AUTOMATON_PREFERENCES).apply();
+                    e.printStackTrace();
+                }
             }
         }
 

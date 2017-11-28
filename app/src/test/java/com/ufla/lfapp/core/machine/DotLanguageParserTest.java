@@ -15,6 +15,7 @@ import com.ufla.lfapp.utils.MyPoint;
 import com.ufla.lfapp.utils.ResourcesContext;
 import com.ufla.lfapp.utils.Symbols;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -35,7 +36,8 @@ public class DotLanguageParserTest {
 
     private Map<State, MyPoint> stateToPoint;
 
-    static {
+    @BeforeClass
+    public static void setTest() {
         ResourcesContext.isTest = true;
     }
 

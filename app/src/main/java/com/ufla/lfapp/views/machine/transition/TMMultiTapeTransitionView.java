@@ -36,9 +36,15 @@ public class TMMultiTapeTransitionView extends EdgeView {
         return ((EditTMMultiTapeLayout) getParent()).getNumTapes();
     }
 
+
     @Override
     protected String[] getLabelLines() {
-        return getTransitionsMultiTape(label);
+        String[] labelLines = getTransitionsMultiTape(label);
+        if (labelLines.length == 0) {
+            setInitialLabel();
+            return getTransitionsMultiTape(label);
+        }
+        return labelLines;
     }
 
     @Override

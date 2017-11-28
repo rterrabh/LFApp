@@ -38,11 +38,12 @@ import java.util.Deque;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 /**
  * Created by carlos on 9/21/16.
- * Representa a visão de uma transição em um autômato ou máquina de estados.
+ * Representa a visão de um vértice em um gráfico.
  */
 
 
@@ -52,8 +53,11 @@ public class EdgeView extends View {
     public static String EMPTY_LABEL = Grammar.LAMBDA;
     private static Alphabet alphabet = new Alphabet(Arrays.asList(
             new String[] { "a", "0" } ) );
-    private Thread tFastEdition;
     private static final long TIME_FAST_EDITION = 3000;
+    private static final float ARROW_ANGLE = (float) Math.toRadians(35.0f);
+    private final static String INITIAL_LABEL = "";
+
+    private Thread tFastEdition;
     private EdgeDraw edgeDraw;
     private int gridBeginHeight;
     private int gridBeginWidth;
@@ -61,7 +65,6 @@ public class EdgeView extends View {
     private EdgeView invertedEdge;
     private Paint mEdgeLine;
     private Paint mEdgeText;
-    private static final float ARROW_ANGLE = (float) Math.toRadians(35.0f);
     protected String label;
     protected List<Path> labelPaths;
     private boolean changeLabel = false;
@@ -69,7 +72,7 @@ public class EdgeView extends View {
     private boolean reflexiveUp;
     private boolean fastEdition;
     private PointF nearestPoint;
-    private final static String INITIAL_LABEL = "";
+
 
 
     public String[] getAlphabet() {
@@ -92,6 +95,14 @@ public class EdgeView extends View {
         this.label = label;
         dimensionLabelPath(label.split(LABEL_ITEM_SEP).length);
         invalidate();
+    }
+
+    public float distanceToObject(PointF point) {
+        return edgeDraw.distanceToObject(point);
+    }
+
+    public boolean isOnInteractLabelArea(PointF point) {
+        return edgeDraw.isOnInteractLabelArea(point);
     }
 
     public void appendLabel(String append) {
@@ -356,11 +367,20 @@ public class EdgeView extends View {
         return lineLabels;
     }
 
+    private static int[] colors = new int[] { Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW };
+    private static Random random = new Random();
+
     /**
      * @param canvas
      */
     @Override
     protected void onDraw(Canvas canvas) {
+//        mEdgeLine.setColor(colors[random.nextInt(colors.length)]);
+//        mEdgeLine.setStyle(Paint.Style.FILL_AND_STROKE);
+//        canvas.drawPath(edgeDraw.getPathInteractArea(), mEdgeLine);
+//        mEdgeLine.setStyle(Paint.Style.STROKE);
+//        mEdgeLine.setColor(Color.BLACK);
+
         canvas.drawPath(edgeDraw.getEdge(), mEdgeLine);
         canvas.drawPath(edgeDraw.getArrowHead(), mEdgeLine);
         if (fastEdition) {
@@ -379,6 +399,8 @@ public class EdgeView extends View {
             canvas.drawTextOnPath(labelLines[i], getLabelPath(i), 0.0f, 0.0f,
                     mEdgeText);
         }
+
+
 
 //        PointF newNearestPoint = edgeDraw.getInteractArea().getNearestPoint();
 //        if (newNearestPoint != null) {

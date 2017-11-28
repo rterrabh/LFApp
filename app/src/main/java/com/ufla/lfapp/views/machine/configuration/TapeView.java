@@ -24,6 +24,7 @@ public class TapeView extends  AbstractTapeView {
     protected String[] tape;
     protected int index;
     protected VertexDraw stateDraw;
+    public boolean isTM = true;
 
     public TapeView(Context context) {
         super(context);

@@ -767,7 +767,7 @@
     <string name="lfapp_gnf_8_8">LFApp - GNF - 7/7</string>
     <string name="lfapp_history">LFApp - History</string>
     <string name="compl_automaton">Complete Automaton</string>
-    <string name="processar_palavra">word_process</string>
+    <string name="processar_palavra">Simulate FSA</string>
     <string name="convert_fsand_fsad">Convert NDFA into DFA</string>
     <string name="convert_fsand_fsad_step_by_step">Convert NDFA into DFA step by step</string>
     <string name="min_fsa">Minimize DFA</string>
@@ -775,11 +775,11 @@
     <string name="min_fsand_regular_expression">Create NDFA with Regular Expression</string>
     <string name="pda_to_grammar">Convert automaton into grammar</string>
     <string name="pda_to_grammar_step_by_step">Convert automaton into grammar step by step</string>
-    <string name="word_process_pda">Word processing</string>
-    <string name="word_process_enumerator_tm">Word Process as Turing Machine Enumerator</string>
-    <string name="word_process_multi_tape_tm">Word Process as Turing Machine Multi-tapes</string>
-    <string name="word_process_multi_track_tm">Word Process as Turing Machine Multi-tracks</string>
-    <string name="word_process_turing_machine">Word Process as Turing Machine</string>
-    <string name="word_process_linear_bounded_automaton">Word Process as Linear bounded automaton</string>
+    <string name="word_process_pda">Simulate PDA</string>
+    <string name="word_process_enumerator_tm">Simulate TM Enumerator</string>
+    <string name="word_process_multi_tape_tm">Simulate TM Multitapes</string>
+    <string name="word_process_multi_track_tm">Simulate TM Multitracks</string>
+    <string name="word_process_turing_machine">Simulate Turing Machine</string>
+    <string name="word_process_linear_bounded_automaton">Simulate Linear Bounded Automaton</string>
 
 </resources>

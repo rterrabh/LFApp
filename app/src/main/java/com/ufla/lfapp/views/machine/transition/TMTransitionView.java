@@ -32,7 +32,12 @@ public class TMTransitionView extends EdgeView {
 
     @Override
     protected String[] getLabelLines() {
-        return TMMultiTrackTransitionView.arrayTrim(label.split("[,\n]"));
+        String[] labelLines = TMMultiTrackTransitionView.arrayTrim(label.split("[,\n]"));
+        if (labelLines.length == 0) {
+            setInitialLabel();
+            return  TMMultiTrackTransitionView.arrayTrim(label.split("[,\n]"));
+        }
+        return labelLines;
     }
 
     @Override

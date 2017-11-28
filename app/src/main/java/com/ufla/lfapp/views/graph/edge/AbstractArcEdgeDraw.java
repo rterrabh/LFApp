@@ -5,6 +5,7 @@ import android.graphics.Point;
 import android.graphics.PointF;
 import android.support.v4.util.Pair;
 
+import com.ufla.lfapp.views.graph.edge.interactarea.BezierQuadraticCurve;
 import com.ufla.lfapp.views.graph.layout.EditGraphLayout;
 import com.ufla.lfapp.views.graph.EdgeView;
 import com.ufla.lfapp.utils.PointUtils;
@@ -19,6 +20,12 @@ public abstract class AbstractArcEdgeDraw extends AbstractEdgeDraw {
 
     public AbstractArcEdgeDraw(Pair<Point, Point> gridPoints, EditGraphLayout editGraphLayout) {
         super(gridPoints, editGraphLayout);
+    }
+
+    @Override
+    protected void defineInteractArea() {
+        interactArea = new BezierQuadraticCurve(circPoints.first, pointControl, circPoints.second,
+                getPointsControlInteractArea(), vertexRadius);
     }
 
     @Override

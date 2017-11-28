@@ -5,6 +5,7 @@ import android.graphics.PointF;
 import android.support.v4.util.Pair;
 
 import com.ufla.lfapp.utils.PointUtils;
+import com.ufla.lfapp.views.graph.layout.EditGraphLayout;
 
 /**
  * Created by carlos on 1/27/17.
@@ -15,7 +16,6 @@ public class BezierQuadraticCurve implements InteractArea {
     private PointF pointInitial;
     private PointF pointControl;
     private PointF pointEnd;
-    private final int MAX_DISTANCE;
     private Pair<PointF, PointF> controlPoints;
     private PointF nearestPoint;
 
@@ -28,7 +28,6 @@ public class BezierQuadraticCurve implements InteractArea {
         this.pointInitial = pointInitial;
         this.pointControl = pointControl;
         this.pointEnd = pointEnd;
-        MAX_DISTANCE = (int) (radiusVertex * 1.5f);
         this.controlPoints = controlPoints;
     }
 
@@ -165,18 +164,30 @@ public class BezierQuadraticCurve implements InteractArea {
 
     @Override
     public boolean isOnInteractArea(PointF point) {
-        float dist = getDistanceToPoint(point);
-        return dist <= MAX_DISTANCE;
+        float dist = distanceToObject(point);
+        return dist <= EditGraphLayout.MAX_DISTANCE_FROM_EDGE;
+    }
+
+    @Override
+    public boolean isOnInteractLabelArea(PointF point) {
+        return false;
     }
 
     @Override
     public Path getInteractArea() {
+        // Equation -> B(t) = (1 - t)²P0 + 2(1 - t)tP1 + t²P2
         Path interactArea = new Path();
-        interactArea.moveTo(pointInitial.x, pointInitial.y);
-        interactArea.lineTo(controlPoints.first.x, controlPoints.first.y);
-        interactArea.lineTo(pointEnd.x, pointEnd.y);
-        interactArea.lineTo(controlPoints.second.x, controlPoints.second.y);
-        interactArea.lineTo(pointInitial.x, pointInitial.y);
+        PointF point = new PointF();
+        for (float t = 0; t <= 1.0; t += 0.1) {
+            float ti = (1 - t);
+            float ti_2 = ti * ti;
+            float ti2 = 2 * ti;
+            float ti2t = ti2 * t;
+            float t_2 = t * t;
+            point.x = ti_2 * pointInitial.x + ti2t * pointControl.x + t_2 * pointEnd.x;
+            point.y = ti_2 * pointInitial.y + ti2t * pointControl.y + t_2 * pointEnd.y;
+            interactArea.addCircle(point.x, point.y, EditGraphLayout.MAX_DISTANCE_FROM_EDGE, Path.Direction.CW);
+        }
         return interactArea;
     }
 
@@ -206,7 +217,8 @@ public class BezierQuadraticCurve implements InteractArea {
                 pointInitial.y - 2 * pointControl.y + pointEnd.y);
     }
 
-    public float getDistanceToPoint(PointF point) {
+    @Override
+    public float distanceToObject(PointF point) {
         // a temporary util vect = p0 - (x,y)
         PointF pos = new PointF(pointInitial.x - point.x,
                 pointInitial.y - point.y);

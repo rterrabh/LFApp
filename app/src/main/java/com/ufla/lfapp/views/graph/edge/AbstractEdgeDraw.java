@@ -101,6 +101,16 @@ public abstract class AbstractEdgeDraw implements EdgeDraw {
         return interactArea.isOnInteractArea(point);
     }
 
+    @Override
+    public float distanceToObject(PointF point) {
+        return interactArea.distanceToObject(point);
+    }
+
+    @Override
+    public boolean isOnInteractLabelArea(PointF point) {
+        return interactArea.isOnInteractLabelArea(point);
+    }
+
     /**
      * Calcula os pontos mais próximos nas circunferências entre dois círculos. Recebe um par de
      * pontos que identificam a localização dos círculos no grid, então calcula o ponto na
