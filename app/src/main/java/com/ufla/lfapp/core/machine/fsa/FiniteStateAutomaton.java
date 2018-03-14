@@ -664,8 +664,8 @@ public class FiniteStateAutomaton
             }
             throw new Exception(messageException.toString());
         }
-        configurations = new ArrayList<>();
-        configurationsSpan = new ArrayList<>();
+        //configurations = new ArrayList<>();
+        //configurationsSpan = new ArrayList<>();
         confIndex = new ArrayDeque<>();
         confStates = new ArrayDeque<>();
         Deque<Process> stackProcess = new ArrayDeque<>();
@@ -709,8 +709,8 @@ public class FiniteStateAutomaton
                 }
             }
             if (!generateProcess) {
-                configurations.remove(configurations.size() - 1);
-                configurationsSpan.remove(configurationsSpan.size() - 1);
+                //configurations.remove(configurations.size() - 1);
+                //configurationsSpan.remove(configurationsSpan.size() - 1);
             }
             if (cont == MAX_PROCESS) {
                 throw new Exception(ResourcesContext.getString(R.string.exception_loop_process));

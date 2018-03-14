@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -68,6 +69,8 @@ public class Home extends AppCompatActivityContext {
         uflaLogoLayoutParams.height = heighUflaLogo;
         uflaLogoLayoutParams.width = widthUflaLogo;
         uflaLogoView.requestLayout();
+        ConstraintLayout constraintLayout = (ConstraintLayout) findViewById(R.id.mainConstraintLayout);
+        constraintLayout.requestLayout();
     }
 
 

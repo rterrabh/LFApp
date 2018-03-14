@@ -1,39 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:background="#FFFFFF"
-    android:orientation="vertical">
+    android:paddingTop="@dimen/activity_vertical_margin">
 
-    <include layout="@layout/header_grammar"/>
+    <include layout="@layout/header_grammar" />
 
     <LinearLayout
+        android:id="@+id/ambiguityWord"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="vertical"
-        android:layout_weight="0.67">
+        android:layout_weight="0.67"
+        android:orientation="vertical">
 
-        <com.ufla.lfapp.utils.AutoResizeTextView
-            android:text="@string/ambiguity_check"
-            style="@style/TitleSingleLine" />
-
-        <TextView
-            android:id="@+id/isAmbiguity"
+        <LinearLayout
+            android:id="@+id/derivation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/Black" />
+            android:orientation="vertical">
 
-        <ListView
-            android:id="@+id/words"
+            <com.ufla.lfapp.utils.AutoResizeTextView
+                style="@style/TitleSingleLine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ambiguity_check" />
+
+            <TextView
+                android:id="@+id/isAmbiguity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Searching for ambiguity on this grammar ..."
+                android:textColor="@color/Black" />
+
+            <!--<TextView-->
+                <!--android:id="@+id/word"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text=""-->
+                <!--android:textColor="@color/Black" />-->
+
+            <TextView
+                android:id="@+id/derivations"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/Black" />
+
+            <!--<ListView-->
+            <!--android:id="@+id/words"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content">-->
+
+            <!--</ListView>-->
+
+            <Button
+                android:id="@+id/cancel_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="cancelSearch"
+                android:text="Cancel search" />
+
+        </LinearLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/derivationTree"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
-        </ListView>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/derivationTree1"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:paddingRight="15dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/derivationTree2"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/derivationTree2"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:paddingLeft="15dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/derivationTree1"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </android.support.constraint.ConstraintLayout>
 
     </LinearLayout>
 

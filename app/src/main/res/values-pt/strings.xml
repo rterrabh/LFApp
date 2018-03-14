@@ -580,7 +580,7 @@
     <string name="grammar_in_gnf">Gramática na forma normal de Greibach:</string>
     <string name="new_transitions_2">Novas transições:</string>
     <string name="not_find_ambiguity">Não foi encontrada ambiguidade nos testes realizados.</string>
-    <string name="find_ambiguity">Foi encontrada ambiguidade para a(s) palavra(s) abaixo.</string>
+    <string name="find_ambiguity">Foi encontrada ambiguidade para a palavra abaixo.</string>
     <string name="lfapp_cnf_title">LFApp - FNC</string>
     <string name="lfapp_gnf_title">LFApp - FNG</string>
     <string name="lfapp_left_recursion_title">LFApp - Recursão à Esq</string>
@@ -642,6 +642,7 @@
     <string name="cyk_comments">A gramática inserida não está na Forma Normal de Chomsky. Logo, uma transformação foi necessária.</string>
     <string name="no_derivation_for_the_word">Não foi encontrada nenhuma derivação para a palavra.</string>
     <string name="derivation">Derivação:</string>
+    <string name="two_derivations_1_simple">Derivação 1:\n</string>
     <string name="two_derivations_1">Foram encontradas duas derivações para a palavra, portanto esta gramática é ambígua.\nDerivação 1:\n</string>
     <string name="two_derivations_2">\nDerivação 2:\n</string>
     <string name="nullable_algol">

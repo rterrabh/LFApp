@@ -110,6 +110,7 @@ public class GrammarParser {
      * @return : símbolo inicial extraído
      */
     public static String extractInitialSymbolFromFull(String txt) {
+        txt = txt.trim();
         int i = 0;
         while (txt.charAt(i) != ' ' && txt.charAt(i) != '-') {
             i++;

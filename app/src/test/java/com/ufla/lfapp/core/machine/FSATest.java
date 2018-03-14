@@ -5,6 +5,7 @@ import android.support.v4.util.Pair;
 import com.ufla.lfapp.core.machine.dotlang.DotLanguage;
 import com.ufla.lfapp.core.machine.fsa.FSATransitionFunction;
 import com.ufla.lfapp.core.machine.fsa.FiniteStateAutomaton;
+import com.ufla.lfapp.core.machine.fsa.FiniteStateFiniteStateAutomatonGUIBuilder;
 import com.ufla.lfapp.utils.MyPoint;
 import com.ufla.lfapp.utils.ResourcesContext;
 import com.ufla.lfapp.utils.Symbols;
@@ -22,6 +23,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by carlos on 11/7/17.
@@ -91,6 +93,16 @@ public class FSATest {
         FiniteStateAutomaton fsa = fsaPair.first;
 
         assertEquals(FSA_09_TO_STRING_EXPECTED, fsa.toString());
+    }
+
+    @Test
+    public void removeStateFSAGuiBuilder() {
+        FiniteStateFiniteStateAutomatonGUIBuilder fsaguiBuilder =
+                new FiniteStateFiniteStateAutomatonGUIBuilder();
+        State q0 = new State("q0");
+        fsaguiBuilder.addState(q0);
+        fsaguiBuilder.removeState(q0);
+        assertTrue(fsaguiBuilder.states.isEmpty());
     }
 
     @Test

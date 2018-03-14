@@ -582,7 +582,7 @@
     <string name="grammar_in_gnf">Grammar in the Greibach Normal Form:</string>
     <string name="new_transitions_2">New transitions:</string>
     <string name="not_find_ambiguity">No ambiguity was found in the tests performed.</string>
-    <string name="find_ambiguity">Ambiguity was found for the word(s) below.</string>
+    <string name="find_ambiguity">Ambiguity was found for the word \'</string>
     <string name="lfapp_cnf_title">LFApp - CNF</string>
     <string name="lfapp_gnf_title">LFApp - GNF</string>
     <string name="lfapp_left_recursion_title">LFApp - Left Recursion</string>
@@ -644,6 +644,7 @@
     <string name="cyk_comments">The grammar inserted is not in Chomsky Normal Form. Therefore, a transformation was necessary.</string>
     <string name="no_derivation_for_the_word">No derivations were found for the word.</string>
     <string name="derivation">Derivation:</string>
+    <string name="two_derivations_1_simple">Derivation 1:\n</string>
     <string name="two_derivations_1">Two derivations were found for the word, so this grammar is ambiguous.\nDerivation 1:\n</string>
     <string name="two_derivations_2">\nDerivation 2:\n</string>
     <string name="nullable_algol">

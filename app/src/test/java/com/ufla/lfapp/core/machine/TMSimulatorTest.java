@@ -4,6 +4,7 @@ import com.ufla.lfapp.core.machine.tm.TMMove;
 import com.ufla.lfapp.core.machine.tm.TMSimulator;
 import com.ufla.lfapp.core.machine.tm.TMTransitionFunction;
 import com.ufla.lfapp.core.machine.tm.TuringMachine;
+import com.ufla.lfapp.core.machine.tm.var.TuringMachineMultiTape;
 import com.ufla.lfapp.utils.ResourcesContext;
 
 import org.junit.Before;
@@ -57,6 +58,24 @@ public class TMSimulatorTest {
                     TMMove.getInstance(tfS[4])));
         }
         this.tm = new TuringMachine(states, statesMap.get("q0"), finalStates, tf);
+    }
+
+    @Test
+    public void TMtest01() {
+        TuringMachine tm = new TuringMachine();
+        State q0 = new State("q0");
+        State q1 = new State("q1");
+        tm.getStates().add(q0);
+        tm.getStates().add(q1);
+        tm.getTransitionFunctions().add(new TMTransitionFunction(q0, "a", q1,
+                "b", TMMove.LEFT));
+       tm.getTransitionsTM();
+       tm.getAlphabet();
+       tm.toString();
+       TuringMachineMultiTape tmMt = new TuringMachineMultiTape();
+       tmMt.getAlphabet();
+       tmMt.getTransitionsTMMultiTape();
+       tmMt.toString();
     }
 
     @Test

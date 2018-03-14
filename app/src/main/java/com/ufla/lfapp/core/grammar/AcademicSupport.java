@@ -102,8 +102,10 @@ public class AcademicSupport {
      */
     private String formatVariableRules(String variable, final Grammar grammar) {
         StringBuilder formatedRules = new StringBuilder();
+        System.out.println("VAR -> " + variable);
         formatedRules.append(formatElement(variable)).append(" →");
         for (Rule element : grammar.getRules(variable)) {
+            System.out.println(element.toString());
             formatedRules.append(" ").append(formatElement
                     (element.getRightSide())).append(" |");
         }
@@ -147,7 +149,7 @@ public class AcademicSupport {
     /**
      * Insere um nova regra no conjunto de novas regras.
      *
-     * @param irregularRule nova regra a ser inserida
+     * @param newRule nova regra a ser inserida
      */
     public void insertNewRule(Rule newRule) {
         this.insertedRules.add(newRule);

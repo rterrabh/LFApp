@@ -353,6 +353,15 @@ public class Rule implements Cloneable, Comparable<Rule> {
         return rightSide.length() == 1 && Character.isLowerCase(rightSide.charAt(0));
     }
 
+    public boolean producesOnlyTerminal() {
+        for (int i = 0; i < rightSide.length(); i++) {
+            if (Character.isUpperCase(rightSide.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public boolean containsTerminalOnRightSide() {
         for (int i = 0; i < rightSide.length(); i++) {
             if (Character.isLowerCase(rightSide.charAt(i))) {

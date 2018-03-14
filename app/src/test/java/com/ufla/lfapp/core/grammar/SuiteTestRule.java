@@ -10,5 +10,5 @@ import org.junit.runners.Suite.SuiteClasses;
         Rule07Test.class, Rule08Test.class, Rule09Test.class,
         Rule10Test.class, RuleTest.class })
 
-public class RuleTests {
+public class SuiteTestRule {
 }

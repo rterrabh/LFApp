@@ -1,11 +1,33 @@
 package com.ufla.lfapp.core.grammar.parser;
 
+import android.app.ActivityManager;
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.util.Pair;
+
 import com.ufla.lfapp.core.grammar.Grammar;
 import com.ufla.lfapp.core.grammar.Rule;
+import com.ufla.lfapp.utils.MyConsumer;
+import com.ufla.lfapp.utils.MyPair;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Deque;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
+
+import static android.content.Context.ACTIVITY_SERVICE;
 
 /**
  * Created by carlos on 2/15/17.
@@ -15,6 +37,7 @@ public class TreeDerivationParser {
 
     private boolean treeComplete;
     private Grammar grammar;
+    private GrammarOrderedAmbiguity grammarOrderedAmbiguity;
     private NodeDerivationParser root;
     private String word;
     private int index;
@@ -24,8 +47,11 @@ public class TreeDerivationParser {
     private TreeDerivation treeDerivationAux;
     private int countNodes;
     //private static final int MAX_NODES = 250;
-    private static final int MAX_LEVEL = 5;
-
+    private static final int MAX_LEVEL = 20;
+    private List<String> actualWord;
+    private AtomicBoolean cancelSearch;
+    private static final long MAX_TIME_AMBIGUITY_SEARCH = 1000 * 7;
+    private static final double MIN_FREE_MEMORY_PERCENT = 15;
     /**
      * Construtor de árvore de derivação com base em uma gramática _grammar_ e uma palavra a ser
      * derivada _word_.
@@ -34,9 +60,327 @@ public class TreeDerivationParser {
      * @param word    palavra a ser derivada
      */
     public TreeDerivationParser(Grammar grammar, String word) {
+        this.grammar = grammar;
         this.word = word;
+        index = 0;
+    }
+
+    public TreeDerivationParser(Grammar grammar) {
         this.grammar = grammar;
         index = 0;
+    }
+
+    class RuleOrderedAmbiguity implements Comparable<RuleOrderedAmbiguity> {
+        public Rule rule;
+        public int invPriority;
+
+        public RuleOrderedAmbiguity(Rule rule, int invPriority) {
+            this.rule = rule;
+            this.invPriority = invPriority;
+        }
+
+        @Override
+        public String toString() {
+            return rule.toString();
+        }
+
+        @Override
+        public int compareTo(@NonNull RuleOrderedAmbiguity o) {
+            return invPriority - o.invPriority;
+        }
+    }
+
+    public void cancelAmbiguitySearch() {
+        cancelSearch.set(true);
+    }
+
+    class GrammarOrderedAmbiguity {
+        private Set<String> variables;
+        private Set<String> terminals;
+        private String initialSymbol;
+        private Set<RuleOrderedAmbiguity> rules;
+
+        public GrammarOrderedAmbiguity(Grammar grammarUnordered) {
+            terminals = grammarUnordered.getTerminals();
+            initialSymbol = grammarUnordered.getInitialSymbol();
+            variables = new LinkedHashSet<>();
+            rules = new LinkedHashSet<>();
+            defineGrammarOrdered(grammarUnordered);
+        }
+
+        public List<Rule> getRules(String variable) {
+            List<Rule> rulesOfVariable = new ArrayList<>();
+            for (RuleOrderedAmbiguity ruleOrderedAmbiguity : rules) {
+                if (ruleOrderedAmbiguity.rule.getLeftSide().equals(variable)) {
+                    rulesOfVariable.add(ruleOrderedAmbiguity.rule);
+                }
+            }
+            return rulesOfVariable;
+        }
+
+        private void defineGrammarOrdered(Grammar grammarUnordered) {
+            Map<String, Integer> variableToInvPriority = calcVariableToInvPriority(grammarUnordered);
+            for (String var : grammarUnordered.getVariables()) {
+                if (variableToInvPriority.get(var) != Integer.MAX_VALUE) {
+                    variables.add(var);
+                }
+            }
+            List<RuleOrderedAmbiguity> rulesList = new ArrayList<>();
+            for (String var : variables) {
+                for (Rule rule : grammarUnordered.getRules(var)) {
+                    Integer invPriority = calcRuleInvPriority(variableToInvPriority, rule);
+                    if (invPriority != null && invPriority != Integer.MAX_VALUE) {
+                        rulesList.add(new RuleOrderedAmbiguity(rule, invPriority));
+                    }
+                }
+            }
+            Collections.sort(rulesList);
+            rules.addAll(rulesList);
+        }
+
+        private Map<String, Integer> calcVariableToInvPriority(Grammar grammarUnordered) {
+            Map<String, Integer> variableToInvPriority = new HashMap<>();
+            Set<String> variables = grammarUnordered.getVariables();
+            Set<String> variablesCalcInvPriority = new HashSet<>();
+            for (String var : variables) {
+                for (Rule rule : grammarUnordered.getRules(var)) {
+                    if (rule.producesOnlyTerminal()) {
+                        variablesCalcInvPriority.add(var);
+                        variableToInvPriority.put(var, 0);
+                        break;
+                    }
+                }
+            }
+            variables.removeAll(variablesCalcInvPriority);
+            do {
+                variablesCalcInvPriority.clear();
+                for (String var : variables) {
+                    Integer minInvPriority = Integer.MAX_VALUE;
+                    Integer minInvPriorityAux;
+                    for (Rule rule : grammarUnordered.getRules(var)) {
+                        minInvPriorityAux = calcRuleInvPriority(variableToInvPriority, rule);
+                        if (minInvPriorityAux != null) {
+                            minInvPriority = Math.min(minInvPriority, minInvPriorityAux);
+                        }
+                    }
+                    if (minInvPriority != Integer.MAX_VALUE) {
+                        variablesCalcInvPriority.add(var);
+                        variableToInvPriority.put(var, minInvPriority);
+                    }
+                }
+                variables.removeAll(variablesCalcInvPriority);
+            } while (!variablesCalcInvPriority.isEmpty());
+            for (String var : variables) {
+                variableToInvPriority.put(var, Integer.MAX_VALUE);
+            }
+            return variableToInvPriority;
+        }
+
+        private Integer calcRuleInvPriority(Map<String, Integer> variableToInvPriority,
+                                            Rule rule) {
+            Set<String> symbols = rule.getSymbolsOfRightSide();
+            int hasVar = 0;
+            Integer invPriority = 0;
+            Integer invPriorityAux;
+            for (String symbol : symbols) {
+                if (symbol.length() != 1 || !Character.isLowerCase(symbol.charAt(0))) {
+                    hasVar = 1;
+                    invPriorityAux = variableToInvPriority.get(symbol);
+                    if (invPriorityAux == null) {
+                        return null;
+                    }
+                    invPriority = Math.max(invPriority, invPriorityAux);
+                }
+            }
+            return invPriority + hasVar;
+        }
+    }
+
+    public String getWord() {
+        return word;
+    }
+
+    private Map<String, TreeDerivation> words;
+
+    // Get a MemoryInfo object for the device's current memory status.
+    private ActivityManager.MemoryInfo getAvailableMemory(Context context) {
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
+        ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
+        activityManager.getMemoryInfo(memoryInfo);
+        return memoryInfo;
+    }
+
+
+    public void checkAmbiguity(final MyConsumer<TreeDerivationParser> callback, final Context context) {
+        cancelSearch = new AtomicBoolean(false);
+        final Thread runAmbiguity = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                grammarOrderedAmbiguity = new GrammarOrderedAmbiguity(grammar);
+                int cont = 0;
+                String initialVariable = grammar.getInitialSymbol();
+                List<String> initialList = new ArrayList<>();
+                initialList.add(initialVariable);
+                NodeAmbiguity rootAmbiguity = new NodeAmbiguity(initialList, 0, null, -1);
+                List<NodeAmbiguity> actualNodeAmbiguity = new ArrayList<>();
+                List<NodeAmbiguity> nextNodeAmbiguity = new ArrayList<>();
+                actualNodeAmbiguity.add(rootAmbiguity);
+//                root = new NodeDerivationParser(initialVariable, 0, null, -1);
+//                actualNode = root;
+//                actualWord = new ArrayList<>();
+                words = new LinkedHashMap<>();
+                cont = 0;
+                while (!treeComplete && !cancelSearch.get()) {
+                    for (NodeAmbiguity nodeAmbiguity : actualNodeAmbiguity) {
+                        List<NodeAmbiguity> childs = nodeAmbiguity.generateChilds(grammarOrderedAmbiguity);
+                        for (NodeAmbiguity child : childs) {
+                            MyPair<String, TreeDerivation> derivation = child.verifyNode();
+                            if (derivation != null) {
+                                if (words.containsKey(derivation.first)) {
+                                    if (derivation.second.getDerivation()
+                                            .equals(words.get(derivation.first).getDerivation())) {
+                                        continue;
+                                    }
+                                    word = derivation.first;
+                                    treeComplete = true;
+                                    treeDerivation = words.get(derivation.first);
+                                    treeDerivationAux = derivation.second;
+                                } else {
+                                    words.put(derivation.first, derivation.second);
+                                }
+                            } else {
+                                nextNodeAmbiguity.add(child);
+                            }
+                        }
+                        if (treeComplete || cancelSearch.get()) {
+                            break;
+                        }
+                    }
+                    cont++;
+                    actualNodeAmbiguity = nextNodeAmbiguity;
+                    nextNodeAmbiguity = new ArrayList<>();
+                }
+//                System.out.println("Level max -> " + actualNodeAmbiguity.get(0).getLevel());
+                System.out.println("Level max -> " + cont);
+//                System.out.println("###Derivation founds###");
+//                for (Map.Entry<String, TreeDerivation> derivationEntry : words.entrySet()) {
+//                    System.out.print(derivationEntry.getKey() + ": \n" +
+//                            derivationEntry.getValue().getDerivation() + "\n");
+//                }
+                grammarOrderedAmbiguity = null;
+                root = null;
+                actualNode = null;
+                actualWord = null;
+                words = null;
+                treeComplete = false;
+                //System.out.println("callback");
+                callback.accept(TreeDerivationParser.this);
+            }
+        });
+        runAmbiguity.start();
+        final Thread killAmbiguity = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(MAX_TIME_AMBIGUITY_SEARCH);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+//                if (context == null) {
+//                    try {
+//                        Thread.sleep(MAX_TIME_AMBIGUITY_SEARCH);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                } else {
+//                    ActivityManager.MemoryInfo actualMemory = getAvailableMemory(context);
+//                    System.out.println("totalMem -> " + actualMemory.totalMem);
+//                    double memoryFreePercent = actualMemory.availMem / (double) actualMemory.totalMem * 100.0d;
+//                    System.out.println("availMem -> " + actualMemory.availMem +
+//                            " | percentFree -> " + memoryFreePercent);
+//                    while (memoryFreePercent > MIN_FREE_MEMORY_PERCENT) {
+//                        try {
+//                            Thread.sleep(100);
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+//                        actualMemory = getAvailableMemory(context);
+//                        memoryFreePercent = actualMemory.availMem / (double) actualMemory.totalMem * 100.0d;
+//                        System.out.println("availMem -> " + actualMemory.availMem +
+//                                " | percentFree -> " + memoryFreePercent);
+//                    }
+//                }
+                System.out.println("Cancelando busca");
+                cancelSearch.set(true);
+            }
+        });
+        killAmbiguity.start();
+
+    }
+
+    private String getActualWordString() {
+        StringBuilder sb = new StringBuilder();
+        for (String token : actualWord) {
+            sb.append(token);
+        }
+        return sb.toString();
+    }
+
+    private void parserNodeAmb() {
+        if (actualNode.isVariable()) {
+            if (!actualNode.stackRulesIsDefinied()) {
+                setStackRulesAmb();
+            }
+            if (actualNode.hasRulesOnStack()) {
+                derivateNode();
+            } else {
+                actualNode.setStackRules(null);
+                backAmb();
+            }
+        } else {
+            if (!actualNode.isLambda()) {
+                actualWord.add(actualNode.getNode());
+            }
+            if (!findNextLeafNode()) {
+                word = getActualWordString();
+                treeDerivationAux = new TreeDerivation(root);
+                if (words.containsKey(word)) {
+                    treeDerivation = words.get(word);
+                    treeComplete = true;
+                } else {
+                    words.put(word, treeDerivationAux);
+                    findLastNodeOfBranch();
+                    backAmb();
+                }
+            }
+        }
+    }
+
+    private void setStackRulesAmb() {
+        String variable = actualNode.getNode();
+        //actualNode.setStackRules(grammarOrderedAmbiguity.getRules(variable));
+    }
+
+    private void backAmb() {
+        boolean findNode = false;
+        while (!findNode) {
+            if (actualNode.isVariable()) {
+                if (actualNode.stackRulesIsDefinied() && actualNode.hasRulesOnStack()) {
+                    simpleCutBranch();
+                    findNode = true;
+                } else if (actualNode == root) {
+                    treeComplete = true;
+                    findNode = true;
+                } else {
+                    findLastNode();
+                }
+            } else {
+                if (!actualNode.isLambda()) {
+                    actualWord.remove(actualWord.size() - 1);
+                }
+                findLastNode();
+            }
+        }
     }
 
 //    private void printNodeRec(NodeDerivationParser node) {
@@ -362,7 +706,6 @@ public class TreeDerivationParser {
 
 
     public boolean isAmbiguity() {
-        return treeDerivationAux != null &&
-                !treeDerivation.getDerivation().equals(treeDerivationAux.getDerivation());
+        return treeDerivationAux != null && treeDerivation != null;
     }
 }
